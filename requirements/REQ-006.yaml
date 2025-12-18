@@ -1,0 +1,19 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: component-product-list
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-006
+      type: architectural
+      c4_level: component
+      description: "The WebServer shall have a ProductController component to list products."
+      priority: high
+      tracesTo: "REQ-003"
+      validation_policy: "policies/check_components.rego"
+      model_validation:
+        container: "WebServer"
+        component: "ProductController"
+      implementation_validation:
+        file_path: "webshop/src/main/java/com/example/webshop/ProductController.java"

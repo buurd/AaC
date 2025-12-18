@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: system-context-webshop
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-001
+      type: architectural
+      c4_level: context
+      description: "The Customer shall use the Webshop system."
+      priority: critical
+      validation_policy: "policies/check_relation.rego"
+      model_validation:
+        source: "Customer"
+        destination: "Webshop"
+        description_contains: "Uses"

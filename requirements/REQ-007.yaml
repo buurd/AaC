@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: runtime-product-list
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-007
+      type: runtime
+      c4_level: component
+      description: "The ProductController shall return a list of products at /products."
+      priority: high
+      tracesTo: "REQ-006"
+      runtime_validation:
+        url: "http://localhost:8000/products"
+        expected_status: 200
+        response_contains: "The Hitchhiker's Guide to the Galaxy"

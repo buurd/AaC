@@ -1,0 +1,16 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: implementation-webshop
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-002
+      type: implementation
+      c4_level: context
+      description: "The Webshop system shall be implemented as a Maven project."
+      priority: high
+      # This policy is now generic
+      validation_policy: "policies/check_implementation.rego"
+      implementation_validation:
+        file_path: "webshop/pom.xml"

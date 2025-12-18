@@ -1,0 +1,16 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: runtime-webserver
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-005
+      type: runtime
+      c4_level: container
+      description: "The WebServer shall be accessible via HTTP and return 200 OK on the root path."
+      priority: critical
+      tracesTo: "REQ-003"
+      runtime_validation:
+        url: "http://localhost:8000/"
+        expected_status: 200

@@ -1,0 +1,26 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: domain-product
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-008
+      type: architectural
+      c4_level: code
+      description: "The system shall have a Product domain entity."
+      priority: high
+      tracesTo: "REQ-006"
+      validation_policy: "policies/check_class_structure.rego"
+      code_validation:
+        file_path: "webshop/src/main/java/com/example/webshop/Product.java"
+        class_name: "Product"
+        fields:
+          - name: "id"
+            type: "int"
+          - name: "name"
+            type: "String"
+          - name: "price"
+            type: "double"
+          - name: "description"
+            type: "String"

@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: container-database
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-004
+      type: architectural
+      c4_level: container
+      description: "The Webshop system shall have a Database container."
+      priority: high
+      tracesTo: "REQ-001"
+      validation_policy: "policies/check_containers.rego"
+      model_validation:
+        parent: "Webshop"
+        container: "Database"
