@@ -5,14 +5,15 @@ workspace "My System" "My System Description" {
         webshop = softwareSystem "Webshop" "The webshop system." {
             webServer = container "WebServer" "The web server." {
                 productController = component "ProductController" "Handles product listing."
+                productRepository = component "ProductRepository" "Handles data access for products."
             }
             database = container "Database" "The database."
         }
 
-        // High-level relationship for context-level views and requirements
+        // High-level relationship
         customer -> webshop "Uses"
 
-        // Detailed relationships for container-level views and requirements
+        // Container-level relationships
         customer -> webServer "Uses" {
             tags "Implementation"
         }
@@ -20,8 +21,9 @@ workspace "My System" "My System Description" {
             tags "Implementation"
         }
 
-        // Component-level relationship
-        productController -> database "Reads products from"
+        // Component-level relationships
+        productController -> productRepository "Uses"
+        productRepository -> database "Reads from and writes to"
     }
 
     views {

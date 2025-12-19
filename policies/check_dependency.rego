@@ -35,14 +35,24 @@ get_file_content(files_map, path) = content if {
     content := files_map[sprintf("./%s", [path])]
 } else = ""
 
-# Helper to check for a dependency using regex
+# Helper to check for a dependency using regex (Import check)
 has_dependency(content, dependency_class) if {
-    # Simple regex to find an import statement or a field declaration.
-    # This is a simplification and might not cover all edge cases.
     import_pattern := sprintf(`import .*\.%s;`, [dependency_class])
-    field_pattern := sprintf(`private final\s+%s\s+.*;`, [dependency_class])
-
     regex.match(import_pattern, content)
-} else if {
+}
+
+# Helper to check for a dependency using regex (Field check)
+has_dependency(content, dependency_class) if {
+    # We don't strictly need 'private final' but it's good practice.
+    # Let's make it a bit more flexible: just the type name followed by a variable name.
+    # Example: "ProductRepository repository;"
+    field_pattern := sprintf(`\b%s\s+\w+;`, [dependency_class])
     regex.match(field_pattern, content)
+}
+
+# Helper to check for a dependency using regex (Constructor arg check)
+has_dependency(content, dependency_class) if {
+    # Example: "public ProductController(ProductRepository repository)"
+    ctor_pattern := sprintf(`\b%s\s+\w+`, [dependency_class])
+    regex.match(ctor_pattern, content)
 }

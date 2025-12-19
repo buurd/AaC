@@ -136,6 +136,7 @@ run_opa_validation "Container Validation" "/project/workspace.json" "/project/po
 run_opa_validation "Component Validation" "/project/workspace.json" "/project/policies/check_components.rego" "data.structurizr.components.violation"
 run_opa_validation "Implementation Validation" "/project/implementation-input.json" "/project/policies/check_implementation.rego" "data.project_files.violation"
 run_opa_validation "Code Structure Validation" "/project/code-structure-input.json" "/project/policies/check_class_structure.rego" "data.code.structure.violation"
+run_opa_validation "Dependency Validation" "/project/code-structure-input.json" "/project/policies/check_dependency.rego" "data.code.dependency.violation"
 
 # --- Runtime Validation ---
 echo
