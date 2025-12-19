@@ -1,42 +1,33 @@
 package structurizr.containers
 
-# Violation if Webshop system itself is missing
-violation contains {"msg": "Webshop Software System (parent for containers) is missing from the model."} if {
-    # Check if any software system named "Webshop" exists
-    not webshop_exists
+# Generic rule: Check if parent system exists
+violation contains {"msg": msg} if {
+    req := input.reqs[0].requirements[_].spec.requirements[_]
+    req.model_validation.parent
+    req.model_validation.container
+
+    model := input.model[0].model
+    systems := {s | s := object.get(model, "softwareSystems", [])[_]; s.name == req.model_validation.parent}
+
+    count(systems) == 0
+    msg := sprintf("Requirement %s failed: Parent Software System '%s' not found in the model.", [req.id, req.model_validation.parent])
 }
 
-webshop_exists if {
-    some s in input.model.softwareSystems
-    s.name == "Webshop"
-}
+# Generic rule: Check if container exists in parent
+violation contains {"msg": msg} if {
+    req := input.reqs[0].requirements[_].spec.requirements[_]
+    req.model_validation.parent
+    req.model_validation.container
 
-# REQ-003: Webshop must have a WebServer container
-violation contains {"msg": "Requirement REQ-003 not fulfilled: Webshop is missing WebServer container."} if {
-    some s in input.model.softwareSystems
-    s.name == "Webshop"
+    model := input.model[0].model
+    systems := {s | s := object.get(model, "softwareSystems", [])[_]; s.name == req.model_validation.parent}
 
-    # Get containers safely, defaulting to empty array
-    containers := object.get(s, "containers", [])
+    count(systems) > 0
+    system := systems[_]
 
-    # Check if WebServer is missing
-    not container_exists(containers, "WebServer")
-}
+    containers := object.get(system, "containers", [])
+    matching_containers := {c | c := containers[_]; c.name == req.model_validation.container}
 
-# REQ-004: Webshop must have a Database container
-violation contains {"msg": "Requirement REQ-004 not fulfilled: Webshop is missing Database container."} if {
-    some s in input.model.softwareSystems
-    s.name == "Webshop"
-
-    # Get containers safely, defaulting to empty array
-    containers := object.get(s, "containers", [])
-
-    # Check if Database is missing
-    not container_exists(containers, "Database")
-}
-
-# Helper to check if a container with a given name exists in the containers array
-container_exists(containers_array, container_name) if {
-    some c in containers_array
-    c.name == container_name
+    count(matching_containers) == 0
+    msg := sprintf("Requirement %s failed: Container '%s' not found in Software System '%s'.", [req.id, req.model_validation.container, req.model_validation.parent])
 }

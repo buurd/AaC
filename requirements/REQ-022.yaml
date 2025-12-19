@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: functional-product-edit
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-022
+      type: functional
+      c4_level: component
+      description: "When a Product Manager submits the edit product form, the product details shall be updated in the database."
+      priority: critical
+      tracesTo: "REQ-017"
+      manual_validation: true

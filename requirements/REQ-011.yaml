@@ -5,12 +5,12 @@ metadata:
   version: "1.0"
 spec:
   requirements:
-    - id: REQ-002
+    - id: REQ-011
       type: implementation
       c4_level: context
-      description: "The Webshop system shall be implemented as a Maven project."
+      description: "The Product Management System shall be implemented as a Maven project."
       priority: high
-      tracesTo: "REQ-010"
+      # This policy is now generic
       validation_policy: "policies/check_implementation.rego"
       implementation_validation:
-        file_path: "webshop/pom.xml"
+        file_path: "productManagementSystem/pom.xml"

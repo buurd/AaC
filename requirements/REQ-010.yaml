@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: system-context-webshop
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-010
+      type: architectural
+      c4_level: context
+      description: "The Project Manager shall use the Product Management System"
+      priority: critical
+      validation_policy: "policies/check_relation.rego"
+      model_validation:
+        source: "Product Manager"
+        destination: "Product Management System"
+        description_contains: "Uses"

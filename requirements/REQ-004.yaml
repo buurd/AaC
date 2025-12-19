@@ -14,4 +14,4 @@ spec:
       validation_policy: "policies/check_containers.rego"
       model_validation:
         parent: "Webshop"
-        container: "Database"
+        container: "Webshop Database"

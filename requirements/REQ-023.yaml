@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: functional-product-delete
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-023
+      type: functional
+      c4_level: component
+      description: "When a Product Manager confirms deletion, the product shall be removed from the database."
+      priority: critical
+      tracesTo: "REQ-018"
+      manual_validation: true

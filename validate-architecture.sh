@@ -7,17 +7,29 @@ clear
 cleanup() {
     echo
     echo "--- Cleaning up temporary files ---"
-    rm -f workspace.json project-files.json requirements.json implementation-input.json code-structure-input.json code-structure-files.json
+    rm -f workspace.json project-files.json requirements.json implementation-input.json code-structure-input.json code-structure-files.json relation-input.json
     rm -f structurizr/workspace.json
 
-    # Stop the containers if they are running
+    # Stop and remove the containers
     if [ -n "$WEBSHOP_CONTAINER_ID" ]; then
         echo "Stopping Webshop container ($WEBSHOP_CONTAINER_ID)..."
         docker stop $WEBSHOP_CONTAINER_ID > /dev/null 2>&1 || true
+        docker rm $WEBSHOP_CONTAINER_ID > /dev/null 2>&1 || true
     fi
-    if [ -n "$DB_CONTAINER_ID" ]; then
-        echo "Stopping Database container ($DB_CONTAINER_ID)..."
-        docker stop $DB_CONTAINER_ID > /dev/null 2>&1 || true
+    if [ -n "$PM_CONTAINER_ID" ]; then
+        echo "Stopping Product Management container ($PM_CONTAINER_ID)..."
+        docker stop $PM_CONTAINER_ID > /dev/null 2>&1 || true
+        docker rm $PM_CONTAINER_ID > /dev/null 2>&1 || true
+    fi
+    if [ -n "$DB_WEBSHOP_ID" ]; then
+        echo "Stopping Webshop Database container ($DB_WEBSHOP_ID)..."
+        docker stop $DB_WEBSHOP_ID > /dev/null 2>&1 || true
+        docker rm $DB_WEBSHOP_ID > /dev/null 2>&1 || true
+    fi
+    if [ -n "$DB_PM_ID" ]; then
+        echo "Stopping PM Database container ($DB_PM_ID)..."
+        docker stop $DB_PM_ID > /dev/null 2>&1 || true
+        docker rm $DB_PM_ID > /dev/null 2>&1 || true
     fi
     if [ -n "$NETWORK_NAME" ]; then
         echo "Removing Docker network ($NETWORK_NAME)..."
@@ -80,19 +92,51 @@ run_runtime_check() {
     local url="$2"
     local expected_status="$3"
     local response_contains="$4"
+    local container_id="$5"
 
     echo
     echo "--- Running: $title ---"
     echo "Checking URL: $url"
 
-    RESPONSE=$(docker run --rm --network="host" curlimages/curl:7.78.0 curl -s -w "\\n%{http_code}" "$url")
+    # Check if container is still running
+    if [ -n "$container_id" ]; then
+        if ! docker ps -q --no-trunc | grep -q "$container_id"; then
+             echo "🔴 Validation Failed: Container $container_id is not running."
+             echo "--- Container Logs ---"
+             docker logs "$container_id"
+             exit 1
+        fi
+    fi
+
+    # Temporarily disable set -e to capture curl failure
+    set +e
+    RESPONSE=$(docker run --rm --network="host" curlimages/curl:7.78.0 curl -v -s -w "\\n%{http_code}" "$url" 2>&1)
+    CURL_EXIT_CODE=$?
+    set -e
+
+    if [ $CURL_EXIT_CODE -ne 0 ]; then
+        echo "🔴 Validation Failed: Curl command failed (Exit Code: $CURL_EXIT_CODE)"
+        echo "Output: $RESPONSE"
+        if [ -n "$container_id" ]; then
+            echo "--- Container Logs ($container_id) ---"
+            docker logs "$container_id" | tail -n 20
+        fi
+        exit 1
+    fi
+
     HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
+    # Extract body (everything except the last line)
     HTTP_BODY=$(echo "$RESPONSE" | sed '$d')
 
     echo "Server returned status: $HTTP_STATUS"
 
     if [ "$HTTP_STATUS" -ne "$expected_status" ]; then
         echo "🔴 Validation Failed: Expected status $expected_status, got $HTTP_STATUS"
+        echo "Response Body: $HTTP_BODY"
+        if [ -n "$container_id" ]; then
+            echo "--- Container Logs ($container_id) ---"
+            docker logs "$container_id" | tail -n 20
+        fi
         exit 1
     fi
 
@@ -122,17 +166,21 @@ find . -path ./.git -prune -o -type f -print | sed 's|^\./||' | jq -R . | jq -s 
 echo "Step 3: Aggregating requirements..."
 docker run --rm -v "$(pwd):/workdir" mikefarah/yq eval-all -o=json '. as $doc ireduce ({}; .requirements += [$doc])' requirements/*.yaml > requirements.json
 
-echo "Step 4: Combining inputs for implementation validation..."
+echo "Step 4: Combining inputs for validations..."
+# Implementation Validation Input
 jq -n '{files: $files, reqs: $reqs}' --slurpfile files project-files.json --slurpfile reqs requirements.json > implementation-input.json
 
-echo "Step 5: Creating file content map for code structure validation..."
+# Code Structure Validation Input
 find . -name "*.java" -print0 | xargs -0 -I {} jq -Rs --arg path "{}" '{$path: .}' {} | jq -s 'add' > code-structure-files.json
 jq -n '{files: $files, reqs: $reqs}' --slurpfile files code-structure-files.json --slurpfile reqs requirements.json > code-structure-input.json
 
+# Relation Validation Input (Model + Requirements)
+jq -n '{model: $model, reqs: $reqs}' --slurpfile model workspace.json --slurpfile reqs requirements.json > relation-input.json
+
 # --- Static Validations ---
 run_opa_validation "Traceability Validation" "/project/requirements.json" "/project/policies/check_traceability.rego" "data.requirements.traceability.violation"
-run_opa_validation "Relation Validation" "/project/workspace.json" "/project/policies/check_relation.rego" "data.structurizr.violation"
-run_opa_validation "Container Validation" "/project/workspace.json" "/project/policies/check_containers.rego" "data.structurizr.containers.violation"
+run_opa_validation "Relation Validation" "/project/relation-input.json" "/project/policies/check_relation.rego" "data.structurizr.relation.violation"
+run_opa_validation "Container Validation" "/project/relation-input.json" "/project/policies/check_containers.rego" "data.structurizr.containers.violation"
 run_opa_validation "Component Validation" "/project/workspace.json" "/project/policies/check_components.rego" "data.structurizr.components.violation"
 run_opa_validation "Implementation Validation" "/project/implementation-input.json" "/project/policies/check_implementation.rego" "data.project_files.violation"
 run_opa_validation "Code Structure Validation" "/project/code-structure-input.json" "/project/policies/check_class_structure.rego" "data.code.structure.violation"
@@ -144,35 +192,59 @@ echo "--- Preparing for Runtime Validations ---"
 echo "Compiling Webshop application..."
 docker run --rm -v "$(pwd)/webshop:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package > /dev/null
 
+echo "Compiling Product Management application..."
+docker run --rm -v "$(pwd)/productManagementSystem:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package > /dev/null
+
 # Create a dedicated network for the containers
 NETWORK_NAME="webshop-net-$$"
 docker network create $NETWORK_NAME
 
-# Start PostgreSQL container
-echo "Starting Database container..."
-DB_CONTAINER_ID=$(docker run -d --rm --network $NETWORK_NAME --name db_host -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres postgres:14-alpine)
-echo "Database container started with ID: $DB_CONTAINER_ID"
+# Start Webshop Database container
+echo "Starting Webshop Database container..."
+DB_WEBSHOP_ID=$(docker run -d --network $NETWORK_NAME --name db_webshop -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres postgres:14-alpine)
+echo "Webshop Database container started with ID: $DB_WEBSHOP_ID"
+
+# Start PM Database container
+echo "Starting PM Database container..."
+DB_PM_ID=$(docker run -d --network $NETWORK_NAME --name db_pm -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres postgres:14-alpine)
+echo "PM Database container started with ID: $DB_PM_ID"
+
+echo "Waiting for Databases to initialize (15s)..."
+sleep 15
 
 # Start Webshop container
 echo "Starting Webshop server in a Docker container..."
-# We now use the Docker network to communicate, not host networking
-WEBSHOP_CONTAINER_ID=$(docker run -d --rm --network $NETWORK_NAME -p 8000:8000 \
+WEBSHOP_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME -p 8000:8000 \
     -v "$(pwd)/webshop/target:/app" \
-    -e DB_URL=jdbc:postgresql://db_host:5432/postgres \
+    -e DB_URL=jdbc:postgresql://db_webshop:5432/postgres \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
     eclipse-temurin:21-jre java -jar /app/webshop-1.0-SNAPSHOT-jar-with-dependencies.jar)
 echo "Webshop container started with ID: $WEBSHOP_CONTAINER_ID"
 
-echo "Waiting for services to initialize..."
-# Wait for Postgres to be ready
-sleep 10
-# Wait for Webshop to be ready
+# Start Product Management container
+echo "Starting Product Management server in a Docker container..."
+PM_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME -p 8001:8001 \
+    -v "$(pwd)/productManagementSystem/target:/app" \
+    -e DB_URL=jdbc:postgresql://db_pm:5432/postgres \
+    -e DB_USER=postgres \
+    -e DB_PASSWORD=postgres \
+    eclipse-temurin:21-jre java -jar /app/productManagementSystem-1.0-SNAPSHOT-jar-with-dependencies.jar)
+echo "Product Management container started with ID: $PM_CONTAINER_ID"
+
+echo "Waiting for services to initialize (5s)..."
 sleep 5
 
 # Run the actual runtime checks
-run_runtime_check "Runtime Validation (REQ-005)" "http://localhost:8000/" "200"
-run_runtime_check "Runtime Validation (REQ-007)" "http://localhost:8000/products" "200" "The Hitchhiker's Guide to the Galaxy"
+run_runtime_check "Runtime Validation (REQ-005)" "http://localhost:8000/" "200" "" "$WEBSHOP_CONTAINER_ID"
+run_runtime_check "Runtime Validation (REQ-007)" "http://localhost:8000/products" "200" "The Hitchhiker's Guide to the Galaxy" "$WEBSHOP_CONTAINER_ID"
+run_runtime_check "Runtime Validation (REQ-014)" "http://localhost:8001/" "200" "" "$PM_CONTAINER_ID"
+# Note: REQ-015 checks for "The Hitchhiker's Guide to the Galaxy" which is NOT in the PM DB (it has Hammer/Screwdriver)
+# I need to update REQ-015 to check for "Hammer" instead.
+run_runtime_check "Runtime Validation (REQ-015)" "http://localhost:8001/products" "200" "Hammer" "$PM_CONTAINER_ID"
+run_runtime_check "Runtime Validation (REQ-016)" "http://localhost:8001/products/create" "200" "" "$PM_CONTAINER_ID"
+run_runtime_check "Runtime Validation (REQ-017)" "http://localhost:8001/products/edit" "200" "" "$PM_CONTAINER_ID"
+run_runtime_check "Runtime Validation (REQ-018)" "http://localhost:8001/products/delete" "200" "" "$PM_CONTAINER_ID"
 
 # --- Final Status ---
 echo

@@ -1,0 +1,16 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: runtime-product-management-edit
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-017
+      type: runtime
+      c4_level: component
+      description: "The ProductController shall allow a productManager to edit a product entry at /products/edit."
+      priority: critical
+      tracesTo: "REQ-014"
+      runtime_validation:
+        url: "http://localhost:8001/products/edit"
+        expected_status: 200

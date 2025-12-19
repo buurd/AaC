@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: container-product-management-database
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-013
+      type: architectural
+      c4_level: container
+      description: "The Product Management System shall have a Database container."
+      priority: high
+      tracesTo: "REQ-010"
+      validation_policy: "policies/check_containers.rego"
+      model_validation:
+        parent: "Product Management System"
+        container: "PM Database"

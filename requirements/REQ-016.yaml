@@ -1,0 +1,16 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: runtime-product-management-create
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-016
+      type: runtime
+      c4_level: component
+      description: "The ProductController shall allow a productManager to create a product entry at /products/create."
+      priority: critical
+      tracesTo: "REQ-014"
+      runtime_validation:
+        url: "http://localhost:8001/products/create"
+        expected_status: 200
