@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: component-repository
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-009
+      type: architectural
+      c4_level: component
+      description: "The ProductController shall use a ProductRepository for data access."
+      priority: high
+      tracesTo: "REQ-006"
+      validation_policy: "policies/check_dependency.rego"
+      code_validation:
+        source_file: "webshop/src/main/java/com/example/webshop/ProductController.java"
+        dependency_class: "ProductRepository"
