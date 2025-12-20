@@ -38,16 +38,21 @@ public class ProductRepository {
         return null;
     }
 
-    public void create(Product product) throws SQLException {
-        String sql = "INSERT INTO products (type, name, description, price, unit) VALUES (?, ?, ?, ?, ?)";
+    public int create(Product product) throws SQLException {
+        String sql = "INSERT INTO products (type, name, description, price, unit) VALUES (?, ?, ?, ?, ?) RETURNING id";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, product.getType());
             stmt.setString(2, product.getName());
             stmt.setString(3, product.getDescription());
             stmt.setDouble(4, product.getPrice());
             stmt.setString(5, product.getUnit());
-            stmt.executeUpdate();
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
         }
+        throw new SQLException("Creating product failed, no ID obtained.");
     }
 
     public void update(Product product) throws SQLException {

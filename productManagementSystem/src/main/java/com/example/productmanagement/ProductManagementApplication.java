@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
+import java.util.concurrent.Executors;
 
 public class ProductManagementApplication {
     
@@ -34,10 +36,12 @@ public class ProductManagementApplication {
         ".btn-secondary { background-color: #6C757D; }" +
         ".btn-danger { background-color: #DC3545; }" +
         ".btn-success { background-color: #28A745; }" +
+        ".btn-warning { background-color: #FFC107; color: #212529; }" +
         "input[type='text'], input[type='number'] { padding: 8px; border: 1px solid #CED4DA; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }" +
         "label { display: block; font-weight: bold; margin-bottom: 5px; }";
 
     private static ProductRepository repository;
+    private static ProductService service;
 
     public static void main(String[] args) throws IOException, SQLException {
         // Database Setup
@@ -62,6 +66,7 @@ public class ProductManagementApplication {
         }
 
         repository = new ProductRepository(connection);
+        service = new ProductService(repository);
 
         int port = 8001;
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
@@ -71,17 +76,21 @@ public class ProductManagementApplication {
         server.createContext("/products/create", new ProductCreateHandler());
         server.createContext("/products/edit", new ProductEditHandler());
         server.createContext("/products/delete", new ProductDeleteHandler());
+        server.createContext("/products/sync", new ProductSyncHandler());
 
-        server.setExecutor(null);
+        // Use a thread pool
+        server.setExecutor(Executors.newCachedThreadPool());
         server.start();
         System.out.println("Product Management Server started on port " + port);
     }
 
     private static void sendResponse(HttpExchange t, String body) throws IOException {
         String html = "<!DOCTYPE html><html><head><style>" + CSS + "</style></head><body><div class='container'>" + body + "</div></body></html>";
-        t.sendResponseHeaders(200, html.getBytes().length);
+        byte[] bytes = html.getBytes(StandardCharsets.UTF_8);
+        t.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
+        t.sendResponseHeaders(200, bytes.length);
         OutputStream os = t.getResponseBody();
-        os.write(html.getBytes());
+        os.write(bytes);
         os.close();
     }
 
@@ -129,11 +138,13 @@ public class ProductManagementApplication {
                     sb.append("<td>").append(p.getId()).append("</td>");
                     sb.append("<td>").append(p.getType() != null ? p.getType() : "").append("</td>");
                     sb.append("<td>").append(p.getName()).append("</td>");
-                    sb.append("<td>").append(p.getPrice()).append("</td>");
+                    // Format price with 2 decimal places
+                    sb.append("<td>").append(String.format(Locale.US, "%.2f", p.getPrice())).append("</td>");
                     sb.append("<td>").append(p.getUnit() != null ? p.getUnit() : "").append("</td>");
                     sb.append("<td>").append(p.getDescription()).append("</td>");
                     sb.append("<td>");
                     sb.append("<a href='/products/edit?id=").append(p.getId()).append("' class='btn btn-secondary'>Edit</a>");
+                    sb.append("<a href='/products/sync?id=").append(p.getId()).append("' class='btn btn-warning'>Sync</a>");
                     sb.append("<a href='/products/delete?id=").append(p.getId()).append("' class='btn btn-danger'>Delete</a>");
                     sb.append("</td>");
                     sb.append("</tr>");
@@ -167,7 +178,7 @@ public class ProductManagementApplication {
                 }
 
                 try {
-                    repository.create(p);
+                    service.createProduct(p); // Use service
                     redirect(t, "/products");
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -196,11 +207,6 @@ public class ProductManagementApplication {
             Map<String, String> queryParams = parseFormData(query != null ? query : "");
             String idStr = queryParams.get("id");
             
-            if (idStr == null && "POST".equalsIgnoreCase(t.getRequestMethod())) {
-                 // Try to get ID from body if not in query (though usually edit posts to same URL)
-                 // Actually, let's just parse body first
-            }
-
             if ("POST".equalsIgnoreCase(t.getRequestMethod())) {
                 InputStream is = t.getRequestBody();
                 String formData = new String(is.readAllBytes(), StandardCharsets.UTF_8);
@@ -220,7 +226,7 @@ public class ProductManagementApplication {
                         p.setPrice(0.0);
                     }
 
-                    repository.update(p);
+                    service.updateProduct(p); // Use service
                     redirect(t, "/products");
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -269,7 +275,7 @@ public class ProductManagementApplication {
                 
                 try {
                     int id = Integer.parseInt(params.get("id"));
-                    repository.delete(id);
+                    service.deleteProduct(id); // Use service (though it doesn't sync delete yet)
                     redirect(t, "/products");
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -305,6 +311,29 @@ public class ProductManagementApplication {
                     e.printStackTrace();
                     sendResponse(t, "<h1>Error</h1><p>" + e.getMessage() + "</p>");
                 }
+            }
+        }
+    }
+
+    static class ProductSyncHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange t) throws IOException {
+            String query = t.getRequestURI().getQuery();
+            Map<String, String> queryParams = parseFormData(query != null ? query : "");
+            String idStr = queryParams.get("id");
+            
+            if (idStr == null) {
+                sendResponse(t, "<h1>Error</h1><p>No Product ID provided</p>");
+                return;
+            }
+
+            try {
+                int id = Integer.parseInt(idStr);
+                service.syncProduct(id);
+                redirect(t, "/products");
+            } catch (Exception e) {
+                e.printStackTrace();
+                sendResponse(t, "<h1>Error Syncing Product</h1><p>" + e.getMessage() + "</p>");
             }
         }
     }

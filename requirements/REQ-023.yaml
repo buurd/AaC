@@ -11,4 +11,5 @@ spec:
       description: "When a Product Manager confirms deletion, the product shall be removed from the database."
       priority: critical
       tracesTo: "REQ-018"
-      manual_validation: true
+      functional_validation:
+        test_file: "e2e-tests/cypress/e2e/product_crud.cy.js"

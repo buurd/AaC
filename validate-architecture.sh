@@ -214,7 +214,8 @@ sleep 15
 
 # Start Webshop container
 echo "Starting Webshop server in a Docker container..."
-WEBSHOP_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME -p 8000:8000 \
+# Named webshop-demo for PM to find it
+WEBSHOP_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name webshop-demo -p 8000:8000 \
     -v "$(pwd)/webshop/target:/app" \
     -e DB_URL=jdbc:postgresql://db_webshop:5432/postgres \
     -e DB_USER=postgres \
@@ -224,11 +225,12 @@ echo "Webshop container started with ID: $WEBSHOP_CONTAINER_ID"
 
 # Start Product Management container
 echo "Starting Product Management server in a Docker container..."
-PM_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME -p 8001:8001 \
+PM_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name pm-system -p 8001:8001 \
     -v "$(pwd)/productManagementSystem/target:/app" \
     -e DB_URL=jdbc:postgresql://db_pm:5432/postgres \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
+    -e WEBSHOP_API_URL=http://webshop-demo:8000/api/products/sync \
     eclipse-temurin:21-jre java -jar /app/productManagementSystem-1.0-SNAPSHOT-jar-with-dependencies.jar)
 echo "Product Management container started with ID: $PM_CONTAINER_ID"
 
@@ -239,12 +241,36 @@ sleep 5
 run_runtime_check "Runtime Validation (REQ-005)" "http://localhost:8000/" "200" "" "$WEBSHOP_CONTAINER_ID"
 run_runtime_check "Runtime Validation (REQ-007)" "http://localhost:8000/products" "200" "The Hitchhiker's Guide to the Galaxy" "$WEBSHOP_CONTAINER_ID"
 run_runtime_check "Runtime Validation (REQ-014)" "http://localhost:8001/" "200" "" "$PM_CONTAINER_ID"
-# Note: REQ-015 checks for "The Hitchhiker's Guide to the Galaxy" which is NOT in the PM DB (it has Hammer/Screwdriver)
-# I need to update REQ-015 to check for "Hammer" instead.
 run_runtime_check "Runtime Validation (REQ-015)" "http://localhost:8001/products" "200" "Hammer" "$PM_CONTAINER_ID"
 run_runtime_check "Runtime Validation (REQ-016)" "http://localhost:8001/products/create" "200" "" "$PM_CONTAINER_ID"
 run_runtime_check "Runtime Validation (REQ-017)" "http://localhost:8001/products/edit" "200" "" "$PM_CONTAINER_ID"
 run_runtime_check "Runtime Validation (REQ-018)" "http://localhost:8001/products/delete" "200" "" "$PM_CONTAINER_ID"
+
+# --- Functional Validation (Cypress) ---
+echo
+echo "--- Running: Functional Validation (Cypress) ---"
+echo "Running Cypress tests against http://pm-system:8001..."
+
+set +e
+# Run Cypress in a container connected to the same network
+docker run --rm --network $NETWORK_NAME \
+    -v "$(pwd)/e2e-tests:/e2e" \
+    -w /e2e \
+    cypress/included:13.6.6 \
+    --browser chrome
+CYPRESS_EXIT_CODE=$?
+set -e
+
+if [ $CYPRESS_EXIT_CODE -ne 0 ]; then
+    echo "🔴 Functional Validation Failed: Cypress tests failed."
+    echo "--- Webshop Logs ---"
+    docker logs "$WEBSHOP_CONTAINER_ID" | tail -n 200
+    echo "--- PM System Logs ---"
+    docker logs "$PM_CONTAINER_ID" | tail -n 200
+    exit 1
+else
+    echo "✅ Functional Validation Passed."
+fi
 
 # --- Final Status ---
 echo

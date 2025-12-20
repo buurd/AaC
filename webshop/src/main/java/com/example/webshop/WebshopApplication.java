@@ -9,12 +9,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.concurrent.Executors;
 
 public class WebshopApplication {
 
     public static void main(String[] args) throws IOException, SQLException {
         // --- Database Setup ---
-        // The validation script will provide the DB_URL as an environment variable
         String dbUrl = System.getenv().getOrDefault("DB_URL", "jdbc:postgresql://localhost:5432/postgres");
         String dbUser = System.getenv().getOrDefault("DB_USER", "postgres");
         String dbPassword = System.getenv().getOrDefault("DB_PASSWORD", "postgres");
@@ -44,14 +44,16 @@ public class WebshopApplication {
         
         server.createContext("/", (exchange) -> {
             String response = "Welcome to the Webshop!";
-            exchange.sendResponseHeaders(200, response.length());
+            exchange.sendResponseHeaders(200, response.getBytes().length);
             exchange.getResponseBody().write(response.getBytes());
             exchange.close();
         });
         
         server.createContext("/products", new ProductController(productRepository));
+        server.createContext("/api/products/sync", new ProductSyncController(productRepository));
         
-        server.setExecutor(null);
+        // Use a thread pool to handle multiple requests concurrently
+        server.setExecutor(Executors.newCachedThreadPool());
         server.start();
         System.out.println("Server started on port " + port);
     }

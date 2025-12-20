@@ -1,0 +1,19 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: pm-sync-integration
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-025
+      type: functional
+      c4_level: component
+      description: "The Product Management System shall send product updates to the Webshop API when a product is created or updated."
+      priority: high
+      tracesTo: "REQ-010"
+      # We will validate this by checking if the code uses an HTTP client
+      validation_policy: "policies/check_dependency.rego"
+      code_validation:
+        file_path: "productManagementSystem/src/main/java/com/example/productmanagement/ProductService.java"
+        imports:
+          - "java.net.http.HttpClient"

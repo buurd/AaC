@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: pm-sync-delete
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-026
+      type: functional
+      c4_level: component
+      description: "The Product Management System shall send product deletion events to the Webshop when a product is deleted."
+      priority: high
+      tracesTo: "REQ-025"
+      functional_validation:
+        test_file: "e2e-tests/cypress/e2e/product_sync.cy.js"

@@ -55,6 +55,7 @@ docker run -d --rm --network webshop-net --name pm-demo \
     -e DB_URL=jdbc:postgresql://db-pm:5432/postgres \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
+    -e WEBSHOP_API_URL=http://webshop-demo:8000/api/products/sync \
     eclipse-temurin:21-jre java -jar /app/productManagementSystem-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 echo

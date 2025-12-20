@@ -1,0 +1,16 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: webshop-sync-api
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-024
+      type: architectural
+      c4_level: component
+      description: "The Webshop shall expose a REST API endpoint /api/products/sync to receive product updates."
+      priority: high
+      tracesTo: "REQ-003"
+      validation_policy: "policies/check_implementation.rego"
+      implementation_validation:
+        file_path: "webshop/src/main/java/com/example/webshop/ProductSyncController.java"

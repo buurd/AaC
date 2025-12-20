@@ -11,5 +11,5 @@ spec:
       description: "When a Product Manager submits the create product form, a new product shall be persisted in the database and visible in the product list."
       priority: critical
       tracesTo: "REQ-016"
-      # Validation would require a stateful test (POST then GET)
-      manual_validation: true
+      functional_validation:
+        test_file: "e2e-tests/cypress/e2e/product_crud.cy.js"

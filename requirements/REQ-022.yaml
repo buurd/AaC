@@ -11,4 +11,5 @@ spec:
       description: "When a Product Manager submits the edit product form, the product details shall be updated in the database."
       priority: critical
       tracesTo: "REQ-017"
-      manual_validation: true
+      functional_validation:
+        test_file: "e2e-tests/cypress/e2e/product_crud.cy.js"

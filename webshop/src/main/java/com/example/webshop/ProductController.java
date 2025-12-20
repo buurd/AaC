@@ -5,8 +5,10 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class ProductController implements HttpHandler {
@@ -31,22 +33,31 @@ public class ProductController implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try {
+            System.out.println("ProductController: Fetching products...");
+            System.out.flush();
             List<Product> products = repository.findAll();
+            System.out.println("ProductController: Found " + products.size() + " products.");
+            System.out.flush();
             
             StringBuilder html = new StringBuilder();
             html.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body>");
             html.append("<div class='container'>");
             html.append("<h1>Webshop Products</h1>");
             html.append("<table>");
-            html.append("<thead><tr><th>ID</th><th>Name</th><th>Description</th><th>Price</th><th>Unit</th></tr></thead>");
+            html.append("<thead><tr><th>ID</th><th>PM_ID</th><th>Name</th><th>Description</th><th>Price</th><th>Unit</th></tr></thead>");
             html.append("<tbody>");
             
             for (Product p : products) {
+                String priceStr = String.format(Locale.US, "%.2f", p.getPrice());
+                System.out.println("Rendering Product: " + p.getName() + ", Price: " + priceStr);
+                System.out.flush();
+                
                 html.append("<tr>");
                 html.append("<td>").append(p.getId()).append("</td>");
+                html.append("<td>").append(p.getPmId() != null ? p.getPmId() : "N/A").append("</td>");
                 html.append("<td>").append(p.getName()).append("</td>");
                 html.append("<td>").append(p.getDescription()).append("</td>");
-                html.append("<td>").append(String.format("%.2f", p.getPrice())).append("</td>");
+                html.append("<td>").append(priceStr).append("</td>");
                 html.append("<td>").append(p.getUnit()).append("</td>");
                 html.append("</tr>");
             }
@@ -55,9 +66,12 @@ public class ProductController implements HttpHandler {
             html.append("</div></body></html>");
             
             String response = html.toString();
-            exchange.sendResponseHeaders(200, response.getBytes().length);
+            byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+            
+            exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
+            exchange.sendResponseHeaders(200, bytes.length);
             try (OutputStream os = exchange.getResponseBody()) {
-                os.write(response.getBytes());
+                os.write(bytes);
             }
         } catch (SQLException e) {
             e.printStackTrace();
