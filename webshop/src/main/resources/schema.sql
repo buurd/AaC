@@ -5,10 +5,11 @@ CREATE TABLE IF NOT EXISTS products (
     name VARCHAR(255),
     description TEXT,
     price NUMERIC(10, 2),
-    unit VARCHAR(50)
+    unit VARCHAR(50),
+    stock INTEGER DEFAULT 0
 );
 
 -- Insert some sample data (local only, no pm_id)
-INSERT INTO products (type, name, description, price, unit)
-SELECT 'Book', 'The Hitchhiker''s Guide to the Galaxy', 'A sci-fi comedy classic.', 12.50, 'pcs'
+INSERT INTO products (type, name, description, price, unit, stock)
+SELECT 'Book', 'The Hitchhiker''s Guide to the Galaxy', 'A sci-fi comedy classic.', 12.50, 'pcs', 10
 WHERE NOT EXISTS (SELECT 1 FROM products);

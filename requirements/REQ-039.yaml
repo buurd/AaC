@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: warehouse-return-delivery
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-039
+      type: functional
+      c4_level: component
+      description: "The Warehouse Service shall allow returning a Delivery to the sender (deleting it)."
+      priority: high
+      tracesTo: "REQ-036"
+      functional_validation:
+        test_file: "e2e-tests/cypress/e2e/warehouse_delivery.cy.js"

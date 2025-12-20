@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: navigation-links
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-040
+      type: functional
+      c4_level: component
+      description: "The root page of each service shall provide navigation links to its main functionalities."
+      priority: medium
+      tracesTo: "REQ-020"
+      functional_validation:
+        test_file: "e2e-tests/cypress/e2e/navigation.cy.js"

@@ -8,10 +8,11 @@ public class Product {
     private String description;
     private double price;
     private String unit;
+    private int stock;
 
     public Product() {}
 
-    public Product(int id, Integer pmId, String type, String name, String description, double price, String unit) {
+    public Product(int id, Integer pmId, String type, String name, String description, double price, String unit, int stock) {
         this.id = id;
         this.pmId = pmId;
         this.type = type;
@@ -19,6 +20,7 @@ public class Product {
         this.description = description;
         this.price = price;
         this.unit = unit;
+        this.stock = stock;
     }
 
     // Getters and Setters
@@ -42,9 +44,12 @@ public class Product {
 
     public String getUnit() { return unit; }
     public void setUnit(String unit) { this.unit = unit; }
+
+    public int getStock() { return stock; }
+    public void setStock(int stock) { this.stock = stock; }
     
     @Override
     public String toString() {
-        return String.format("Product{id=%d, pmId=%d, name='%s', price=%.2f %s}", id, pmId, name, price, unit);
+        return String.format("Product{id=%d, pmId=%d, name='%s', price=%.2f %s, stock=%d}", id, pmId, name, price, unit, stock);
     }
 }

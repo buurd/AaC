@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: warehouse-domain-delivery
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-036
+      type: architectural
+      c4_level: code
+      description: "The Warehouse Service shall model Deliveries containing Product Individuals with serial numbers and state."
+      priority: high
+      tracesTo: "REQ-027"
+      validation_policy: "policies/check_class_structure.rego"
+      code_validation:
+        file_path: "warehouse/src/main/java/com/example/warehouse/Delivery.java"
+        class_name: "Delivery"

@@ -14,26 +14,20 @@ public class ProductRepository {
 
     public List<Product> findAll() throws SQLException {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT id, pm_id, type, name, description, price, unit FROM products ORDER BY id";
+        String sql = "SELECT id, pm_id, type, name, description, price, unit, stock FROM products ORDER BY id";
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                int id = rs.getInt("id");
-                Integer pmId = (Integer) rs.getObject("pm_id");
-                String name = rs.getString("name");
-                double price = rs.getDouble("price");
-                
-                System.out.println("DB Read: ID=" + id + ", PM_ID=" + pmId + ", Name=" + name + ", Price=" + price);
-                
                 products.add(new Product(
-                    id,
-                    pmId,
+                    rs.getInt("id"),
+                    (Integer) rs.getObject("pm_id"),
                     rs.getString("type"),
-                    name,
+                    rs.getString("name"),
                     rs.getString("description"),
-                    price,
-                    rs.getString("unit")
+                    rs.getDouble("price"),
+                    rs.getString("unit"),
+                    rs.getInt("stock")
                 ));
             }
         }
@@ -47,8 +41,7 @@ public class ProductRepository {
             checkStmt.setInt(1, product.getPmId());
             try (ResultSet rs = checkStmt.executeQuery()) {
                 if (rs.next()) {
-                    // Update
-                    System.out.println("Updating product with pm_id: " + product.getPmId() + " to price: " + product.getPrice());
+                    // Update (preserve stock if not provided, but here we assume product sync doesn't touch stock)
                     String updateSql = "UPDATE products SET type=?, name=?, description=?, price=?, unit=? WHERE pm_id=?";
                     try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
                         updateStmt.setString(1, product.getType());
@@ -57,13 +50,11 @@ public class ProductRepository {
                         updateStmt.setDouble(4, product.getPrice());
                         updateStmt.setString(5, product.getUnit());
                         updateStmt.setInt(6, product.getPmId());
-                        int rows = updateStmt.executeUpdate();
-                        System.out.println("Updated " + rows + " rows.");
+                        updateStmt.executeUpdate();
                     }
                 } else {
-                    // Insert
-                    System.out.println("Inserting product with pm_id: " + product.getPmId() + " with price: " + product.getPrice());
-                    String insertSql = "INSERT INTO products (pm_id, type, name, description, price, unit) VALUES (?, ?, ?, ?, ?, ?)";
+                    // Insert (default stock 0)
+                    String insertSql = "INSERT INTO products (pm_id, type, name, description, price, unit, stock) VALUES (?, ?, ?, ?, ?, ?, 0)";
                     try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
                         insertStmt.setInt(1, product.getPmId());
                         insertStmt.setString(2, product.getType());
@@ -72,20 +63,26 @@ public class ProductRepository {
                         insertStmt.setDouble(5, product.getPrice());
                         insertStmt.setString(6, product.getUnit());
                         insertStmt.executeUpdate();
-                        System.out.println("Inserted product.");
                     }
                 }
             }
         }
     }
 
+    public void updateStock(int pmId, int stock) throws SQLException {
+        String sql = "UPDATE products SET stock = ? WHERE pm_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, stock);
+            stmt.setInt(2, pmId);
+            stmt.executeUpdate();
+        }
+    }
+
     public void deleteByPmId(int pmId) throws SQLException {
-        System.out.println("Deleting product with pm_id: " + pmId);
         String sql = "DELETE FROM products WHERE pm_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, pmId);
-            int rows = stmt.executeUpdate();
-            System.out.println("Deleted " + rows + " rows.");
+            stmt.executeUpdate();
         }
     }
 }

@@ -1,14 +1,14 @@
 apiVersion: policy/v1
 kind: RequirementSet
 metadata:
-  name: pm-sync-integration
+  name: pm-warehouse-sync
   version: "1.0"
 spec:
   requirements:
-    - id: REQ-025
+    - id: REQ-033
       type: functional
       c4_level: component
-      description: "The Product Management System shall send product updates to the Webshop API when a product is created or updated."
+      description: "The Product Management System shall send product updates to the Warehouse Service when a product is created or updated."
       priority: high
       tracesTo: "REQ-010"
       # Validated by code check AND functional test
@@ -18,4 +18,4 @@ spec:
         imports:
           - "java.net.http.HttpClient"
       functional_validation:
-        test_file: "e2e-tests/cypress/e2e/product_sync.cy.js"
+        test_file: "e2e-tests/cypress/e2e/warehouse_sync.cy.js"

@@ -1,0 +1,16 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: runtime-warehouse-webserver
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-031
+      type: runtime
+      c4_level: container
+      description: "The Warehouse Service WebServer shall be accessible via HTTP and return 200 OK on the root path."
+      priority: critical
+      tracesTo: "REQ-029"
+      runtime_validation:
+        url: "http://localhost:8002/"
+        expected_status: 200

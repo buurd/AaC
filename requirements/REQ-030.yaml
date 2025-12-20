@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: container-warehouse-database
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-030
+      type: architectural
+      c4_level: container
+      description: "The Warehouse Service shall have a Database container."
+      priority: high
+      tracesTo: "REQ-027"
+      validation_policy: "policies/check_containers.rego"
+      model_validation:
+        parent: "Warehouse Service"
+        container: "Warehouse Database"

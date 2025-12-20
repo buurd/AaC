@@ -1,4 +1,4 @@
-package com.example.webshop;
+package com.example.warehouse;
 
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;
@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Locale;
 
 public class ProductController implements HttpHandler {
 
@@ -25,9 +24,7 @@ public class ProductController implements HttpHandler {
         "table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }" +
         "th { background-color: #007BFF; color: #FFFFFF; padding: 12px; text-align: left; }" +
         "td { padding: 12px; border-bottom: 1px solid #DEE2E6; }" +
-        "tr:nth-child(even) { background-color: #F2F2F2; }" +
-        ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; }" +
-        ".btn-primary { background-color: #007BFF; }";
+        "tr:nth-child(even) { background-color: #F2F2F2; }";
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -37,22 +34,16 @@ public class ProductController implements HttpHandler {
             StringBuilder html = new StringBuilder();
             html.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body>");
             html.append("<div class='container'>");
-            html.append("<h1>Webshop Products</h1>");
+            html.append("<h1>Warehouse Products</h1>");
             html.append("<table>");
-            html.append("<thead><tr><th>ID</th><th>PM_ID</th><th>Name</th><th>Description</th><th>Price</th><th>Unit</th><th>Stock</th></tr></thead>");
+            html.append("<thead><tr><th>ID</th><th>PM_ID</th><th>Name</th></tr></thead>");
             html.append("<tbody>");
             
             for (Product p : products) {
-                String priceStr = String.format(Locale.US, "%.2f", p.getPrice());
-                
                 html.append("<tr>");
                 html.append("<td>").append(p.getId()).append("</td>");
                 html.append("<td>").append(p.getPmId() != null ? p.getPmId() : "N/A").append("</td>");
                 html.append("<td>").append(p.getName()).append("</td>");
-                html.append("<td>").append(p.getDescription()).append("</td>");
-                html.append("<td>").append(priceStr).append("</td>");
-                html.append("<td>").append(p.getUnit()).append("</td>");
-                html.append("<td>").append(p.getStock()).append("</td>");
                 html.append("</tr>");
             }
             

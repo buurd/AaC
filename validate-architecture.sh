@@ -21,6 +21,11 @@ cleanup() {
         docker stop $PM_CONTAINER_ID > /dev/null 2>&1 || true
         docker rm $PM_CONTAINER_ID > /dev/null 2>&1 || true
     fi
+    if [ -n "$WAREHOUSE_CONTAINER_ID" ]; then
+        echo "Stopping Warehouse container ($WAREHOUSE_CONTAINER_ID)..."
+        docker stop $WAREHOUSE_CONTAINER_ID > /dev/null 2>&1 || true
+        docker rm $WAREHOUSE_CONTAINER_ID > /dev/null 2>&1 || true
+    fi
     if [ -n "$DB_WEBSHOP_ID" ]; then
         echo "Stopping Webshop Database container ($DB_WEBSHOP_ID)..."
         docker stop $DB_WEBSHOP_ID > /dev/null 2>&1 || true
@@ -30,6 +35,11 @@ cleanup() {
         echo "Stopping PM Database container ($DB_PM_ID)..."
         docker stop $DB_PM_ID > /dev/null 2>&1 || true
         docker rm $DB_PM_ID > /dev/null 2>&1 || true
+    fi
+    if [ -n "$DB_WAREHOUSE_ID" ]; then
+        echo "Stopping Warehouse Database container ($DB_WAREHOUSE_ID)..."
+        docker stop $DB_WAREHOUSE_ID > /dev/null 2>&1 || true
+        docker rm $DB_WAREHOUSE_ID > /dev/null 2>&1 || true
     fi
     if [ -n "$NETWORK_NAME" ]; then
         echo "Removing Docker network ($NETWORK_NAME)..."
@@ -195,6 +205,9 @@ docker run --rm -v "$(pwd)/webshop:/usr/src/mymaven" -w /usr/src/mymaven maven:3
 echo "Compiling Product Management application..."
 docker run --rm -v "$(pwd)/productManagementSystem:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package > /dev/null
 
+echo "Compiling Warehouse Service..."
+docker run --rm -v "$(pwd)/warehouse:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package > /dev/null
+
 # Create a dedicated network for the containers
 NETWORK_NAME="webshop-net-$$"
 docker network create $NETWORK_NAME
@@ -208,6 +221,11 @@ echo "Webshop Database container started with ID: $DB_WEBSHOP_ID"
 echo "Starting PM Database container..."
 DB_PM_ID=$(docker run -d --network $NETWORK_NAME --name db_pm -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres postgres:14-alpine)
 echo "PM Database container started with ID: $DB_PM_ID"
+
+# Start Warehouse Database container
+echo "Starting Warehouse Database container..."
+DB_WAREHOUSE_ID=$(docker run -d --network $NETWORK_NAME --name db_warehouse -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres postgres:14-alpine)
+echo "Warehouse Database container started with ID: $DB_WAREHOUSE_ID"
 
 echo "Waiting for Databases to initialize (15s)..."
 sleep 15
@@ -231,8 +249,21 @@ PM_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name pm-system -p 8001
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
     -e WEBSHOP_API_URL=http://webshop-demo:8000/api/products/sync \
+    -e WAREHOUSE_API_URL=http://warehouse-demo:8002/api/products/sync \
     eclipse-temurin:21-jre java -jar /app/productManagementSystem-1.0-SNAPSHOT-jar-with-dependencies.jar)
 echo "Product Management container started with ID: $PM_CONTAINER_ID"
+
+# Start Warehouse container
+echo "Starting Warehouse Service in a Docker container..."
+# Named warehouse-demo for PM to find it
+WAREHOUSE_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name warehouse-demo -p 8002:8002 \
+    -v "$(pwd)/warehouse/target:/app" \
+    -e DB_URL=jdbc:postgresql://db_warehouse:5432/postgres \
+    -e DB_USER=postgres \
+    -e DB_PASSWORD=postgres \
+    -e WEBSHOP_STOCK_API_URL=http://webshop-demo:8000/api/stock/sync \
+    eclipse-temurin:21-jre java -jar /app/warehouse-1.0-SNAPSHOT-jar-with-dependencies.jar)
+echo "Warehouse container started with ID: $WAREHOUSE_CONTAINER_ID"
 
 echo "Waiting for services to initialize (5s)..."
 sleep 5
@@ -245,6 +276,8 @@ run_runtime_check "Runtime Validation (REQ-015)" "http://localhost:8001/products
 run_runtime_check "Runtime Validation (REQ-016)" "http://localhost:8001/products/create" "200" "" "$PM_CONTAINER_ID"
 run_runtime_check "Runtime Validation (REQ-017)" "http://localhost:8001/products/edit" "200" "" "$PM_CONTAINER_ID"
 run_runtime_check "Runtime Validation (REQ-018)" "http://localhost:8001/products/delete" "200" "" "$PM_CONTAINER_ID"
+run_runtime_check "Runtime Validation (REQ-031)" "http://localhost:8002/" "200" "Warehouse Service" "$WAREHOUSE_CONTAINER_ID"
+run_runtime_check "Runtime Validation (REQ-034)" "http://localhost:8002/products" "200" "Sample Product" "$WAREHOUSE_CONTAINER_ID"
 
 # --- Functional Validation (Cypress) ---
 echo
@@ -267,6 +300,8 @@ if [ $CYPRESS_EXIT_CODE -ne 0 ]; then
     docker logs "$WEBSHOP_CONTAINER_ID" | tail -n 200
     echo "--- PM System Logs ---"
     docker logs "$PM_CONTAINER_ID" | tail -n 200
+    echo "--- Warehouse Logs ---"
+    docker logs "$WAREHOUSE_CONTAINER_ID" | tail -n 200
     exit 1
 else
     echo "✅ Functional Validation Passed."

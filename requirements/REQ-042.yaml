@@ -1,0 +1,18 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: warehouse-stock-sync
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-042
+      type: functional
+      c4_level: component
+      description: "The Warehouse Service shall send stock updates to the Webshop when inventory changes (e.g., delivery received)."
+      priority: high
+      tracesTo: "REQ-027"
+      validation_policy: "policies/check_dependency.rego"
+      code_validation:
+        file_path: "warehouse/src/main/java/com/example/warehouse/StockService.java"
+        imports:
+          - "java.net.http.HttpClient"

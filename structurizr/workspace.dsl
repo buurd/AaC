@@ -6,6 +6,9 @@ workspace "My System" "My System Description" {
         productManager = person "Product Manager" "A manager of products" {
             tags "Person"
         }
+        warehouseStaff = person "Warehouse Staff" "Staff managing inventory." {
+            tags "Person"
+        }
 
         webshop = softwareSystem "Webshop" "The webshop system." {
             tags "Software System"
@@ -45,10 +48,41 @@ workspace "My System" "My System Description" {
             }
         }
 
+        warehouseService = softwareSystem "Warehouse Service" "The warehouse inventory system." {
+            tags "Software System"
+            warehouseWebServer = container "Warehouse WebServer" "The web server." {
+                tags "Container" "Web Server"
+                warehouseProductSyncController = component "ProductSyncController" "Handles product sync from PM." {
+                    tags "Component"
+                }
+                warehouseProductController = component "ProductController" "Displays product list." {
+                    tags "Component"
+                }
+                warehouseDeliveryController = component "DeliveryController" "Handles delivery management." {
+                    tags "Component"
+                }
+                warehouseStockService = component "StockService" "Handles stock sync to Webshop." {
+                    tags "Component" "Service"
+                }
+                warehouseProductRepository = component "ProductRepository" "Handles data access for products." {
+                    tags "Component" "Repository"
+                }
+                warehouseDeliveryRepository = component "DeliveryRepository" "Handles data access for deliveries." {
+                    tags "Component" "Repository"
+                }
+            }
+            warehouseDatabase = container "Warehouse Database" "The database." {
+                tags "Container" "Database"
+            }
+        }
+
         // High-level relationship
         customer -> webshop "Uses"
         productManager -> productManagementSystem "Uses"
+        warehouseStaff -> warehouseService "Uses"
         productManagementSystem -> webshop "Sends product updates to"
+        productManagementSystem -> warehouseService "Sends product updates to"
+        warehouseService -> webshop "Sends stock updates to"
 
         // Container-level relationships for webshop
         customer -> webServer "Uses" {
@@ -69,6 +103,22 @@ workspace "My System" "My System Description" {
         pmWebServer -> webServer "Sends product updates to (HTTP)" {
             tags "Implementation"
         }
+        // PM System sends updates to Warehouse
+        pmWebServer -> warehouseWebServer "Sends product updates to (HTTP)" {
+            tags "Implementation"
+        }
+
+        // Container-level relationships for warehouseService
+        warehouseStaff -> warehouseWebServer "Uses" {
+            tags "Implementation"
+        }
+        warehouseWebServer -> warehouseDatabase "Reads from and writes to" {
+            tags "Implementation"
+        }
+        // Warehouse sends stock updates to Webshop
+        warehouseWebServer -> webServer "Sends stock updates to (HTTP)" {
+            tags "Implementation"
+        }
 
         // Component-level relationships for webshop
         productController -> productRepository "Uses"
@@ -79,7 +129,17 @@ workspace "My System" "My System Description" {
         pmProductController -> pmProductService "Uses"
         pmProductService -> pmProductRepository "Uses"
         pmProductService -> productSyncController "Sends updates to"
+        pmProductService -> warehouseProductSyncController "Sends updates to"
         pmProductRepository -> pmDatabase "Reads from and writes to"
+
+        // Component-level relationships for warehouseService
+        warehouseProductController -> warehouseProductRepository "Uses"
+        warehouseProductSyncController -> warehouseProductRepository "Uses"
+        warehouseDeliveryController -> warehouseDeliveryRepository "Uses"
+        warehouseDeliveryController -> warehouseStockService "Uses"
+        warehouseStockService -> productSyncController "Sends stock updates to"
+        warehouseProductRepository -> warehouseDatabase "Reads from and writes to"
+        warehouseDeliveryRepository -> warehouseDatabase "Reads from and writes to"
     }
 
     views {
@@ -104,6 +164,16 @@ workspace "My System" "My System Description" {
         }
 
         component pmWebServer "PM_Components" {
+            include *
+            autolayout tb
+        }
+
+        container warehouseService "Warehouse_Containers" {
+            include *
+            autolayout tb
+        }
+
+        component warehouseWebServer "Warehouse_Components" {
             include *
             autolayout tb
         }

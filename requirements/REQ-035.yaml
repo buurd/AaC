@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: warehouse-sync-delete
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-035
+      type: functional
+      c4_level: component
+      description: "The Product Management System shall send product deletion events to the Warehouse Service."
+      priority: high
+      tracesTo: "REQ-033"
+      functional_validation:
+        test_file: "e2e-tests/cypress/e2e/warehouse_sync.cy.js"

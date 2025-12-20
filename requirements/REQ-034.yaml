@@ -1,0 +1,16 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: warehouse-product-list
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-034
+      type: runtime
+      c4_level: component
+      description: "The Warehouse Service shall display a list of products (ID, Name) to the Warehouse Manager at /products."
+      priority: high
+      tracesTo: "REQ-027"
+      runtime_validation:
+        url: "http://localhost:8002/products"
+        expected_status: 200

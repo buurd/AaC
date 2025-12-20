@@ -1,0 +1,16 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: warehouse-sync-api
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-032
+      type: architectural
+      c4_level: component
+      description: "The Warehouse Service shall expose a REST API endpoint /api/products/sync to receive product updates (ID, Name)."
+      priority: high
+      tracesTo: "REQ-029"
+      validation_policy: "policies/check_implementation.rego"
+      implementation_validation:
+        file_path: "warehouse/src/main/java/com/example/warehouse/ProductSyncController.java"

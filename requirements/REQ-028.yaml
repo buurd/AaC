@@ -1,16 +1,16 @@
 apiVersion: policy/v1
 kind: RequirementSet
 metadata:
-  name: implementation-webshop
+  name: implementation-warehouse
   version: "1.0"
 spec:
   requirements:
-    - id: REQ-002
+    - id: REQ-028
       type: implementation
       c4_level: context
-      description: "The Webshop system shall be implemented as a Maven project."
+      description: "The Warehouse Service shall be implemented as a Maven project."
       priority: high
-      tracesTo: "REQ-001"
+      tracesTo: "REQ-027"
       validation_policy: "policies/check_implementation.rego"
       implementation_validation:
-        file_path: "webshop/pom.xml"
+        file_path: "warehouse/pom.xml"

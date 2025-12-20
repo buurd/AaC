@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: system-context-warehouse
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-027
+      type: architectural
+      c4_level: context
+      description: "The Warehouse Staff shall use the Warehouse Service."
+      priority: critical
+      validation_policy: "policies/check_relation.rego"
+      model_validation:
+        source: "Warehouse Staff"
+        destination: "Warehouse Service"
+        description_contains: "Uses"
