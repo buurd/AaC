@@ -7,20 +7,24 @@ clear
 cleanup() {
     echo
     echo "--- Stopping containers ---"
-    docker stop webshop-demo pm-demo warehouse-demo db-webshop db-pm db-warehouse > /dev/null 2>&1 || true
-    docker rm webshop-demo pm-demo warehouse-demo db-webshop db-pm db-warehouse > /dev/null 2>&1 || true
+    docker stop webshop-demo pm-demo warehouse-demo reverse-proxy db-webshop db-pm db-warehouse > /dev/null 2>&1 || true
+    docker rm webshop-demo pm-demo warehouse-demo reverse-proxy db-webshop db-pm db-warehouse > /dev/null 2>&1 || true
     docker network rm webshop-net > /dev/null 2>&1 || true
 }
 trap cleanup EXIT
 
+echo "--- Setting up Certificates ---"
+chmod +x infrastructure/setup-certs.sh
+./infrastructure/setup-certs.sh
+
 echo "--- Building Webshop ---"
-docker run --rm -v "$(pwd)/webshop:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
+docker run --rm -v "$(pwd)/webshop:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests > /dev/null
 
 echo "--- Building Product Management System ---"
-docker run --rm -v "$(pwd)/productManagementSystem:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
+docker run --rm -v "$(pwd)/productManagementSystem:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests > /dev/null
 
 echo "--- Building Warehouse Service ---"
-docker run --rm -v "$(pwd)/warehouse:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
+docker run --rm -v "$(pwd)/warehouse:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests > /dev/null
 
 echo "--- Starting Infrastructure ---"
 docker network create webshop-net
@@ -49,7 +53,6 @@ sleep 10
 # Start Webshop
 echo "--- Starting Webshop ---"
 docker run -d --rm --network webshop-net --name webshop-demo \
-    -p 8081:8000 \
     -v "$(pwd)/webshop/target:/app" \
     -e DB_URL=jdbc:postgresql://db-webshop:5432/postgres \
     -e DB_USER=postgres \
@@ -58,8 +61,7 @@ docker run -d --rm --network webshop-net --name webshop-demo \
 
 # Start Product Management System
 echo "--- Starting Product Management System ---"
-docker run -d --rm --network webshop-net --name pm-demo \
-    -p 8082:8001 \
+docker run -d --rm --network webshop-net --name pm-system \
     -v "$(pwd)/productManagementSystem/target:/app" \
     -e DB_URL=jdbc:postgresql://db-pm:5432/postgres \
     -e DB_USER=postgres \
@@ -71,7 +73,6 @@ docker run -d --rm --network webshop-net --name pm-demo \
 # Start Warehouse Service
 echo "--- Starting Warehouse Service ---"
 docker run -d --rm --network webshop-net --name warehouse-demo \
-    -p 8083:8002 \
     -v "$(pwd)/warehouse/target:/app" \
     -e DB_URL=jdbc:postgresql://db-warehouse:5432/postgres \
     -e DB_USER=postgres \
@@ -79,17 +80,24 @@ docker run -d --rm --network webshop-net --name warehouse-demo \
     -e WEBSHOP_STOCK_API_URL=http://webshop-demo:8000/api/stock/sync \
     eclipse-temurin:21-jre java -jar /app/warehouse-1.0-SNAPSHOT-jar-with-dependencies.jar
 
+# Start Reverse Proxy
+echo "--- Starting Reverse Proxy (Nginx) ---"
+docker run -d --rm --network webshop-net --name reverse-proxy \
+    -p 8443:8443 -p 8444:8444 -p 8445:8445 \
+    -v "$(pwd)/infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro" \
+    -v "$(pwd)/infrastructure/nginx/certs:/etc/nginx/certs:ro" \
+    nginx:alpine
+
 echo
-echo "✅ Webshop is running at:            http://localhost:8081"
-echo "✅ Webshop Product list:             http://localhost:8081/products"
-echo "✅ Product Management is running at: http://localhost:8082"
-echo "✅ PM Product list:                  http://localhost:8082/products"
-echo "✅ Warehouse Service is running at:  http://localhost:8083"
+echo "✅ Webshop is running at:            https://localhost:8443"
+echo "✅ Product Management is running at: https://localhost:8444"
+echo "✅ Warehouse Service is running at:  https://localhost:8445"
 echo
 echo "Press Ctrl+C to stop the servers."
 
 # Follow logs from all containers
 docker logs -f webshop-demo &
-docker logs -f pm-demo &
+docker logs -f pm-system &
 docker logs -f warehouse-demo &
+docker logs -f reverse-proxy &
 wait

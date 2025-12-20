@@ -1,10 +1,10 @@
 describe('Warehouse Delivery Management', () => {
-  const warehouseUrl = 'http://warehouse-demo:8002';
+  const warehouseUrl = 'https://reverse-proxy:8445';
   const senderName = 'Supplier A';
   const serialNumber = 'SN123';
 
   it('should create delivery, add items, and return delivery', () => {
-    // 1. Visit Warehouse
+    // 1. Visit Warehouse (HTTPS)
     cy.visit(warehouseUrl);
     cy.contains('Manage Deliveries').click();
     

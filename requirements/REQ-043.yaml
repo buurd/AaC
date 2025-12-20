@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: security-https
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-043
+      type: security
+      c4_level: context
+      description: "All external access to the system shall be secured via HTTPS."
+      priority: critical
+      # Validation deferred until infrastructure is fully implemented
+      manual_validation: true

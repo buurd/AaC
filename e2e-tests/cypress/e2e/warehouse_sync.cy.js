@@ -1,7 +1,7 @@
 describe('Warehouse Synchronization', () => {
   const productName = 'Warehouse Sync Product';
   const productUpdatedName = 'Warehouse Sync Product Updated';
-  const warehouseUrl = 'http://warehouse-demo:8002/products';
+  const warehouseUrl = 'https://reverse-proxy:8445/products';
 
   // Helper function to poll the Warehouse until content appears
   const verifyWarehouseContent = (content, attempts = 0) => {
@@ -34,7 +34,7 @@ describe('Warehouse Synchronization', () => {
   };
 
   it('should sync create, update, and delete to warehouse', () => {
-    // 1. Create Product in PM
+    // 1. Create Product in PM (BaseUrl is PM HTTPS)
     cy.visit('/products');
     cy.contains('Create New Product').click();
     

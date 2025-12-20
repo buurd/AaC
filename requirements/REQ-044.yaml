@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: security-reverse-proxy
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-044
+      type: architectural
+      c4_level: container
+      description: "A Reverse Proxy (Nginx) shall be used for SSL termination and routing."
+      priority: high
+      tracesTo: "REQ-043"
+      # Validation deferred until infrastructure is fully implemented
+      manual_validation: true

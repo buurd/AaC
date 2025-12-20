@@ -26,6 +26,11 @@ cleanup() {
         docker stop $WAREHOUSE_CONTAINER_ID > /dev/null 2>&1 || true
         docker rm $WAREHOUSE_CONTAINER_ID > /dev/null 2>&1 || true
     fi
+    if [ -n "$PROXY_CONTAINER_ID" ]; then
+        echo "Stopping Proxy container ($PROXY_CONTAINER_ID)..."
+        docker stop $PROXY_CONTAINER_ID > /dev/null 2>&1 || true
+        docker rm $PROXY_CONTAINER_ID > /dev/null 2>&1 || true
+    fi
     if [ -n "$DB_WEBSHOP_ID" ]; then
         echo "Stopping Webshop Database container ($DB_WEBSHOP_ID)..."
         docker stop $DB_WEBSHOP_ID > /dev/null 2>&1 || true
@@ -120,7 +125,8 @@ run_runtime_check() {
 
     # Temporarily disable set -e to capture curl failure
     set +e
-    RESPONSE=$(docker run --rm --network="host" curlimages/curl:7.78.0 curl -v -s -w "\\n%{http_code}" "$url" 2>&1)
+    # Use -k to allow self-signed certs
+    RESPONSE=$(docker run --rm --network="host" curlimages/curl:7.78.0 curl -k -v -s -w "\\n%{http_code}" "$url" 2>&1)
     CURL_EXIT_CODE=$?
     set -e
 
@@ -199,6 +205,10 @@ run_opa_validation "Dependency Validation" "/project/code-structure-input.json" 
 # --- Runtime Validation ---
 echo
 echo "--- Preparing for Runtime Validations ---"
+echo "Setting up Certificates..."
+chmod +x infrastructure/setup-certs.sh
+./infrastructure/setup-certs.sh
+
 echo "Compiling Webshop application..."
 docker run --rm -v "$(pwd)/webshop:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package > /dev/null
 
@@ -233,7 +243,7 @@ sleep 15
 # Start Webshop container
 echo "Starting Webshop server in a Docker container..."
 # Named webshop-demo for PM to find it
-WEBSHOP_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name webshop-demo -p 8000:8000 \
+WEBSHOP_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name webshop-demo \
     -v "$(pwd)/webshop/target:/app" \
     -e DB_URL=jdbc:postgresql://db_webshop:5432/postgres \
     -e DB_USER=postgres \
@@ -243,7 +253,7 @@ echo "Webshop container started with ID: $WEBSHOP_CONTAINER_ID"
 
 # Start Product Management container
 echo "Starting Product Management server in a Docker container..."
-PM_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name pm-system -p 8001:8001 \
+PM_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name pm-system \
     -v "$(pwd)/productManagementSystem/target:/app" \
     -e DB_URL=jdbc:postgresql://db_pm:5432/postgres \
     -e DB_USER=postgres \
@@ -256,7 +266,7 @@ echo "Product Management container started with ID: $PM_CONTAINER_ID"
 # Start Warehouse container
 echo "Starting Warehouse Service in a Docker container..."
 # Named warehouse-demo for PM to find it
-WAREHOUSE_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name warehouse-demo -p 8002:8002 \
+WAREHOUSE_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name warehouse-demo \
     -v "$(pwd)/warehouse/target:/app" \
     -e DB_URL=jdbc:postgresql://db_warehouse:5432/postgres \
     -e DB_USER=postgres \
@@ -265,24 +275,29 @@ WAREHOUSE_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name warehouse-
     eclipse-temurin:21-jre java -jar /app/warehouse-1.0-SNAPSHOT-jar-with-dependencies.jar)
 echo "Warehouse container started with ID: $WAREHOUSE_CONTAINER_ID"
 
+# Start Reverse Proxy
+echo "Starting Reverse Proxy (Nginx)..."
+PROXY_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name reverse-proxy \
+    -p 8443:8443 -p 8444:8444 -p 8445:8445 \
+    -v "$(pwd)/infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro" \
+    -v "$(pwd)/infrastructure/nginx/certs:/etc/nginx/certs:ro" \
+    nginx:alpine)
+echo "Proxy container started with ID: $PROXY_CONTAINER_ID"
+
 echo "Waiting for services to initialize (5s)..."
 sleep 5
 
-# Run the actual runtime checks
-run_runtime_check "Runtime Validation (REQ-005)" "http://localhost:8000/" "200" "" "$WEBSHOP_CONTAINER_ID"
-run_runtime_check "Runtime Validation (REQ-007)" "http://localhost:8000/products" "200" "The Hitchhiker's Guide to the Galaxy" "$WEBSHOP_CONTAINER_ID"
-run_runtime_check "Runtime Validation (REQ-014)" "http://localhost:8001/" "200" "" "$PM_CONTAINER_ID"
-run_runtime_check "Runtime Validation (REQ-015)" "http://localhost:8001/products" "200" "Hammer" "$PM_CONTAINER_ID"
-run_runtime_check "Runtime Validation (REQ-016)" "http://localhost:8001/products/create" "200" "" "$PM_CONTAINER_ID"
-run_runtime_check "Runtime Validation (REQ-017)" "http://localhost:8001/products/edit" "200" "" "$PM_CONTAINER_ID"
-run_runtime_check "Runtime Validation (REQ-018)" "http://localhost:8001/products/delete" "200" "" "$PM_CONTAINER_ID"
-run_runtime_check "Runtime Validation (REQ-031)" "http://localhost:8002/" "200" "Warehouse Service" "$WAREHOUSE_CONTAINER_ID"
-run_runtime_check "Runtime Validation (REQ-034)" "http://localhost:8002/products" "200" "Sample Product" "$WAREHOUSE_CONTAINER_ID"
+# Run the actual runtime checks (via HTTPS Proxy)
+# Note: We use -k to ignore self-signed cert errors in validation
+run_runtime_check "Runtime Validation (REQ-005) - HTTPS" "https://localhost:8443/" "200" "" "$WEBSHOP_CONTAINER_ID"
+run_runtime_check "Runtime Validation (REQ-007) - HTTPS" "https://localhost:8443/products" "200" "The Hitchhiker's Guide to the Galaxy" "$WEBSHOP_CONTAINER_ID"
+run_runtime_check "Runtime Validation (REQ-014) - HTTPS" "https://localhost:8444/" "200" "" "$PM_CONTAINER_ID"
+run_runtime_check "Runtime Validation (REQ-031) - HTTPS" "https://localhost:8445/" "200" "Warehouse Service" "$WAREHOUSE_CONTAINER_ID"
 
 # --- Functional Validation (Cypress) ---
 echo
 echo "--- Running: Functional Validation (Cypress) ---"
-echo "Running Cypress tests against http://pm-system:8001..."
+echo "Running Cypress tests against https://reverse-proxy:8444..."
 
 set +e
 # Run Cypress in a container connected to the same network

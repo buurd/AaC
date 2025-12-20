@@ -1,7 +1,7 @@
 describe('Navigation Links', () => {
-  const webshopUrl = 'http://webshop-demo:8000';
-  const pmUrl = 'http://pm-system:8001';
-  const warehouseUrl = 'http://warehouse-demo:8002';
+  const webshopUrl = 'https://reverse-proxy:8443';
+  const pmUrl = 'https://reverse-proxy:8444';
+  const warehouseUrl = 'https://reverse-proxy:8445';
 
   it('should navigate correctly in Webshop', () => {
     cy.visit(webshopUrl);
