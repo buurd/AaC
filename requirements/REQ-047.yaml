@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: webshop-shopping-cart
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-047
+      type: functional
+      c4_level: component
+      description: "The Webshop shall provide a client-side shopping cart feature, allowing users to add, view, and remove products, respecting available stock."
+      priority: high
+      tracesTo: "REQ-001"
+      functional_validation:
+        test_file: "e2e-tests/cypress/e2e/shopping_cart.cy.js"

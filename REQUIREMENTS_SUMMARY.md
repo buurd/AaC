@@ -1,0 +1,83 @@
+# Requirements Summary
+
+This document presents the system requirements in a narrative format, grouping them by user journey and architectural concern.
+
+## 1. User Journeys
+
+### The Webshop Experience (Customer)
+The primary goal is to provide a seamless shopping experience for customers.
+*   **Access**: The Customer uses the Webshop system (**REQ-001**).
+*   **Navigation**: The root page provides clear navigation links to main functionalities (**REQ-040**).
+*   **Browsing**: Customers can view a list of available products (**REQ-007**).
+*   **Stock Visibility**: The current stock quantity is displayed for each product (**REQ-041**).
+*   **Shopping Cart**: Customers can add products to a client-side shopping cart, view their cart, and remove items (**REQ-047**).
+
+### Product Management (Product Manager)
+Product Managers need tools to maintain the product catalog.
+*   **Access**: The Product Manager uses the Product Management System (**REQ-010**).
+*   **Product List**: Managers can view all products in the system (**REQ-015**).
+*   **CRUD Operations**: The system provides a UI to Create (**REQ-016**, **REQ-021**), Edit (**REQ-017**, **REQ-022**), and Delete (**REQ-018**, **REQ-023**) products.
+
+### Warehouse Operations (Warehouse Staff)
+Warehouse Staff manage the physical inventory.
+*   **Access**: The Warehouse Staff uses the Warehouse Service (**REQ-027**).
+*   **Inventory View**: Staff can view the list of products known to the warehouse (**REQ-034**).
+*   **Delivery Management**: The system supports the concept of Deliveries containing Product Individuals (**REQ-036**). Staff can create deliveries (**REQ-037**), add items to them (**REQ-038**), and return deliveries (**REQ-039**).
+
+---
+
+## 2. System Integration
+
+To ensure data consistency across the landscape, the systems synchronize data automatically.
+
+### Product Synchronization (PM -> Webshop & Warehouse)
+When a Product Manager changes the catalog, updates are propagated.
+*   **Trigger**: The Product Management System sends updates when a product is created or updated (**REQ-025**) and deletions when a product is removed (**REQ-026**).
+*   **Destinations**: Updates are sent to the Webshop (**REQ-024**) and the Warehouse Service (**REQ-033**, **REQ-035**).
+*   **Mechanism**: The Warehouse exposes a sync API to receive these updates (**REQ-032**).
+
+### Stock Synchronization (Warehouse -> Webshop)
+When inventory changes in the warehouse, the webshop is updated.
+*   **Trigger**: The Warehouse Service sends stock updates when inventory changes (e.g., delivery received) (**REQ-042**).
+*   **Destination**: The Webshop receives these updates to display accurate stock to customers.
+
+---
+
+## 3. Security & Infrastructure
+
+The system is built with security as a core concern.
+
+*   **Secure Access**: All external access must be secured via HTTPS (**REQ-043**).
+*   **Gateway**: A Reverse Proxy (Nginx) handles SSL termination and routing (**REQ-044**).
+*   **Identity Management**: Keycloak is used as the centralized IAM provider (**REQ-045**).
+*   **Authentication**: All services delegate authentication to Keycloak and verify JWT tokens for access (**REQ-046**).
+
+---
+
+## 4. Technical Architecture
+
+The system follows a microservices-inspired architecture using the C4 model.
+
+### Webshop System
+*   **Implementation**: Maven project (**REQ-002**).
+*   **Containers**: Web Server (**REQ-003**) and Database (**REQ-004**).
+*   **Runtime**: Accessible via HTTP (**REQ-005**).
+*   **Components**: `ProductController` (**REQ-006**) using `ProductRepository` (**REQ-009**).
+*   **Domain**: `Product` entity (**REQ-008**).
+
+### Product Management System
+*   **Implementation**: Maven project (**REQ-011**).
+*   **Containers**: Web Server (**REQ-012**) and Database (**REQ-013**).
+*   **Runtime**: Accessible via HTTP (**REQ-014**).
+*   **Domain**: `Product` entity (**REQ-019**).
+
+### Warehouse Service
+*   **Implementation**: Maven project (**REQ-028**).
+*   **Containers**: Web Server (**REQ-029**) and Database (**REQ-030**).
+*   **Runtime**: Accessible via HTTP (**REQ-031**).
+
+---
+
+## 5. Design Standards
+
+*   **Consistency**: All user interfaces must adhere to the Design Guidelines defined in `DESIGN_GUIDELINES.md` (**REQ-020**).

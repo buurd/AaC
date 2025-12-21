@@ -84,6 +84,7 @@ public class WebshopApplication {
         });
         
         server.createContext("/products", new ProductController(productRepository));
+        server.createContext("/cart", new ShoppingCartController());
         
         HttpContext productSyncContext = server.createContext("/api/products/sync", new ProductSyncController(productRepository));
         productSyncContext.getFilters().add(productSyncFilter);

@@ -31,6 +31,9 @@ workspace "My System" "My System Description" {
                 productController = component "ProductController" "Handles product listing." {
                     tags "Component"
                 }
+                shoppingCartController = component "ShoppingCartController" "Handles cart view." {
+                    tags "Component"
+                }
                 productSyncController = component "ProductSyncController" "Handles product synchronization API." {
                     tags "Component"
                 }
@@ -229,6 +232,7 @@ workspace "My System" "My System Description" {
 
         // Component-level relationships for webshop
         productController -> productRepository "Uses"
+        shoppingCartController -> productRepository "Uses"
         productSyncController -> productRepository "Uses"
         stockSyncController -> productRepository "Uses"
         productRepository -> database "Reads from and writes to"
@@ -301,7 +305,6 @@ workspace "My System" "My System Description" {
             webServer -> database "4. Updates database"
         }
 
-        // Changed scope to warehouseWebServer to allow component-level interactions
         dynamic warehouseWebServer "StockUpdateFlow" "Stock Update on Delivery" {
             warehouseStaff -> warehouseDeliveryController "1. Adds item to delivery"
             warehouseDeliveryController -> warehouseDeliveryRepository "2. Saves new item"

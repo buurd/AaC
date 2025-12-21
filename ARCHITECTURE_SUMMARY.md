@@ -29,32 +29,69 @@ The landscape is composed of independent containers to ensure loose coupling:
 *   **Warehouse WebServer**: A Java application (Java 21) handling inventory traffic.
 *   **Warehouse Database**: A dedicated PostgreSQL database for the Warehouse Service.
 
+**4. Infrastructure & Security**
+*   **API Gateway / Reverse Proxy**: An **Nginx** container handling SSL termination and routing.
+*   **Keycloak IAM**: A centralized Identity and Access Management server handling authentication and authorization.
+
 ### Inter-System Communication
 *   **Product Sync**: The **Product Management System** sends product updates (name, price, etc.) to both the **Webshop** and the **Warehouse Service**.
 *   **Stock Sync**: The **Warehouse Service** sends stock level updates to the **Webshop** when inventory changes.
+
+### Components (Level 3)
+Inside the Web Server containers, we have defined the following components:
+
+*   **Webshop WebServer**:
+    1.  **ProductController**: Handles product listing and "Add to Cart" functionality.
+    2.  **ShoppingCartController**: Manages the client-side shopping cart view.
+    3.  **ProductSyncController**: Handles product updates from PM.
+    4.  **StockSyncController**: Handles stock updates from Warehouse.
+    5.  **ProductRepository**: Manages data access to the Webshop Database.
+
+*   **PM WebServer**:
+    1.  **ProductController**: Handles CRUD operations.
+    2.  **ProductService**: Orchestrates business logic and synchronization to Webshop and Warehouse.
+    3.  **ProductRepository**: Manages data access to the PM Database.
+
+*   **Warehouse WebServer**:
+    1.  **ProductController**: Displays product list.
+    2.  **DeliveryController**: Handles delivery management.
+    3.  **ProductSyncController**: Handles product updates from PM.
+    4.  **StockService**: Sends stock updates to Webshop.
+    5.  **Repositories**: `ProductRepository` and `DeliveryRepository`.
+
+### Code (Level 4)
+All systems implement a shared domain concept:
+*   **Product**: A domain entity representing a product (ID, Name, Price, Description, Type, Unit).
 
 ---
 
 ## 2. Requirements & Traceability
 
-We define our requirements as code (YAML), allowing us to trace them from high-level goals down to specific code implementations. The system now covers over 40 requirements, including:
+We define our requirements as code (YAML), allowing us to trace them from high-level goals down to specific code implementations. The system now covers over 45 requirements, including:
 *   **Architectural**: Defining the structure of all three systems, their containers, and components.
-*   **Functional**: Specifying user-facing features (CRUD in PM, Delivery Management in Warehouse) and system integrations (Product and Stock Sync).
+*   **Functional**: Specifying user-facing features (CRUD in PM, Delivery Management in Warehouse, **Shopping Cart in Webshop**) and system integrations (Product and Stock Sync).
 *   **Runtime**: Ensuring services are live and accessible.
-*   **Security**: Mandating HTTPS and a Reverse Proxy.
+*   **Security**: Mandating HTTPS, Reverse Proxy, and IAM (Keycloak).
 *   **Design**: Enforcing a consistent UI via `DESIGN_GUIDELINES.md`.
 
 ---
 
 ## 3. Security Architecture
 
-We have adopted an **SSL Termination** strategy to secure external access.
+We have implemented a robust security architecture:
 
+### A. SSL Termination
 *   **Reverse Proxy**: An **Nginx** container acts as the single entry point for all external traffic.
-*   **HTTPS**: All traffic from users to the Reverse Proxy is encrypted via HTTPS.
-*   **Internal Traffic**: Traffic between the Reverse Proxy and the application containers, and between application containers, is currently unencrypted HTTP.
+*   **HTTPS**: All traffic from users to the Reverse Proxy is encrypted via HTTPS (using self-signed certs for dev).
+*   **Internal Traffic**: Traffic between the Reverse Proxy and the application containers is unencrypted HTTP within the trusted Docker network.
 
-**Security Note**: This architecture relies on a "Security Bubble" assumption. The internal Docker network is considered a trusted zone. If an attacker gains access to this internal network, they can eavesdrop on inter-service communication. Future improvements may include implementing mTLS for zero-trust internal communication.
+### B. Identity and Access Management (IAM)
+*   **Keycloak**: Used as the centralized IdP.
+*   **Authentication**: Users (Product Managers, Warehouse Staff) authenticate against Keycloak via the Reverse Proxy.
+*   **Authorization**: Services enforce **Role-Based Access Control (RBAC)** using JWT tokens.
+    *   **PM System**: Requires `product-manager` role.
+    *   **Warehouse**: Requires `warehouse-staff` role.
+*   **Service-to-Service Security**: Internal synchronization calls use **Client Credentials Flow** to obtain service account tokens, ensuring secure M2M communication.
 
 ---
 
@@ -64,16 +101,17 @@ We have built a `validate-architecture.sh` script that runs a series of automate
 
 ### A. Static Analysis (OPA & Rego)
 We use **Open Policy Agent (OPA)** to validate our architecture model and code against our requirements.
-*   **Structure**: Validates that all systems (Webshop, PM, Warehouse) exist with their respective containers.
+*   **Structure**: Validates that all systems exist with their respective containers.
 *   **Relations**: Ensures the model reflects the logical and physical dependencies.
 *   **Code**: Scans Java source code to ensure domain entities and repositories are implemented correctly.
+*   **Security**: Scans test code to ensure no insecure `http://` URLs are used.
 
 ### B. Runtime Verification
-We spin up the entire landscape (3 Apps, 3 DBs, 1 Proxy) in Docker to verify the system works as expected.
-*   **Infrastructure**: Starts all databases and the Nginx Reverse Proxy.
-*   **Deployment**: Starts `webshop-demo`, `pm-demo`, and `warehouse-demo` application containers.
-*   **Functional Check**: Verifies HTTP endpoints, CRUD UI availability, and data persistence.
-*   **E2E Testing**: Uses **Cypress** to verify complex user flows and cross-system synchronization, running tests against the secure HTTPS endpoints.
+We spin up the entire landscape (3 Apps, 3 DBs, 1 Proxy, 1 Keycloak) in Docker to verify the system works as expected.
+*   **Infrastructure**: Starts all databases, Keycloak, and Nginx.
+*   **Deployment**: Starts application containers with security configuration.
+*   **Functional Check**: Verifies HTTP endpoints and redirects (302 Found) for secured resources.
+*   **E2E Testing**: Uses **Cypress** to verify complex user flows and cross-system synchronization, running tests against the secure HTTPS endpoints and performing full login flows.
 
 ---
 
@@ -83,14 +121,19 @@ We use **Structurizr** to visualize our model. The DSL file (`workspace.dsl`) is
 
 *   **System Landscape View**: Shows the logical business context (Users -> Systems), hiding infrastructure details.
 *   **Infrastructure View**: Shows the physical routing (Users -> Reverse Proxy -> Containers).
-*   **Container & Component Views**: Show the internal structure of each service.
+*   **Security View**: Shows the IAM architecture (Users/Services -> Keycloak).
+*   **Dynamic Views**: Visualizes sequence diagrams for key flows:
+    *   **User Login Flow**: Interaction between User, App, and Keycloak.
+    *   **M2M Sync Flow**: Interaction between PM Service, Keycloak, and Webshop.
+    *   **Stock Update Flow**: Interaction between Warehouse, Keycloak, and Webshop.
 
 ---
 
 ## Conclusion
 
-We have successfully scaled our **"Architecture as Code"** approach to a multi-system landscape.
+We have successfully scaled our **"Architecture as Code"** approach to a secure, multi-system landscape.
 *   **Decoupling**: We explicitly modeled and implemented separate databases to ensure loose coupling.
 *   **Consistency**: We introduced Design Guidelines to maintain UI consistency across systems.
-*   **Security**: We added a Reverse Proxy for SSL termination, securing all external traffic.
+*   **Security**: We implemented a production-like security stack with Reverse Proxy and Keycloak IAM.
+*   **New Features**: Added a client-side shopping cart to the Webshop, enhancing user interaction.
 *   **Verification**: Our automated pipeline now validates the integrity of a distributed system, ensuring that the implementation never drifts from the architectural intent.

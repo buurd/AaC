@@ -27,7 +27,33 @@ public class ProductController implements HttpHandler {
         "td { padding: 12px; border-bottom: 1px solid #DEE2E6; }" +
         "tr:nth-child(even) { background-color: #F2F2F2; }" +
         ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; }" +
-        ".btn-primary { background-color: #007BFF; }";
+        ".btn-primary { background-color: #007BFF; }" +
+        ".btn-success { background-color: #28A745; }" +
+        ".btn-secondary { background-color: #6C757D; }";
+
+    private static final String JS = 
+        "<script>" +
+        "function addToCart(id, name, price, stock) {" +
+        "  let cart = JSON.parse(localStorage.getItem('cart')) || [];" +
+        "  let item = cart.find(i => i.id === id);" +
+        "  if (item) {" +
+        "    if (item.quantity < stock) {" +
+        "      item.quantity++;" +
+        "      alert('Added ' + name + ' to cart!');" +
+        "    } else {" +
+        "      alert('Cannot add more. Out of stock!');" +
+        "    }" +
+        "  } else {" +
+        "    if (stock > 0) {" +
+        "      cart.push({id: id, name: name, price: price, quantity: 1, stock: stock});" +
+        "      alert('Added ' + name + ' to cart!');" +
+        "    } else {" +
+        "      alert('Out of stock!');" +
+        "    }" +
+        "  }" +
+        "  localStorage.setItem('cart', JSON.stringify(cart));" +
+        "}" +
+        "</script>";
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -35,24 +61,31 @@ public class ProductController implements HttpHandler {
             List<Product> products = repository.findAll();
             
             StringBuilder html = new StringBuilder();
-            html.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body>");
+            html.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style>");
+            html.append(JS).append("</head><body>");
             html.append("<div class='container'>");
+            html.append("<div style='display:flex; justify-content:space-between; align-items:center;'>");
             html.append("<h1>Webshop Products</h1>");
+            html.append("<a href='/cart' class='btn btn-secondary'>View Cart</a>");
+            html.append("</div>");
             html.append("<table>");
-            html.append("<thead><tr><th>ID</th><th>PM_ID</th><th>Name</th><th>Description</th><th>Price</th><th>Unit</th><th>Stock</th></tr></thead>");
+            html.append("<thead><tr><th>Name</th><th>Description</th><th>Price</th><th>Stock</th><th>Action</th></tr></thead>");
             html.append("<tbody>");
             
             for (Product p : products) {
                 String priceStr = String.format(Locale.US, "%.2f", p.getPrice());
                 
                 html.append("<tr>");
-                html.append("<td>").append(p.getId()).append("</td>");
-                html.append("<td>").append(p.getPmId() != null ? p.getPmId() : "N/A").append("</td>");
                 html.append("<td>").append(p.getName()).append("</td>");
                 html.append("<td>").append(p.getDescription()).append("</td>");
-                html.append("<td>").append(priceStr).append("</td>");
-                html.append("<td>").append(p.getUnit()).append("</td>");
+                html.append("<td>").append(priceStr).append(" ").append(p.getUnit()).append("</td>");
                 html.append("<td>").append(p.getStock()).append("</td>");
+                html.append("<td>");
+                html.append("<button onclick=\"addToCart(").append(p.getId()).append(", '")
+                    .append(p.getName().replace("'", "\\'")).append("', ")
+                    .append(p.getPrice()).append(", ")
+                    .append(p.getStock()).append(")\" class='btn btn-success'>Add to Cart</button>");
+                html.append("</td>");
                 html.append("</tr>");
             }
             

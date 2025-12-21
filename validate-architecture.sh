@@ -289,6 +289,7 @@ echo "Webshop container started with ID: $WEBSHOP_CONTAINER_ID"
 
 # Start Product Management container
 echo "Starting Product Management server in a Docker container..."
+# Fixed name to pm-demo to match nginx.conf
 PM_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name pm-demo \
     -v "$(pwd)/productManagementSystem/target:/app" \
     -e DB_URL=jdbc:postgresql://db_pm:5432/postgres \
@@ -296,6 +297,11 @@ PM_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name pm-demo \
     -e DB_PASSWORD=postgres \
     -e WEBSHOP_API_URL=http://webshop-demo:8000/api/products/sync \
     -e WAREHOUSE_API_URL=http://warehouse-demo:8002/api/products/sync \
+    -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
+    -e ISSUER_URL=https://localhost:8446/realms/webshop-realm \
+    -e CLIENT_ID=pm-client \
+    -e CLIENT_SECRET=pm-secret \
+    -e TOKEN_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token \
     eclipse-temurin:21-jre java -jar /app/productManagementSystem-1.0-SNAPSHOT-jar-with-dependencies.jar)
 echo "Product Management container started with ID: $PM_CONTAINER_ID"
 
@@ -308,6 +314,11 @@ WAREHOUSE_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name warehouse-
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
     -e WEBSHOP_STOCK_API_URL=http://webshop-demo:8000/api/stock/sync \
+    -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
+    -e ISSUER_URL=https://localhost:8446/realms/webshop-realm \
+    -e CLIENT_ID=warehouse-client \
+    -e CLIENT_SECRET=warehouse-secret \
+    -e TOKEN_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token \
     eclipse-temurin:21-jre java -jar /app/warehouse-1.0-SNAPSHOT-jar-with-dependencies.jar)
 echo "Warehouse container started with ID: $WAREHOUSE_CONTAINER_ID"
 
@@ -320,8 +331,8 @@ PROXY_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name reverse-proxy 
     nginx:alpine)
 echo "Proxy container started with ID: $PROXY_CONTAINER_ID"
 
-echo "Waiting for services to initialize (20s)..."
-sleep 20
+echo "Waiting for services to initialize (40s)..."
+sleep 40
 
 # Check if proxy is running
 if ! docker ps -q --no-trunc | grep -q "$PROXY_CONTAINER_ID"; then
