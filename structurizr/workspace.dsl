@@ -193,6 +193,39 @@ workspace "My System" "My System Description" {
             tags "Implementation" "Direct"
         }
 
+        // --- Interaction Relationships (For Dynamic Views) ---
+        // These are needed to support the dynamic view steps but are hidden from static views
+        productManager -> pmWebServer "Interacts with" {
+            tags "Interaction"
+        }
+        pmWebServer -> productManager "Returns response to" {
+            tags "Interaction"
+        }
+        pmWebServer -> keycloakContainer "Validates token with" {
+            tags "Interaction"
+        }
+        keycloakContainer -> pmWebServer "Returns token to" {
+            tags "Interaction"
+        }
+        pmProductService -> keycloakContainer "Requests token from" {
+            tags "Interaction"
+        }
+        keycloakContainer -> pmProductService "Returns token to" {
+            tags "Interaction"
+        }
+        pmProductService -> webServer "Sends sync to" {
+            tags "Interaction"
+        }
+        webServer -> pmProductService "Returns response to" {
+            tags "Interaction"
+        }
+        warehouseStaff -> warehouseDeliveryController "Interacts with" {
+            tags "Interaction"
+        }
+        warehouseStockService -> keycloakContainer "Requests token from" {
+            tags "Interaction"
+        }
+
 
         // Component-level relationships for webshop
         productController -> productRepository "Uses"
@@ -224,6 +257,7 @@ workspace "My System" "My System Description" {
             exclude "element.tag==Infrastructure"
             exclude "relationship.tag==Infrastructure"
             exclude "relationship.tag==Security"
+            exclude "relationship.tag==Interaction"
             autolayout tb
         }
 
@@ -237,6 +271,7 @@ workspace "My System" "My System Description" {
             exclude "relationship.tag==Direct"
             exclude "relationship.tag==Logical"
             exclude "relationship.tag==Security"
+            exclude "relationship.tag==Interaction"
             autolayout tb
         }
 
@@ -249,11 +284,40 @@ workspace "My System" "My System Description" {
             autolayout tb
         }
 
+        // --- Dynamic Views (Sequence Diagrams) ---
+
+        dynamic productManagementSystem "UserLoginFlow" "User Login Flow" {
+            productManager -> pmWebServer "1. Requests /products"
+            productManager -> pmWebServer "2. Submits credentials to /login"
+            pmWebServer -> keycloakContainer "3. Validates credentials, gets token"
+            productManager -> pmWebServer "4. Requests /products (with cookie)"
+            pmWebServer -> pmDatabase "5. Fetches products"
+        }
+
+        dynamic pmWebServer "MachineToMachineSync" "M2M Sync Flow" {
+            pmProductService -> keycloakContainer "1. Requests token (Client Credentials)"
+            pmProductService -> webServer "2. Sends sync request with token"
+            webServer -> keycloakContainer "3. Verifies token"
+            webServer -> database "4. Updates database"
+        }
+
+        // Changed scope to warehouseWebServer to allow component-level interactions
+        dynamic warehouseWebServer "StockUpdateFlow" "Stock Update on Delivery" {
+            warehouseStaff -> warehouseDeliveryController "1. Adds item to delivery"
+            warehouseDeliveryController -> warehouseDeliveryRepository "2. Saves new item"
+            warehouseDeliveryController -> warehouseStockService "3. Triggers stock update"
+            warehouseStockService -> keycloakContainer "4. Requests token (Client Credentials)"
+            warehouseStockService -> stockSyncController "5. Sends stock update to Webshop"
+            stockSyncController -> productRepository "6. Updates stock in Webshop DB"
+            productRepository -> database "7. Writes to DB"
+        }
+
         container webshop "Webshop_Containers" "Webshop - Containers" {
             include *
             exclude "element.tag==Infrastructure"
             exclude "relationship.tag==Infrastructure"
             exclude "relationship.tag==Security"
+            exclude "relationship.tag==Interaction"
             autolayout tb
         }
 
@@ -267,6 +331,7 @@ workspace "My System" "My System Description" {
             exclude "element.tag==Infrastructure"
             exclude "relationship.tag==Infrastructure"
             exclude "relationship.tag==Security"
+            exclude "relationship.tag==Interaction"
             autolayout tb
         }
 
@@ -280,6 +345,7 @@ workspace "My System" "My System Description" {
             exclude "element.tag==Infrastructure"
             exclude "relationship.tag==Infrastructure"
             exclude "relationship.tag==Security"
+            exclude "relationship.tag==Interaction"
             autolayout tb
         }
 
