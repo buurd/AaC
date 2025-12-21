@@ -2,6 +2,20 @@ describe('Warehouse Synchronization', () => {
   const productName = 'Warehouse Sync Product';
   const productUpdatedName = 'Warehouse Sync Product Updated';
   const warehouseUrl = 'https://reverse-proxy:8445/products';
+  const warehouseLoginUrl = 'https://reverse-proxy:8445/login';
+
+  // Helper to login to Warehouse via request (to get cookie)
+  const loginToWarehouse = () => {
+    cy.request({
+      method: 'POST',
+      url: warehouseLoginUrl,
+      form: true,
+      body: {
+        username: 'staff',
+        password: 'password'
+      }
+    });
+  };
 
   // Helper function to poll the Warehouse until content appears
   const verifyWarehouseContent = (content, attempts = 0) => {
@@ -9,6 +23,7 @@ describe('Warehouse Synchronization', () => {
       throw new Error(`Timed out waiting for content: '${content}' in Warehouse`);
     }
     cy.wait(1000);
+    // Ensure we are logged in (cookie is preserved)
     cy.request({ url: warehouseUrl, failOnStatusCode: false }).then((res) => {
       if (res.status === 200 && res.body.includes(content)) {
         return; // Success
@@ -32,6 +47,13 @@ describe('Warehouse Synchronization', () => {
       verifyWarehouseContentMissing(content, attempts + 1);
     });
   };
+
+  beforeEach(() => {
+    // Login to PM (UI)
+    cy.login('manager', 'password');
+    // Login to Warehouse (API) for verification
+    loginToWarehouse();
+  });
 
   it('should sync create, update, and delete to warehouse', () => {
     // 1. Create Product in PM (BaseUrl is PM HTTPS)

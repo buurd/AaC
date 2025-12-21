@@ -1,6 +1,7 @@
 package com.example.productmanagement;
 
 import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -8,12 +9,17 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
+import java.net.URI;
 import java.net.URLDecoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +43,7 @@ public class ProductManagementApplication {
         ".btn-danger { background-color: #DC3545; }" +
         ".btn-success { background-color: #28A745; }" +
         ".btn-warning { background-color: #FFC107; color: #212529; }" +
-        "input[type='text'], input[type='number'] { padding: 8px; border: 1px solid #CED4DA; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }" +
+        "input[type='text'], input[type='number'], input[type='password'] { padding: 8px; border: 1px solid #CED4DA; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }" +
         "label { display: block; font-weight: bold; margin-bottom: 5px; }";
 
     private static ProductRepository repository;
@@ -48,6 +54,11 @@ public class ProductManagementApplication {
         String dbUrl = System.getenv().getOrDefault("DB_URL", "jdbc:postgresql://localhost:5432/postgres");
         String dbUser = System.getenv().getOrDefault("DB_USER", "postgres");
         String dbPassword = System.getenv().getOrDefault("DB_PASSWORD", "postgres");
+
+        // Security Setup
+        String jwksUrl = System.getenv().getOrDefault("JWKS_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs");
+        String issuer = System.getenv().getOrDefault("ISSUER_URL", "https://localhost:8446/realms/webshop-realm");
+        String tokenUrl = System.getenv().getOrDefault("TOKEN_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token");
 
         System.out.println("Connecting to database at: " + dbUrl);
         Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
@@ -68,15 +79,29 @@ public class ProductManagementApplication {
         repository = new ProductRepository(connection);
         service = new ProductService(repository);
 
+        SecurityFilter securityFilter = new SecurityFilter(jwksUrl, issuer, "product-manager");
+
         int port = 8001;
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         
-        server.createContext("/", new RootHandler());
-        server.createContext("/products", new ProductListHandler());
-        server.createContext("/products/create", new ProductCreateHandler());
-        server.createContext("/products/edit", new ProductEditHandler());
-        server.createContext("/products/delete", new ProductDeleteHandler());
-        server.createContext("/products/sync", new ProductSyncHandler());
+        server.createContext("/", new RootHandler()); // Public landing page
+        server.createContext("/login", new LoginHandler(tokenUrl)); // Public login page
+        
+        // Protected Contexts
+        HttpContext productsContext = server.createContext("/products", new ProductListHandler());
+        productsContext.getFilters().add(securityFilter);
+        
+        HttpContext createContext = server.createContext("/products/create", new ProductCreateHandler());
+        createContext.getFilters().add(securityFilter);
+        
+        HttpContext editContext = server.createContext("/products/edit", new ProductEditHandler());
+        editContext.getFilters().add(securityFilter);
+        
+        HttpContext deleteContext = server.createContext("/products/delete", new ProductDeleteHandler());
+        deleteContext.getFilters().add(securityFilter);
+        
+        HttpContext syncContext = server.createContext("/products/sync", new ProductSyncHandler());
+        syncContext.getFilters().add(securityFilter);
 
         // Use a thread pool
         server.setExecutor(Executors.newCachedThreadPool());
@@ -123,6 +148,68 @@ public class ProductManagementApplication {
         }
     }
 
+    static class LoginHandler implements HttpHandler {
+        private final String tokenUrl;
+        private final HttpClient httpClient;
+
+        public LoginHandler(String tokenUrl) {
+            this.tokenUrl = tokenUrl;
+            this.httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
+        }
+
+        @Override
+        public void handle(HttpExchange t) throws IOException {
+            if ("POST".equalsIgnoreCase(t.getRequestMethod())) {
+                InputStream is = t.getRequestBody();
+                String formData = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                Map<String, String> params = parseFormData(formData);
+                
+                String username = params.get("username");
+                String password = params.get("password");
+                
+                String requestBody = "client_id=webshop-client&grant_type=password&username=" + username + "&password=" + password;
+                
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(tokenUrl))
+                        .header("Content-Type", "application/x-www-form-urlencoded")
+                        .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                        .build();
+                
+                try {
+                    HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                    if (response.statusCode() == 200) {
+                        String json = response.body();
+                        String accessToken = extractToken(json);
+                        // Changed cookie name to pm_auth_token
+                        t.getResponseHeaders().add("Set-Cookie", "pm_auth_token=" + accessToken + "; Path=/; HttpOnly");
+                        redirect(t, "/products");
+                    } else {
+                        sendResponse(t, "<h1>Login Failed</h1><p>Invalid credentials</p><a href='/login'>Try Again</a>");
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    sendResponse(t, "<h1>Error</h1><p>" + e.getMessage() + "</p>");
+                }
+            } else {
+                String body = "<h1>Login</h1>" +
+                              "<form action='/login' method='post'>" +
+                              "<label>Username</label><input type='text' name='username'>" +
+                              "<label>Password</label><input type='password' name='password'>" +
+                              "<button type='submit' class='btn btn-primary'>Login</button>" +
+                              "</form>";
+                sendResponse(t, body);
+            }
+        }
+
+        private String extractToken(String json) {
+            int start = json.indexOf("\"access_token\":\"");
+            if (start == -1) return null;
+            start += 16;
+            int end = json.indexOf("\"", start);
+            return json.substring(start, end);
+        }
+    }
+
     static class ProductListHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange t) throws IOException {
@@ -138,7 +225,6 @@ public class ProductManagementApplication {
                     sb.append("<td>").append(p.getId()).append("</td>");
                     sb.append("<td>").append(p.getType() != null ? p.getType() : "").append("</td>");
                     sb.append("<td>").append(p.getName()).append("</td>");
-                    // Format price with 2 decimal places
                     sb.append("<td>").append(String.format(Locale.US, "%.2f", p.getPrice())).append("</td>");
                     sb.append("<td>").append(p.getUnit() != null ? p.getUnit() : "").append("</td>");
                     sb.append("<td>").append(p.getDescription()).append("</td>");

@@ -3,3 +3,4 @@ structurizr/.structurizr
 .idea
 structurizr/workspace.json
 */cypress/downloads
+m2-cache

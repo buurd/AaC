@@ -10,5 +10,6 @@ spec:
       c4_level: context
       description: "All external access to the system shall be secured via HTTPS."
       priority: critical
-      # Validation deferred until infrastructure is fully implemented
-      manual_validation: true
+      validation_policy: "policies/check_https_usage.rego"
+      # Input is provided by validate-architecture.sh (test-content-input.json)
+      https_validation: true

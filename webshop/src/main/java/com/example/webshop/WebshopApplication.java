@@ -1,6 +1,7 @@
 package com.example.webshop;
 
 import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,6 +28,10 @@ public class WebshopApplication {
         String dbUser = System.getenv().getOrDefault("DB_USER", "postgres");
         String dbPassword = System.getenv().getOrDefault("DB_PASSWORD", "postgres");
 
+        // Security Setup
+        String jwksUrl = System.getenv().getOrDefault("JWKS_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs");
+        String issuer = System.getenv().getOrDefault("ISSUER_URL", "https://localhost:8446/realms/webshop-realm");
+
         System.out.println("Connecting to database at: " + dbUrl);
         Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
         System.out.println("Database connection successful.");
@@ -45,6 +50,10 @@ public class WebshopApplication {
 
         // Create repository
         ProductRepository productRepository = new ProductRepository(connection);
+
+        // Security Filters
+        SecurityFilter productSyncFilter = new SecurityFilter(jwksUrl, issuer, "product-sync");
+        SecurityFilter stockSyncFilter = new SecurityFilter(jwksUrl, issuer, "stock-sync");
 
         // --- HTTP Server Setup ---
         int port = 8000;
@@ -75,8 +84,12 @@ public class WebshopApplication {
         });
         
         server.createContext("/products", new ProductController(productRepository));
-        server.createContext("/api/products/sync", new ProductSyncController(productRepository));
-        server.createContext("/api/stock/sync", new StockSyncController(productRepository));
+        
+        HttpContext productSyncContext = server.createContext("/api/products/sync", new ProductSyncController(productRepository));
+        productSyncContext.getFilters().add(productSyncFilter);
+        
+        HttpContext stockSyncContext = server.createContext("/api/stock/sync", new StockSyncController(productRepository));
+        stockSyncContext.getFilters().add(stockSyncFilter);
         
         // Use a thread pool to handle multiple requests concurrently
         server.setExecutor(Executors.newCachedThreadPool());

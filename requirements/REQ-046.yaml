@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: security-auth-delegation
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-046
+      type: security
+      c4_level: container
+      description: "All services (Webshop, PM, Warehouse) shall delegate authentication to Keycloak and verify JWT tokens."
+      priority: high
+      tracesTo: "REQ-045"
+      # Validation deferred until implementation
+      manual_validation: true

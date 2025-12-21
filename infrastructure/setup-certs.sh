@@ -1,7 +1,12 @@
 #!/bin/bash
 set -e
 
-CERT_DIR="$(pwd)/infrastructure/nginx/certs"
+# Get the directory where the script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+# Go to the project root (assuming script is in infrastructure/)
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+CERT_DIR="$PROJECT_ROOT/infrastructure/nginx/certs"
 mkdir -p "$CERT_DIR"
 
 if command -v mkcert &> /dev/null; then

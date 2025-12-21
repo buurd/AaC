@@ -7,7 +7,7 @@ clear
 cleanup() {
     echo
     echo "--- Cleaning up temporary files ---"
-    rm -f workspace.json project-files.json requirements.json implementation-input.json code-structure-input.json code-structure-files.json relation-input.json
+    rm -f workspace.json project-files.json requirements.json implementation-input.json code-structure-input.json code-structure-files.json relation-input.json test-content-input.json test-files.json
     rm -f structurizr/workspace.json
 
     # Stop and remove the containers
@@ -25,6 +25,11 @@ cleanup() {
         echo "Stopping Warehouse container ($WAREHOUSE_CONTAINER_ID)..."
         docker stop $WAREHOUSE_CONTAINER_ID > /dev/null 2>&1 || true
         docker rm $WAREHOUSE_CONTAINER_ID > /dev/null 2>&1 || true
+    fi
+    if [ -n "$KEYCLOAK_CONTAINER_ID" ]; then
+        echo "Stopping Keycloak container ($KEYCLOAK_CONTAINER_ID)..."
+        docker stop $KEYCLOAK_CONTAINER_ID > /dev/null 2>&1 || true
+        docker rm $KEYCLOAK_CONTAINER_ID > /dev/null 2>&1 || true
     fi
     if [ -n "$PROXY_CONTAINER_ID" ]; then
         echo "Stopping Proxy container ($PROXY_CONTAINER_ID)..."
@@ -190,6 +195,10 @@ jq -n '{files: $files, reqs: $reqs}' --slurpfile files project-files.json --slur
 find . -name "*.java" -print0 | xargs -0 -I {} jq -Rs --arg path "{}" '{$path: .}' {} | jq -s 'add' > code-structure-files.json
 jq -n '{files: $files, reqs: $reqs}' --slurpfile files code-structure-files.json --slurpfile reqs requirements.json > code-structure-input.json
 
+# Test Content Input (for HTTPS check)
+find e2e-tests -name "*.js" -print0 | xargs -0 -I {} jq -Rs --arg path "{}" '{$path: .}' {} | jq -s 'add' > test-files.json
+jq -n '{files: $files, reqs: $reqs}' --slurpfile files test-files.json --slurpfile reqs requirements.json > test-content-input.json
+
 # Relation Validation Input (Model + Requirements)
 jq -n '{model: $model, reqs: $reqs}' --slurpfile model workspace.json --slurpfile reqs requirements.json > relation-input.json
 
@@ -201,6 +210,7 @@ run_opa_validation "Component Validation" "/project/workspace.json" "/project/po
 run_opa_validation "Implementation Validation" "/project/implementation-input.json" "/project/policies/check_implementation.rego" "data.project_files.violation"
 run_opa_validation "Code Structure Validation" "/project/code-structure-input.json" "/project/policies/check_class_structure.rego" "data.code.structure.violation"
 run_opa_validation "Dependency Validation" "/project/code-structure-input.json" "/project/policies/check_dependency.rego" "data.code.dependency.violation"
+run_opa_validation "HTTPS Usage Validation" "/project/test-content-input.json" "/project/policies/check_https_usage.rego" "data.security.https.violation"
 
 # --- Runtime Validation ---
 echo
@@ -209,14 +219,26 @@ echo "Setting up Certificates..."
 chmod +x infrastructure/setup-certs.sh
 ./infrastructure/setup-certs.sh
 
+# Create a local Maven cache directory
+mkdir -p ./m2-cache
+
 echo "Compiling Webshop application..."
-docker run --rm -v "$(pwd)/webshop:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package > /dev/null
+docker run --rm \
+    -v "$(pwd)/webshop:/usr/src/mymaven" \
+    -v "$(pwd)/m2-cache:/root/.m2" \
+    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package > /dev/null
 
 echo "Compiling Product Management application..."
-docker run --rm -v "$(pwd)/productManagementSystem:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package > /dev/null
+docker run --rm \
+    -v "$(pwd)/productManagementSystem:/usr/src/mymaven" \
+    -v "$(pwd)/m2-cache:/root/.m2" \
+    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package > /dev/null
 
 echo "Compiling Warehouse Service..."
-docker run --rm -v "$(pwd)/warehouse:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package > /dev/null
+docker run --rm \
+    -v "$(pwd)/warehouse:/usr/src/mymaven" \
+    -v "$(pwd)/m2-cache:/root/.m2" \
+    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package > /dev/null
 
 # Create a dedicated network for the containers
 NETWORK_NAME="webshop-net-$$"
@@ -240,6 +262,20 @@ echo "Warehouse Database container started with ID: $DB_WAREHOUSE_ID"
 echo "Waiting for Databases to initialize (15s)..."
 sleep 15
 
+# Start Keycloak
+echo "Starting Keycloak container..."
+KEYCLOAK_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name keycloak \
+    -e KEYCLOAK_ADMIN=admin \
+    -e KEYCLOAK_ADMIN_PASSWORD=admin \
+    -e KC_PROXY=edge \
+    -e KC_HOSTNAME_STRICT=false \
+    -e KC_HOSTNAME_URL=https://localhost:8446 \
+    -e KC_HTTP_ENABLED=true \
+    -v "$(pwd)/infrastructure/keycloak/realm-export.json:/opt/keycloak/data/import/realm.json:ro" \
+    quay.io/keycloak/keycloak:23.0.7 \
+    start-dev --import-realm)
+echo "Keycloak container started with ID: $KEYCLOAK_CONTAINER_ID"
+
 # Start Webshop container
 echo "Starting Webshop server in a Docker container..."
 # Named webshop-demo for PM to find it
@@ -253,7 +289,7 @@ echo "Webshop container started with ID: $WEBSHOP_CONTAINER_ID"
 
 # Start Product Management container
 echo "Starting Product Management server in a Docker container..."
-PM_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name pm-system \
+PM_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name pm-demo \
     -v "$(pwd)/productManagementSystem/target:/app" \
     -e DB_URL=jdbc:postgresql://db_pm:5432/postgres \
     -e DB_USER=postgres \
@@ -278,21 +314,33 @@ echo "Warehouse container started with ID: $WAREHOUSE_CONTAINER_ID"
 # Start Reverse Proxy
 echo "Starting Reverse Proxy (Nginx)..."
 PROXY_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name reverse-proxy \
-    -p 8443:8443 -p 8444:8444 -p 8445:8445 \
+    -p 8443:8443 -p 8444:8444 -p 8445:8445 -p 8446:8446 \
     -v "$(pwd)/infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro" \
     -v "$(pwd)/infrastructure/nginx/certs:/etc/nginx/certs:ro" \
     nginx:alpine)
 echo "Proxy container started with ID: $PROXY_CONTAINER_ID"
 
-echo "Waiting for services to initialize (5s)..."
-sleep 5
+echo "Waiting for services to initialize (20s)..."
+sleep 20
+
+# Check if proxy is running
+if ! docker ps -q --no-trunc | grep -q "$PROXY_CONTAINER_ID"; then
+    echo "🔴 Reverse Proxy failed to start!"
+    docker logs "$PROXY_CONTAINER_ID"
+    exit 1
+fi
 
 # Run the actual runtime checks (via HTTPS Proxy)
 # Note: We use -k to ignore self-signed cert errors in validation
 run_runtime_check "Runtime Validation (REQ-005) - HTTPS" "https://localhost:8443/" "200" "" "$WEBSHOP_CONTAINER_ID"
 run_runtime_check "Runtime Validation (REQ-007) - HTTPS" "https://localhost:8443/products" "200" "The Hitchhiker's Guide to the Galaxy" "$WEBSHOP_CONTAINER_ID"
-run_runtime_check "Runtime Validation (REQ-014) - HTTPS" "https://localhost:8444/" "200" "" "$PM_CONTAINER_ID"
-run_runtime_check "Runtime Validation (REQ-031) - HTTPS" "https://localhost:8445/" "200" "Warehouse Service" "$WAREHOUSE_CONTAINER_ID"
+# PM and Warehouse are now SECURED. They should return 302 Found (Redirect to Login) if accessed without token.
+run_runtime_check "Runtime Validation (REQ-014) - HTTPS (Secured)" "https://localhost:8444/products" "302" "" "$PM_CONTAINER_ID"
+run_runtime_check "Runtime Validation (REQ-031) - HTTPS (Secured)" "https://localhost:8445/products" "302" "" "$WAREHOUSE_CONTAINER_ID"
+# Webshop is public, so it should still be 200.
+run_runtime_check "Runtime Validation (REQ-034) - HTTPS (Secured)" "https://localhost:8445/products" "302" "" "$WAREHOUSE_CONTAINER_ID"
+# Check Keycloak
+run_runtime_check "Runtime Validation (Keycloak) - HTTPS" "https://localhost:8446/" "200" "Welcome to Keycloak" "$KEYCLOAK_CONTAINER_ID"
 
 # --- Functional Validation (Cypress) ---
 echo

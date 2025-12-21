@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: security-iam-keycloak
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-045
+      type: security
+      c4_level: context
+      description: "The system shall use Keycloak as the centralized Identity and Access Management (IAM) provider."
+      priority: high
+      tracesTo: "REQ-043"
+      runtime_validation:
+        url: "https://localhost:8446/"
+        expected_status: 200
+        response_contains: "Welcome to Keycloak"

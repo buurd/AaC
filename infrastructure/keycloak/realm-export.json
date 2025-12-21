@@ -1,0 +1,105 @@
+{
+  "realm": "webshop-realm",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "product-manager",
+        "description": "Can manage products"
+      },
+      {
+        "name": "warehouse-staff",
+        "description": "Can manage inventory"
+      },
+      {
+        "name": "product-sync",
+        "description": "Can sync products"
+      },
+      {
+        "name": "stock-sync",
+        "description": "Can sync stock"
+      }
+    ]
+  },
+  "users": [
+    {
+      "username": "manager",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password"
+        }
+      ],
+      "realmRoles": [ "product-manager" ]
+    },
+    {
+      "username": "staff",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password"
+        }
+      ],
+      "realmRoles": [ "warehouse-staff" ]
+    },
+    {
+      "username": "p-user",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "p-user"
+        }
+      ],
+      "realmRoles": [ "product-manager" ]
+    },
+    {
+      "username": "w-user",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "w-user"
+        }
+      ],
+      "realmRoles": [ "warehouse-staff" ]
+    },
+    {
+      "username": "service-account-pm-client",
+      "enabled": true,
+      "serviceAccountClientId": "pm-client",
+      "realmRoles": [ "product-sync" ]
+    },
+    {
+      "username": "service-account-warehouse-client",
+      "enabled": true,
+      "serviceAccountClientId": "warehouse-client",
+      "realmRoles": [ "stock-sync" ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "webshop-client",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "redirectUris": [ "*" ]
+    },
+    {
+      "clientId": "pm-client",
+      "enabled": true,
+      "serviceAccountsEnabled": true,
+      "secret": "pm-secret",
+      "clientAuthenticatorType": "client-secret"
+    },
+    {
+      "clientId": "warehouse-client",
+      "enabled": true,
+      "serviceAccountsEnabled": true,
+      "secret": "warehouse-secret",
+      "clientAuthenticatorType": "client-secret"
+    }
+  ]
+}

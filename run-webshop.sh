@@ -7,8 +7,10 @@ clear
 cleanup() {
     echo
     echo "--- Stopping containers ---"
-    docker stop webshop-demo pm-demo warehouse-demo reverse-proxy db-webshop db-pm db-warehouse > /dev/null 2>&1 || true
-    docker rm webshop-demo pm-demo warehouse-demo reverse-proxy db-webshop db-pm db-warehouse > /dev/null 2>&1 || true
+    docker stop webshop-demo pm-demo warehouse-demo keycloak reverse-proxy db-webshop db-pm db-warehouse > /dev/null 2>&1 || true
+    docker rm webshop-demo pm-demo warehouse-demo keycloak reverse-proxy db-webshop db-pm db-warehouse > /dev/null 2>&1 || true
+    # Don't remove the network if it was already there, but for this script we assume we own it.
+    # However, to be safe, we try to remove it.
     docker network rm webshop-net > /dev/null 2>&1 || true
 }
 trap cleanup EXIT
@@ -17,17 +19,30 @@ echo "--- Setting up Certificates ---"
 chmod +x infrastructure/setup-certs.sh
 ./infrastructure/setup-certs.sh
 
+# Create a local Maven cache directory
+mkdir -p ./m2-cache
+
 echo "--- Building Webshop ---"
-docker run --rm -v "$(pwd)/webshop:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests > /dev/null
+docker run --rm \
+    -v "$(pwd)/webshop:/usr/src/mymaven" \
+    -v "$(pwd)/m2-cache:/root/.m2" \
+    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
 echo "--- Building Product Management System ---"
-docker run --rm -v "$(pwd)/productManagementSystem:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests > /dev/null
+docker run --rm \
+    -v "$(pwd)/productManagementSystem:/usr/src/mymaven" \
+    -v "$(pwd)/m2-cache:/root/.m2" \
+    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
 echo "--- Building Warehouse Service ---"
-docker run --rm -v "$(pwd)/warehouse:/usr/src/mymaven" -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests > /dev/null
+docker run --rm \
+    -v "$(pwd)/warehouse:/usr/src/mymaven" \
+    -v "$(pwd)/m2-cache:/root/.m2" \
+    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
 echo "--- Starting Infrastructure ---"
-docker network create webshop-net
+# Create network if it doesn't exist
+docker network inspect webshop-net >/dev/null 2>&1 || docker network create webshop-net
 
 # Start Webshop Postgres
 docker run -d --rm --network webshop-net --name db-webshop \
@@ -50,54 +65,94 @@ docker run -d --rm --network webshop-net --name db-warehouse \
 echo "Waiting for Databases to be ready (10s)..."
 sleep 10
 
+# Start Keycloak
+echo "--- Starting Keycloak ---"
+docker run -d --rm --network webshop-net --name keycloak \
+    -p 8084:8080 \
+    -e KEYCLOAK_ADMIN=admin \
+    -e KEYCLOAK_ADMIN_PASSWORD=admin \
+    -e KC_PROXY=edge \
+    -e KC_HOSTNAME_STRICT=false \
+    -e KC_HOSTNAME_URL=https://localhost:8446 \
+    -e KC_HTTP_ENABLED=true \
+    -v "$(pwd)/infrastructure/keycloak/realm-export.json:/opt/keycloak/data/import/realm.json:ro" \
+    quay.io/keycloak/keycloak:23.0.7 \
+    start-dev --import-realm
+
 # Start Webshop
 echo "--- Starting Webshop ---"
 docker run -d --rm --network webshop-net --name webshop-demo \
+    -p 8081:8000 \
     -v "$(pwd)/webshop/target:/app" \
     -e DB_URL=jdbc:postgresql://db-webshop:5432/postgres \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
+    -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
+    -e ISSUER_URL=https://localhost:8446/realms/webshop-realm \
     eclipse-temurin:21-jre java -jar /app/webshop-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 # Start Product Management System
 echo "--- Starting Product Management System ---"
-docker run -d --rm --network webshop-net --name pm-system \
+docker run -d --rm --network webshop-net --name pm-demo \
+    -p 8082:8001 \
     -v "$(pwd)/productManagementSystem/target:/app" \
     -e DB_URL=jdbc:postgresql://db-pm:5432/postgres \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
     -e WEBSHOP_API_URL=http://webshop-demo:8000/api/products/sync \
     -e WAREHOUSE_API_URL=http://warehouse-demo:8002/api/products/sync \
+    -e CLIENT_ID=pm-client \
+    -e CLIENT_SECRET=pm-secret \
+    -e TOKEN_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token \
     eclipse-temurin:21-jre java -jar /app/productManagementSystem-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 # Start Warehouse Service
 echo "--- Starting Warehouse Service ---"
 docker run -d --rm --network webshop-net --name warehouse-demo \
+    -p 8083:8002 \
     -v "$(pwd)/warehouse/target:/app" \
     -e DB_URL=jdbc:postgresql://db-warehouse:5432/postgres \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
     -e WEBSHOP_STOCK_API_URL=http://webshop-demo:8000/api/stock/sync \
+    -e CLIENT_ID=warehouse-client \
+    -e CLIENT_SECRET=warehouse-secret \
+    -e TOKEN_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token \
     eclipse-temurin:21-jre java -jar /app/warehouse-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 # Start Reverse Proxy
 echo "--- Starting Reverse Proxy (Nginx) ---"
 docker run -d --rm --network webshop-net --name reverse-proxy \
-    -p 8443:8443 -p 8444:8444 -p 8445:8445 \
+    -p 8443:8443 -p 8444:8444 -p 8445:8445 -p 8446:8446 \
     -v "$(pwd)/infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro" \
     -v "$(pwd)/infrastructure/nginx/certs:/etc/nginx/certs:ro" \
     nginx:alpine
 
+echo "Waiting for Keycloak to be ready (20s)..."
+sleep 20
+
+# Check if proxy is running
+if ! docker ps | grep -q reverse-proxy; then
+    echo "🔴 Reverse Proxy failed to start!"
+    docker logs reverse-proxy
+    exit 1
+fi
+
 echo
-echo "✅ Webshop is running at:            https://localhost:8443"
-echo "✅ Product Management is running at: https://localhost:8444"
-echo "✅ Warehouse Service is running at:  https://localhost:8445"
+echo "✅ Webshop is running at:            https://localhost:8443 (Direct: http://localhost:8081)"
+echo "✅ Product Management is running at: https://localhost:8444 (Direct: http://localhost:8082)"
+echo "   (Login: p-user / p-user)"
+echo "✅ Warehouse Service is running at:  https://localhost:8445 (Direct: http://localhost:8083)"
+echo "   (Login: w-user / w-user)"
+echo "✅ Keycloak is running at:           https://localhost:8446 (Direct: http://localhost:8084)"
+echo "   (Admin Console: https://localhost:8446/admin/)"
 echo
 echo "Press Ctrl+C to stop the servers."
 
 # Follow logs from all containers
 docker logs -f webshop-demo &
-docker logs -f pm-system &
+docker logs -f pm-demo &
 docker logs -f warehouse-demo &
+docker logs -f keycloak &
 docker logs -f reverse-proxy &
 wait

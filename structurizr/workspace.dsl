@@ -17,6 +17,13 @@ workspace "My System" "My System Description" {
             }
         }
 
+        keycloak = softwareSystem "Keycloak IAM" "Identity and Access Management." {
+            tags "Software System" "Infrastructure" "Security"
+            keycloakContainer = container "Keycloak Server" "Handles AuthN/AuthZ." {
+                tags "Container" "Infrastructure" "Security"
+            }
+        }
+
         webshop = softwareSystem "Webshop" "The webshop system." {
             tags "Software System" "Logical"
             webServer = container "Webshop WebServer" "The web server." {
@@ -128,6 +135,32 @@ workspace "My System" "My System Description" {
         reverseProxy -> warehouseWebServer "Routes to (HTTP)" {
             tags "Infrastructure"
         }
+        reverseProxy -> keycloakContainer "Routes to (HTTP)" {
+            tags "Infrastructure"
+        }
+
+        // Security Relationships (Infrastructure/Security)
+        // Users authenticate with Keycloak (via Proxy)
+        customer -> keycloakContainer "Authenticates with" {
+            tags "Security"
+        }
+        productManager -> keycloakContainer "Authenticates with" {
+            tags "Security"
+        }
+        warehouseStaff -> keycloakContainer "Authenticates with" {
+            tags "Security"
+        }
+
+        // Services verify tokens with Keycloak
+        webServer -> keycloakContainer "Verifies tokens with" {
+            tags "Security"
+        }
+        pmWebServer -> keycloakContainer "Verifies tokens with" {
+            tags "Security"
+        }
+        warehouseWebServer -> keycloakContainer "Verifies tokens with" {
+            tags "Security"
+        }
 
         // Internal System-to-System via Gateway (Infrastructure View)
         pmWebServer -> reverseProxy "Sends product updates to (HTTPS)" {
@@ -190,6 +223,7 @@ workspace "My System" "My System Description" {
             include *
             exclude "element.tag==Infrastructure"
             exclude "relationship.tag==Infrastructure"
+            exclude "relationship.tag==Security"
             autolayout tb
         }
 
@@ -202,6 +236,16 @@ workspace "My System" "My System Description" {
             // Exclude direct links to show only Proxy routing
             exclude "relationship.tag==Direct"
             exclude "relationship.tag==Logical"
+            exclude "relationship.tag==Security"
+            autolayout tb
+        }
+
+        // Security View: Shows IAM and Auth flows
+        container keycloak "Security_View" "Security Architecture" {
+            include "element.tag==Security"
+            include "relationship.tag==Security"
+            include "element.tag==Person"
+            include "element.tag==Web Server"
             autolayout tb
         }
 
@@ -209,6 +253,7 @@ workspace "My System" "My System Description" {
             include *
             exclude "element.tag==Infrastructure"
             exclude "relationship.tag==Infrastructure"
+            exclude "relationship.tag==Security"
             autolayout tb
         }
 
@@ -221,6 +266,7 @@ workspace "My System" "My System Description" {
             include *
             exclude "element.tag==Infrastructure"
             exclude "relationship.tag==Infrastructure"
+            exclude "relationship.tag==Security"
             autolayout tb
         }
 
@@ -233,6 +279,7 @@ workspace "My System" "My System Description" {
             include *
             exclude "element.tag==Infrastructure"
             exclude "relationship.tag==Infrastructure"
+            exclude "relationship.tag==Security"
             autolayout tb
         }
 
@@ -276,6 +323,10 @@ workspace "My System" "My System Description" {
             element "Infrastructure" {
                 background #333333
                 color #ffffff
+            }
+            element "Security" {
+                shape Hexagon
+                background #333333
             }
         }
     }

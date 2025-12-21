@@ -2,6 +2,10 @@ describe('Product Management CRUD', () => {
   const productName = 'Cypress Test Product';
   const productEditedName = 'Cypress Edited Product';
 
+  beforeEach(() => {
+    cy.login('manager', 'password');
+  });
+
   it('should create, edit, and delete a product', () => {
     // 1. Visit the product list
     cy.visit('/products');
@@ -24,7 +28,6 @@ describe('Product Management CRUD', () => {
     cy.contains(productName).should('be.visible');
 
     // 4. Edit the product
-    // Find the row containing the product name, then find the Edit button in that row
     cy.contains('tr', productName).within(() => {
       cy.contains('Edit').click();
     });

@@ -3,6 +3,15 @@ describe('Warehouse Delivery Management', () => {
   const senderName = 'Supplier A';
   const serialNumber = 'SN123';
 
+  beforeEach(() => {
+    // Login to Warehouse
+    cy.visit(warehouseUrl + '/login');
+    cy.get('input[name="username"]').type('staff');
+    cy.get('input[name="password"]').type('password');
+    cy.get('button[type="submit"]').click();
+    cy.url().should('not.include', '/login');
+  });
+
   it('should create delivery, add items, and return delivery', () => {
     // 1. Visit Warehouse (HTTPS)
     cy.visit(warehouseUrl);

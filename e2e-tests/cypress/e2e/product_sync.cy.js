@@ -13,7 +13,6 @@ describe('Product Synchronization', () => {
         return; // Success
       }
       cy.log(`Content '${content}' not found yet. Retrying... (${attempts + 1}/20)`);
-      cy.log(`Response Body: ${res.body}`); // Log the body to see what we got
       verifyWebshopContent(content, attempts + 1);
     });
   };
@@ -32,6 +31,10 @@ describe('Product Synchronization', () => {
       verifyWebshopContentMissing(content, attempts + 1);
     });
   };
+
+  beforeEach(() => {
+    cy.login('manager', 'password');
+  });
 
   it('should sync create, update, and delete to webshop', () => {
     // 1. Create Product in PM (BaseUrl is PM HTTPS)

@@ -12,6 +12,12 @@ describe('Navigation Links', () => {
   });
 
   it('should navigate correctly in Product Management', () => {
+    // Login first
+    cy.visit(pmUrl + '/login');
+    cy.get('input[name="username"]').type('manager');
+    cy.get('input[name="password"]').type('password');
+    cy.get('button[type="submit"]').click();
+
     cy.visit(pmUrl);
     cy.contains('h1', 'Product Management System');
     cy.contains('Manage Products').click();
@@ -20,6 +26,12 @@ describe('Navigation Links', () => {
   });
 
   it('should navigate correctly in Warehouse', () => {
+    // Login first
+    cy.visit(warehouseUrl + '/login');
+    cy.get('input[name="username"]').type('staff');
+    cy.get('input[name="password"]').type('password');
+    cy.get('button[type="submit"]').click();
+
     cy.visit(warehouseUrl);
     cy.contains('h1', 'Warehouse Service');
     
