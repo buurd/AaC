@@ -26,6 +26,11 @@ cleanup() {
         docker stop $WAREHOUSE_CONTAINER_ID > /dev/null 2>&1 || true
         docker rm $WAREHOUSE_CONTAINER_ID > /dev/null 2>&1 || true
     fi
+    if [ -n "$ORDER_CONTAINER_ID" ]; then
+        echo "Stopping Order Service container ($ORDER_CONTAINER_ID)..."
+        docker stop $ORDER_CONTAINER_ID > /dev/null 2>&1 || true
+        docker rm $ORDER_CONTAINER_ID > /dev/null 2>&1 || true
+    fi
     if [ -n "$KEYCLOAK_CONTAINER_ID" ]; then
         echo "Stopping Keycloak container ($KEYCLOAK_CONTAINER_ID)..."
         docker stop $KEYCLOAK_CONTAINER_ID > /dev/null 2>&1 || true
@@ -50,6 +55,11 @@ cleanup() {
         echo "Stopping Warehouse Database container ($DB_WAREHOUSE_ID)..."
         docker stop $DB_WAREHOUSE_ID > /dev/null 2>&1 || true
         docker rm $DB_WAREHOUSE_ID > /dev/null 2>&1 || true
+    fi
+    if [ -n "$DB_ORDER_ID" ]; then
+        echo "Stopping Order Database container ($DB_ORDER_ID)..."
+        docker stop $DB_ORDER_ID > /dev/null 2>&1 || true
+        docker rm $DB_ORDER_ID > /dev/null 2>&1 || true
     fi
     if [ -n "$NETWORK_NAME" ]; then
         echo "Removing Docker network ($NETWORK_NAME)..."
@@ -226,19 +236,25 @@ echo "Compiling Webshop application..."
 docker run --rm \
     -v "$(pwd)/webshop:/usr/src/mymaven" \
     -v "$(pwd)/m2-cache:/root/.m2" \
-    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package > /dev/null
+    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package
 
 echo "Compiling Product Management application..."
 docker run --rm \
     -v "$(pwd)/productManagementSystem:/usr/src/mymaven" \
     -v "$(pwd)/m2-cache:/root/.m2" \
-    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package > /dev/null
+    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package
 
 echo "Compiling Warehouse Service..."
 docker run --rm \
     -v "$(pwd)/warehouse:/usr/src/mymaven" \
     -v "$(pwd)/m2-cache:/root/.m2" \
-    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package > /dev/null
+    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package
+
+echo "Compiling Order Service..."
+docker run --rm \
+    -v "$(pwd)/orderService:/usr/src/mymaven" \
+    -v "$(pwd)/m2-cache:/root/.m2" \
+    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package
 
 # Create a dedicated network for the containers
 NETWORK_NAME="webshop-net-$$"
@@ -258,6 +274,11 @@ echo "PM Database container started with ID: $DB_PM_ID"
 echo "Starting Warehouse Database container..."
 DB_WAREHOUSE_ID=$(docker run -d --network $NETWORK_NAME --name db_warehouse -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres postgres:14-alpine)
 echo "Warehouse Database container started with ID: $DB_WAREHOUSE_ID"
+
+# Start Order Database container
+echo "Starting Order Database container..."
+DB_ORDER_ID=$(docker run -d --network $NETWORK_NAME --name db_order -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres postgres:14-alpine)
+echo "Order Database container started with ID: $DB_ORDER_ID"
 
 echo "Waiting for Databases to initialize (15s)..."
 sleep 15
@@ -322,10 +343,29 @@ WAREHOUSE_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name warehouse-
     eclipse-temurin:21-jre java -jar /app/warehouse-1.0-SNAPSHOT-jar-with-dependencies.jar)
 echo "Warehouse container started with ID: $WAREHOUSE_CONTAINER_ID"
 
+# Start Order Service container
+echo "Starting Order Service in a Docker container..."
+ORDER_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name order-service \
+    -v "$(pwd)/orderService/target:/app" \
+    -e DB_URL=jdbc:postgresql://db_order:5432/postgres \
+    -e DB_USER=postgres \
+    -e DB_PASSWORD=postgres \
+    -e WAREHOUSE_RESERVE_URL=http://warehouse-demo:8002/api/stock/reserve \
+    -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
+    -e ISSUER_URL=https://localhost:8446/realms/webshop-realm \
+    -e CLIENT_ID=order-client \
+    -e CLIENT_SECRET=order-secret \
+    -e TOKEN_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token \
+    eclipse-temurin:21-jre java -jar /app/orderService-1.0-SNAPSHOT-jar-with-dependencies.jar)
+echo "Order Service container started with ID: $ORDER_CONTAINER_ID"
+
+echo "Waiting 2 seconds for Docker DNS to propagate..."
+sleep 2
+
 # Start Reverse Proxy
 echo "Starting Reverse Proxy (Nginx)..."
 PROXY_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name reverse-proxy \
-    -p 8443:8443 -p 8444:8444 -p 8445:8445 -p 8446:8446 \
+    -p 8443:8443 -p 8444:8444 -p 8445:8445 -p 8446:8446 -p 8447:8447 \
     -v "$(pwd)/infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro" \
     -v "$(pwd)/infrastructure/nginx/certs:/etc/nginx/certs:ro" \
     nginx:alpine)
@@ -352,6 +392,8 @@ run_runtime_check "Runtime Validation (REQ-031) - HTTPS (Secured)" "https://loca
 run_runtime_check "Runtime Validation (REQ-034) - HTTPS (Secured)" "https://localhost:8445/products" "302" "" "$WAREHOUSE_CONTAINER_ID"
 # Check Keycloak
 run_runtime_check "Runtime Validation (Keycloak) - HTTPS" "https://localhost:8446/" "200" "Welcome to Keycloak" "$KEYCLOAK_CONTAINER_ID"
+# Check Order Service
+run_runtime_check "Runtime Validation (REQ-051) - HTTPS (Secured)" "https://localhost:8447/" "200" "Order Service" "$ORDER_CONTAINER_ID"
 
 # --- Functional Validation (Cypress) ---
 echo

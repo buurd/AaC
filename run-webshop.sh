@@ -7,8 +7,8 @@ clear
 cleanup() {
     echo
     echo "--- Stopping containers ---"
-    docker stop webshop-demo pm-demo warehouse-demo keycloak reverse-proxy db-webshop db-pm db-warehouse > /dev/null 2>&1 || true
-    docker rm webshop-demo pm-demo warehouse-demo keycloak reverse-proxy db-webshop db-pm db-warehouse > /dev/null 2>&1 || true
+    docker stop webshop-demo pm-demo warehouse-demo order-service keycloak reverse-proxy db-webshop db-pm db-warehouse db-order > /dev/null 2>&1 || true
+    docker rm webshop-demo pm-demo warehouse-demo order-service keycloak reverse-proxy db-webshop db-pm db-warehouse db-order > /dev/null 2>&1 || true
     # Don't remove the network if it was already there, but for this script we assume we own it.
     # However, to be safe, we try to remove it.
     docker network rm webshop-net > /dev/null 2>&1 || true
@@ -40,6 +40,12 @@ docker run --rm \
     -v "$(pwd)/m2-cache:/root/.m2" \
     -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
+echo "--- Building Order Service ---"
+docker run --rm \
+    -v "$(pwd)/orderService:/usr/src/mymaven" \
+    -v "$(pwd)/m2-cache:/root/.m2" \
+    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
+
 echo "--- Starting Infrastructure ---"
 # Create network if it doesn't exist
 docker network inspect webshop-net >/dev/null 2>&1 || docker network create webshop-net
@@ -58,6 +64,12 @@ docker run -d --rm --network webshop-net --name db-pm \
 
 # Start Warehouse Postgres
 docker run -d --rm --network webshop-net --name db-warehouse \
+    -e POSTGRES_PASSWORD=postgres \
+    -e POSTGRES_USER=postgres \
+    postgres:14-alpine
+
+# Start Order Postgres
+docker run -d --rm --network webshop-net --name db-order \
     -e POSTGRES_PASSWORD=postgres \
     -e POSTGRES_USER=postgres \
     postgres:14-alpine
@@ -82,19 +94,15 @@ docker run -d --rm --network webshop-net --name keycloak \
 # Start Webshop
 echo "--- Starting Webshop ---"
 docker run -d --rm --network webshop-net --name webshop-demo \
-    -p 8081:8000 \
     -v "$(pwd)/webshop/target:/app" \
     -e DB_URL=jdbc:postgresql://db-webshop:5432/postgres \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
-    -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
-    -e ISSUER_URL=https://localhost:8446/realms/webshop-realm \
     eclipse-temurin:21-jre java -jar /app/webshop-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 # Start Product Management System
 echo "--- Starting Product Management System ---"
 docker run -d --rm --network webshop-net --name pm-demo \
-    -p 8082:8001 \
     -v "$(pwd)/productManagementSystem/target:/app" \
     -e DB_URL=jdbc:postgresql://db-pm:5432/postgres \
     -e DB_USER=postgres \
@@ -109,7 +117,6 @@ docker run -d --rm --network webshop-net --name pm-demo \
 # Start Warehouse Service
 echo "--- Starting Warehouse Service ---"
 docker run -d --rm --network webshop-net --name warehouse-demo \
-    -p 8083:8002 \
     -v "$(pwd)/warehouse/target:/app" \
     -e DB_URL=jdbc:postgresql://db-warehouse:5432/postgres \
     -e DB_USER=postgres \
@@ -120,10 +127,24 @@ docker run -d --rm --network webshop-net --name warehouse-demo \
     -e TOKEN_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token \
     eclipse-temurin:21-jre java -jar /app/warehouse-1.0-SNAPSHOT-jar-with-dependencies.jar
 
+# Start Order Service
+echo "--- Starting Order Service ---"
+docker run -d --rm --network webshop-net --name order-service \
+    -v "$(pwd)/orderService/target:/app" \
+    -e DB_URL=jdbc:postgresql://db-order:5432/postgres \
+    -e DB_USER=postgres \
+    -e DB_PASSWORD=postgres \
+    -e WAREHOUSE_RESERVE_URL=http://warehouse-demo:8002/api/stock/reserve \
+    -e CLIENT_ID=order-client \
+    -e CLIENT_SECRET=order-secret \
+    -e TOKEN_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token \
+    eclipse-temurin:21-jre java -jar /app/orderService-1.0-SNAPSHOT-jar-with-dependencies.jar
+
 # Start Reverse Proxy
 echo "--- Starting Reverse Proxy (Nginx) ---"
-docker run -d --rm --network webshop-net --name reverse-proxy \
-    -p 8443:8443 -p 8444:8444 -p 8445:8445 -p 8446:8446 \
+# Removed --rm to debug crash
+docker run -d --network webshop-net --name reverse-proxy \
+    -p 8443:8443 -p 8444:8444 -p 8445:8445 -p 8446:8446 -p 8447:8447 \
     -v "$(pwd)/infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro" \
     -v "$(pwd)/infrastructure/nginx/certs:/etc/nginx/certs:ro" \
     nginx:alpine
@@ -139,12 +160,14 @@ if ! docker ps | grep -q reverse-proxy; then
 fi
 
 echo
-echo "✅ Webshop is running at:            https://localhost:8443 (Direct: http://localhost:8081)"
-echo "✅ Product Management is running at: https://localhost:8444 (Direct: http://localhost:8082)"
+echo "✅ Webshop is running at:            https://localhost:8443"
+echo "✅ Product Management is running at: https://localhost:8444"
 echo "   (Login: p-user / p-user)"
-echo "✅ Warehouse Service is running at:  https://localhost:8445 (Direct: http://localhost:8083)"
+echo "✅ Warehouse Service is running at:  https://localhost:8445"
 echo "   (Login: w-user / w-user)"
-echo "✅ Keycloak is running at:           https://localhost:8446 (Direct: http://localhost:8084)"
+echo "✅ Order Service is running at:      https://localhost:8447"
+echo "   (Login: o-user / o-user)"
+echo "✅ Keycloak is running at:           https://localhost:8446"
 echo "   (Admin Console: https://localhost:8446/admin/)"
 echo
 echo "Press Ctrl+C to stop the servers."
@@ -153,6 +176,7 @@ echo "Press Ctrl+C to stop the servers."
 docker logs -f webshop-demo &
 docker logs -f pm-demo &
 docker logs -f warehouse-demo &
+docker logs -f order-service &
 docker logs -f keycloak &
 docker logs -f reverse-proxy &
 wait

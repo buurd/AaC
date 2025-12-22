@@ -18,7 +18,8 @@ public class ShoppingCartController implements HttpHandler {
         "td { padding: 12px; border-bottom: 1px solid #DEE2E6; }" +
         ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; }" +
         ".btn-danger { background-color: #DC3545; }" +
-        ".btn-secondary { background-color: #6C757D; }";
+        ".btn-secondary { background-color: #6C757D; }" +
+        ".btn-success { background-color: #28A745; }";
 
     private static final String JS = 
         "<script>" +
@@ -28,6 +29,7 @@ public class ShoppingCartController implements HttpHandler {
         "  tbody.innerHTML = '';" +
         "  if (cart.length === 0) {" +
         "    tbody.innerHTML = '<tr><td colspan=4>Your cart is empty.</td></tr>';" +
+        "    document.getElementById('checkout-btn').style.display = 'none';" +
         "    return;" +
         "  }" +
         "  cart.forEach(item => {" +
@@ -41,6 +43,27 @@ public class ShoppingCartController implements HttpHandler {
         "  cart = cart.filter(i => i.id !== id);" +
         "  localStorage.setItem('cart', JSON.stringify(cart));" +
         "  renderCart();" +
+        "}" +
+        "function checkout() {" +
+        "  let cart = JSON.parse(localStorage.getItem('cart')) || [];" +
+        "  if (cart.length === 0) { alert('Cart is empty!'); return; }" +
+        "  const order = {" +
+        "    customerName: 'Test Customer'," +
+        "    items: cart.map(i => ({ productId: i.id, quantity: i.quantity }))" +
+        "  };" +
+        "  fetch('/api/orders', {" +
+        "    method: 'POST'," +
+        "    headers: { 'Content-Type': 'application/json' }," +
+        "    body: JSON.stringify(order)" +
+        "  }).then(res => {" +
+        "    if (res.ok) {" +
+        "      alert('Order placed successfully!');" +
+        "      localStorage.removeItem('cart');" +
+        "      window.location.href = '/products';" +
+        "    } else {" +
+        "      alert('Failed to place order. Insufficient stock?');" +
+        "    }" +
+        "  });" +
         "}" +
         "window.onload = renderCart;" +
         "</script>";
@@ -56,6 +79,7 @@ public class ShoppingCartController implements HttpHandler {
         html.append("<thead><tr><th>Product</th><th>Quantity</th><th>Price</th><th>Action</th></tr></thead>");
         html.append("<tbody id='cart-body'></tbody>");
         html.append("</table>");
+        html.append("<button id='checkout-btn' onclick='checkout()' class='btn btn-success'>Checkout</button> ");
         html.append("<a href='/products' class='btn btn-secondary'>Back to Products</a>");
         html.append("</div></body></html>");
         

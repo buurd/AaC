@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: system-context-order
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-048
+      type: architectural
+      c4_level: context
+      description: "The Order Manager shall use the Order Service."
+      priority: critical
+      validation_policy: "policies/check_relation.rego"
+      model_validation:
+        source: "Order Manager"
+        destination: "Order Service"
+        description_contains: "Uses"

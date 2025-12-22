@@ -1,4 +1,4 @@
-package com.example.warehouse;
+package com.example.order;
 
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpContext;
@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
 
-public class WarehouseApplication {
+public class OrderApplication {
 
     private static final String CSS = 
         "body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }" +
@@ -32,7 +32,6 @@ public class WarehouseApplication {
         "h1 { color: #343A40; }" +
         ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }" +
         ".btn-primary { background-color: #007BFF; }" +
-        ".btn-secondary { background-color: #6C757D; }" +
         "input[type='text'], input[type='password'] { padding: 8px; border: 1px solid #CED4DA; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }" +
         "label { display: block; font-weight: bold; margin-bottom: 5px; }";
 
@@ -52,7 +51,7 @@ public class WarehouseApplication {
         System.out.println("Database connection successful.");
 
         // Initialize schema
-        try (InputStream is = WarehouseApplication.class.getResourceAsStream("/schema.sql")) {
+        try (InputStream is = OrderApplication.class.getResourceAsStream("/schema.sql")) {
             if (is == null) {
                 throw new IOException("Cannot find schema.sql in resources.");
             }
@@ -68,25 +67,21 @@ public class WarehouseApplication {
             }
         }
 
-        ProductRepository productRepository = new ProductRepository(connection);
-        DeliveryRepository deliveryRepository = new DeliveryRepository(connection);
-        StockService stockService = new StockService();
-        
-        SecurityFilter staffFilter = new SecurityFilter(jwksUrl, issuer, "warehouse-staff");
-        SecurityFilter reserveFilter = new SecurityFilter(jwksUrl, issuer, "stock-reserve");
+        OrderRepository repository = new OrderRepository(connection);
+        StockReservationService stockService = new StockReservationService();
+        SecurityFilter securityFilter = new SecurityFilter(jwksUrl, issuer, "order-manager");
 
         // --- HTTP Server Setup ---
-        int port = 8002;
+        int port = 8003;
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         
         server.createContext("/", (exchange) -> {
             String path = exchange.getRequestURI().getPath();
             if ("/".equals(path)) {
                 String html = "<!DOCTYPE html><html><head><style>" + CSS + "</style></head><body><div class='container'>" +
-                              "<h1>Warehouse Service</h1>" +
-                              "<p>Manage inventory and deliveries.</p>" +
-                              "<a href='/products' class='btn btn-secondary'>View Products</a>" +
-                              "<a href='/deliveries' class='btn btn-primary'>Manage Deliveries</a>" +
+                              "<h1>Order Service</h1>" +
+                              "<p>Manage customer orders.</p>" +
+                              "<a href='/orders' class='btn btn-primary'>View Orders</a>" +
                               "</div></body></html>";
                 byte[] bytes = html.getBytes(StandardCharsets.UTF_8);
                 exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
@@ -104,53 +99,14 @@ public class WarehouseApplication {
             exchange.close();
         });
         
-        server.createContext("/login", new LoginHandler(tokenUrl)); // Public login page
+        server.createContext("/login", new LoginHandler(tokenUrl));
         
-        // Public sync endpoint (should be secured with product-sync role, but keeping public for now as per previous steps)
-        server.createContext("/api/products/sync", new ProductSyncController(productRepository));
-        
-        // Protected Contexts
-        HttpContext productsContext = server.createContext("/products", new ProductController(productRepository));
-        productsContext.getFilters().add(staffFilter);
-        
-        HttpContext deliveriesContext = server.createContext("/deliveries", new DeliveryController(deliveryRepository, productRepository, stockService));
-        deliveriesContext.getFilters().add(staffFilter);
-        
-        // Stock Reservation Endpoint
-        HttpContext reserveContext = server.createContext("/api/stock/reserve", new StockReservationController(deliveryRepository, productRepository, stockService));
-        reserveContext.getFilters().add(reserveFilter);
+        HttpContext ordersContext = server.createContext("/orders", new OrderController(repository, stockService));
+        ordersContext.getFilters().add(securityFilter);
         
         server.setExecutor(Executors.newCachedThreadPool());
         server.start();
-        System.out.println("Warehouse Service started on port " + port);
-    }
-
-    private static void sendResponse(HttpExchange t, int status, String body) throws IOException {
-        byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
-        t.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
-        t.sendResponseHeaders(status, bytes.length);
-        try (OutputStream os = t.getResponseBody()) {
-            os.write(bytes);
-        }
-    }
-
-    private static void redirect(HttpExchange t, String location) throws IOException {
-        t.getResponseHeaders().set("Location", location);
-        t.sendResponseHeaders(302, -1);
-    }
-
-    private static Map<String, String> parseFormData(String formData) {
-        Map<String, String> map = new HashMap<>();
-        String[] pairs = formData.split("&");
-        for (String pair : pairs) {
-            String[] keyValue = pair.split("=");
-            if (keyValue.length > 0) {
-                String key = URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);
-                String value = keyValue.length > 1 ? URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8) : "";
-                map.put(key, value);
-            }
-        }
-        return map;
+        System.out.println("Order Service started on port " + port);
     }
 
     static class LoginHandler implements HttpHandler {
@@ -185,9 +141,8 @@ public class WarehouseApplication {
                     if (response.statusCode() == 200) {
                         String json = response.body();
                         String accessToken = extractToken(json);
-                        // Changed cookie name to warehouse_auth_token
-                        t.getResponseHeaders().add("Set-Cookie", "warehouse_auth_token=" + accessToken + "; Path=/; HttpOnly");
-                        redirect(t, "/products"); // Default redirect to products
+                        t.getResponseHeaders().add("Set-Cookie", "order_auth_token=" + accessToken + "; Path=/; HttpOnly");
+                        redirect(t, "/orders");
                     } else {
                         sendResponse(t, 401, "<h1>Login Failed</h1><p>Invalid credentials</p><a href='/login'>Try Again</a>");
                     }
@@ -213,5 +168,33 @@ public class WarehouseApplication {
             int end = json.indexOf("\"", start);
             return json.substring(start, end);
         }
+    }
+
+    private static void sendResponse(HttpExchange t, int status, String body) throws IOException {
+        byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
+        t.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
+        t.sendResponseHeaders(status, bytes.length);
+        try (OutputStream os = t.getResponseBody()) {
+            os.write(bytes);
+        }
+    }
+
+    private static void redirect(HttpExchange t, String location) throws IOException {
+        t.getResponseHeaders().set("Location", location);
+        t.sendResponseHeaders(302, -1);
+    }
+
+    private static Map<String, String> parseFormData(String formData) {
+        Map<String, String> map = new HashMap<>();
+        String[] pairs = formData.split("&");
+        for (String pair : pairs) {
+            String[] keyValue = pair.split("=");
+            if (keyValue.length > 0) {
+                String key = URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);
+                String value = keyValue.length > 1 ? URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8) : "";
+                map.put(key, value);
+            }
+        }
+        return map;
     }
 }

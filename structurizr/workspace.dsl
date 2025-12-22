@@ -9,6 +9,9 @@ workspace "My System" "My System Description" {
         warehouseStaff = person "Warehouse Staff" "Staff managing inventory." {
             tags "Person" "Logical"
         }
+        orderManager = person "Order Manager" "A manager of orders." {
+            tags "Person" "Logical"
+        }
 
         gateway = softwareSystem "API Gateway / Reverse Proxy" "Entry point for all traffic (HTTPS)." {
             tags "Software System" "Infrastructure"
@@ -96,14 +99,39 @@ workspace "My System" "My System Description" {
             }
         }
 
+        orderService = softwareSystem "Order Service" "The order management system." {
+            tags "Software System" "Logical"
+            orderWebServer = container "Order WebServer" "The web server." {
+                tags "Container" "Web Server" "Logical"
+                orderController = component "OrderController" "Handles order placement and management." {
+                    tags "Component"
+                }
+                orderRepository = component "OrderRepository" "Handles data access for orders." {
+                    tags "Component" "Repository"
+                }
+                stockReservationService = component "StockReservationService" "Handles stock reservation with Warehouse." {
+                    tags "Component" "Service"
+                }
+            }
+            orderDatabase = container "Order Database" "The database." {
+                tags "Container" "Database" "Logical"
+            }
+        }
+
         // --- Logical Relationships (Business View) ---
         customer -> webshop "Uses" {
+            tags "Logical"
+        }
+        customer -> orderService "Places orders in" {
             tags "Logical"
         }
         productManager -> productManagementSystem "Uses" {
             tags "Logical"
         }
         warehouseStaff -> warehouseService "Uses" {
+            tags "Logical"
+        }
+        orderManager -> orderService "Uses" {
             tags "Logical"
         }
         productManagementSystem -> webshop "Sends product updates to" {
@@ -113,6 +141,9 @@ workspace "My System" "My System Description" {
             tags "Logical"
         }
         warehouseService -> webshop "Sends stock updates to" {
+            tags "Logical"
+        }
+        orderService -> warehouseService "Reserves stock in" {
             tags "Logical"
         }
 
@@ -127,6 +158,9 @@ workspace "My System" "My System Description" {
         warehouseStaff -> reverseProxy "Uses (HTTPS)" {
             tags "Infrastructure"
         }
+        orderManager -> reverseProxy "Uses (HTTPS)" {
+            tags "Infrastructure"
+        }
 
         // Gateway Routing
         reverseProxy -> webServer "Routes to (HTTP)" {
@@ -136,6 +170,9 @@ workspace "My System" "My System Description" {
             tags "Infrastructure"
         }
         reverseProxy -> warehouseWebServer "Routes to (HTTP)" {
+            tags "Infrastructure"
+        }
+        reverseProxy -> orderWebServer "Routes to (HTTP)" {
             tags "Infrastructure"
         }
         reverseProxy -> keycloakContainer "Routes to (HTTP)" {
@@ -153,6 +190,9 @@ workspace "My System" "My System Description" {
         warehouseStaff -> keycloakContainer "Authenticates with" {
             tags "Security"
         }
+        orderManager -> keycloakContainer "Authenticates with" {
+            tags "Security"
+        }
 
         // Services verify tokens with Keycloak
         webServer -> keycloakContainer "Verifies tokens with" {
@@ -164,12 +204,18 @@ workspace "My System" "My System Description" {
         warehouseWebServer -> keycloakContainer "Verifies tokens with" {
             tags "Security"
         }
+        orderWebServer -> keycloakContainer "Verifies tokens with" {
+            tags "Security"
+        }
 
         // Internal System-to-System via Gateway (Infrastructure View)
         pmWebServer -> reverseProxy "Sends product updates to (HTTPS)" {
             tags "Infrastructure" "Implementation"
         }
         warehouseWebServer -> reverseProxy "Sends stock updates to (HTTPS)" {
+            tags "Infrastructure" "Implementation"
+        }
+        orderWebServer -> reverseProxy "Reserves stock in (HTTPS)" {
             tags "Infrastructure" "Implementation"
         }
 
@@ -183,6 +229,9 @@ workspace "My System" "My System Description" {
         warehouseWebServer -> warehouseDatabase "Reads from and writes to" {
             tags "Implementation" "Logical"
         }
+        orderWebServer -> orderDatabase "Reads from and writes to" {
+            tags "Implementation" "Logical"
+        }
 
         // Direct Container Links (Logical/Current Implementation without Proxy)
         // These should be excluded from Infrastructure View if we want to show Proxy routing
@@ -193,6 +242,9 @@ workspace "My System" "My System Description" {
             tags "Implementation" "Direct"
         }
         warehouseWebServer -> webServer "Sends stock updates to (HTTP)" {
+            tags "Implementation" "Direct"
+        }
+        orderWebServer -> warehouseWebServer "Reserves stock in (HTTP)" {
             tags "Implementation" "Direct"
         }
 
@@ -252,6 +304,12 @@ workspace "My System" "My System Description" {
         warehouseStockService -> stockSyncController "Sends stock updates to"
         warehouseProductRepository -> warehouseDatabase "Reads from and writes to"
         warehouseDeliveryRepository -> warehouseDatabase "Reads from and writes to"
+
+        // Component-level relationships for orderService
+        orderController -> orderRepository "Uses"
+        orderController -> stockReservationService "Uses"
+        stockReservationService -> warehouseDeliveryController "Reserves stock via"
+        orderRepository -> orderDatabase "Reads from and writes to"
     }
 
     views {
@@ -353,6 +411,20 @@ workspace "My System" "My System Description" {
         }
 
         component warehouseWebServer "Warehouse_Components" "Warehouse - Components" {
+            include *
+            autolayout tb
+        }
+
+        container orderService "Order_Containers" "Order Service - Containers" {
+            include *
+            exclude "element.tag==Infrastructure"
+            exclude "relationship.tag==Infrastructure"
+            exclude "relationship.tag==Security"
+            exclude "relationship.tag==Interaction"
+            autolayout tb
+        }
+
+        component orderWebServer "Order_Components" "Order Service - Components" {
             include *
             autolayout tb
         }

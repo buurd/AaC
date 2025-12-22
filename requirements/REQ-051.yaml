@@ -1,0 +1,16 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: runtime-order-webserver
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-051
+      type: runtime
+      c4_level: container
+      description: "The Order Service WebServer shall be accessible via HTTP and return 200 OK on the root path."
+      priority: critical
+      tracesTo: "REQ-050"
+      runtime_validation:
+        url: "https://localhost:8447/"
+        expected_status: 200

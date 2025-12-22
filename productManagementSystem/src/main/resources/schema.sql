@@ -7,11 +7,7 @@ CREATE TABLE IF NOT EXISTS products (
     unit VARCHAR(50)
 );
 
--- Insert some sample data for PM System
+-- Insert sample data
+-- ID 1
 INSERT INTO products (type, name, description, price, unit)
-SELECT 'Tool', 'Hammer', 'A heavy hammer.', 15.00, 'pcs'
-WHERE NOT EXISTS (SELECT 1 FROM products);
-
-INSERT INTO products (type, name, description, price, unit)
-SELECT 'Tool', 'Screwdriver', 'A flathead screwdriver.', 5.00, 'pcs'
-WHERE NOT EXISTS (SELECT 1 FROM products);
+VALUES ('Book', 'The Hitchhiker''s Guide to the Galaxy', 'A sci-fi comedy classic.', 12.50, 'pcs');

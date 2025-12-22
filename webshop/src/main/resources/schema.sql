@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS products (
     stock INTEGER DEFAULT 0
 );
 
--- Insert some sample data (local only, no pm_id)
-INSERT INTO products (type, name, description, price, unit, stock)
-SELECT 'Book', 'The Hitchhiker''s Guide to the Galaxy', 'A sci-fi comedy classic.', 12.50, 'pcs', 10
-WHERE NOT EXISTS (SELECT 1 FROM products);
+-- Seed Data
+-- Matches PM ID 1 and Warehouse Stock 10
+INSERT INTO products (pm_id, type, name, description, price, unit, stock)
+VALUES (1, 'Book', 'The Hitchhiker''s Guide to the Galaxy', 'A sci-fi comedy classic.', 12.50, 'pcs', 10);

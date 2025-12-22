@@ -74,8 +74,8 @@ public class DeliveryRepository {
     }
 
     public int countStock(int productId) throws SQLException {
-        // Count all individuals for this product (maybe filter by state 'New' later)
-        String sql = "SELECT COUNT(*) FROM product_individuals WHERE product_id = ?";
+        // Count only 'New' items
+        String sql = "SELECT COUNT(*) FROM product_individuals WHERE product_id = ? AND state = 'New'";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, productId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -85,6 +85,27 @@ public class DeliveryRepository {
             }
         }
         return 0;
+    }
+
+    public synchronized boolean reserveStock(int productId, int quantity) throws SQLException {
+        // Check availability
+        int available = countStock(productId);
+        if (available < quantity) {
+            return false;
+        }
+
+        // Reserve items (Update state to 'Reserved')
+        // We use a subquery to select specific IDs to update
+        String sql = "UPDATE product_individuals SET state = 'Reserved' WHERE id IN (" +
+                     "SELECT id FROM product_individuals WHERE product_id = ? AND state = 'New' LIMIT ?" +
+                     ")";
+        
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, productId);
+            stmt.setInt(2, quantity);
+            int updated = stmt.executeUpdate();
+            return updated == quantity;
+        }
     }
 
     private List<ProductIndividual> findIndividualsByDeliveryId(int deliveryId) throws SQLException {

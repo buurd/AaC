@@ -12,12 +12,20 @@
         "description": "Can manage inventory"
       },
       {
+        "name": "order-manager",
+        "description": "Can manage orders"
+      },
+      {
         "name": "product-sync",
         "description": "Can sync products"
       },
       {
         "name": "stock-sync",
         "description": "Can sync stock"
+      },
+      {
+        "name": "stock-reserve",
+        "description": "Can reserve stock"
       }
     ]
   },
@@ -67,6 +75,17 @@
       "realmRoles": [ "warehouse-staff" ]
     },
     {
+      "username": "o-user",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "o-user"
+        }
+      ],
+      "realmRoles": [ "order-manager" ]
+    },
+    {
       "username": "service-account-pm-client",
       "enabled": true,
       "serviceAccountClientId": "pm-client",
@@ -77,6 +96,12 @@
       "enabled": true,
       "serviceAccountClientId": "warehouse-client",
       "realmRoles": [ "stock-sync" ]
+    },
+    {
+      "username": "service-account-order-client",
+      "enabled": true,
+      "serviceAccountClientId": "order-client",
+      "realmRoles": [ "stock-reserve" ]
     }
   ],
   "clients": [
@@ -99,6 +124,13 @@
       "enabled": true,
       "serviceAccountsEnabled": true,
       "secret": "warehouse-secret",
+      "clientAuthenticatorType": "client-secret"
+    },
+    {
+      "clientId": "order-client",
+      "enabled": true,
+      "serviceAccountsEnabled": true,
+      "secret": "order-secret",
       "clientAuthenticatorType": "client-secret"
     }
   ]

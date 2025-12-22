@@ -107,7 +107,27 @@ public class ProductManagementApplication {
         server.setExecutor(Executors.newCachedThreadPool());
         server.start();
         System.out.println("Product Management Server started on port " + port);
+        
+        // Initial product sync is now handled by direct seeding in schema.sql files
+        // triggerInitialSync(); 
     }
+
+    // private static void triggerInitialSync() {
+    //     new Thread(() -> {
+    //         try {
+    //             // Wait for other services to be ready
+    //             Thread.sleep(10000);
+    //             System.out.println("Starting initial product sync...");
+    //             List<Product> products = repository.findAll();
+    //             for (Product p : products) {
+    //                 service.syncProduct(p.getId());
+    //             }
+    //             System.out.println("Initial product sync completed.");
+    //         } catch (Exception e) {
+    //             e.printStackTrace();
+    //         }
+    //     }).start();
+    // }
 
     private static void sendResponse(HttpExchange t, String body) throws IOException {
         String html = "<!DOCTYPE html><html><head><style>" + CSS + "</style></head><body><div class='container'>" + body + "</div></body></html>";

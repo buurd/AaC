@@ -1,0 +1,20 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: container-order
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-050
+      type: architectural
+      c4_level: container
+      description: "The Order Service shall have a Web Server and a Database container."
+      priority: high
+      tracesTo: "REQ-048"
+      validation_policy: "policies/check_containers.rego"
+      model_validation:
+        parent: "Order Service"
+        container: "Order WebServer"
+      model_validation_2:
+        parent: "Order Service"
+        container: "Order Database"
