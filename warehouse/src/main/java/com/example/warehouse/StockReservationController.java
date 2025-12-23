@@ -56,12 +56,14 @@ public class StockReservationController implements HttpHandler {
                     }
 
                     String response = "{\"status\":\"reserved\"}";
+                    exchange.getResponseHeaders().set("Content-Type", "application/json");
                     exchange.sendResponseHeaders(200, response.length());
                     try (OutputStream os = exchange.getResponseBody()) {
                         os.write(response.getBytes());
                     }
                 } else {
                     String response = "{\"status\":\"insufficient_stock\"}";
+                    exchange.getResponseHeaders().set("Content-Type", "application/json");
                     exchange.sendResponseHeaders(409, response.length()); // Conflict
                     try (OutputStream os = exchange.getResponseBody()) {
                         os.write(response.getBytes());

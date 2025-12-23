@@ -10,6 +10,7 @@ import com.sun.net.httpserver.Filter;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.security.interfaces.RSAPublicKey;
 import java.util.List;
@@ -35,6 +36,7 @@ public class SecurityFilter extends Filter {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void doFilter(HttpExchange exchange, Chain chain) throws IOException {
         String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -87,8 +89,9 @@ public class SecurityFilter extends Filter {
 
     private void sendError(HttpExchange exchange, int code, String message) throws IOException {
         exchange.sendResponseHeaders(code, message.length());
-        exchange.getResponseBody().write(message.getBytes());
-        exchange.close();
+        try (OutputStream os = exchange.getResponseBody()) {
+            os.write(message.getBytes());
+        }
     }
 
     @Override

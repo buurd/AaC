@@ -6,7 +6,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.SQLException;
 import java.time.Duration;
-import java.util.Base64;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
@@ -16,27 +15,30 @@ public class ProductService {
     private final HttpClient httpClient;
     private final String webshopApiUrl;
     private final String warehouseApiUrl;
-    private final String keycloakTokenUrl;
-    private final String clientId;
-    private final String clientSecret;
-
-    private String accessToken;
-    private long tokenExpiresAt;
+    private final TokenService tokenService;
 
     public ProductService(ProductRepository repository) {
+        this(repository, 
+             System.getenv().getOrDefault("WEBSHOP_API_URL", "http://webshop-demo:8000/api/products/sync"),
+             System.getenv().getOrDefault("WAREHOUSE_API_URL", "http://warehouse-demo:8002/api/products/sync"),
+             new KeycloakTokenService(
+                 System.getenv().getOrDefault("TOKEN_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token"),
+                 System.getenv().getOrDefault("CLIENT_ID", "pm-client"),
+                 System.getenv().getOrDefault("CLIENT_SECRET", "pm-secret")
+             ));
+    }
+
+    public ProductService(ProductRepository repository, String webshopApiUrl, String warehouseApiUrl, TokenService tokenService) {
         this.repository = repository;
         this.httpClient = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(5))
                 .build();
-        this.webshopApiUrl = System.getenv().getOrDefault("WEBSHOP_API_URL", "http://webshop-demo:8000/api/products/sync");
-        this.warehouseApiUrl = System.getenv().getOrDefault("WAREHOUSE_API_URL", "http://warehouse-demo:8002/api/products/sync");
-        this.keycloakTokenUrl = System.getenv().getOrDefault("TOKEN_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token");
-        this.clientId = System.getenv().getOrDefault("CLIENT_ID", "pm-client");
-        this.clientSecret = System.getenv().getOrDefault("CLIENT_SECRET", "pm-secret");
+        this.webshopApiUrl = webshopApiUrl;
+        this.warehouseApiUrl = warehouseApiUrl;
+        this.tokenService = tokenService;
 
         System.out.println("ProductService initialized with Webshop API URL: " + this.webshopApiUrl);
         System.out.println("ProductService initialized with Warehouse API URL: " + this.warehouseApiUrl);
-        System.out.println("ProductService initialized with Keycloak Token URL: " + this.keycloakTokenUrl);
     }
 
     public void createProduct(Product product) throws SQLException {
@@ -72,48 +74,8 @@ public class ProductService {
         }
     }
 
-    private CompletableFuture<String> getAccessToken() {
-        if (accessToken != null && tokenExpiresAt > System.currentTimeMillis() + 5000) { // Refresh 5s before expiry
-            return CompletableFuture.completedFuture(accessToken);
-        }
-
-        String requestBody = "grant_type=client_credentials&client_id=" + clientId + "&client_secret=" + clientSecret;
-        
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(keycloakTokenUrl))
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
-
-        return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(response -> {
-                    if (response.statusCode() == 200) {
-                        String json = response.body();
-                        // Basic JSON parsing for access_token and expires_in
-                        int tokenStart = json.indexOf("\"access_token\":\"");
-                        int tokenEnd = json.indexOf("\"", tokenStart + 16);
-                        String token = json.substring(tokenStart + 16, tokenEnd);
-
-                        int expiresStart = json.indexOf("\"expires_in\":");
-                        int expiresEnd = json.indexOf(",", expiresStart);
-                        long expiresIn = Long.parseLong(json.substring(expiresStart + 13, expiresEnd));
-
-                        this.accessToken = token;
-                        this.tokenExpiresAt = System.currentTimeMillis() + (expiresIn * 1000);
-                        return token;
-                    } else {
-                        System.err.println("Failed to get access token. Status: " + response.statusCode() + " Body: " + response.body());
-                        throw new RuntimeException("Failed to get access token");
-                    }
-                })
-                .exceptionally(e -> {
-                    System.err.println("Exception getting access token: " + e.getMessage());
-                    throw new RuntimeException("Exception getting access token", e);
-                });
-    }
-
     private void syncToWebshop(Product p) {
-        getAccessToken().thenAccept(token -> {
+        tokenService.getAccessToken().thenAccept(token -> {
             try {
                 System.out.println("Syncing product " + p.getId() + " to " + webshopApiUrl);
                 String json = String.format(Locale.US,
@@ -128,7 +90,7 @@ public class ProductService {
     }
 
     private void syncToWarehouse(Product p) {
-        getAccessToken().thenAccept(token -> {
+        tokenService.getAccessToken().thenAccept(token -> {
             try {
                 System.out.println("Syncing product " + p.getId() + " to " + warehouseApiUrl);
                 // Warehouse only needs ID and Name
@@ -166,13 +128,13 @@ public class ProductService {
     }
 
     private void syncDeleteToWebshop(int id) {
-        getAccessToken().thenAccept(token -> {
+        tokenService.getAccessToken().thenAccept(token -> {
             sendDeleteRequest(webshopApiUrl, id, token);
         });
     }
 
     private void syncDeleteToWarehouse(int id) {
-        getAccessToken().thenAccept(token -> {
+        tokenService.getAccessToken().thenAccept(token -> {
             sendDeleteRequest(warehouseApiUrl, id, token);
         });
     }

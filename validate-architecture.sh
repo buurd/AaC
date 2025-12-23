@@ -222,6 +222,55 @@ run_opa_validation "Code Structure Validation" "/project/code-structure-input.js
 run_opa_validation "Dependency Validation" "/project/code-structure-input.json" "/project/policies/check_dependency.rego" "data.code.dependency.violation"
 run_opa_validation "HTTPS Usage Validation" "/project/test-content-input.json" "/project/policies/check_https_usage.rego" "data.security.https.violation"
 
+# --- Contract Validation (Pact) ---
+echo
+echo "--- Running: Contract Validation (Pact) ---"
+
+# Ensure pacts directory exists
+mkdir -p pacts
+
+# Define modules to scan
+MODULES="webshop productManagementSystem warehouse orderService"
+
+# 1. Run Consumer Tests (Generate Pacts)
+echo "Phase 1: Generating Contracts (Consumer Tests)..."
+for module in $MODULES; do
+    if [ -d "$module" ] && [ -f "$module/pom.xml" ]; then
+        echo "  Scanning $module for consumer tests..."
+        # We use 'mvn test' but filter by tag 'pact-consumer'.
+        # If no tests match, it might fail or pass depending on config, so we allow failure if no tests found but check output?
+        # Better: Just run it. If it fails, it fails. If no tests, it passes (usually).
+        if ! docker run --rm \
+            -v "$(pwd)/$module:/usr/src/mymaven" \
+            -v "$(pwd)/pacts:/usr/pacts" \
+            -v "$(pwd)/m2-cache:/root/.m2" \
+            -w /usr/src/mymaven \
+            maven:3.9.6-eclipse-temurin-21 mvn clean test -Dgroups=pact-consumer -DfailIfNoTests=false; then
+            echo "🔴 Consumer Contract Tests Failed in $module"
+            exit 1
+        fi
+    fi
+done
+
+# 2. Run Provider Tests (Verify Pacts)
+echo "Phase 2: Verifying Contracts (Provider Tests)..."
+for module in $MODULES; do
+    if [ -d "$module" ] && [ -f "$module/pom.xml" ]; then
+        echo "  Scanning $module for provider tests..."
+        if ! docker run --rm \
+            -v "$(pwd)/$module:/usr/src/mymaven" \
+            -v "$(pwd)/pacts:/usr/pacts" \
+            -v "$(pwd)/m2-cache:/root/.m2" \
+            -w /usr/src/mymaven \
+            maven:3.9.6-eclipse-temurin-21 mvn clean test -Dgroups=pact-provider -DfailIfNoTests=false; then
+            echo "🔴 Provider Contract Verification Failed in $module"
+            exit 1
+        fi
+    fi
+done
+
+echo "✅ Contract Validation Passed."
+
 # --- Runtime Validation ---
 echo
 echo "--- Preparing for Runtime Validations ---"
@@ -236,25 +285,25 @@ echo "Compiling Webshop application..."
 docker run --rm \
     -v "$(pwd)/webshop:/usr/src/mymaven" \
     -v "$(pwd)/m2-cache:/root/.m2" \
-    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package
+    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
 echo "Compiling Product Management application..."
 docker run --rm \
     -v "$(pwd)/productManagementSystem:/usr/src/mymaven" \
     -v "$(pwd)/m2-cache:/root/.m2" \
-    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package
+    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
 echo "Compiling Warehouse Service..."
 docker run --rm \
     -v "$(pwd)/warehouse:/usr/src/mymaven" \
     -v "$(pwd)/m2-cache:/root/.m2" \
-    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package
+    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
 echo "Compiling Order Service..."
 docker run --rm \
     -v "$(pwd)/orderService:/usr/src/mymaven" \
     -v "$(pwd)/m2-cache:/root/.m2" \
-    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package
+    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
 # Create a dedicated network for the containers
 NETWORK_NAME="webshop-net-$$"

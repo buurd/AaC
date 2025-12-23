@@ -1,0 +1,70 @@
+{
+  "consumer": {
+    "name": "WarehouseService"
+  },
+  "interactions": [
+    {
+      "comments": {
+        "text": [
+
+        ]
+      },
+      "description": "A request to sync stock",
+      "key": "653f6b7",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "Webshop is up"
+        }
+      ],
+      "request": {
+        "body": {
+          "content": {
+            "pmId": 1,
+            "stock": 50
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Authorization": [
+            "Bearer dummy-token"
+          ],
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "method": "POST",
+        "path": "/api/stock/sync"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "status": "success"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "status": 200
+      },
+      "transport": "https",
+      "type": "Synchronous/HTTP"
+    }
+  ],
+  "metadata": {
+    "pact-jvm": {
+      "version": "4.6.5"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "WebshopService"
+  }
+}

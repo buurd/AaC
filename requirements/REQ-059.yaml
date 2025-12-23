@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: contract-testing
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-059
+      type: functional
+      c4_level: context
+      description: "All inter-system integrations shall be verified using Pact contract tests."
+      priority: high
+      functional_validation:
+        test_file: "pacts/"

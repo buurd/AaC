@@ -76,7 +76,13 @@ The system includes comprehensive monitoring capabilities.
 
 ---
 
-## 5. Technical Architecture
+## 5. Quality Assurance
+
+*   **Contract Testing**: All inter-system integrations are verified using Pact contract tests (**REQ-059**).
+
+---
+
+## 6. Technical Architecture
 
 The system follows a microservices-inspired architecture using the C4 model.
 
@@ -105,6 +111,6 @@ The system follows a microservices-inspired architecture using the C4 model.
 
 ---
 
-## 6. Design Standards
+## 7. Design Standards
 
 *   **Consistency**: All user interfaces must adhere to the Design Guidelines defined in `DESIGN_GUIDELINES.md` (**REQ-020**).
