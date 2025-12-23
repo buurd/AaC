@@ -12,6 +12,9 @@ workspace "My System" "My System Description" {
         orderManager = person "Order Manager" "A manager of orders." {
             tags "Person" "Logical"
         }
+        developer = person "Developer" "A software developer." {
+            tags "Person" "Logical"
+        }
 
         gateway = softwareSystem "API Gateway / Reverse Proxy" "Entry point for all traffic (HTTPS)." {
             tags "Software System" "Infrastructure"
@@ -24,6 +27,19 @@ workspace "My System" "My System Description" {
             tags "Software System" "Infrastructure" "Security"
             keycloakContainer = container "Keycloak Server" "Handles AuthN/AuthZ." {
                 tags "Container" "Infrastructure" "Security"
+            }
+        }
+
+        observability = softwareSystem "Observability System" "Log aggregation and monitoring." {
+            tags "Software System" "Infrastructure"
+            loki = container "Loki" "Log aggregation system." {
+                tags "Container" "Infrastructure"
+            }
+            promtail = container "Promtail" "Log collector agent." {
+                tags "Container" "Infrastructure"
+            }
+            grafana = container "Grafana" "Visualization dashboard." {
+                tags "Container" "Infrastructure"
             }
         }
 
@@ -134,6 +150,9 @@ workspace "My System" "My System Description" {
         orderManager -> orderService "Uses" {
             tags "Logical"
         }
+        developer -> observability "Monitors logs via" {
+            tags "Logical"
+        }
         productManagementSystem -> webshop "Sends product updates to" {
             tags "Logical"
         }
@@ -161,6 +180,9 @@ workspace "My System" "My System Description" {
         orderManager -> reverseProxy "Uses (HTTPS)" {
             tags "Infrastructure"
         }
+        developer -> grafana "Views logs in" {
+            tags "Infrastructure"
+        }
 
         // Gateway Routing
         reverseProxy -> webServer "Routes to (HTTP)" {
@@ -176,6 +198,32 @@ workspace "My System" "My System Description" {
             tags "Infrastructure"
         }
         reverseProxy -> keycloakContainer "Routes to (HTTP)" {
+            tags "Infrastructure"
+        }
+
+        // Observability
+        promtail -> webServer "Reads logs from" {
+            tags "Infrastructure"
+        }
+        promtail -> pmWebServer "Reads logs from" {
+            tags "Infrastructure"
+        }
+        promtail -> warehouseWebServer "Reads logs from" {
+            tags "Infrastructure"
+        }
+        promtail -> orderWebServer "Reads logs from" {
+            tags "Infrastructure"
+        }
+        promtail -> reverseProxy "Reads logs from" {
+            tags "Infrastructure"
+        }
+        promtail -> keycloakContainer "Reads logs from" {
+            tags "Infrastructure"
+        }
+        promtail -> loki "Pushes logs to" {
+            tags "Infrastructure"
+        }
+        grafana -> loki "Queries logs from" {
             tags "Infrastructure"
         }
 
@@ -343,6 +391,19 @@ workspace "My System" "My System Description" {
             include "relationship.tag==Security"
             include "element.tag==Person"
             include "element.tag==Web Server"
+            autolayout tb
+        }
+
+        // Observability View
+        container observability "Observability_View" "Observability Architecture" {
+            include "element.tag==Infrastructure"
+            include "relationship.tag==Infrastructure"
+            include "element.tag==Web Server"
+            include "element.tag==Person"
+            exclude "relationship.tag==Direct"
+            exclude "relationship.tag==Logical"
+            exclude "relationship.tag==Security"
+            exclude "relationship.tag==Interaction"
             autolayout tb
         }
 

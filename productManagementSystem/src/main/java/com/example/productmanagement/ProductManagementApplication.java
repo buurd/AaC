@@ -4,6 +4,8 @@ import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,6 +31,8 @@ import java.util.concurrent.Executors;
 
 public class ProductManagementApplication {
     
+    private static final Logger logger = LoggerFactory.getLogger(ProductManagementApplication.class);
+
     private static final String CSS = 
         "body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }" +
         ".container { max-width: 1200px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }" +
@@ -60,9 +64,9 @@ public class ProductManagementApplication {
         String issuer = System.getenv().getOrDefault("ISSUER_URL", "https://localhost:8446/realms/webshop-realm");
         String tokenUrl = System.getenv().getOrDefault("TOKEN_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token");
 
-        System.out.println("Connecting to database at: " + dbUrl);
+        logger.info("Connecting to database at: {}", dbUrl);
         Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-        System.out.println("Database connection successful.");
+        logger.info("Database connection successful.");
 
         // Initialize schema
         try (InputStream is = ProductManagementApplication.class.getResourceAsStream("/schema.sql")) {
@@ -72,7 +76,7 @@ public class ProductManagementApplication {
             String schemaSql = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             try (Statement stmt = connection.createStatement()) {
                 stmt.execute(schemaSql);
-                System.out.println("Database schema initialized.");
+                logger.info("Database schema initialized.");
             }
         }
 
@@ -106,7 +110,7 @@ public class ProductManagementApplication {
         // Use a thread pool
         server.setExecutor(Executors.newCachedThreadPool());
         server.start();
-        System.out.println("Product Management Server started on port " + port);
+        logger.info("Product Management Server started on port {}", port);
         
         // Initial product sync is now handled by direct seeding in schema.sql files
         // triggerInitialSync(); 
@@ -161,6 +165,7 @@ public class ProductManagementApplication {
     static class RootHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange t) throws IOException {
+            logger.info("Received request: {} {}", t.getRequestMethod(), t.getRequestURI().getPath());
             String body = "<h1>Product Management System</h1>" +
                           "<p>Welcome to the Product Management System.</p>" +
                           "<a href='/products' class='btn btn-primary'>Manage Products</a>";
@@ -179,6 +184,7 @@ public class ProductManagementApplication {
 
         @Override
         public void handle(HttpExchange t) throws IOException {
+            logger.info("Received request: {} {}", t.getRequestMethod(), t.getRequestURI().getPath());
             if ("POST".equalsIgnoreCase(t.getRequestMethod())) {
                 InputStream is = t.getRequestBody();
                 String formData = new String(is.readAllBytes(), StandardCharsets.UTF_8);
@@ -204,10 +210,11 @@ public class ProductManagementApplication {
                         t.getResponseHeaders().add("Set-Cookie", "pm_auth_token=" + accessToken + "; Path=/; HttpOnly");
                         redirect(t, "/products");
                     } else {
+                        logger.warn("Login failed for user: {}", username);
                         sendResponse(t, "<h1>Login Failed</h1><p>Invalid credentials</p><a href='/login'>Try Again</a>");
                     }
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    logger.error("Error during login", e);
                     sendResponse(t, "<h1>Error</h1><p>" + e.getMessage() + "</p>");
                 }
             } else {
@@ -233,6 +240,7 @@ public class ProductManagementApplication {
     static class ProductListHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange t) throws IOException {
+            logger.info("Received request: {} {}", t.getRequestMethod(), t.getRequestURI().getPath());
             try {
                 List<Product> products = repository.findAll();
                 StringBuilder sb = new StringBuilder();
@@ -258,7 +266,7 @@ public class ProductManagementApplication {
                 sb.append("</tbody></table>");
                 sendResponse(t, sb.toString());
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error("Error listing products", e);
                 sendResponse(t, "<h1>Error</h1><p>" + e.getMessage() + "</p>");
             }
         }
@@ -267,6 +275,7 @@ public class ProductManagementApplication {
     static class ProductCreateHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange t) throws IOException {
+            logger.info("Received request: {} {}", t.getRequestMethod(), t.getRequestURI().getPath());
             if ("POST".equalsIgnoreCase(t.getRequestMethod())) {
                 InputStream is = t.getRequestBody();
                 String formData = new String(is.readAllBytes(), StandardCharsets.UTF_8);
@@ -287,7 +296,7 @@ public class ProductManagementApplication {
                     service.createProduct(p); // Use service
                     redirect(t, "/products");
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    logger.error("Error creating product", e);
                     sendResponse(t, "<h1>Error Creating Product</h1><p>" + e.getMessage() + "</p>");
                 }
             } else {
@@ -309,6 +318,7 @@ public class ProductManagementApplication {
     static class ProductEditHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange t) throws IOException {
+            logger.info("Received request: {} {}", t.getRequestMethod(), t.getRequestURI().getPath());
             String query = t.getRequestURI().getQuery();
             Map<String, String> queryParams = parseFormData(query != null ? query : "");
             String idStr = queryParams.get("id");
@@ -335,7 +345,7 @@ public class ProductManagementApplication {
                     service.updateProduct(p); // Use service
                     redirect(t, "/products");
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("Error updating product", e);
                     sendResponse(t, "<h1>Error Updating Product</h1><p>" + e.getMessage() + "</p>");
                 }
             } else {
@@ -364,7 +374,7 @@ public class ProductManagementApplication {
                                   "</form>";
                     sendResponse(t, body);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("Error loading product for edit", e);
                     sendResponse(t, "<h1>Error</h1><p>" + e.getMessage() + "</p>");
                 }
             }
@@ -374,6 +384,7 @@ public class ProductManagementApplication {
     static class ProductDeleteHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange t) throws IOException {
+            logger.info("Received request: {} {}", t.getRequestMethod(), t.getRequestURI().getPath());
             if ("POST".equalsIgnoreCase(t.getRequestMethod())) {
                 InputStream is = t.getRequestBody();
                 String formData = new String(is.readAllBytes(), StandardCharsets.UTF_8);
@@ -384,7 +395,7 @@ public class ProductManagementApplication {
                     service.deleteProduct(id); // Use service (though it doesn't sync delete yet)
                     redirect(t, "/products");
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("Error deleting product", e);
                     sendResponse(t, "<h1>Error Deleting Product</h1><p>" + e.getMessage() + "</p>");
                 }
             } else {
@@ -414,7 +425,7 @@ public class ProductManagementApplication {
                                   "</form>";
                     sendResponse(t, body);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("Error loading product for delete", e);
                     sendResponse(t, "<h1>Error</h1><p>" + e.getMessage() + "</p>");
                 }
             }
@@ -424,6 +435,7 @@ public class ProductManagementApplication {
     static class ProductSyncHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange t) throws IOException {
+            logger.info("Received request: {} {}", t.getRequestMethod(), t.getRequestURI().getPath());
             String query = t.getRequestURI().getQuery();
             Map<String, String> queryParams = parseFormData(query != null ? query : "");
             String idStr = queryParams.get("id");
@@ -438,7 +450,7 @@ public class ProductManagementApplication {
                 service.syncProduct(id);
                 redirect(t, "/products");
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Error syncing product", e);
                 sendResponse(t, "<h1>Error Syncing Product</h1><p>" + e.getMessage() + "</p>");
             }
         }

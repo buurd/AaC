@@ -7,8 +7,8 @@ clear
 cleanup() {
     echo
     echo "--- Stopping containers ---"
-    docker stop webshop-demo pm-demo warehouse-demo order-service keycloak reverse-proxy db-webshop db-pm db-warehouse db-order > /dev/null 2>&1 || true
-    docker rm webshop-demo pm-demo warehouse-demo order-service keycloak reverse-proxy db-webshop db-pm db-warehouse db-order > /dev/null 2>&1 || true
+    docker stop webshop-demo pm-demo warehouse-demo order-service keycloak reverse-proxy loki promtail grafana db-webshop db-pm db-warehouse db-order > /dev/null 2>&1 || true
+    docker rm webshop-demo pm-demo warehouse-demo order-service keycloak reverse-proxy loki promtail grafana db-webshop db-pm db-warehouse db-order > /dev/null 2>&1 || true
     # Don't remove the network if it was already there, but for this script we assume we own it.
     # However, to be safe, we try to remove it.
     docker network rm webshop-net > /dev/null 2>&1 || true
@@ -73,6 +73,33 @@ docker run -d --rm --network webshop-net --name db-order \
     -e POSTGRES_PASSWORD=postgres \
     -e POSTGRES_USER=postgres \
     postgres:14-alpine
+
+# Start Observability Stack
+echo "--- Starting Observability Stack ---"
+# Run Loki as root to avoid permission issues with config mount
+# Expose port 3100 for Promtail to access via host network
+docker run -d --rm --network webshop-net --name loki -u 0 -p 3100:3100 \
+    -v "$(pwd)/infrastructure/monitoring/loki-config.yaml:/etc/loki/local-config.yaml" \
+    grafana/loki:2.9.4 -config.file=/etc/loki/local-config.yaml
+
+echo "Waiting for Loki to start..."
+sleep 5
+
+# Add host.docker.internal mapping for Linux support
+docker run -d --rm --network webshop-net --name promtail \
+    --add-host host.docker.internal:host-gateway \
+    -v "$(pwd)/infrastructure/monitoring/promtail-config.yaml:/etc/promtail/config.yml" \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v /var/lib/docker/containers:/var/lib/docker/containers \
+    grafana/promtail:2.9.4 -config.file=/etc/promtail/config.yml
+
+docker run -d --rm --network webshop-net --name grafana \
+    -p 3000:3000 \
+    -e GF_SECURITY_ADMIN_PASSWORD=admin \
+    -v "$(pwd)/infrastructure/monitoring/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml" \
+    -v "$(pwd)/infrastructure/monitoring/grafana-dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml" \
+    -v "$(pwd)/infrastructure/monitoring/dashboards:/var/lib/grafana/dashboards" \
+    grafana/grafana:latest
 
 echo "Waiting for Databases to be ready (10s)..."
 sleep 10
@@ -169,7 +196,16 @@ echo "✅ Order Service is running at:      https://localhost:8447"
 echo "   (Login: o-user / o-user)"
 echo "✅ Keycloak is running at:           https://localhost:8446"
 echo "   (Admin Console: https://localhost:8446/admin/)"
+echo "✅ Grafana is running at:            http://localhost:3000"
+echo "   (Login: admin / admin)"
 echo
+
+# Debug: Check Loki labels
+echo "--- Checking Loki Labels ---"
+docker run --rm --network webshop-net curlimages/curl:7.78.0 curl -s http://loki:3100/loki/api/v1/labels
+echo
+echo
+
 echo "Press Ctrl+C to stop the servers."
 
 # Follow logs from all containers
@@ -179,4 +215,6 @@ docker logs -f warehouse-demo &
 docker logs -f order-service &
 docker logs -f keycloak &
 docker logs -f reverse-proxy &
+docker logs -f promtail &
+docker logs -f loki &
 wait

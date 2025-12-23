@@ -4,15 +4,19 @@ This document summarizes the "Architecture as Code" approach we have implemented
 
 ## 1. The Architecture
 
-We are building a landscape consisting of three distinct software systems following the **C4 Model**.
+We are building a landscape consisting of four distinct software systems following the **C4 Model**.
 
 ### System Context (Level 1)
 *   **Webshop System**: The customer-facing e-commerce platform.
 *   **Product Management System**: The internal system for managing product information (e.g., price, name).
 *   **Warehouse Service**: The internal system for managing physical inventory and deliveries.
+*   **Order Service**: The internal system for managing customer orders.
+*   **Observability System**: The infrastructure system for log aggregation and monitoring.
 *   **Customer**: A person who uses the Webshop.
 *   **Product Manager**: A person who manages products via the PM System.
 *   **Warehouse Staff**: A person who manages inventory via the Warehouse Service.
+*   **Order Manager**: A person who manages orders via the Order Service.
+*   **Developer**: A person who monitors the system logs.
 
 ### Containers (Level 2)
 The landscape is composed of independent containers to ensure loose coupling:
@@ -29,13 +33,23 @@ The landscape is composed of independent containers to ensure loose coupling:
 *   **Warehouse WebServer**: A Java application (Java 21) handling inventory traffic.
 *   **Warehouse Database**: A dedicated PostgreSQL database for the Warehouse Service.
 
-**4. Infrastructure & Security**
+**4. Order Service**
+*   **Order WebServer**: A Java application (Java 21) handling order management traffic.
+*   **Order Database**: A dedicated PostgreSQL database for the Order Service.
+
+**5. Infrastructure & Security**
 *   **API Gateway / Reverse Proxy**: An **Nginx** container handling SSL termination and routing.
 *   **Keycloak IAM**: A centralized Identity and Access Management server handling authentication and authorization.
+
+**6. Observability**
+*   **Loki**: Log aggregation system.
+*   **Promtail**: Log collector agent.
+*   **Grafana**: Visualization dashboard.
 
 ### Inter-System Communication
 *   **Product Sync**: The **Product Management System** sends product updates (name, price, etc.) to both the **Webshop** and the **Warehouse Service**.
 *   **Stock Sync**: The **Warehouse Service** sends stock level updates to the **Webshop** when inventory changes.
+*   **Stock Reservation**: The **Order Service** reserves stock in the **Warehouse Service** when an order is placed.
 
 ### Components (Level 3)
 Inside the Web Server containers, we have defined the following components:
@@ -59,6 +73,11 @@ Inside the Web Server containers, we have defined the following components:
     4.  **StockService**: Sends stock updates to Webshop.
     5.  **Repositories**: `ProductRepository` and `DeliveryRepository`.
 
+*   **Order WebServer**:
+    1.  **OrderController**: Handles order placement and management.
+    2.  **StockReservationService**: Handles stock reservation with Warehouse.
+    3.  **OrderRepository**: Manages data access to the Order Database.
+
 ### Code (Level 4)
 All systems implement a shared domain concept:
 *   **Product**: A domain entity representing a product (ID, Name, Price, Description, Type, Unit).
@@ -67,11 +86,12 @@ All systems implement a shared domain concept:
 
 ## 2. Requirements & Traceability
 
-We define our requirements as code (YAML), allowing us to trace them from high-level goals down to specific code implementations. The system now covers over 45 requirements, including:
-*   **Architectural**: Defining the structure of all three systems, their containers, and components.
-*   **Functional**: Specifying user-facing features (CRUD in PM, Delivery Management in Warehouse, **Shopping Cart in Webshop**) and system integrations (Product and Stock Sync).
+We define our requirements as code (YAML), allowing us to trace them from high-level goals down to specific code implementations. The system now covers over 55 requirements, including:
+*   **Architectural**: Defining the structure of all systems, their containers, and components.
+*   **Functional**: Specifying user-facing features (CRUD in PM, Delivery Management in Warehouse, **Shopping Cart in Webshop**, **Order Management**) and system integrations (Product Sync, Stock Sync, Stock Reservation).
 *   **Runtime**: Ensuring services are live and accessible.
 *   **Security**: Mandating HTTPS, Reverse Proxy, and IAM (Keycloak).
+*   **Observability**: Mandating log aggregation and monitoring (Loki, Promtail, Grafana).
 *   **Design**: Enforcing a consistent UI via `DESIGN_GUIDELINES.md`.
 
 ---
@@ -87,15 +107,26 @@ We have implemented a robust security architecture:
 
 ### B. Identity and Access Management (IAM)
 *   **Keycloak**: Used as the centralized IdP.
-*   **Authentication**: Users (Product Managers, Warehouse Staff) authenticate against Keycloak via the Reverse Proxy.
+*   **Authentication**: Users (Product Managers, Warehouse Staff, Order Managers) authenticate against Keycloak via the Reverse Proxy.
 *   **Authorization**: Services enforce **Role-Based Access Control (RBAC)** using JWT tokens.
     *   **PM System**: Requires `product-manager` role.
     *   **Warehouse**: Requires `warehouse-staff` role.
+    *   **Order Service**: Requires `order-manager` role.
 *   **Service-to-Service Security**: Internal synchronization calls use **Client Credentials Flow** to obtain service account tokens, ensuring secure M2M communication.
 
 ---
 
-## 4. Automated Validations
+## 4. Observability Architecture
+
+We have implemented a centralized logging and monitoring stack:
+*   **Log Aggregation**: **Promtail** collects logs from all Docker containers (Webshop, PM, Warehouse, Order, Nginx, Postgres) and pushes them to **Loki**.
+*   **Visualization**: **Grafana** queries Loki to display log volumes and details.
+*   **Dashboards**: A custom dashboard provides insights into log volume per container and log level (INFO, ERROR, etc.), with filtering capabilities.
+*   **Standardization**: All Java applications use **SLF4J** to produce structured logs that are parsed by Promtail for better analysis.
+
+---
+
+## 5. Automated Validations
 
 We have built a `validate-architecture.sh` script that runs a series of automated checks to enforce our architecture.
 
@@ -107,21 +138,22 @@ We use **Open Policy Agent (OPA)** to validate our architecture model and code a
 *   **Security**: Scans test code to ensure no insecure `http://` URLs are used.
 
 ### B. Runtime Verification
-We spin up the entire landscape (3 Apps, 3 DBs, 1 Proxy, 1 Keycloak) in Docker to verify the system works as expected.
-*   **Infrastructure**: Starts all databases, Keycloak, and Nginx.
+We spin up the entire landscape (4 Apps, 4 DBs, 1 Proxy, 1 Keycloak, Observability Stack) in Docker to verify the system works as expected.
+*   **Infrastructure**: Starts all databases, Keycloak, Nginx, and Observability tools.
 *   **Deployment**: Starts application containers with security configuration.
 *   **Functional Check**: Verifies HTTP endpoints and redirects (302 Found) for secured resources.
 *   **E2E Testing**: Uses **Cypress** to verify complex user flows and cross-system synchronization, running tests against the secure HTTPS endpoints and performing full login flows.
 
 ---
 
-## 5. Visualizing the Architecture
+## 6. Visualizing the Architecture
 
 We use **Structurizr** to visualize our model. The DSL file (`workspace.dsl`) is the source of truth for these diagrams. We use **tags** to create different views for different audiences:
 
 *   **System Landscape View**: Shows the logical business context (Users -> Systems), hiding infrastructure details.
 *   **Infrastructure View**: Shows the physical routing (Users -> Reverse Proxy -> Containers).
 *   **Security View**: Shows the IAM architecture (Users/Services -> Keycloak).
+*   **Observability View**: Shows the logging architecture (Promtail -> Loki -> Grafana).
 *   **Dynamic Views**: Visualizes sequence diagrams for key flows:
     *   **User Login Flow**: Interaction between User, App, and Keycloak.
     *   **M2M Sync Flow**: Interaction between PM Service, Keycloak, and Webshop.
@@ -131,9 +163,10 @@ We use **Structurizr** to visualize our model. The DSL file (`workspace.dsl`) is
 
 ## Conclusion
 
-We have successfully scaled our **"Architecture as Code"** approach to a secure, multi-system landscape.
+We have successfully scaled our **"Architecture as Code"** approach to a secure, multi-system landscape with observability.
 *   **Decoupling**: We explicitly modeled and implemented separate databases to ensure loose coupling.
 *   **Consistency**: We introduced Design Guidelines to maintain UI consistency across systems.
 *   **Security**: We implemented a production-like security stack with Reverse Proxy and Keycloak IAM.
-*   **New Features**: Added a client-side shopping cart to the Webshop, enhancing user interaction.
+*   **Observability**: We added a full logging stack to monitor the health and activity of all services.
+*   **New Features**: Added Order Service and Stock Reservation flows.
 *   **Verification**: Our automated pipeline now validates the integrity of a distributed system, ensuring that the implementation never drifts from the architectural intent.

@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: container-grafana
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-058
+      type: architectural
+      c4_level: container
+      description: "Grafana shall be used for log visualization."
+      priority: high
+      tracesTo: "REQ-055"
+      validation_policy: "policies/check_containers.rego"
+      model_validation:
+        parent: "Observability System"
+        container: "Grafana"

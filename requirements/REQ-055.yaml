@@ -1,0 +1,16 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: system-context-observability
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-055
+      type: architectural
+      c4_level: context
+      description: "The system shall include an Observability System for log aggregation and monitoring."
+      priority: high
+      validation_policy: "policies/check_containers.rego"
+      model_validation:
+        parent: "Observability System"
+        container: "Loki"

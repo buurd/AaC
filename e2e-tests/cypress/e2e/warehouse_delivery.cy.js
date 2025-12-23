@@ -2,6 +2,7 @@ describe('Warehouse Delivery Management', () => {
   const warehouseUrl = 'https://reverse-proxy:8445';
   const senderName = 'Supplier A';
   const serialNumber = 'SN123';
+  const productName = "The Hitchhiker's Guide to the Galaxy"; // Updated product name
 
   beforeEach(() => {
     // Login to Warehouse
@@ -33,8 +34,8 @@ describe('Warehouse Delivery Management', () => {
     cy.contains('Sender: ' + senderName);
 
     // 5. Add Item
-    // Assuming "Sample Product" exists (ID 1) from schema.sql
-    cy.get('select[name="productId"]').select('Sample Product');
+    // Use the updated product name
+    cy.get('select[name="productId"]').select(productName);
     cy.get('input[name="serialNumber"]').type(serialNumber);
     cy.get('select[name="state"]').select('New');
     // Ensure we click the button, not the h3 header

@@ -12,8 +12,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.concurrent.Executors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WebshopApplication {
+
+    private static final Logger logger = LoggerFactory.getLogger(WebshopApplication.class);
 
     private static final String CSS = 
         "body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }" +
@@ -32,9 +36,9 @@ public class WebshopApplication {
         String jwksUrl = System.getenv().getOrDefault("JWKS_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs");
         String issuer = System.getenv().getOrDefault("ISSUER_URL", "https://localhost:8446/realms/webshop-realm");
 
-        System.out.println("Connecting to database at: " + dbUrl);
+        logger.info("Connecting to database at: {}", dbUrl);
         Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-        System.out.println("Database connection successful.");
+        logger.info("Database connection successful.");
 
         // Initialize schema
         try (InputStream is = WebshopApplication.class.getResourceAsStream("/schema.sql")) {
@@ -44,7 +48,7 @@ public class WebshopApplication {
             String schemaSql = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             try (Statement stmt = connection.createStatement()) {
                 stmt.execute(schemaSql);
-                System.out.println("Database schema initialized.");
+                logger.info("Database schema initialized.");
             }
         }
 
@@ -61,6 +65,7 @@ public class WebshopApplication {
         
         server.createContext("/", (exchange) -> {
             String path = exchange.getRequestURI().getPath();
+            logger.info("Received request: {} {}", exchange.getRequestMethod(), path);
             if ("/".equals(path)) {
                 String html = "<!DOCTYPE html><html><head><style>" + CSS + "</style></head><body><div class='container'>" +
                               "<h1>Welcome to the Webshop!</h1>" +
@@ -95,6 +100,6 @@ public class WebshopApplication {
         // Use a thread pool to handle multiple requests concurrently
         server.setExecutor(Executors.newCachedThreadPool());
         server.start();
-        System.out.println("Server started on port " + port);
+        logger.info("Server started on port {}", port);
     }
 }

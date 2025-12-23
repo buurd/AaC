@@ -82,6 +82,7 @@ describe('Order Flow', () => {
     
     // We skip verifying the second alert because the page redirect might happen too fast
     // Instead, we verify the outcome: Stock reduced to 0
+    cy.log('Verifying stock reduction...');
 
     // 5. Verify Stock Reduced in Webshop (should be 0)
     verifyStock(0);

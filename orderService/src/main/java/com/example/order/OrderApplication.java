@@ -4,6 +4,8 @@ import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +28,8 @@ import java.util.concurrent.Executors;
 
 public class OrderApplication {
 
+    private static final Logger logger = LoggerFactory.getLogger(OrderApplication.class);
+
     private static final String CSS = 
         "body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }" +
         ".container { max-width: 1200px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }" +
@@ -46,9 +50,9 @@ public class OrderApplication {
         String issuer = System.getenv().getOrDefault("ISSUER_URL", "https://localhost:8446/realms/webshop-realm");
         String tokenUrl = System.getenv().getOrDefault("TOKEN_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token");
 
-        System.out.println("Connecting to database at: " + dbUrl);
+        logger.info("Connecting to database at: {}", dbUrl);
         Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-        System.out.println("Database connection successful.");
+        logger.info("Database connection successful.");
 
         // Initialize schema
         try (InputStream is = OrderApplication.class.getResourceAsStream("/schema.sql")) {
@@ -63,7 +67,7 @@ public class OrderApplication {
                         stmt.execute(sql);
                     }
                 }
-                System.out.println("Database schema initialized.");
+                logger.info("Database schema initialized.");
             }
         }
 
@@ -77,6 +81,7 @@ public class OrderApplication {
         
         server.createContext("/", (exchange) -> {
             String path = exchange.getRequestURI().getPath();
+            logger.info("Received request: {} {}", exchange.getRequestMethod(), path);
             if ("/".equals(path)) {
                 String html = "<!DOCTYPE html><html><head><style>" + CSS + "</style></head><body><div class='container'>" +
                               "<h1>Order Service</h1>" +
@@ -106,7 +111,7 @@ public class OrderApplication {
         
         server.setExecutor(Executors.newCachedThreadPool());
         server.start();
-        System.out.println("Order Service started on port " + port);
+        logger.info("Order Service started on port {}", port);
     }
 
     static class LoginHandler implements HttpHandler {
@@ -120,6 +125,7 @@ public class OrderApplication {
 
         @Override
         public void handle(HttpExchange t) throws IOException {
+            logger.info("Received request: {} {}", t.getRequestMethod(), t.getRequestURI().getPath());
             if ("POST".equalsIgnoreCase(t.getRequestMethod())) {
                 InputStream is = t.getRequestBody();
                 String formData = new String(is.readAllBytes(), StandardCharsets.UTF_8);
@@ -144,10 +150,11 @@ public class OrderApplication {
                         t.getResponseHeaders().add("Set-Cookie", "order_auth_token=" + accessToken + "; Path=/; HttpOnly");
                         redirect(t, "/orders");
                     } else {
+                        logger.warn("Login failed for user: {}", username);
                         sendResponse(t, 401, "<h1>Login Failed</h1><p>Invalid credentials</p><a href='/login'>Try Again</a>");
                     }
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    logger.error("Error during login", e);
                     sendResponse(t, 500, "<h1>Error</h1><p>" + e.getMessage() + "</p>");
                 }
             } else {
