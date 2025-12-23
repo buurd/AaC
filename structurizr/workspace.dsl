@@ -53,6 +53,9 @@ workspace "My System" "My System Description" {
                 shoppingCartController = component "ShoppingCartController" "Handles cart view." {
                     tags "Component"
                 }
+                orderHistoryController = component "OrderHistoryController" "Handles customer order history." {
+                    tags "Component"
+                }
                 productSyncController = component "ProductSyncController" "Handles product synchronization API." {
                     tags "Component"
                 }
@@ -165,6 +168,9 @@ workspace "My System" "My System Description" {
         orderService -> warehouseService "Reserves stock in" {
             tags "Logical"
         }
+        webshop -> orderService "Fetches customer orders from" {
+            tags "Logical"
+        }
 
         // --- Infrastructure Relationships (Physical/Routing View) ---
         // Point to the Container (Nginx) instead of the System (Gateway)
@@ -266,6 +272,9 @@ workspace "My System" "My System Description" {
         orderWebServer -> reverseProxy "Reserves stock in (HTTPS)" {
             tags "Infrastructure" "Implementation"
         }
+        webServer -> reverseProxy "Fetches customer orders from (HTTPS)" {
+            tags "Infrastructure" "Implementation"
+        }
 
         // Database Access (Direct - Logical & Infra)
         webServer -> database "Reads from and writes to" {
@@ -293,6 +302,9 @@ workspace "My System" "My System Description" {
             tags "Implementation" "Direct"
         }
         orderWebServer -> warehouseWebServer "Reserves stock in (HTTP)" {
+            tags "Implementation" "Direct"
+        }
+        webServer -> orderWebServer "Fetches customer orders from (HTTP)" {
             tags "Implementation" "Direct"
         }
 
@@ -328,11 +340,15 @@ workspace "My System" "My System Description" {
         warehouseStockService -> keycloakContainer "Requests token from" {
             tags "Interaction"
         }
+        orderHistoryController -> keycloakContainer "Requests token from" {
+            tags "Interaction"
+        }
 
 
         // Component-level relationships for webshop
         productController -> productRepository "Uses"
         shoppingCartController -> productRepository "Uses"
+        orderHistoryController -> orderController "Fetches orders from"
         productSyncController -> productRepository "Uses"
         stockSyncController -> productRepository "Uses"
         productRepository -> database "Reads from and writes to"

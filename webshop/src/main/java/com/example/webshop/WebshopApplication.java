@@ -54,6 +54,9 @@ public class WebshopApplication {
 
         // Create repository
         ProductRepository productRepository = new ProductRepository(connection);
+        
+        // Create services
+        OrderService orderService = new OrderService();
 
         // Security Filters
         SecurityFilter productSyncFilter = new SecurityFilter(jwksUrl, issuer, "product-sync");
@@ -71,6 +74,7 @@ public class WebshopApplication {
                               "<h1>Welcome to the Webshop!</h1>" +
                               "<p>Browse our amazing products.</p>" +
                               "<a href='/products' class='btn btn-primary'>View Products</a>" +
+                              "<a href='/my-orders' class='btn btn-primary' style='margin-left:10px;'>My Orders</a>" +
                               "</div></body></html>";
                 byte[] bytes = html.getBytes(StandardCharsets.UTF_8);
                 exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
@@ -90,6 +94,7 @@ public class WebshopApplication {
         
         server.createContext("/products", new ProductController(productRepository));
         server.createContext("/cart", new ShoppingCartController());
+        server.createContext("/my-orders", new OrderHistoryController(orderService));
         
         HttpContext productSyncContext = server.createContext("/api/products/sync", new ProductSyncController(productRepository));
         productSyncContext.getFilters().add(productSyncFilter);

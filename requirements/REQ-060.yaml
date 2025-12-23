@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: webshop-order-history
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-060
+      type: functional
+      c4_level: component
+      description: "The Webshop shall allow customers to view their order history by retrieving data from the Order Service."
+      priority: medium
+      tracesTo: "REQ-001"
+      model_validation:
+        source: "Webshop WebServer"
+        destination: "Order WebServer"
+        description_contains: "Fetches customer orders from"

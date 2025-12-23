@@ -45,8 +45,63 @@ public class OrderController implements HttpHandler {
             } else {
                 exchange.sendResponseHeaders(405, -1);
             }
+        } else if ("/api/orders".equals(path)) {
+            if ("GET".equalsIgnoreCase(method)) {
+                handleApiListOrders(exchange);
+            } else {
+                exchange.sendResponseHeaders(405, -1);
+            }
         } else {
             exchange.sendResponseHeaders(404, -1);
+        }
+    }
+
+    private void handleApiListOrders(HttpExchange exchange) throws IOException {
+        String query = exchange.getRequestURI().getQuery();
+        String customerName = null;
+        if (query != null) {
+            for (String param : query.split("&")) {
+                String[] pair = param.split("=");
+                if (pair.length == 2 && "customer".equals(pair[0])) {
+                    customerName = java.net.URLDecoder.decode(pair[1], StandardCharsets.UTF_8);
+                }
+            }
+        }
+
+        try {
+            List<Order> orders = repository.findAll(); // Should filter by customer in DB, but filtering in memory for now
+            List<Order> filteredOrders = new ArrayList<>();
+            if (customerName != null) {
+                for (Order o : orders) {
+                    if (customerName.equals(o.getCustomerName())) {
+                        filteredOrders.add(o);
+                    }
+                }
+            } else {
+                filteredOrders = orders;
+            }
+
+            StringBuilder json = new StringBuilder("[");
+            for (int i = 0; i < filteredOrders.size(); i++) {
+                Order o = filteredOrders.get(i);
+                json.append(String.format("{\"id\":%d,\"customerName\":\"%s\",\"status\":\"%s\"}", 
+                    o.getId(), o.getCustomerName(), o.getStatus()));
+                if (i < filteredOrders.size() - 1) {
+                    json.append(",");
+                }
+            }
+            json.append("]");
+
+            String response = json.toString();
+            byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().set("Content-Type", "application/json");
+            exchange.sendResponseHeaders(200, bytes.length);
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(bytes);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            exchange.sendResponseHeaders(500, -1);
         }
     }
 
