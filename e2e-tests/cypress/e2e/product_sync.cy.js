@@ -33,52 +33,32 @@ describe('Product Synchronization', () => {
   };
 
   beforeEach(() => {
-    cy.login('manager', 'password');
+    cy.loginToPM();
   });
 
   it('should sync create, update, and delete to webshop', () => {
-    // 1. Create Product in PM (BaseUrl is PM HTTPS)
-    cy.visit('/products');
-    cy.contains('Create New Product').click();
-    
-    cy.get('input[name="type"]').clear().type('SyncType');
-    cy.get('input[name="name"]').type(productName);
-    cy.get('input[name="price"]').clear().type('100.00');
-    cy.get('input[name="unit"]').clear().type('pcs');
-    cy.get('input[name="description"]').type('Sync Description');
-    cy.get('button[type="submit"]').click();
+    // 1. Create
+    cy.createProductInPM({ name: productName, type: 'SyncType', price: '100.00', description: 'Sync Description' });
 
-    // Verify in PM
-    cy.contains(productName).should('be.visible');
-
-    // 2. Verify in Webshop
+    // 2. Verify Sync
     verifyWebshopContent(productName);
     verifyWebshopContent('100.00');
 
-    // 3. Update Product in PM
+    // 3. Update
     cy.contains('tr', productName).within(() => {
       cy.contains('Edit').click();
     });
     cy.get('input[name="price"]').clear().type('200.00');
     cy.get('button[type="submit"]').click();
-
-    // Verify in PM
-    cy.contains(productName).should('be.visible');
     cy.contains('200.00').should('be.visible');
 
-    // 4. Verify Update in Webshop
+    // 4. Verify Update Sync
     verifyWebshopContent('200.00');
 
-    // 5. Delete Product in PM
-    cy.contains('tr', productName).within(() => {
-      cy.contains('Delete').click();
-    });
-    cy.get('button[type="submit"]').click();
+    // 5. Delete
+    cy.deleteProductInPM(productName);
 
-    // Verify in PM
-    cy.contains(productName).should('not.exist');
-
-    // 6. Verify Delete in Webshop
+    // 6. Verify Delete Sync
     verifyWebshopContentMissing(productName);
   });
 });

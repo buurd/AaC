@@ -87,7 +87,7 @@ describe('Security and Error Handling', () => {
   });
   
   it('should validate input when creating a product', () => {
-     cy.login('manager', 'password'); // Login to PM
+     cy.loginToPM(); // Login to PM
      cy.visit(pmUrl + '/products/create');
      
      // Try to submit with negative price
