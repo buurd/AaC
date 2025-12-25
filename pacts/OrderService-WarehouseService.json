@@ -9,6 +9,57 @@
 
         ]
       },
+      "description": "A request to fulfill an order",
+      "key": "f538ebec",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "Warehouse is up"
+        }
+      ],
+      "request": {
+        "body": {
+          "content": {
+            "orderId": 123
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Authorization": [
+            "Bearer dummy-token"
+          ],
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "method": "POST",
+        "path": "/api/fulfillment/order"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "status": "processing"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "status": 200
+      },
+      "transport": "https",
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "comments": {
+        "text": [
+
+        ]
+      },
       "description": "A request to reserve stock",
       "key": "fe62cc9b",
       "pending": false,

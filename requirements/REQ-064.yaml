@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: user-login-order
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-064
+      type: functional
+      c4_level: component
+      description: "The Webshop shall require users to be logged in before placing an order."
+      priority: high
+      tracesTo: "REQ-050"
+      model_validation:
+        source: "Webshop WebServer"
+        destination: "Keycloak IAM"
+        description_contains: "Verifies tokens with"

@@ -42,12 +42,13 @@ public class OrderPactProviderTest {
         };
         
         StockReservationService mockStockService = new StockReservationService(null, null);
+        OrderFulfillmentService mockFulfillmentService = new OrderFulfillmentService(null, null);
 
         // Start Server
         server = HttpServer.create(new InetSocketAddress(8083), 0);
         
         // Mount controller directly
-        server.createContext("/api/orders", new OrderController(mockRepo, mockStockService));
+        server.createContext("/api/orders", new OrderController(mockRepo, mockStockService, mockFulfillmentService));
         
         server.setExecutor(Executors.newCachedThreadPool());
         server.start();

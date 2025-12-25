@@ -36,6 +36,7 @@ public class OrderApplication {
         "h1 { color: #343A40; }" +
         ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }" +
         ".btn-primary { background-color: #007BFF; }" +
+        ".btn-secondary { background-color: #6C757D; }" +
         "input[type='text'], input[type='password'] { padding: 8px; border: 1px solid #CED4DA; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }" +
         "label { display: block; font-weight: bold; margin-bottom: 5px; }";
 
@@ -49,6 +50,7 @@ public class OrderApplication {
         String jwksUrl = System.getenv().getOrDefault("JWKS_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs");
         String issuer = System.getenv().getOrDefault("ISSUER_URL", "https://localhost:8446/realms/webshop-realm");
         String tokenUrl = System.getenv().getOrDefault("TOKEN_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token");
+        String keycloakUrl = System.getenv().getOrDefault("KEYCLOAK_URL", "https://localhost:8446");
 
         logger.info("Connecting to database at: {}", dbUrl);
         Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
@@ -73,7 +75,10 @@ public class OrderApplication {
 
         OrderRepository repository = new OrderRepository(connection);
         StockReservationService stockService = new StockReservationService();
-        SecurityFilter securityFilter = new SecurityFilter(jwksUrl, issuer, "order-manager");
+        OrderFulfillmentService fulfillmentService = new OrderFulfillmentService();
+        
+        SecurityFilter managerFilter = new SecurityFilter(jwksUrl, issuer, "order-manager");
+        SecurityFilter historyFilter = new SecurityFilter(jwksUrl, issuer, "order-history");
 
         // --- HTTP Server Setup ---
         int port = 8003;
@@ -83,10 +88,12 @@ public class OrderApplication {
             String path = exchange.getRequestURI().getPath();
             logger.info("Received request: {} {}", exchange.getRequestMethod(), path);
             if ("/".equals(path)) {
+                String logoutUrl = keycloakUrl + "/realms/webshop-realm/protocol/openid-connect/logout?redirect_uri=https://localhost:8447/";
                 String html = "<!DOCTYPE html><html><head><style>" + CSS + "</style></head><body><div class='container'>" +
                               "<h1>Order Service</h1>" +
                               "<p>Manage customer orders.</p>" +
                               "<a href='/orders' class='btn btn-primary'>View Orders</a>" +
+                              "<a href='" + logoutUrl + "' class='btn btn-secondary' style='margin-left:10px;'>Logout</a>" +
                               "</div></body></html>";
                 byte[] bytes = html.getBytes(StandardCharsets.UTF_8);
                 exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
@@ -106,8 +113,13 @@ public class OrderApplication {
         
         server.createContext("/login", new LoginHandler(tokenUrl));
         
-        HttpContext ordersContext = server.createContext("/orders", new OrderController(repository, stockService));
-        ordersContext.getFilters().add(securityFilter);
+        // Mount UI context (protected by order-manager)
+        HttpContext ordersContext = server.createContext("/orders", new OrderController(repository, stockService, fulfillmentService));
+        ordersContext.getFilters().add(managerFilter);
+        
+        // Mount API context (protected by order-history)
+        HttpContext apiContext = server.createContext("/api/orders", new OrderController(repository, stockService, fulfillmentService));
+        apiContext.getFilters().add(historyFilter);
         
         server.setExecutor(Executors.newCachedThreadPool());
         server.start();

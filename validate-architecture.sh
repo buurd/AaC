@@ -2,6 +2,20 @@
 set -e
 clear
 
+# --- Pre-Cleanup ---
+# Remove any leftover containers from previous runs or run-webshop.sh to avoid conflicts
+echo "--- Checking for leftover containers ---"
+# List of container names used in this script and run-webshop.sh
+CONTAINERS="webshop-demo pm-demo warehouse-demo order-service keycloak reverse-proxy db_webshop db_pm db_warehouse db_order db-webshop db-pm db-warehouse db-order loki promtail grafana"
+
+for container in $CONTAINERS; do
+    if docker ps -a --format '{{.Names}}' | grep -q "^${container}$"; then
+        echo "Removing leftover container: $container"
+        docker stop $container > /dev/null 2>&1 || true
+        docker rm $container > /dev/null 2>&1 || true
+    fi
+done
+
 # --- Cleanup ---
 # This function will be called on script exit to ensure temporary files are removed.
 cleanup() {
@@ -10,61 +24,9 @@ cleanup() {
     rm -f workspace.json project-files.json requirements.json implementation-input.json code-structure-input.json code-structure-files.json relation-input.json test-content-input.json test-files.json
     rm -f structurizr/workspace.json
 
-    # Stop and remove the containers
-    if [ -n "$WEBSHOP_CONTAINER_ID" ]; then
-        echo "Stopping Webshop container ($WEBSHOP_CONTAINER_ID)..."
-        docker stop $WEBSHOP_CONTAINER_ID > /dev/null 2>&1 || true
-        docker rm $WEBSHOP_CONTAINER_ID > /dev/null 2>&1 || true
-    fi
-    if [ -n "$PM_CONTAINER_ID" ]; then
-        echo "Stopping Product Management container ($PM_CONTAINER_ID)..."
-        docker stop $PM_CONTAINER_ID > /dev/null 2>&1 || true
-        docker rm $PM_CONTAINER_ID > /dev/null 2>&1 || true
-    fi
-    if [ -n "$WAREHOUSE_CONTAINER_ID" ]; then
-        echo "Stopping Warehouse container ($WAREHOUSE_CONTAINER_ID)..."
-        docker stop $WAREHOUSE_CONTAINER_ID > /dev/null 2>&1 || true
-        docker rm $WAREHOUSE_CONTAINER_ID > /dev/null 2>&1 || true
-    fi
-    if [ -n "$ORDER_CONTAINER_ID" ]; then
-        echo "Stopping Order Service container ($ORDER_CONTAINER_ID)..."
-        docker stop $ORDER_CONTAINER_ID > /dev/null 2>&1 || true
-        docker rm $ORDER_CONTAINER_ID > /dev/null 2>&1 || true
-    fi
-    if [ -n "$KEYCLOAK_CONTAINER_ID" ]; then
-        echo "Stopping Keycloak container ($KEYCLOAK_CONTAINER_ID)..."
-        docker stop $KEYCLOAK_CONTAINER_ID > /dev/null 2>&1 || true
-        docker rm $KEYCLOAK_CONTAINER_ID > /dev/null 2>&1 || true
-    fi
-    if [ -n "$PROXY_CONTAINER_ID" ]; then
-        echo "Stopping Proxy container ($PROXY_CONTAINER_ID)..."
-        docker stop $PROXY_CONTAINER_ID > /dev/null 2>&1 || true
-        docker rm $PROXY_CONTAINER_ID > /dev/null 2>&1 || true
-    fi
-    if [ -n "$DB_WEBSHOP_ID" ]; then
-        echo "Stopping Webshop Database container ($DB_WEBSHOP_ID)..."
-        docker stop $DB_WEBSHOP_ID > /dev/null 2>&1 || true
-        docker rm $DB_WEBSHOP_ID > /dev/null 2>&1 || true
-    fi
-    if [ -n "$DB_PM_ID" ]; then
-        echo "Stopping PM Database container ($DB_PM_ID)..."
-        docker stop $DB_PM_ID > /dev/null 2>&1 || true
-        docker rm $DB_PM_ID > /dev/null 2>&1 || true
-    fi
-    if [ -n "$DB_WAREHOUSE_ID" ]; then
-        echo "Stopping Warehouse Database container ($DB_WAREHOUSE_ID)..."
-        docker stop $DB_WAREHOUSE_ID > /dev/null 2>&1 || true
-        docker rm $DB_WAREHOUSE_ID > /dev/null 2>&1 || true
-    fi
-    if [ -n "$DB_ORDER_ID" ]; then
-        echo "Stopping Order Database container ($DB_ORDER_ID)..."
-        docker stop $DB_ORDER_ID > /dev/null 2>&1 || true
-        docker rm $DB_ORDER_ID > /dev/null 2>&1 || true
-    fi
-    if [ -n "$NETWORK_NAME" ]; then
-        echo "Removing Docker network ($NETWORK_NAME)..."
-        docker network rm $NETWORK_NAME > /dev/null 2>&1 || true
-    fi
+    # NOTE: Containers are NOT stopped automatically to allow manual debugging.
+    # Run 'docker stop ...' manually if needed.
+    echo "⚠️  Containers are left running for debugging."
 }
 trap cleanup EXIT
 
@@ -339,7 +301,8 @@ KEYCLOAK_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name keycloak \
     -e KEYCLOAK_ADMIN_PASSWORD=admin \
     -e KC_PROXY=edge \
     -e KC_HOSTNAME_STRICT=false \
-    -e KC_HOSTNAME_URL=https://localhost:8446 \
+    -e KC_HOSTNAME_STRICT_BACKCHANNEL=true \
+    -e KC_HOSTNAME_URL=https://reverse-proxy:8446 \
     -e KC_HTTP_ENABLED=true \
     -v "$(pwd)/infrastructure/keycloak/realm-export.json:/opt/keycloak/data/import/realm.json:ro" \
     quay.io/keycloak/keycloak:23.0.7 \
@@ -354,6 +317,8 @@ WEBSHOP_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name webshop-demo
     -e DB_URL=jdbc:postgresql://db_webshop:5432/postgres \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
+    -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
+    -e ISSUER_URL=https://reverse-proxy:8446/realms/webshop-realm \
     eclipse-temurin:21-jre java -jar /app/webshop-1.0-SNAPSHOT-jar-with-dependencies.jar)
 echo "Webshop container started with ID: $WEBSHOP_CONTAINER_ID"
 
@@ -368,7 +333,7 @@ PM_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name pm-demo \
     -e WEBSHOP_API_URL=http://webshop-demo:8000/api/products/sync \
     -e WAREHOUSE_API_URL=http://warehouse-demo:8002/api/products/sync \
     -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
-    -e ISSUER_URL=https://localhost:8446/realms/webshop-realm \
+    -e ISSUER_URL=https://reverse-proxy:8446/realms/webshop-realm \
     -e CLIENT_ID=pm-client \
     -e CLIENT_SECRET=pm-secret \
     -e TOKEN_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token \
@@ -385,7 +350,7 @@ WAREHOUSE_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name warehouse-
     -e DB_PASSWORD=postgres \
     -e WEBSHOP_STOCK_API_URL=http://webshop-demo:8000/api/stock/sync \
     -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
-    -e ISSUER_URL=https://localhost:8446/realms/webshop-realm \
+    -e ISSUER_URL=https://reverse-proxy:8446/realms/webshop-realm \
     -e CLIENT_ID=warehouse-client \
     -e CLIENT_SECRET=warehouse-secret \
     -e TOKEN_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token \
@@ -401,7 +366,7 @@ ORDER_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name order-service 
     -e DB_PASSWORD=postgres \
     -e WAREHOUSE_RESERVE_URL=http://warehouse-demo:8002/api/stock/reserve \
     -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
-    -e ISSUER_URL=https://localhost:8446/realms/webshop-realm \
+    -e ISSUER_URL=https://reverse-proxy:8446/realms/webshop-realm \
     -e CLIENT_ID=order-client \
     -e CLIENT_SECRET=order-secret \
     -e TOKEN_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token \

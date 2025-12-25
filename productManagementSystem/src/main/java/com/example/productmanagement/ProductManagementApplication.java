@@ -52,6 +52,7 @@ public class ProductManagementApplication {
 
     private static ProductRepository repository;
     private static ProductService service;
+    private static String keycloakUrl;
 
     public static void main(String[] args) throws IOException, SQLException {
         // Database Setup
@@ -63,6 +64,7 @@ public class ProductManagementApplication {
         String jwksUrl = System.getenv().getOrDefault("JWKS_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs");
         String issuer = System.getenv().getOrDefault("ISSUER_URL", "https://localhost:8446/realms/webshop-realm");
         String tokenUrl = System.getenv().getOrDefault("TOKEN_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token");
+        keycloakUrl = System.getenv().getOrDefault("KEYCLOAK_URL", "https://localhost:8446");
 
         logger.info("Connecting to database at: {}", dbUrl);
         Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
@@ -223,9 +225,13 @@ public class ProductManagementApplication {
             logger.info("Received request: {} {}", t.getRequestMethod(), t.getRequestURI().getPath());
             try {
                 List<Product> products = repository.findAll();
+                String logoutUrl = keycloakUrl + "/realms/webshop-realm/protocol/openid-connect/logout?redirect_uri=https://localhost:8444/";
                 StringBuilder sb = new StringBuilder();
                 sb.append("<h1>Product List</h1>");
-                sb.append("<a href='/products/create' class='btn btn-success' style='margin-bottom: 20px;'>Create New Product</a>");
+                sb.append("<div style='margin-bottom: 20px;'>");
+                sb.append("<a href='/products/create' class='btn btn-success'>Create New Product</a>");
+                sb.append("<a href='" + logoutUrl + "' class='btn btn-secondary' style='float: right;'>Logout</a>");
+                sb.append("</div>");
                 sb.append("<table><thead><tr><th>ID</th><th>Type</th><th>Name</th><th>Price</th><th>Unit</th><th>Description</th><th>Actions</th></tr></thead><tbody>");
                 
                 for (Product p : products) {

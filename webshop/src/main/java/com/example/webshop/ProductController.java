@@ -65,13 +65,31 @@ public class ProductController implements HttpHandler {
         try {
             List<Product> products = repository.findAll();
             
+            // Dynamic URL construction
+            String host = exchange.getRequestHeaders().getFirst("Host");
+            if (host == null) host = "localhost:8443";
+            String baseUrl = "https://" + host;
+            if (baseUrl.endsWith("/")) baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+
+            String defaultKeycloakUrl = System.getenv().getOrDefault("KEYCLOAK_URL", "https://localhost:8446");
+            String currentKeycloakUrl = defaultKeycloakUrl;
+            if (host.contains(":8443")) {
+                currentKeycloakUrl = "https://" + host.replace(":8443", ":8446");
+            }
+
+            // Use /logout endpoint instead of direct Keycloak logout
+            String logoutUrl = "/logout";
+            
             StringBuilder html = new StringBuilder();
             html.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style>");
             html.append(JS).append("</head><body>");
             html.append("<div class='container'>");
             html.append("<div style='display:flex; justify-content:space-between; align-items:center;'>");
             html.append("<h1>Webshop Products</h1>");
-            html.append("<a href='/cart' class='btn btn-secondary'>View Cart</a>");
+            html.append("<div>");
+            html.append("<a href='/cart' class='btn btn-secondary' style='margin-right: 10px;'>View Cart</a>");
+            html.append("<a href='" + logoutUrl + "' class='btn btn-secondary'>Logout</a>");
+            html.append("</div>");
             html.append("</div>");
             html.append("<table>");
             html.append("<thead><tr><th>Name</th><th>Description</th><th>Price</th><th>Stock</th><th>Action</th></tr></thead>");

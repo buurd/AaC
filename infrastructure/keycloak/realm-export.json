@@ -1,6 +1,7 @@
 {
   "realm": "webshop-realm",
   "enabled": true,
+  "registrationAllowed": true,
   "roles": {
     "realm": [
       {
@@ -26,6 +27,14 @@
       {
         "name": "stock-reserve",
         "description": "Can reserve stock"
+      },
+      {
+        "name": "order-history",
+        "description": "Can view order history"
+      },
+      {
+        "name": "order-fulfillment",
+        "description": "Can trigger order fulfillment"
       }
     ]
   },
@@ -101,7 +110,13 @@
       "username": "service-account-order-client",
       "enabled": true,
       "serviceAccountClientId": "order-client",
-      "realmRoles": [ "stock-reserve" ]
+      "realmRoles": [ "stock-reserve", "order-fulfillment" ]
+    },
+    {
+      "username": "service-account-webshop-backend-client",
+      "enabled": true,
+      "serviceAccountClientId": "webshop-backend-client",
+      "realmRoles": [ "order-history" ]
     }
   ],
   "clients": [
@@ -110,7 +125,19 @@
       "enabled": true,
       "publicClient": true,
       "directAccessGrantsEnabled": true,
-      "redirectUris": [ "*" ]
+      "redirectUris": [
+        "https://localhost:8443/*",
+        "https://reverse-proxy:8443/*",
+        "*"
+      ],
+      "webOrigins": [ "*" ]
+    },
+    {
+      "clientId": "webshop-backend-client",
+      "enabled": true,
+      "serviceAccountsEnabled": true,
+      "secret": "webshop-backend-secret",
+      "clientAuthenticatorType": "client-secret"
     },
     {
       "clientId": "pm-client",

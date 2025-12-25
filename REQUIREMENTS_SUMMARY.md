@@ -7,11 +7,14 @@ This document presents the system requirements in a narrative format, grouping t
 ### The Webshop Experience (Customer)
 The primary goal is to provide a seamless shopping experience for customers.
 *   **Access**: The Customer uses the Webshop system (**REQ-001**).
+*   **Registration**: Customers can register a new account (**REQ-063**).
 *   **Navigation**: The root page provides clear navigation links to main functionalities (**REQ-040**).
 *   **Browsing**: Customers can view a list of available products (**REQ-007**).
 *   **Stock Visibility**: The current stock quantity is displayed for each product (**REQ-041**).
 *   **Shopping Cart**: Customers can add products to a client-side shopping cart, view their cart, and remove items (**REQ-047**).
 *   **Ordering**: Customers can place orders via the Order Service (**REQ-050**).
+*   **Security**: Customers must be logged in to place an order (**REQ-064**).
+*   **Order History**: Customers can view their past orders (**REQ-060**).
 
 ### Product Management (Product Manager)
 Product Managers need tools to maintain the product catalog.
@@ -24,6 +27,7 @@ Warehouse Staff manage the physical inventory.
 *   **Access**: The Warehouse Staff uses the Warehouse Service (**REQ-027**).
 *   **Inventory View**: Staff can view the list of products known to the warehouse (**REQ-034**).
 *   **Delivery Management**: The system supports the concept of Deliveries containing Product Individuals (**REQ-036**). Staff can create deliveries (**REQ-037**), add items to them (**REQ-038**), and return deliveries (**REQ-039**).
+*   **Order Fulfillment**: Staff can view pending orders and mark them as shipped (**REQ-062**).
 
 ### Order Management (Order Manager)
 Order Managers oversee the order fulfillment process.
@@ -51,6 +55,11 @@ When inventory changes in the warehouse, the webshop is updated.
 When an order is placed, stock must be reserved.
 *   **Trigger**: The Order Service reserves stock when an order is created (**REQ-053**).
 *   **Destination**: The Warehouse Service receives the reservation request (**REQ-054**).
+
+### Order Fulfillment (Order -> Warehouse)
+When an order is confirmed, the warehouse is notified.
+*   **Trigger**: The Order Service notifies the Warehouse Service when an order is confirmed (**REQ-061**).
+*   **Destination**: The Warehouse Service receives the notification to start fulfillment.
 
 ---
 

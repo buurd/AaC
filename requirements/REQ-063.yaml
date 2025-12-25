@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: user-registration
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-063
+      type: functional
+      c4_level: component
+      description: "The Webshop shall allow users to register themselves."
+      priority: high
+      tracesTo: "REQ-001"
+      model_validation:
+        source: "Customer"
+        destination: "Keycloak IAM"
+        description_contains: "Registers with"

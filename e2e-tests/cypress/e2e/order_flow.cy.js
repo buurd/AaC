@@ -17,6 +17,19 @@ describe('Order Flow', () => {
     });
   };
 
+  // Helper to login to Webshop via request
+  const loginToWebshop = () => {
+    cy.request({
+      method: 'POST',
+      url: webshopUrl + '/login',
+      form: true,
+      body: {
+        username: 'manager', // Using manager as a valid user
+        password: 'password'
+      }
+    });
+  };
+
   // Helper to verify stock in Webshop
   const verifyStock = (expectedStock, attempts = 0) => {
     if (attempts > 20) throw new Error(`Timed out waiting for stock to be ${expectedStock}`);
@@ -31,7 +44,7 @@ describe('Order Flow', () => {
     });
   };
 
-  it('should place an order and reduce stock', () => {
+  it('should place an order, reduce stock, and show in order history', () => {
     // --- SETUP ---
     // 1. Create Product in PM
     cy.login('manager', 'password'); // Logs into PM (baseUrl)
@@ -62,7 +75,10 @@ describe('Order Flow', () => {
     verifyStock(1);
 
     // --- TEST ---
-    // 4. Place Order in Webshop
+    // 4. Login to Webshop
+    loginToWebshop();
+
+    // 5. Place Order in Webshop
     cy.visit(webshopUrl + '/products');
     
     // Stub the window.alert function to test its calls
@@ -84,7 +100,13 @@ describe('Order Flow', () => {
     // Instead, we verify the outcome: Stock reduced to 0
     cy.log('Verifying stock reduction...');
 
-    // 5. Verify Stock Reduced in Webshop (should be 0)
+    // 6. Verify Stock Reduced in Webshop (should be 0)
     verifyStock(0);
+
+    // 7. Verify Order History (REQ-060)
+    cy.visit(webshopUrl + '/my-orders');
+    cy.contains('h1', 'My Orders');
+    // The order ID is dynamic, but we can check for the status
+    cy.contains('td', 'CONFIRMED').should('be.visible');
   });
 });

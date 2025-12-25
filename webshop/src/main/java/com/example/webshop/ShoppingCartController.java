@@ -23,6 +23,11 @@ public class ShoppingCartController implements HttpHandler {
 
     private static final String JS = 
         "<script>" +
+        "function getCookie(name) {" +
+        "  const value = `; ${document.cookie}`;" +
+        "  const parts = value.split(`; ${name}=`);" +
+        "  if (parts.length === 2) return parts.pop().split(';').shift();" +
+        "}" +
         "function renderCart() {" +
         "  let cart = JSON.parse(localStorage.getItem('cart')) || [];" +
         "  let tbody = document.getElementById('cart-body');" +
@@ -47,13 +52,22 @@ public class ShoppingCartController implements HttpHandler {
         "function checkout() {" +
         "  let cart = JSON.parse(localStorage.getItem('cart')) || [];" +
         "  if (cart.length === 0) { alert('Cart is empty!'); return; }" +
+        "  const token = getCookie('webshop_auth_token');" +
+        "  if (!token) {" +
+        "    alert('You must be logged in to place an order.');" +
+        "    window.location.href = '/login';" + // Assuming a login page or redirect to Keycloak
+        "    return;" +
+        "  }" +
         "  const order = {" +
-        "    customerName: 'Test Customer'," +
+        "    customerName: 'John Doe'," + // Ideally, this should come from the token claims
         "    items: cart.map(i => ({ productId: i.id, quantity: i.quantity }))" +
         "  };" +
         "  fetch('/api/orders', {" +
         "    method: 'POST'," +
-        "    headers: { 'Content-Type': 'application/json' }," +
+        "    headers: { " +
+        "      'Content-Type': 'application/json'," +
+        "      'Authorization': 'Bearer ' + token" +
+        "    }," +
         "    body: JSON.stringify(order)" +
         "  }).then(res => {" +
         "    if (res.ok) {" +

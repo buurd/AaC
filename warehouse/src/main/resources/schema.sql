@@ -17,6 +17,12 @@ CREATE TABLE IF NOT EXISTS product_individuals (
     state VARCHAR(50)
 );
 
+CREATE TABLE IF NOT EXISTS fulfillment_orders (
+    id SERIAL PRIMARY KEY,
+    order_id INTEGER UNIQUE,
+    status VARCHAR(50) DEFAULT 'PENDING'
+);
+
 -- Seed Data
 -- Product (matches PM ID 1)
 INSERT INTO products (pm_id, name) VALUES (1, 'The Hitchhiker''s Guide to the Galaxy');

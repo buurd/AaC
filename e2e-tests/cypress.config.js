@@ -9,6 +9,7 @@ module.exports = defineConfig({
     chromeWebSecurity: false, // Allow self-signed certs and cross-origin
     supportFile: 'cypress/support/e2e.js', // Enable support file
     video: false,
-    screenshotOnRunFailure: false
+    screenshotOnRunFailure: false,
+    experimentalSessionAndOrigin: true // Ensure experimental session support is on if needed (though cy.origin is standard now)
   },
 });

@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: warehouse-fulfillment-ui
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-062
+      type: functional
+      c4_level: component
+      description: "The Warehouse Service shall provide a UI for Warehouse Staff to view pending orders and mark them as shipped."
+      priority: high
+      tracesTo: "REQ-027"
+      model_validation:
+        source: "Warehouse Staff"
+        destination: "Warehouse WebServer"
+        description_contains: "Manages fulfillment"

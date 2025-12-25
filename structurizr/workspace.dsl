@@ -106,6 +106,9 @@ workspace "My System" "My System Description" {
                 warehouseStockService = component "StockService" "Handles stock sync to Webshop." {
                     tags "Component" "Service"
                 }
+                warehouseOrderFulfillmentController = component "OrderFulfillmentController" "Handles order fulfillment." {
+                    tags "Component"
+                }
                 warehouseProductRepository = component "ProductRepository" "Handles data access for products." {
                     tags "Component" "Repository"
                 }
@@ -129,6 +132,9 @@ workspace "My System" "My System Description" {
                     tags "Component" "Repository"
                 }
                 stockReservationService = component "StockReservationService" "Handles stock reservation with Warehouse." {
+                    tags "Component" "Service"
+                }
+                orderFulfillmentService = component "OrderFulfillmentService" "Notifies Warehouse of confirmed orders." {
                     tags "Component" "Service"
                 }
             }
@@ -169,6 +175,9 @@ workspace "My System" "My System Description" {
             tags "Logical"
         }
         webshop -> orderService "Fetches customer orders from" {
+            tags "Logical"
+        }
+        orderService -> warehouseService "Notifies of confirmed order" {
             tags "Logical"
         }
 
@@ -247,6 +256,9 @@ workspace "My System" "My System Description" {
         orderManager -> keycloakContainer "Authenticates with" {
             tags "Security"
         }
+        customer -> keycloak "Registers with" {
+            tags "Security"
+        }
 
         // Services verify tokens with Keycloak
         webServer -> keycloakContainer "Verifies tokens with" {
@@ -273,6 +285,9 @@ workspace "My System" "My System Description" {
             tags "Infrastructure" "Implementation"
         }
         webServer -> reverseProxy "Fetches customer orders from (HTTPS)" {
+            tags "Infrastructure" "Implementation"
+        }
+        orderWebServer -> reverseProxy "Notifies of confirmed order (HTTPS)" {
             tags "Infrastructure" "Implementation"
         }
 
@@ -305,6 +320,9 @@ workspace "My System" "My System Description" {
             tags "Implementation" "Direct"
         }
         webServer -> orderWebServer "Fetches customer orders from (HTTP)" {
+            tags "Implementation" "Direct"
+        }
+        orderWebServer -> warehouseWebServer "Notifies of confirmed order (HTTP)" {
             tags "Implementation" "Direct"
         }
 
@@ -343,6 +361,12 @@ workspace "My System" "My System Description" {
         orderHistoryController -> keycloakContainer "Requests token from" {
             tags "Interaction"
         }
+        orderFulfillmentService -> keycloakContainer "Requests token from" {
+            tags "Interaction"
+        }
+        warehouseStaff -> warehouseWebServer "Manages fulfillment" {
+            tags "Interaction"
+        }
 
 
         // Component-level relationships for webshop
@@ -366,13 +390,16 @@ workspace "My System" "My System Description" {
         warehouseDeliveryController -> warehouseDeliveryRepository "Uses"
         warehouseDeliveryController -> warehouseStockService "Uses"
         warehouseStockService -> stockSyncController "Sends stock updates to"
+        warehouseOrderFulfillmentController -> warehouseDeliveryRepository "Uses"
         warehouseProductRepository -> warehouseDatabase "Reads from and writes to"
         warehouseDeliveryRepository -> warehouseDatabase "Reads from and writes to"
 
         // Component-level relationships for orderService
         orderController -> orderRepository "Uses"
         orderController -> stockReservationService "Uses"
+        orderController -> orderFulfillmentService "Uses"
         stockReservationService -> warehouseDeliveryController "Reserves stock via"
+        orderFulfillmentService -> warehouseOrderFulfillmentController "Notifies of confirmed order"
         orderRepository -> orderDatabase "Reads from and writes to"
     }
 

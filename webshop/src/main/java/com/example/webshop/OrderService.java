@@ -15,11 +15,11 @@ public class OrderService {
 
     public OrderService() {
         this(
-            System.getenv().getOrDefault("ORDER_SERVICE_URL", "http://order-service:8003/orders"),
+            System.getenv().getOrDefault("ORDER_SERVICE_URL", "http://order-service:8003/api/orders"),
             new KeycloakTokenService(
                 System.getenv().getOrDefault("TOKEN_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token"),
-                System.getenv().getOrDefault("CLIENT_ID", "webshop-client"),
-                System.getenv().getOrDefault("CLIENT_SECRET", "webshop-secret")
+                System.getenv().getOrDefault("BACKEND_CLIENT_ID", "webshop-backend-client"),
+                System.getenv().getOrDefault("BACKEND_CLIENT_SECRET", "webshop-backend-secret")
             )
         );
     }

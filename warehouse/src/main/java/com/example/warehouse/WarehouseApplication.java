@@ -50,6 +50,7 @@ public class WarehouseApplication {
         String jwksUrl = System.getenv().getOrDefault("JWKS_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs");
         String issuer = System.getenv().getOrDefault("ISSUER_URL", "https://localhost:8446/realms/webshop-realm");
         String tokenUrl = System.getenv().getOrDefault("TOKEN_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token");
+        String keycloakUrl = System.getenv().getOrDefault("KEYCLOAK_URL", "https://localhost:8446");
 
         logger.info("Connecting to database at: {}", dbUrl);
         Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
@@ -78,6 +79,7 @@ public class WarehouseApplication {
         
         SecurityFilter staffFilter = new SecurityFilter(jwksUrl, issuer, "warehouse-staff");
         SecurityFilter reserveFilter = new SecurityFilter(jwksUrl, issuer, "stock-reserve");
+        SecurityFilter fulfillmentFilter = new SecurityFilter(jwksUrl, issuer, "order-fulfillment");
 
         // --- HTTP Server Setup ---
         int port = 8002;
@@ -87,11 +89,14 @@ public class WarehouseApplication {
             String path = exchange.getRequestURI().getPath();
             logger.info("Received request: {} {}", exchange.getRequestMethod(), path);
             if ("/".equals(path)) {
+                String logoutUrl = keycloakUrl + "/realms/webshop-realm/protocol/openid-connect/logout?redirect_uri=https://localhost:8445/";
                 String html = "<!DOCTYPE html><html><head><style>" + CSS + "</style></head><body><div class='container'>" +
                               "<h1>Warehouse Service</h1>" +
                               "<p>Manage inventory and deliveries.</p>" +
                               "<a href='/products' class='btn btn-secondary'>View Products</a>" +
                               "<a href='/deliveries' class='btn btn-primary'>Manage Deliveries</a>" +
+                              "<a href='/fulfillment' class='btn btn-primary'>Order Fulfillment</a>" +
+                              "<a href='" + logoutUrl + "' class='btn btn-secondary' style='margin-left:10px;'>Logout</a>" +
                               "</div></body></html>";
                 byte[] bytes = html.getBytes(StandardCharsets.UTF_8);
                 exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
@@ -121,9 +126,17 @@ public class WarehouseApplication {
         HttpContext deliveriesContext = server.createContext("/deliveries", new DeliveryController(deliveryRepository, productRepository, stockService));
         deliveriesContext.getFilters().add(staffFilter);
         
+        // Fulfillment UI
+        HttpContext fulfillmentUiContext = server.createContext("/fulfillment", new FulfillmentController(deliveryRepository));
+        fulfillmentUiContext.getFilters().add(staffFilter);
+        
         // Stock Reservation Endpoint
         HttpContext reserveContext = server.createContext("/api/stock/reserve", new StockReservationController(deliveryRepository, productRepository, stockService));
         reserveContext.getFilters().add(reserveFilter);
+        
+        // Order Fulfillment Endpoint
+        HttpContext fulfillmentContext = server.createContext("/api/fulfillment/order", new OrderFulfillmentController(deliveryRepository));
+        fulfillmentContext.getFilters().add(fulfillmentFilter);
         
         server.setExecutor(Executors.newCachedThreadPool());
         server.start();

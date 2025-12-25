@@ -112,7 +112,6 @@ docker run -d --rm --network webshop-net --name keycloak \
     -e KEYCLOAK_ADMIN_PASSWORD=admin \
     -e KC_PROXY=edge \
     -e KC_HOSTNAME_STRICT=false \
-    -e KC_HOSTNAME_URL=https://localhost:8446 \
     -e KC_HTTP_ENABLED=true \
     -v "$(pwd)/infrastructure/keycloak/realm-export.json:/opt/keycloak/data/import/realm.json:ro" \
     quay.io/keycloak/keycloak:23.0.7 \

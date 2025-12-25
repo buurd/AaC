@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: warehouse-order-fulfillment
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-061
+      type: functional
+      c4_level: component
+      description: "The Order Service shall notify the Warehouse Service when an order is confirmed, so that fulfillment can begin."
+      priority: high
+      tracesTo: "REQ-051"
+      model_validation:
+        source: "Order WebServer"
+        destination: "Warehouse WebServer"
+        description_contains: "Notifies of confirmed order"

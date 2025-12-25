@@ -17,10 +17,12 @@ public class OrderController implements HttpHandler {
 
     private final OrderRepository repository;
     private final StockReservationService stockService;
+    private final OrderFulfillmentService fulfillmentService;
 
-    public OrderController(OrderRepository repository, StockReservationService stockService) {
+    public OrderController(OrderRepository repository, StockReservationService stockService, OrderFulfillmentService fulfillmentService) {
         this.repository = repository;
         this.stockService = stockService;
+        this.fulfillmentService = fulfillmentService;
     }
 
     private static final String CSS = 
@@ -30,7 +32,9 @@ public class OrderController implements HttpHandler {
         "table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }" +
         "th { background-color: #007BFF; color: #FFFFFF; padding: 12px; text-align: left; }" +
         "td { padding: 12px; border-bottom: 1px solid #DEE2E6; }" +
-        "tr:nth-child(even) { background-color: #F2F2F2; }";
+        "tr:nth-child(even) { background-color: #F2F2F2; }" +
+        ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }" +
+        ".btn-secondary { background-color: #6C757D; }";
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -108,9 +112,15 @@ public class OrderController implements HttpHandler {
     private void handleListOrders(HttpExchange exchange) throws IOException {
         try {
             List<Order> orders = repository.findAll();
+            String keycloakUrl = System.getenv().getOrDefault("KEYCLOAK_URL", "https://localhost:8446");
+            String logoutUrl = keycloakUrl + "/realms/webshop-realm/protocol/openid-connect/logout?redirect_uri=https://localhost:8447/";
+            
             StringBuilder sb = new StringBuilder();
             sb.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body><div class='container'>");
             sb.append("<h1>Order Management</h1>");
+            sb.append("<div style='margin-bottom: 20px;'>");
+            sb.append("<a href='" + logoutUrl + "' class='btn btn-secondary' style='float: right;'>Logout</a>");
+            sb.append("</div>");
             sb.append("<table><thead><tr><th>ID</th><th>Customer</th><th>Status</th><th>Items</th></tr></thead><tbody>");
             
             for (Order o : orders) {
@@ -137,6 +147,7 @@ public class OrderController implements HttpHandler {
     }
 
     private void handleCreateOrder(HttpExchange exchange) throws IOException {
+        int orderId = -1;
         try {
             InputStream is = exchange.getRequestBody();
             String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);
@@ -145,12 +156,11 @@ public class OrderController implements HttpHandler {
             Order order = parseOrder(json);
             order.setStatus("PENDING");
             
-            int orderId = repository.createOrder(order);
+            orderId = repository.createOrder(order);
             
             // Reserve stock
             boolean allReserved = true;
             for (OrderItem item : order.getItems()) {
-                // Ensure stockService.reserveStock is called with correct productId and quantity
                 boolean reserved = stockService.reserveStock(item.getProductId(), item.getQuantity()).join();
                 if (!reserved) {
                     allReserved = false;
@@ -160,6 +170,15 @@ public class OrderController implements HttpHandler {
             
             if (allReserved) {
                 repository.updateStatus(orderId, "CONFIRMED");
+                
+                // Notify Warehouse for fulfillment
+                boolean notified = fulfillmentService.notifyOrderConfirmed(orderId).join();
+                if (!notified) {
+                    // Rollback status if notification fails
+                    repository.updateStatus(orderId, "CONFIRMATION_FAILED");
+                    throw new IOException("Failed to notify warehouse for fulfillment");
+                }
+
                 String response = "{\"status\":\"CONFIRMED\", \"orderId\":" + orderId + "}";
                 exchange.getResponseHeaders().set("Content-Type", "application/json");
                 exchange.sendResponseHeaders(200, response.length());
@@ -177,6 +196,13 @@ public class OrderController implements HttpHandler {
             
         } catch (Exception e) {
             e.printStackTrace();
+            if (orderId != -1) {
+                try {
+                    repository.updateStatus(orderId, "ERROR");
+                } catch (SQLException ex) {
+                    e.addSuppressed(ex);
+                }
+            }
             exchange.sendResponseHeaders(500, -1);
         }
     }
