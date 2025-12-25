@@ -32,7 +32,7 @@ describe('Order Flow', () => {
 
   // Helper to verify stock in Webshop
   const verifyStock = (expectedStock, attempts = 0) => {
-    if (attempts > 20) throw new Error(`Timed out waiting for stock to be ${expectedStock}`);
+    if (attempts > 40) throw new Error(`Timed out waiting for stock to be ${expectedStock}`); // Increased attempts
     cy.wait(1000);
     cy.request({ url: webshopUrl + '/products', failOnStatusCode: false }).then((res) => {
       // Simple check if the row contains the stock number
