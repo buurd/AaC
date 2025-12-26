@@ -32,6 +32,7 @@ public class KeycloakTokenService implements TokenService {
             return CompletableFuture.completedFuture(accessToken);
         }
 
+        System.out.println("KeycloakTokenService: Requesting new token for client " + clientId + " from " + keycloakTokenUrl);
         String requestBody = "grant_type=client_credentials&client_id=" + clientId + "&client_secret=" + clientSecret;
         
         HttpRequest request = HttpRequest.newBuilder()
@@ -55,8 +56,10 @@ public class KeycloakTokenService implements TokenService {
 
                         this.accessToken = token;
                         this.tokenExpiresAt = System.currentTimeMillis() + (expiresIn * 1000);
+                        System.out.println("KeycloakTokenService: Token obtained successfully. Length: " + token.length());
                         return token;
                     } else {
+                        System.err.println("KeycloakTokenService: Failed to get token. Status: " + response.statusCode() + ", Body: " + response.body());
                         throw new RuntimeException("Failed to get access token");
                     }
                 });

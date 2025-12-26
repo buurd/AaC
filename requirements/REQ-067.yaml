@@ -1,0 +1,20 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: credit-limit-check
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-067
+      type: functional
+      c4_level: component
+      description: "The Order Service shall deny new orders if the customer has more than 500 units in outstanding (unpaid) invoices."
+      priority: high
+      tracesTo: "REQ-050"
+      validation_policy: "policies/check_code_structure.rego"
+      code_validation:
+        file_path: "orderService/src/main/java/com/example/order/CreditService.java"
+        method_name: "checkCreditLimit"
+      model_validation:
+        component: "CreditService"
+        container: "Order WebServer"

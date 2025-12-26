@@ -33,7 +33,9 @@ public class OrderFulfillmentService {
     }
 
     public CompletableFuture<Boolean> notifyOrderConfirmed(int orderId) {
+        System.out.println("OrderFulfillmentService: Notifying fulfillment for order " + orderId + " at " + warehouseFulfillmentUrl);
         return tokenService.getAccessToken().thenCompose(token -> {
+            System.out.println("OrderFulfillmentService: Got token (length: " + (token != null ? token.length() : 0) + ")");
             String json = "{\"orderId\":" + orderId + "}";
             
             HttpRequest request = HttpRequest.newBuilder()
@@ -45,8 +47,9 @@ public class OrderFulfillmentService {
 
             return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                     .thenApply(response -> {
+                        System.out.println("OrderFulfillmentService: Response status: " + response.statusCode());
                         if (response.statusCode() != 200) {
-                            System.err.println("Failed to notify warehouse. Status: " + response.statusCode());
+                            System.out.println("OrderFulfillmentService: Response body: " + response.body());
                             return false;
                         }
                         return true;

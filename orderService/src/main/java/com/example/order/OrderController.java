@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -18,11 +19,15 @@ public class OrderController implements HttpHandler {
     private final OrderRepository repository;
     private final StockReservationService stockService;
     private final OrderFulfillmentService fulfillmentService;
+    private final CreditService creditService;
+    private final InvoiceRepository invoiceRepository;
 
-    public OrderController(OrderRepository repository, StockReservationService stockService, OrderFulfillmentService fulfillmentService) {
+    public OrderController(OrderRepository repository, StockReservationService stockService, OrderFulfillmentService fulfillmentService, CreditService creditService, InvoiceRepository invoiceRepository) {
         this.repository = repository;
         this.stockService = stockService;
         this.fulfillmentService = fulfillmentService;
+        this.creditService = creditService;
+        this.invoiceRepository = invoiceRepository;
     }
 
     private static final String CSS = 
@@ -44,14 +49,14 @@ public class OrderController implements HttpHandler {
         if ("/orders".equals(path)) {
             if ("GET".equalsIgnoreCase(method)) {
                 handleListOrders(exchange);
-            } else if ("POST".equalsIgnoreCase(method)) {
-                handleCreateOrder(exchange);
             } else {
                 exchange.sendResponseHeaders(405, -1);
             }
         } else if ("/api/orders".equals(path)) {
             if ("GET".equalsIgnoreCase(method)) {
                 handleApiListOrders(exchange);
+            } else if ("POST".equalsIgnoreCase(method)) {
+                handleCreateOrder(exchange);
             } else {
                 exchange.sendResponseHeaders(405, -1);
             }
@@ -154,8 +159,12 @@ public class OrderController implements HttpHandler {
             System.out.println("Received Order: " + json);
             
             Order order = parseOrder(json);
-            order.setStatus("PENDING");
             
+            if (order.getItems().isEmpty()) {
+                System.out.println("Warning: No items found in order!");
+            }
+
+            order.setStatus("PENDING");
             orderId = repository.createOrder(order);
             
             // Reserve stock
@@ -171,26 +180,31 @@ public class OrderController implements HttpHandler {
             if (allReserved) {
                 repository.updateStatus(orderId, "CONFIRMED");
                 
+                // Create Invoice
+                double totalAmount = 0; // In a real app, get prices from Product service
+                invoiceRepository.createInvoice(new Invoice(orderId, order.getCustomerName(), totalAmount, LocalDate.now().plusDays(30)));
+                
                 // Notify Warehouse for fulfillment
                 boolean notified = fulfillmentService.notifyOrderConfirmed(orderId).join();
                 if (!notified) {
-                    // Rollback status if notification fails
                     repository.updateStatus(orderId, "CONFIRMATION_FAILED");
                     throw new IOException("Failed to notify warehouse for fulfillment");
                 }
 
                 String response = "{\"status\":\"CONFIRMED\", \"orderId\":" + orderId + "}";
+                byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
                 exchange.getResponseHeaders().set("Content-Type", "application/json");
-                exchange.sendResponseHeaders(200, response.length());
+                exchange.sendResponseHeaders(200, bytes.length);
                 try (OutputStream os = exchange.getResponseBody()) {
-                    os.write(response.getBytes());
+                    os.write(bytes);
                 }
             } else {
                 repository.updateStatus(orderId, "REJECTED");
                 String response = "{\"status\":\"REJECTED\", \"orderId\":" + orderId + "}";
-                exchange.sendResponseHeaders(409, response.length()); // Conflict
+                byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+                exchange.sendResponseHeaders(409, bytes.length); // Conflict
                 try (OutputStream os = exchange.getResponseBody()) {
-                    os.write(response.getBytes());
+                    os.write(bytes);
                 }
             }
             
@@ -211,7 +225,7 @@ public class OrderController implements HttpHandler {
         Order order = new Order();
         
         // Extract customerName
-        Pattern customerNamePattern = Pattern.compile("\"customerName\":\"([^\"]+)\"");
+        Pattern customerNamePattern = Pattern.compile("\"customerName\"\\s*:\\s*\"([^\"]+)\"");
         Matcher customerNameMatcher = customerNamePattern.matcher(json);
         if (customerNameMatcher.find()) {
             order.setCustomerName(customerNameMatcher.group(1));
@@ -219,15 +233,40 @@ public class OrderController implements HttpHandler {
             order.setCustomerName("Unknown Customer"); // Default
         }
 
-        // Extract items
-        Pattern itemPattern = Pattern.compile("\\{\"productId\":(\\d+),\"quantity\":(\\d+)\\}");
-        Matcher itemMatcher = itemPattern.matcher(json);
-        while (itemMatcher.find()) {
-            int productId = Integer.parseInt(itemMatcher.group(1));
-            int quantity = Integer.parseInt(itemMatcher.group(2));
-            order.addItem(new OrderItem(productId, quantity));
+        // Extract items - robust parsing
+        // Split by "}" to separate objects roughly
+        String[] parts = json.split("\\}");
+        for (String part : parts) {
+            if (part.contains("productId") && part.contains("quantity")) {
+                int productId = -1;
+                int quantity = -1;
+                
+                Pattern pId = Pattern.compile("\"productId\"\\s*:\\s*(\\d+)");
+                Matcher mId = pId.matcher(part);
+                if (mId.find()) {
+                    productId = Integer.parseInt(mId.group(1));
+                }
+                
+                Pattern pQty = Pattern.compile("\"quantity\"\\s*:\\s*(\\d+)");
+                Matcher mQty = pQty.matcher(part);
+                if (mQty.find()) {
+                    quantity = Integer.parseInt(mQty.group(1));
+                }
+                
+                if (productId != -1 && quantity != -1) {
+                    order.addItem(new OrderItem(productId, quantity));
+                }
+            }
         }
 
         return order;
+    }
+
+    private void sendError(HttpExchange exchange, int code, String message) throws IOException {
+        byte[] bytes = message.getBytes(StandardCharsets.UTF_8);
+        exchange.sendResponseHeaders(code, bytes.length);
+        try (OutputStream os = exchange.getResponseBody()) {
+            os.write(bytes);
+        }
     }
 }

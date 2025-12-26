@@ -1,19 +1,34 @@
 package structurizr.components
 
-# REQ-006: WebServer must have a ProductController component
-violation contains {"msg": "Requirement REQ-006 not fulfilled: WebServer is missing ProductController component."} if {
-    # Find the WebServer container
-    webshop := input.model.softwareSystems[_]
-    webshop.name == "Webshop"
+# Generic check for component existence based on requirements
+violation contains {"msg": msg} if {
+    # input.reqs is an array because of --slurpfile in jq
+    reqs_object := input.reqs[0]
+    model := input.model[0].model
 
-    webserver := webshop.containers[_]
-    webserver.name == "WebServer"
+    # Iterate over all requirement sets
+    some req_set in reqs_object.requirements
+    # Iterate over all requirements in the set
+    some req in req_set.spec.requirements
+
+    # Check if this requirement has a model validation for a component
+    req.model_validation
+    req.model_validation.component
+    req.model_validation.container
+
+    # Find the container in the model
+    # We search across all software systems
+    some system in object.get(model, "softwareSystems", [])
+    some container in object.get(system, "containers", [])
+    container.name == req.model_validation.container
 
     # Get components safely, defaulting to empty array
-    components := object.get(webserver, "components", [])
+    components := object.get(container, "components", [])
 
-    # Check if ProductController is missing
-    not component_exists(components, "ProductController")
+    # Check if the component is missing
+    not component_exists(components, req.model_validation.component)
+
+    msg := sprintf("Requirement %s failed: Component '%s' not found in container '%s'.", [req.id, req.model_validation.component, req.model_validation.container])
 }
 
 # Helper to check if a component with a given name exists in the components array

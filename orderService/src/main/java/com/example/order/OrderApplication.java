@@ -25,6 +25,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
+import java.net.URLEncoder;
 
 public class OrderApplication {
 
@@ -50,7 +51,8 @@ public class OrderApplication {
         String jwksUrl = System.getenv().getOrDefault("JWKS_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs");
         String issuer = System.getenv().getOrDefault("ISSUER_URL", "https://localhost:8446/realms/webshop-realm");
         String tokenUrl = System.getenv().getOrDefault("TOKEN_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token");
-        String keycloakUrl = System.getenv().getOrDefault("KEYCLOAK_URL", "https://localhost:8446");
+        // KEYCLOAK_URL is now derived dynamically if possible, or falls back to env
+        String defaultKeycloakUrl = System.getenv().getOrDefault("KEYCLOAK_URL", "https://localhost:8446");
 
         logger.info("Connecting to database at: {}", dbUrl);
         Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
@@ -74,8 +76,10 @@ public class OrderApplication {
         }
 
         OrderRepository repository = new OrderRepository(connection);
+        InvoiceRepository invoiceRepository = new InvoiceRepository(connection);
         StockReservationService stockService = new StockReservationService();
         OrderFulfillmentService fulfillmentService = new OrderFulfillmentService();
+        CreditService creditService = new CreditService(invoiceRepository);
         
         SecurityFilter managerFilter = new SecurityFilter(jwksUrl, issuer, "order-manager");
         SecurityFilter historyFilter = new SecurityFilter(jwksUrl, issuer, "order-history");
@@ -88,11 +92,25 @@ public class OrderApplication {
             String path = exchange.getRequestURI().getPath();
             logger.info("Received request: {} {}", exchange.getRequestMethod(), path);
             if ("/".equals(path)) {
-                String logoutUrl = keycloakUrl + "/realms/webshop-realm/protocol/openid-connect/logout?redirect_uri=https://localhost:8447/";
+                String host = exchange.getRequestHeaders().getFirst("Host");
+                if (host == null) host = "localhost:8447"; // Fallback
+                // Assuming HTTPS via proxy
+                String baseUrl = "https://" + host;
+                if (baseUrl.endsWith("/")) baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+                
+                // Derive Keycloak URL from Host if possible (replace 8447 with 8446)
+                String currentKeycloakUrl = defaultKeycloakUrl;
+                if (host.contains(":8447")) {
+                    currentKeycloakUrl = "https://" + host.replace(":8447", ":8446");
+                }
+
+                String logoutUrl = "/logout";
+                
                 String html = "<!DOCTYPE html><html><head><style>" + CSS + "</style></head><body><div class='container'>" +
                               "<h1>Order Service</h1>" +
                               "<p>Manage customer orders.</p>" +
                               "<a href='/orders' class='btn btn-primary'>View Orders</a>" +
+                              "<a href='/invoices' class='btn btn-primary'>View Invoices</a>" +
                               "<a href='" + logoutUrl + "' class='btn btn-secondary' style='margin-left:10px;'>Logout</a>" +
                               "</div></body></html>";
                 byte[] bytes = html.getBytes(StandardCharsets.UTF_8);
@@ -113,12 +131,44 @@ public class OrderApplication {
         
         server.createContext("/login", new LoginHandler(tokenUrl));
         
+        server.createContext("/logout", (exchange) -> {
+            String path = exchange.getRequestURI().getPath();
+            logger.info("Received request: {} {}", exchange.getRequestMethod(), path);
+            
+            String host = exchange.getRequestHeaders().getFirst("Host");
+            if (host == null) host = "localhost:8447";
+            String baseUrl = "https://" + host;
+            if (baseUrl.endsWith("/")) baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+
+            // Derive Keycloak URL from Host if possible (replace 8447 with 8446)
+            String currentKeycloakUrl = defaultKeycloakUrl;
+            if (host.contains(":8447")) {
+                currentKeycloakUrl = "https://" + host.replace(":8447", ":8446");
+            }
+
+            // Ensure redirect_uri is URL encoded
+            String encodedRedirectUri = URLEncoder.encode(baseUrl + "/", StandardCharsets.UTF_8);
+            String keycloakLogoutUrl = currentKeycloakUrl + "/realms/webshop-realm/protocol/openid-connect/logout?post_logout_redirect_uri=" + encodedRedirectUri + "&client_id=order-client";
+
+            // Clear cookie
+            exchange.getResponseHeaders().add("Set-Cookie", "order_auth_token=; Path=/; Max-Age=0");
+            
+            // Redirect
+            exchange.getResponseHeaders().set("Location", keycloakLogoutUrl);
+            exchange.sendResponseHeaders(302, -1);
+            exchange.close();
+        });
+        
         // Mount UI context (protected by order-manager)
-        HttpContext ordersContext = server.createContext("/orders", new OrderController(repository, stockService, fulfillmentService));
+        HttpContext ordersContext = server.createContext("/orders", new OrderController(repository, stockService, fulfillmentService, creditService, invoiceRepository));
         ordersContext.getFilters().add(managerFilter);
         
+        // Mount Invoices context (protected by order-manager)
+        HttpContext invoicesContext = server.createContext("/invoices", new InvoiceController(invoiceRepository));
+        invoicesContext.getFilters().add(managerFilter);
+        
         // Mount API context (protected by order-history)
-        HttpContext apiContext = server.createContext("/api/orders", new OrderController(repository, stockService, fulfillmentService));
+        HttpContext apiContext = server.createContext("/api/orders", new OrderController(repository, stockService, fulfillmentService, creditService, invoiceRepository));
         apiContext.getFilters().add(historyFilter);
         
         server.setExecutor(Executors.newCachedThreadPool());
@@ -160,7 +210,7 @@ public class OrderApplication {
                         String json = response.body();
                         String accessToken = extractToken(json);
                         t.getResponseHeaders().add("Set-Cookie", "order_auth_token=" + accessToken + "; Path=/; HttpOnly");
-                        redirect(t, "/orders");
+                        redirect(t, "/"); // Redirect to root
                     } else {
                         logger.warn("Login failed for user: {}", username);
                         sendResponse(t, 401, "<h1>Login Failed</h1><p>Invalid credentials</p><a href='/login'>Try Again</a>");

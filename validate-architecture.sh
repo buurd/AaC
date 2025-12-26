@@ -24,9 +24,27 @@ cleanup() {
     rm -f workspace.json project-files.json requirements.json implementation-input.json code-structure-input.json code-structure-files.json relation-input.json test-content-input.json test-files.json
     rm -f structurizr/workspace.json
 
-    # NOTE: Containers are NOT stopped automatically to allow manual debugging.
-    # Run 'docker stop ...' manually if needed.
-    echo "⚠️  Containers are left running for debugging."
+    echo "--- Stopping containers ---"
+    # Stop containers started by this script (using IDs if available, or names)
+    if [ -n "$WEBSHOP_CONTAINER_ID" ]; then docker stop "$WEBSHOP_CONTAINER_ID" > /dev/null 2>&1 || true; fi
+    if [ -n "$PM_CONTAINER_ID" ]; then docker stop "$PM_CONTAINER_ID" > /dev/null 2>&1 || true; fi
+    if [ -n "$WAREHOUSE_CONTAINER_ID" ]; then docker stop "$WAREHOUSE_CONTAINER_ID" > /dev/null 2>&1 || true; fi
+    if [ -n "$ORDER_CONTAINER_ID" ]; then docker stop "$ORDER_CONTAINER_ID" > /dev/null 2>&1 || true; fi
+    if [ -n "$KEYCLOAK_CONTAINER_ID" ]; then docker stop "$KEYCLOAK_CONTAINER_ID" > /dev/null 2>&1 || true; fi
+    if [ -n "$PROXY_CONTAINER_ID" ]; then docker stop "$PROXY_CONTAINER_ID" > /dev/null 2>&1 || true; fi
+    if [ -n "$DB_WEBSHOP_ID" ]; then docker stop "$DB_WEBSHOP_ID" > /dev/null 2>&1 || true; fi
+    if [ -n "$DB_PM_ID" ]; then docker stop "$DB_PM_ID" > /dev/null 2>&1 || true; fi
+    if [ -n "$DB_WAREHOUSE_ID" ]; then docker stop "$DB_WAREHOUSE_ID" > /dev/null 2>&1 || true; fi
+    if [ -n "$DB_ORDER_ID" ]; then docker stop "$DB_ORDER_ID" > /dev/null 2>&1 || true; fi
+
+    # Also try to stop by name just in case
+    docker stop webshop-demo pm-demo warehouse-demo order-service keycloak reverse-proxy db_webshop db_pm db_warehouse db_order > /dev/null 2>&1 || true
+
+    # Remove network
+    if [ -n "$NETWORK_NAME" ]; then
+        echo "Removing network: $NETWORK_NAME"
+        docker network rm "$NETWORK_NAME" > /dev/null 2>&1 || true
+    fi
 }
 trap cleanup EXIT
 
@@ -432,6 +450,8 @@ if [ $CYPRESS_EXIT_CODE -ne 0 ]; then
     docker logs "$PM_CONTAINER_ID" | tail -n 200
     echo "--- Warehouse Logs ---"
     docker logs "$WAREHOUSE_CONTAINER_ID" | tail -n 200
+    echo "--- Order Service Logs ---"
+    docker logs "$ORDER_CONTAINER_ID" | tail -n 200
     exit 1
 else
     echo "✅ Functional Validation Passed."

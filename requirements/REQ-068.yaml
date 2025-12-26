@@ -1,0 +1,20 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: overdue-invoice-check
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-068
+      type: functional
+      c4_level: component
+      description: "The Order Service shall deny new orders if the customer has any overdue invoices."
+      priority: high
+      tracesTo: "REQ-050"
+      validation_policy: "policies/check_code_structure.rego"
+      code_validation:
+        file_path: "orderService/src/main/java/com/example/order/CreditService.java"
+        method_name: "checkOverdueInvoices"
+      model_validation:
+        component: "CreditService"
+        container: "Order WebServer"

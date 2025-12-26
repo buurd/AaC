@@ -43,12 +43,32 @@ public class OrderPactProviderTest {
         
         StockReservationService mockStockService = new StockReservationService(null, null);
         OrderFulfillmentService mockFulfillmentService = new OrderFulfillmentService(null, null);
+        
+        // Mock Invoice Repository
+        InvoiceRepository mockInvoiceRepo = new InvoiceRepository(null) {
+            @Override
+            public void createInvoice(Invoice invoice) throws SQLException {
+                // No-op
+            }
+        };
+        
+        // Mock Credit Service
+        CreditService mockCreditService = new CreditService(mockInvoiceRepo) {
+            @Override
+            public boolean checkCreditLimit(String customerName) {
+                return true;
+            }
+            @Override
+            public boolean checkOverdueInvoices(String customerName) {
+                return true;
+            }
+        };
 
         // Start Server
         server = HttpServer.create(new InetSocketAddress(8083), 0);
         
         // Mount controller directly
-        server.createContext("/api/orders", new OrderController(mockRepo, mockStockService, mockFulfillmentService));
+        server.createContext("/api/orders", new OrderController(mockRepo, mockStockService, mockFulfillmentService, mockCreditService, mockInvoiceRepo));
         
         server.setExecutor(Executors.newCachedThreadPool());
         server.start();

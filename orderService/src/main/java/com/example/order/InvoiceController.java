@@ -1,4 +1,4 @@
-package com.example.warehouse;
+package com.example.order;
 
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;
@@ -13,11 +13,11 @@ import java.util.Map;
 import java.util.HashMap;
 import java.net.URLDecoder;
 
-public class FulfillmentController implements HttpHandler {
+public class InvoiceController implements HttpHandler {
 
-    private final FulfillmentOrderRepository repository;
+    private final InvoiceRepository repository;
 
-    public FulfillmentController(FulfillmentOrderRepository repository) {
+    public InvoiceController(InvoiceRepository repository) {
         this.repository = repository;
     }
 
@@ -30,56 +30,55 @@ public class FulfillmentController implements HttpHandler {
         "td { padding: 12px; border-bottom: 1px solid #DEE2E6; }" +
         "tr:nth-child(even) { background-color: #F2F2F2; }" +
         ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; }" +
-        ".btn-success { background-color: #28A745; }" +
-        ".btn-secondary { background-color: #6C757D; }";
+        ".btn-success { background-color: #28A745; }";
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
-        
-        if ("GET".equalsIgnoreCase(method)) {
-            handleList(exchange);
-        } else if ("POST".equalsIgnoreCase(method)) {
-            handleUpdate(exchange);
+        String path = exchange.getRequestURI().getPath();
+
+        if ("/invoices".equals(path)) {
+            if ("GET".equalsIgnoreCase(method)) {
+                handleListInvoices(exchange);
+            } else if ("POST".equalsIgnoreCase(method)) {
+                handleMarkPaid(exchange);
+            } else {
+                exchange.sendResponseHeaders(405, -1);
+            }
         } else {
-            exchange.sendResponseHeaders(405, -1);
+            exchange.sendResponseHeaders(404, -1);
         }
     }
 
-    private void handleList(HttpExchange exchange) throws IOException {
+    private void handleListInvoices(HttpExchange exchange) throws IOException {
         try {
-            List<FulfillmentOrder> orders = repository.findAllFulfillmentOrders();
+            List<Invoice> invoices = repository.findAll();
+            StringBuilder sb = new StringBuilder();
+            sb.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body><div class='container'>");
+            sb.append("<h1>Invoices</h1>");
+            sb.append("<table><thead><tr><th>ID</th><th>Order ID</th><th>Customer</th><th>Amount</th><th>Due Date</th><th>Paid</th><th>Action</th></tr></thead><tbody>");
             
-            StringBuilder html = new StringBuilder();
-            html.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body>");
-            html.append("<div class='container'>");
-            html.append("<div style='display:flex; justify-content:space-between; align-items:center;'>");
-            html.append("<h1>Order Fulfillment</h1>");
-            html.append("<a href='/' class='btn btn-secondary'>Back to Dashboard</a>");
-            html.append("</div>");
-            
-            html.append("<table><thead><tr><th>Order ID</th><th>Status</th><th>Action</th></tr></thead><tbody>");
-            
-            for (FulfillmentOrder o : orders) {
-                html.append("<tr>");
-                html.append("<td>").append(o.getOrderId()).append("</td>");
-                html.append("<td>").append(o.getStatus()).append("</td>");
-                html.append("<td>");
-                if ("PENDING".equals(o.getStatus())) {
-                    html.append("<form method='post' style='display:inline;'>");
-                    html.append("<input type='hidden' name='orderId' value='").append(o.getOrderId()).append("'>");
-                    html.append("<input type='hidden' name='status' value='SHIPPED'>");
-                    html.append("<button type='submit' class='btn btn-success'>Mark Shipped</button>");
-                    html.append("</form>");
+            for (Invoice i : invoices) {
+                sb.append("<tr>");
+                sb.append("<td>").append(i.getId()).append("</td>");
+                sb.append("<td>").append(i.getOrderId()).append("</td>");
+                sb.append("<td>").append(i.getCustomerName()).append("</td>");
+                sb.append("<td>").append(i.getAmount()).append("</td>");
+                sb.append("<td>").append(i.getDueDate()).append("</td>");
+                sb.append("<td>").append(i.isPaid() ? "Yes" : "No").append("</td>");
+                sb.append("<td>");
+                if (!i.isPaid()) {
+                    sb.append("<form action='/invoices' method='post' style='margin:0;'>");
+                    sb.append("<input type='hidden' name='id' value='").append(i.getId()).append("'>");
+                    sb.append("<button type='submit' class='btn btn-success'>Mark Paid</button>");
+                    sb.append("</form>");
                 }
-                html.append("</td>");
-                html.append("</tr>");
+                sb.append("</td>");
+                sb.append("</tr>");
             }
+            sb.append("</tbody></table></div></body></html>");
             
-            html.append("</tbody></table>");
-            html.append("</div></body></html>");
-            
-            String response = html.toString();
+            String response = sb.toString();
             byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
             exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
             exchange.sendResponseHeaders(200, bytes.length);
@@ -92,19 +91,17 @@ public class FulfillmentController implements HttpHandler {
         }
     }
 
-    private void handleUpdate(HttpExchange exchange) throws IOException {
+    private void handleMarkPaid(HttpExchange exchange) throws IOException {
         InputStream is = exchange.getRequestBody();
         String formData = new String(is.readAllBytes(), StandardCharsets.UTF_8);
         Map<String, String> params = parseFormData(formData);
         
         try {
-            int orderId = Integer.parseInt(params.get("orderId"));
-            String status = params.get("status");
-            
-            repository.updateFulfillmentStatus(orderId, status);
+            int id = Integer.parseInt(params.get("id"));
+            markPaid(id);
             
             // Redirect back to list
-            exchange.getResponseHeaders().set("Location", "/fulfillment");
+            exchange.getResponseHeaders().set("Location", "/invoices");
             exchange.sendResponseHeaders(302, -1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,7 +109,12 @@ public class FulfillmentController implements HttpHandler {
         }
     }
 
-    private Map<String, String> parseFormData(String formData) {
+    // Method required by REQ-066
+    public void markPaid(int invoiceId) throws SQLException {
+        repository.markPaid(invoiceId);
+    }
+
+    private static Map<String, String> parseFormData(String formData) {
         Map<String, String> map = new HashMap<>();
         String[] pairs = formData.split("&");
         for (String pair : pairs) {

@@ -75,6 +75,7 @@ public class WarehouseApplication {
 
         ProductRepository productRepository = new ProductRepository(connection);
         DeliveryRepository deliveryRepository = new DeliveryRepository(connection);
+        FulfillmentOrderRepository fulfillmentOrderRepository = new FulfillmentOrderRepository(connection);
         StockService stockService = new StockService();
         
         SecurityFilter staffFilter = new SecurityFilter(jwksUrl, issuer, "warehouse-staff");
@@ -127,7 +128,7 @@ public class WarehouseApplication {
         deliveriesContext.getFilters().add(staffFilter);
         
         // Fulfillment UI
-        HttpContext fulfillmentUiContext = server.createContext("/fulfillment", new FulfillmentController(deliveryRepository));
+        HttpContext fulfillmentUiContext = server.createContext("/fulfillment", new FulfillmentController(fulfillmentOrderRepository));
         fulfillmentUiContext.getFilters().add(staffFilter);
         
         // Stock Reservation Endpoint
@@ -135,7 +136,7 @@ public class WarehouseApplication {
         reserveContext.getFilters().add(reserveFilter);
         
         // Order Fulfillment Endpoint
-        HttpContext fulfillmentContext = server.createContext("/api/fulfillment/order", new OrderFulfillmentController(deliveryRepository));
+        HttpContext fulfillmentContext = server.createContext("/api/fulfillment/order", new OrderFulfillmentController(fulfillmentOrderRepository));
         fulfillmentContext.getFilters().add(fulfillmentFilter);
         
         server.setExecutor(Executors.newCachedThreadPool());
@@ -206,7 +207,7 @@ public class WarehouseApplication {
                         String accessToken = extractToken(json);
                         // Changed cookie name to warehouse_auth_token
                         t.getResponseHeaders().add("Set-Cookie", "warehouse_auth_token=" + accessToken + "; Path=/; HttpOnly");
-                        redirect(t, "/products"); // Default redirect to products
+                        redirect(t, "/"); // Redirect to root
                     } else {
                         logger.warn("Login failed for user: {}", username);
                         sendResponse(t, 401, "<h1>Login Failed</h1><p>Invalid credentials</p><a href='/login'>Try Again</a>");

@@ -53,6 +53,9 @@ public class WarehousePactProviderTest {
             public int countStock(int productId) throws SQLException {
                 return 100; // Always return enough stock
             }
+        };
+
+        FulfillmentOrderRepository mockFulfillmentRepo = new FulfillmentOrderRepository(null) {
             @Override
             public void createFulfillmentOrder(int orderId) throws SQLException {
                 System.out.println("Mock Repository: Created fulfillment order " + orderId);
@@ -72,7 +75,7 @@ public class WarehousePactProviderTest {
         // Mount controllers directly
         server.createContext("/api/products/sync", new ProductSyncController(mockProductRepo));
         server.createContext("/api/stock/reserve", new StockReservationController(mockDeliveryRepo, mockProductRepo, mockStockService));
-        server.createContext("/api/fulfillment/order", new OrderFulfillmentController(mockDeliveryRepo));
+        server.createContext("/api/fulfillment/order", new OrderFulfillmentController(mockFulfillmentRepo));
 
         server.setExecutor(Executors.newCachedThreadPool());
         server.start();

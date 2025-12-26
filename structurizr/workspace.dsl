@@ -137,6 +137,12 @@ workspace "My System" "My System Description" {
                 orderFulfillmentService = component "OrderFulfillmentService" "Notifies Warehouse of confirmed orders." {
                     tags "Component" "Service"
                 }
+                invoiceRepository = component "InvoiceRepository" "Handles data access for invoices." {
+                    tags "Component" "Repository"
+                }
+                creditService = component "CreditService" "Handles credit checks and overdue invoices." {
+                    tags "Component" "Service"
+                }
             }
             orderDatabase = container "Order Database" "The database." {
                 tags "Container" "Database" "Logical"
@@ -367,6 +373,9 @@ workspace "My System" "My System Description" {
         warehouseStaff -> warehouseWebServer "Manages fulfillment" {
             tags "Interaction"
         }
+        orderManager -> orderWebServer "marks invoice as paid" {
+            tags "Interaction"
+        }
 
 
         // Component-level relationships for webshop
@@ -398,9 +407,12 @@ workspace "My System" "My System Description" {
         orderController -> orderRepository "Uses"
         orderController -> stockReservationService "Uses"
         orderController -> orderFulfillmentService "Uses"
+        orderController -> creditService "Uses"
         stockReservationService -> warehouseDeliveryController "Reserves stock via"
         orderFulfillmentService -> warehouseOrderFulfillmentController "Notifies of confirmed order"
         orderRepository -> orderDatabase "Reads from and writes to"
+        invoiceRepository -> orderDatabase "Reads from and writes to"
+        creditService -> invoiceRepository "Uses"
     }
 
     views {

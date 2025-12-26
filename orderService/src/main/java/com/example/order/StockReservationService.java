@@ -33,7 +33,9 @@ public class StockReservationService {
     }
 
     public CompletableFuture<Boolean> reserveStock(int productId, int quantity) {
+        System.out.println("StockReservationService: Reserving stock for product " + productId + " at " + warehouseReserveUrl);
         return tokenService.getAccessToken().thenCompose(token -> {
+            System.out.println("StockReservationService: Got token (length: " + (token != null ? token.length() : 0) + ")");
             String json = "{\"productId\":" + productId + ",\"quantity\":" + quantity + "}";
             
             HttpRequest request = HttpRequest.newBuilder()
@@ -44,7 +46,13 @@ public class StockReservationService {
                     .build();
 
             return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                    .thenApply(response -> response.statusCode() == 200);
+                    .thenApply(response -> {
+                        System.out.println("StockReservationService: Response status: " + response.statusCode());
+                        if (response.statusCode() != 200) {
+                            System.out.println("StockReservationService: Response body: " + response.body());
+                        }
+                        return response.statusCode() == 200;
+                    });
         });
     }
 }

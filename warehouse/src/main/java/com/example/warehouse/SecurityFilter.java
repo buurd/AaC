@@ -39,7 +39,10 @@ public class SecurityFilter extends Filter {
         String token = getToken(exchange);
         
         if (token == null) {
-            System.out.println("SecurityFilter: No token found. Headers: " + exchange.getRequestHeaders().keySet());
+            System.out.println("SecurityFilter: No token found for " + exchange.getRequestMethod() + " " + exchange.getRequestURI());
+            System.out.println("Headers: ");
+            exchange.getRequestHeaders().forEach((k, v) -> System.out.println(k + ": " + v));
+            
             if (exchange.getRequestHeaders().containsKey("Cookie")) {
                 System.out.println("Cookies: " + exchange.getRequestHeaders().getFirst("Cookie"));
             }
@@ -88,7 +91,15 @@ public class SecurityFilter extends Filter {
     }
 
     private String getToken(HttpExchange exchange) {
-        String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
+        // Check Authorization header (case-insensitive)
+        String authHeader = null;
+        for (Map.Entry<String, List<String>> entry : exchange.getRequestHeaders().entrySet()) {
+            if ("Authorization".equalsIgnoreCase(entry.getKey()) && !entry.getValue().isEmpty()) {
+                authHeader = entry.getValue().get(0);
+                break;
+            }
+        }
+
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7);
         }

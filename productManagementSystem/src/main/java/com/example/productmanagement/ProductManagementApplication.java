@@ -190,7 +190,7 @@ public class ProductManagementApplication {
                         String accessToken = extractToken(json);
                         // Changed cookie name to pm_auth_token
                         t.getResponseHeaders().add("Set-Cookie", "pm_auth_token=" + accessToken + "; Path=/; HttpOnly");
-                        redirect(t, "/products");
+                        redirect(t, "/"); // Redirect to root
                     } else {
                         logger.warn("Login failed for user: {}", username);
                         sendResponse(t, "<h1>Login Failed</h1><p>Invalid credentials</p><a href='/login'>Try Again</a>");

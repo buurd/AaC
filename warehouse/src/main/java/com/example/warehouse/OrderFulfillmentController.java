@@ -11,9 +11,9 @@ import java.sql.SQLException;
 
 public class OrderFulfillmentController implements HttpHandler {
 
-    private final DeliveryRepository repository;
+    private final FulfillmentOrderRepository repository;
 
-    public OrderFulfillmentController(DeliveryRepository repository) {
+    public OrderFulfillmentController(FulfillmentOrderRepository repository) {
         this.repository = repository;
     }
 
