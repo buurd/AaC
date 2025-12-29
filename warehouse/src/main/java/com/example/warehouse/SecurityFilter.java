@@ -109,7 +109,7 @@ public class SecurityFilter extends Filter {
             String[] cookies = cookieHeader.split(";");
             for (String cookie : cookies) {
                 String[] parts = cookie.trim().split("=");
-                if (parts.length == 2 && "warehouse_auth_token".equals(parts[0])) {
+                if (parts.length == 2 && "auth_token".equals(parts[0])) {
                     return parts[1];
                 }
             }
@@ -118,8 +118,12 @@ public class SecurityFilter extends Filter {
     }
 
     private void sendError(HttpExchange exchange, int code, String message) throws IOException {
-        exchange.sendResponseHeaders(code, message.length());
-        exchange.getResponseBody().write(message.getBytes());
+        System.out.println("SecurityFilter: Sending error " + code + ": " + message);
+        String html = "<html><body><h1>Error " + code + "</h1><p>" + message + "</p></body></html>";
+        byte[] bytes = html.getBytes("UTF-8");
+        exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
+        exchange.sendResponseHeaders(code, bytes.length);
+        exchange.getResponseBody().write(bytes);
         exchange.close();
     }
 

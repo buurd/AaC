@@ -48,12 +48,16 @@ describe('Security and Error Handling', () => {
     cy.contains('Insufficient permissions').should('be.visible');
 
     // 2. Product Manager cannot access Warehouse
+    cy.clearCookies();
     cy.visit(warehouseUrl + '/login');
     cy.get('input[name="username"]').type('manager');
     cy.get('input[name="password"]').type('password');
     cy.get('button[type="submit"]').click();
     
-    // Redirects to /products (Warehouse products)
+    // Redirects to / (root) which is public.
+    // We must explicitly visit a protected resource.
+    cy.visit(warehouseUrl + '/products', { failOnStatusCode: false });
+
     // Should be denied
     cy.contains('Insufficient permissions').should('be.visible');
   });

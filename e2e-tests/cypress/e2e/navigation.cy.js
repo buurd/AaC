@@ -20,9 +20,9 @@ describe('Navigation Links', () => {
 
     cy.visit(pmUrl);
     cy.contains('h1', 'Product Management System');
-    cy.contains('Manage Products').click();
+    cy.contains('View Products').click();
     cy.url().should('include', '/products');
-    cy.contains('h1', 'Product List');
+    cy.contains('h1', 'Products');
   });
 
   it('should navigate correctly in Warehouse', () => {
@@ -44,7 +44,7 @@ describe('Navigation Links', () => {
     cy.visit(warehouseUrl);
     
     // Check Deliveries Link
-    cy.contains('Manage Deliveries').click();
+    cy.contains('Deliveries').click();
     cy.url().should('include', '/deliveries');
     cy.contains('h1', 'Deliveries');
   });

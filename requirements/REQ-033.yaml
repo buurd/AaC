@@ -8,7 +8,7 @@ spec:
     - id: REQ-033
       type: functional
       c4_level: component
-      description: "The Product Management System shall send product updates to the Warehouse Service when a product is created or updated."
+      description: "The Product Management System shall provide a mechanism to manually synchronize product updates to the Warehouse Service."
       priority: high
       tracesTo: "REQ-010"
       # Validated by code check AND functional test

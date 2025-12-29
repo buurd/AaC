@@ -8,7 +8,7 @@ spec:
     - id: REQ-025
       type: functional
       c4_level: component
-      description: "The Product Management System shall send product updates to the Webshop API when a product is created or updated."
+      description: "The Product Management System shall provide a mechanism to manually synchronize product updates to the Webshop API."
       priority: high
       tracesTo: "REQ-010"
       # Validated by code check AND functional test

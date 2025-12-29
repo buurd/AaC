@@ -148,10 +148,11 @@ public class OrderApplication {
 
             // Ensure redirect_uri is URL encoded
             String encodedRedirectUri = URLEncoder.encode(baseUrl + "/", StandardCharsets.UTF_8);
+            // Corrected to use post_logout_redirect_uri
             String keycloakLogoutUrl = currentKeycloakUrl + "/realms/webshop-realm/protocol/openid-connect/logout?post_logout_redirect_uri=" + encodedRedirectUri + "&client_id=order-client";
 
             // Clear cookie
-            exchange.getResponseHeaders().add("Set-Cookie", "order_auth_token=; Path=/; Max-Age=0");
+            exchange.getResponseHeaders().add("Set-Cookie", "auth_token=; Path=/; Max-Age=0");
             
             // Redirect
             exchange.getResponseHeaders().set("Location", keycloakLogoutUrl);
@@ -164,7 +165,7 @@ public class OrderApplication {
         ordersContext.getFilters().add(managerFilter);
         
         // Mount Invoices context (protected by order-manager)
-        HttpContext invoicesContext = server.createContext("/invoices", new InvoiceController(invoiceRepository));
+        HttpContext invoicesContext = server.createContext("/invoices", new InvoiceController(invoiceRepository, repository));
         invoicesContext.getFilters().add(managerFilter);
         
         // Mount API context (protected by order-history)
@@ -209,10 +210,12 @@ public class OrderApplication {
                     if (response.statusCode() == 200) {
                         String json = response.body();
                         String accessToken = extractToken(json);
-                        t.getResponseHeaders().add("Set-Cookie", "order_auth_token=" + accessToken + "; Path=/; HttpOnly");
-                        redirect(t, "/"); // Redirect to root
+                        logger.info("Access Token obtained: {}", accessToken != null && !accessToken.isEmpty());
+                        // Changed cookie name to auth_token for SSO
+                        t.getResponseHeaders().add("Set-Cookie", "auth_token=" + accessToken + "; Path=/; HttpOnly");
+                        redirect(t, "/orders"); // Redirect to orders
                     } else {
-                        logger.warn("Login failed for user: {}", username);
+                        logger.warn("Login failed for user: {}. Status: {}. Body: {}", username, response.statusCode(), response.body());
                         sendResponse(t, 401, "<h1>Login Failed</h1><p>Invalid credentials</p><a href='/login'>Try Again</a>");
                     }
                 } catch (InterruptedException e) {
@@ -249,6 +252,7 @@ public class OrderApplication {
     }
 
     private static void redirect(HttpExchange t, String location) throws IOException {
+        logger.info("Redirecting to: {}", location);
         t.getResponseHeaders().set("Location", location);
         t.sendResponseHeaders(302, -1);
     }

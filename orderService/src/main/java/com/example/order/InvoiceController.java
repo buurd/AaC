@@ -16,9 +16,15 @@ import java.net.URLDecoder;
 public class InvoiceController implements HttpHandler {
 
     private final InvoiceRepository repository;
+    private final OrderRepository orderRepository;
+
+    public InvoiceController(InvoiceRepository repository, OrderRepository orderRepository) {
+        this.repository = repository;
+        this.orderRepository = orderRepository;
+    }
 
     public InvoiceController(InvoiceRepository repository) {
-        this.repository = repository;
+        this(repository, null);
     }
 
     private static final String CSS = 
@@ -112,6 +118,14 @@ public class InvoiceController implements HttpHandler {
     // Method required by REQ-066
     public void markPaid(int invoiceId) throws SQLException {
         repository.markPaid(invoiceId);
+        
+        // Update Order Status to PAID
+        if (orderRepository != null) {
+            Invoice invoice = repository.findById(invoiceId);
+            if (invoice != null) {
+                orderRepository.updateStatus(invoice.getOrderId(), "PAID");
+            }
+        }
     }
 
     private static Map<String, String> parseFormData(String formData) {

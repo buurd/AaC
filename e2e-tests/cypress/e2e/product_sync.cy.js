@@ -40,6 +40,17 @@ describe('Product Synchronization', () => {
     // 1. Create
     cy.createProductInPM({ name: productName, type: 'SyncType', price: '100.00', description: 'Sync Description' });
 
+    // Manual Sync required
+    // Ensure we are on the list page and the row exists
+    cy.url().should('include', '/products');
+    cy.contains('tr', productName).should('be.visible').within(() => {
+      // Force click in case of overlay or visibility issues, though should be visible
+      cy.contains('a', 'Sync').should('be.visible').click();
+    });
+    
+    // Wait a moment for the server to process the sync request (async)
+    cy.wait(1000);
+
     // 2. Verify Sync
     verifyWebshopContent(productName);
     verifyWebshopContent('100.00');
@@ -51,6 +62,13 @@ describe('Product Synchronization', () => {
     cy.get('input[name="price"]').clear().type('200.00');
     cy.get('button[type="submit"]').click();
     cy.contains('200.00').should('be.visible');
+
+    // Manual Sync required
+    cy.contains('tr', productName).within(() => {
+      cy.contains('a', 'Sync').should('be.visible').click();
+    });
+    
+    cy.wait(1000);
 
     // 4. Verify Update Sync
     verifyWebshopContent('200.00');

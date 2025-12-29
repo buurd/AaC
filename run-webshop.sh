@@ -3,6 +3,9 @@ set -e
 
 clear
 
+# Redirect all output to log file and stdout
+exec > >(tee -a logs/run-webshop.log) 2>&1
+
 # Cleanup function to stop containers on exit
 cleanup() {
     echo
@@ -16,9 +19,10 @@ cleanup() {
 trap cleanup EXIT
 
 # --- Pre-Cleanup ---
-# Ensure no leftover containers or networks exist before starting
-echo "--- Checking for leftover containers and networks ---"
-CONTAINERS="webshop-demo pm-demo warehouse-demo order-service keycloak reverse-proxy db-webshop db-pm db-warehouse db-order loki promtail grafana"
+# Remove any leftover containers from previous runs to avoid conflicts
+echo "--- Checking for leftover containers ---"
+CONTAINERS="webshop-demo pm-demo warehouse-demo order-service keycloak reverse-proxy loki promtail grafana db-webshop db-pm db-warehouse db-order db_webshop db_pm db_warehouse db_order"
+
 for container in $CONTAINERS; do
     if docker ps -a --format '{{.Names}}' | grep -q "^${container}$"; then
         echo "Removing leftover container: $container"
@@ -156,11 +160,11 @@ docker run -d --rm --network webshop-net --name pm-demo \
     -e DB_PASSWORD=postgres \
     -e WEBSHOP_API_URL=http://webshop-demo:8000/api/products/sync \
     -e WAREHOUSE_API_URL=http://warehouse-demo:8002/api/products/sync \
+    -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
+    -e ISSUER_URL=https://localhost:8446/realms/webshop-realm \
     -e CLIENT_ID=pm-client \
     -e CLIENT_SECRET=pm-secret \
     -e TOKEN_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token \
-    -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
-    -e ISSUER_URL=https://localhost:8446/realms/webshop-realm \
     eclipse-temurin:21-jre java -jar /app/productManagementSystem-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 # Start Warehouse Service
@@ -171,11 +175,11 @@ docker run -d --rm --network webshop-net --name warehouse-demo \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
     -e WEBSHOP_STOCK_API_URL=http://webshop-demo:8000/api/stock/sync \
+    -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
+    -e ISSUER_URL=https://localhost:8446/realms/webshop-realm \
     -e CLIENT_ID=warehouse-client \
     -e CLIENT_SECRET=warehouse-secret \
     -e TOKEN_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token \
-    -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
-    -e ISSUER_URL=https://localhost:8446/realms/webshop-realm \
     eclipse-temurin:21-jre java -jar /app/warehouse-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 # Start Order Service
@@ -186,11 +190,11 @@ docker run -d --rm --network webshop-net --name order-service \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
     -e WAREHOUSE_RESERVE_URL=http://warehouse-demo:8002/api/stock/reserve \
+    -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
+    -e ISSUER_URL=https://localhost:8446/realms/webshop-realm \
     -e CLIENT_ID=order-client \
     -e CLIENT_SECRET=order-secret \
     -e TOKEN_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token \
-    -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
-    -e ISSUER_URL=https://localhost:8446/realms/webshop-realm \
     eclipse-temurin:21-jre java -jar /app/orderService-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 # Start Reverse Proxy
@@ -225,8 +229,6 @@ echo "   (Admin Console: https://localhost:8446/admin/)"
 echo "✅ Grafana is running at:            http://localhost:3000"
 echo "   (Login: admin / admin)"
 echo
-
-# Debug: Check Loki labels
 echo "--- Checking Loki Labels ---"
 docker run --rm --network webshop-net curlimages/curl:7.78.0 curl -s http://loki:3100/loki/api/v1/labels
 echo

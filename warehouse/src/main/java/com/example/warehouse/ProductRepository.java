@@ -46,6 +46,23 @@ public class ProductRepository {
         return null;
     }
 
+    public Product findByPmId(int pmId) throws SQLException {
+        String sql = "SELECT id, pm_id, name FROM products WHERE pm_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, pmId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Product(
+                        rs.getInt("id"),
+                        (Integer) rs.getObject("pm_id"),
+                        rs.getString("name")
+                    );
+                }
+            }
+        }
+        return null;
+    }
+
     public void upsert(Product product) throws SQLException {
         String checkSql = "SELECT id FROM products WHERE pm_id = ?";
         try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {

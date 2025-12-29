@@ -15,7 +15,9 @@ Cypress.Commands.add('loginToWarehouse', (username = 'staff', password = 'passwo
   cy.get('input[name="username"]').type(username);
   cy.get('input[name="password"]').type(password);
   cy.get('button[type="submit"]').click();
-  cy.url().should('include', '/products');
+  // Warehouse redirects to root /
+  cy.url().should('eq', warehouseUrl + '/');
+  cy.contains('h1', 'Warehouse Service');
 });
 
 Cypress.Commands.add('loginToWebshop', (username = 'manager', password = 'password') => {
@@ -25,6 +27,21 @@ Cypress.Commands.add('loginToWebshop', (username = 'manager', password = 'passwo
   cy.get('input[name="password"]').type(password);
   cy.get('button[type="submit"]').click();
   cy.url().should('include', '/products');
+});
+
+Cypress.Commands.add('loginToOrderService', (username = 'o-user', password = 'o-user') => {
+  const orderUrl = 'https://reverse-proxy:8447';
+  cy.visit(orderUrl + '/orders'); // It redirects to login if not authenticated
+  // Check if we are already logged in (url includes /orders) or redirected to login
+  cy.url().then(url => {
+    if (url.includes('/login')) {
+        cy.get('input[name="username"]').type(username);
+        cy.get('input[name="password"]').type(password);
+        cy.get('button[type="submit"]').click();
+    }
+  });
+  // Order Service redirects to /orders
+  cy.url().should('include', '/orders');
 });
 
 // --- Product Management Commands ---

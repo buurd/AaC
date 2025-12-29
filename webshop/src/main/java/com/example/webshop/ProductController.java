@@ -98,13 +98,19 @@ public class ProductController implements HttpHandler {
             for (Product p : products) {
                 String priceStr = String.format(Locale.US, "%.2f", p.getPrice());
                 
+                // Use PM ID if available, otherwise fallback to Webshop ID
+                Integer productId = p.getPmId();
+                if (productId == null) {
+                    productId = p.getId();
+                }
+
                 html.append("<tr>");
                 html.append("<td>").append(p.getName()).append("</td>");
                 html.append("<td>").append(p.getDescription()).append("</td>");
                 html.append("<td>").append(priceStr).append(" ").append(p.getUnit()).append("</td>");
                 html.append("<td>").append(p.getStock()).append("</td>");
                 html.append("<td>");
-                html.append("<button onclick=\"addToCart(").append(p.getId()).append(", '")
+                html.append("<button onclick=\"addToCart(").append(productId).append(", '")
                     .append(p.getName().replace("'", "\\'")).append("', ")
                     .append(p.getPrice()).append(", ")
                     .append(p.getStock()).append(")\" class='btn btn-success'>Add to Cart</button>");

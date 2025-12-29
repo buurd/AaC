@@ -23,6 +23,7 @@ public class OrderRepository {
                 orders.add(o);
             }
         }
+        System.out.println("OrderRepository: Found " + orders.size() + " orders.");
         return orders;
     }
 
@@ -34,6 +35,7 @@ public class OrderRepository {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     int orderId = rs.getInt(1);
+                    System.out.println("OrderRepository: Created order with ID " + orderId);
                     for (OrderItem item : order.getItems()) {
                         createOrderItem(orderId, item);
                     }
@@ -59,7 +61,8 @@ public class OrderRepository {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, status);
             stmt.setInt(2, orderId);
-            stmt.executeUpdate();
+            int rows = stmt.executeUpdate();
+            System.out.println("OrderRepository: Updated status for order " + orderId + " to " + status + ". Rows affected: " + rows);
         }
     }
 

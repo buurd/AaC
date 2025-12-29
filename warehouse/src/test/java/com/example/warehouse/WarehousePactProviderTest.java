@@ -41,6 +41,14 @@ public class WarehousePactProviderTest {
                 p.setPmId(100 + id); // Dummy PM ID
                 return p;
             }
+            @Override
+            public Product findByPmId(int pmId) throws SQLException {
+                Product p = new Product();
+                p.setId(pmId); // Use pmId as ID for simplicity in test
+                p.setPmId(pmId);
+                p.setName("Mock Product " + pmId);
+                return p;
+            }
         };
         
         DeliveryRepository mockDeliveryRepo = new DeliveryRepository(null) {

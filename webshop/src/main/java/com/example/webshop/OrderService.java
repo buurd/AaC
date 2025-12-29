@@ -46,4 +46,17 @@ public class OrderService {
                     .thenApply(HttpResponse::body);
         });
     }
+
+    public CompletableFuture<HttpResponse<String>> createOrder(String orderJson) {
+        return tokenService.getAccessToken().thenCompose(token -> {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(orderServiceUrl))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + token)
+                    .POST(HttpRequest.BodyPublishers.ofString(orderJson))
+                    .build();
+
+            return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+        });
+    }
 }

@@ -36,13 +36,6 @@ public class SecurityFilter extends Filter {
 
     @Override
     public void doFilter(HttpExchange exchange, Chain chain) throws IOException {
-        // Allow POST (Order Placement) to be public or handled separately?
-        // For this demo, let's say POST is public (anyone can order), GET is protected.
-        if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
-            chain.doFilter(exchange);
-            return;
-        }
-
         String token = getToken(exchange);
         
         if (token == null) {
@@ -70,10 +63,13 @@ public class SecurityFilter extends Filter {
             Map<String, Object> realmAccess = jwt.getClaim("realm_access").asMap();
             if (realmAccess != null) {
                 List<String> roles = (List<String>) realmAccess.get("roles");
+                System.out.println("SecurityFilter: Checking for role '" + requiredRole + "'. Found roles: " + roles);
                 if (roles != null && roles.contains(requiredRole)) {
                     chain.doFilter(exchange);
                     return;
                 }
+            } else {
+                System.out.println("SecurityFilter: No realm_access claim found in token.");
             }
             
             sendError(exchange, 403, "Insufficient permissions");
@@ -99,7 +95,7 @@ public class SecurityFilter extends Filter {
             String[] cookies = cookieHeader.split(";");
             for (String cookie : cookies) {
                 String[] parts = cookie.trim().split("=");
-                if (parts.length == 2 && "order_auth_token".equals(parts[0])) {
+                if (parts.length == 2 && "auth_token".equals(parts[0])) {
                     return parts[1];
                 }
             }
@@ -108,8 +104,11 @@ public class SecurityFilter extends Filter {
     }
 
     private void sendError(HttpExchange exchange, int code, String message) throws IOException {
-        exchange.sendResponseHeaders(code, message.length());
-        exchange.getResponseBody().write(message.getBytes());
+        String html = "<html><body><h1>Error " + code + "</h1><p>" + message + "</p></body></html>";
+        byte[] bytes = html.getBytes("UTF-8");
+        exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
+        exchange.sendResponseHeaders(code, bytes.length);
+        exchange.getResponseBody().write(bytes);
         exchange.close();
     }
 

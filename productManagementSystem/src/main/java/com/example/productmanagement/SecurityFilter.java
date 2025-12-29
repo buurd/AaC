@@ -77,6 +77,13 @@ public class SecurityFilter extends Filter {
             System.out.println("SecurityFilter: Insufficient permissions. Roles: " + (realmAccess != null ? realmAccess.get("roles") : "null"));
             sendError(exchange, 403, "Insufficient permissions");
         } catch (Exception e) {
+            System.err.println("SecurityFilter: Verification failed. Configured Issuer: " + issuer);
+            try {
+                DecodedJWT jwt = JWT.decode(token);
+                System.err.println("Token Issuer: " + jwt.getIssuer());
+            } catch (Exception ex) {
+                // ignore
+            }
             e.printStackTrace();
             if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
                 exchange.getResponseHeaders().set("Location", "/login");
@@ -98,7 +105,7 @@ public class SecurityFilter extends Filter {
             String[] cookies = cookieHeader.split(";");
             for (String cookie : cookies) {
                 String[] parts = cookie.trim().split("=");
-                if (parts.length == 2 && "pm_auth_token".equals(parts[0])) {
+                if (parts.length == 2 && "auth_token".equals(parts[0])) {
                     return parts[1];
                 }
             }
@@ -107,8 +114,11 @@ public class SecurityFilter extends Filter {
     }
 
     private void sendError(HttpExchange exchange, int code, String message) throws IOException {
-        exchange.sendResponseHeaders(code, message.length());
-        exchange.getResponseBody().write(message.getBytes());
+        String html = "<html><body><h1>Error " + code + "</h1><p>" + message + "</p></body></html>";
+        byte[] bytes = html.getBytes("UTF-8");
+        exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
+        exchange.sendResponseHeaders(code, bytes.length);
+        exchange.getResponseBody().write(bytes);
         exchange.close();
     }
 

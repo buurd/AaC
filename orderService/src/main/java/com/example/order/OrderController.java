@@ -10,7 +10,9 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,7 +41,8 @@ public class OrderController implements HttpHandler {
         "td { padding: 12px; border-bottom: 1px solid #DEE2E6; }" +
         "tr:nth-child(even) { background-color: #F2F2F2; }" +
         ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }" +
-        ".btn-secondary { background-color: #6C757D; }";
+        ".btn-secondary { background-color: #6C757D; }" +
+        ".btn-success { background-color: #28A745; }";
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -52,11 +55,23 @@ public class OrderController implements HttpHandler {
             } else {
                 exchange.sendResponseHeaders(405, -1);
             }
+        } else if ("/orders/confirm".equals(path)) {
+            if ("POST".equalsIgnoreCase(method)) {
+                handleConfirmOrder(exchange);
+            } else {
+                exchange.sendResponseHeaders(405, -1);
+            }
         } else if ("/api/orders".equals(path)) {
             if ("GET".equalsIgnoreCase(method)) {
                 handleApiListOrders(exchange);
             } else if ("POST".equalsIgnoreCase(method)) {
                 handleCreateOrder(exchange);
+            } else {
+                exchange.sendResponseHeaders(405, -1);
+            }
+        } else if ("/api/orders/status".equals(path)) {
+            if ("POST".equalsIgnoreCase(method)) {
+                handleUpdateStatus(exchange);
             } else {
                 exchange.sendResponseHeaders(405, -1);
             }
@@ -117,6 +132,8 @@ public class OrderController implements HttpHandler {
     private void handleListOrders(HttpExchange exchange) throws IOException {
         try {
             List<Order> orders = repository.findAll();
+            System.out.println("Listing " + orders.size() + " orders."); // Added logging
+            
             String keycloakUrl = System.getenv().getOrDefault("KEYCLOAK_URL", "https://localhost:8446");
             String logoutUrl = keycloakUrl + "/realms/webshop-realm/protocol/openid-connect/logout?redirect_uri=https://localhost:8447/";
             
@@ -126,14 +143,23 @@ public class OrderController implements HttpHandler {
             sb.append("<div style='margin-bottom: 20px;'>");
             sb.append("<a href='" + logoutUrl + "' class='btn btn-secondary' style='float: right;'>Logout</a>");
             sb.append("</div>");
-            sb.append("<table><thead><tr><th>ID</th><th>Customer</th><th>Status</th><th>Items</th></tr></thead><tbody>");
+            sb.append("<table><thead><tr><th>ID</th><th>Customer</th><th>Status</th><th>Items</th><th>Actions</th></tr></thead><tbody>");
             
             for (Order o : orders) {
+                System.out.println("Order: " + o.getId() + ", Status: " + o.getStatus()); // Added logging
                 sb.append("<tr>");
                 sb.append("<td>").append(o.getId()).append("</td>");
                 sb.append("<td>").append(o.getCustomerName()).append("</td>");
                 sb.append("<td>").append(o.getStatus()).append("</td>");
                 sb.append("<td>").append(o.getItems().size()).append("</td>");
+                sb.append("<td>");
+                if ("PENDING_CONFIRMATION".equals(o.getStatus())) {
+                     sb.append("<form action='/orders/confirm' method='post' style='display:inline;'>");
+                     sb.append("<input type='hidden' name='id' value='").append(o.getId()).append("'>");
+                     sb.append("<button type='submit' class='btn btn-success'>Confirm</button>");
+                     sb.append("</form>");
+                }
+                sb.append("</td>");
                 sb.append("</tr>");
             }
             sb.append("</tbody></table></div></body></html>");
@@ -178,20 +204,12 @@ public class OrderController implements HttpHandler {
             }
             
             if (allReserved) {
-                repository.updateStatus(orderId, "CONFIRMED");
+                // Changed from CONFIRMED to PENDING_CONFIRMATION to allow manual confirmation
+                repository.updateStatus(orderId, "PENDING_CONFIRMATION");
                 
-                // Create Invoice
-                double totalAmount = 0; // In a real app, get prices from Product service
-                invoiceRepository.createInvoice(new Invoice(orderId, order.getCustomerName(), totalAmount, LocalDate.now().plusDays(30)));
-                
-                // Notify Warehouse for fulfillment
-                boolean notified = fulfillmentService.notifyOrderConfirmed(orderId).join();
-                if (!notified) {
-                    repository.updateStatus(orderId, "CONFIRMATION_FAILED");
-                    throw new IOException("Failed to notify warehouse for fulfillment");
-                }
+                // Notification to Warehouse and Invoice creation is now moved to handleConfirmOrder
 
-                String response = "{\"status\":\"CONFIRMED\", \"orderId\":" + orderId + "}";
+                String response = "{\"status\":\"PENDING_CONFIRMATION\", \"orderId\":" + orderId + "}";
                 byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
                 exchange.getResponseHeaders().set("Content-Type", "application/json");
                 exchange.sendResponseHeaders(200, bytes.length);
@@ -217,6 +235,100 @@ public class OrderController implements HttpHandler {
                     e.addSuppressed(ex);
                 }
             }
+            exchange.sendResponseHeaders(500, -1);
+        }
+    }
+
+    private void handleConfirmOrder(HttpExchange exchange) throws IOException {
+        try {
+            InputStream is = exchange.getRequestBody();
+            String formData = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            Map<String, String> params = parseFormData(formData);
+            
+            int orderId = Integer.parseInt(params.get("id"));
+            
+            repository.updateStatus(orderId, "CONFIRMED");
+            
+            // Create Invoice (Moved from handleCreateOrder)
+            // We need to fetch the order details to get customer name and calculate amount
+            // For now, I'll assume we can get it or just use placeholders as per upstream logic
+            // Upstream logic: invoiceRepository.createInvoice(new Invoice(orderId, order.getCustomerName(), totalAmount, LocalDate.now().plusDays(30)));
+            // But we don't have 'order' object here.
+            // Let's fetch it.
+            // Assuming repository has findById.
+            // If not, we might need to add it or use a simplified approach.
+            // repository.findAll() exists.
+            
+            // For simplicity and to match upstream intent without refactoring repository too much:
+            // We'll just create the invoice with available info.
+            // Ideally we should fetch the order.
+            // Let's check if repository has findById.
+            // It does not seem to have findById in the snippet I saw earlier.
+            // But findAll returns all.
+            
+            // Let's try to find the order from findAll (inefficient but works for now)
+            List<Order> allOrders = repository.findAll();
+            Order order = allOrders.stream().filter(o -> o.getId() == orderId).findFirst().orElse(null);
+            
+            if (order != null) {
+                 double totalAmount = 0; // Placeholder as per upstream
+                 invoiceRepository.createInvoice(new Invoice(orderId, order.getCustomerName(), totalAmount, LocalDate.now().plusDays(30)));
+            } else {
+                System.err.println("Order not found for invoice creation: " + orderId);
+            }
+            
+            // Notify Warehouse for fulfillment
+            boolean notified = fulfillmentService.notifyOrderConfirmed(orderId).join();
+            if (!notified) {
+                System.err.println("Failed to notify warehouse for order " + orderId);
+                repository.updateStatus(orderId, "CONFIRMATION_FAILED");
+                throw new IOException("Failed to notify warehouse for fulfillment");
+            }
+
+            exchange.getResponseHeaders().set("Location", "/orders");
+            exchange.sendResponseHeaders(302, -1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            exchange.sendResponseHeaders(500, -1);
+        }
+    }
+
+    private void handleUpdateStatus(HttpExchange exchange) throws IOException {
+        try {
+            InputStream is = exchange.getRequestBody();
+            String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            System.out.println("Update Status Request: " + json);
+            
+            int orderId = -1;
+            String status = null;
+            
+            // Simple JSON parsing
+            Pattern pId = Pattern.compile("\"orderId\"\\s*:\\s*(\\d+)");
+            Matcher mId = pId.matcher(json);
+            if (mId.find()) {
+                orderId = Integer.parseInt(mId.group(1));
+            }
+            
+            Pattern pStatus = Pattern.compile("\"status\"\\s*:\\s*\"([^\"]+)\"");
+            Matcher mStatus = pStatus.matcher(json);
+            if (mStatus.find()) {
+                status = mStatus.group(1);
+            }
+            
+            if (orderId != -1 && status != null) {
+                repository.updateStatus(orderId, status);
+                String response = "{\"status\":\"updated\"}";
+                byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+                exchange.getResponseHeaders().set("Content-Type", "application/json");
+                exchange.sendResponseHeaders(200, bytes.length);
+                try (OutputStream os = exchange.getResponseBody()) {
+                    os.write(bytes);
+                }
+            } else {
+                exchange.sendResponseHeaders(400, -1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             exchange.sendResponseHeaders(500, -1);
         }
     }
@@ -268,5 +380,19 @@ public class OrderController implements HttpHandler {
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(bytes);
         }
+    }
+
+    private Map<String, String> parseFormData(String formData) {
+        Map<String, String> map = new HashMap<>();
+        String[] pairs = formData.split("&");
+        for (String pair : pairs) {
+            String[] keyValue = pair.split("=");
+            if (keyValue.length > 0) {
+                String key = java.net.URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);
+                String value = keyValue.length > 1 ? java.net.URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8) : "";
+                map.put(key, value);
+            }
+        }
+        return map;
     }
 }

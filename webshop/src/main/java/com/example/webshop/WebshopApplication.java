@@ -163,6 +163,7 @@ public class WebshopApplication {
         server.createContext("/products", new ProductController(productRepository));
         server.createContext("/cart", new ShoppingCartController());
         server.createContext("/my-orders", new OrderHistoryController(orderService));
+        server.createContext("/api/orders", new OrderController(orderService));
         
         HttpContext productSyncContext = server.createContext("/api/products/sync", new ProductSyncController(productRepository));
         productSyncContext.getFilters().add(productSyncFilter);

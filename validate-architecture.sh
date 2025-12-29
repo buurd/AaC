@@ -2,6 +2,11 @@
 set -e
 clear
 
+START_TIME=$(date +%s)
+
+# Redirect all output to log file and stdout (overwrite)
+exec > >(tee logs/validate-architecture.log) 2>&1
+
 # --- Pre-Cleanup ---
 # Remove any leftover containers from previous runs or run-webshop.sh to avoid conflicts
 echo "--- Checking for leftover containers ---"
@@ -45,6 +50,10 @@ cleanup() {
         echo "Removing network: $NETWORK_NAME"
         docker network rm "$NETWORK_NAME" > /dev/null 2>&1 || true
     fi
+
+    END_TIME=$(date +%s)
+    DURATION=$((END_TIME - START_TIME))
+    echo "Total execution time: ${DURATION} seconds"
 }
 trap cleanup EXIT
 

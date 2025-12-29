@@ -47,8 +47,9 @@ public class ProductService {
         product.setId(newId);
 
         // 2. Sync to Webshop and Warehouse
-        syncToWebshop(product);
-        syncToWarehouse(product);
+        // Automatic sync removed as per requirements change (REQ-025, REQ-033)
+        // syncToWebshop(product);
+        // syncToWarehouse(product);
     }
 
     public void updateProduct(Product product) throws SQLException {
@@ -56,8 +57,9 @@ public class ProductService {
         repository.update(product);
 
         // 2. Sync to Webshop and Warehouse
-        syncToWebshop(product);
-        syncToWarehouse(product);
+        // Automatic sync removed as per requirements change (REQ-025, REQ-033)
+        // syncToWebshop(product);
+        // syncToWarehouse(product);
     }
 
     public void deleteProduct(int id) throws SQLException {

@@ -37,32 +37,35 @@ describe('Warehouse Synchronization', () => {
   beforeEach(() => {
     cy.loginToPM();
     // We also need to be logged in to Warehouse to verify content via API
-    // Since cy.request uses a separate cookie jar from cy.visit if not configured otherwise,
-    // but here we use cy.request for verification.
-    // Let's use the UI login helper which sets the cookie in the browser, 
-    // but cy.request might not pick it up automatically unless we use cy.session or preserve cookies.
-    // However, the previous test worked, so let's assume it shares the jar or we login via request.
-    // Actually, the previous test used a helper `loginToWarehouse` which used `cy.request`.
-    // Let's use the new `loginToWarehouse` command which uses `cy.visit`.
-    // To make `cy.request` work, we might need to use `cy.request` for login too.
-    
-    // Let's just use the UI login for now, and if verification fails, we'll know.
-    // Actually, `verifyWarehouseContent` uses `cy.request`.
-    // If we login via UI, the cookie is in the browser. `cy.request` *does* attach cookies from the browser if they are set on the domain.
-    // So `cy.loginToWarehouse()` (UI) should be enough if domains match.
+    // Clear cookies to avoid conflict if we switch users/apps
+    cy.clearCookies();
     cy.loginToWarehouse();
   });
 
   it('should sync create, update, and delete to warehouse', () => {
     // 1. Create
+    cy.clearCookies();
+    cy.loginToPM();
     cy.createProductInPM({ name: productName, type: 'WarehouseType', price: '50.00', description: 'Warehouse Description' });
 
+    // Manual Sync required
+    cy.url().should('include', '/products');
+    cy.contains('tr', productName).should('be.visible').within(() => {
+      cy.contains('a', 'Sync').should('be.visible').click();
+    });
+    
+    cy.wait(1000);
+
     // 2. Verify Sync
+    // Need to login to Warehouse to verify
+    cy.clearCookies();
+    cy.loginToWarehouse();
     verifyWarehouseContent(productName);
 
     // 3. Update
     // We need to switch back to PM to update.
-    cy.loginToPM(); // Re-login or just visit if session persists. Session should persist.
+    cy.clearCookies();
+    cy.loginToPM(); 
     cy.visit('https://reverse-proxy:8444/products');
     
     cy.contains('tr', productName).within(() => {
@@ -72,15 +75,27 @@ describe('Warehouse Synchronization', () => {
     cy.get('button[type="submit"]').click();
     cy.contains(productUpdatedName).should('be.visible');
 
+    // Manual Sync required
+    cy.contains('tr', productUpdatedName).within(() => {
+      cy.contains('a', 'Sync').should('be.visible').click();
+    });
+    
+    cy.wait(1000);
+
     // 4. Verify Update Sync
+    cy.clearCookies();
+    cy.loginToWarehouse();
     verifyWarehouseContent(productUpdatedName);
 
     // 5. Delete
+    cy.clearCookies();
     cy.loginToPM();
     cy.visit('https://reverse-proxy:8444/products');
     cy.deleteProductInPM(productUpdatedName);
 
     // 6. Verify Delete Sync
+    cy.clearCookies();
+    cy.loginToWarehouse();
     verifyWarehouseContentMissing(productUpdatedName);
   });
 });

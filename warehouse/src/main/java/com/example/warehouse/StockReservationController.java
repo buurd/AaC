@@ -45,13 +45,27 @@ public class StockReservationController implements HttpHandler {
                     if ("quantity".equals(key)) quantity = Integer.parseInt(value);
                 }
                 
-                boolean success = repository.reserveStock(productId, quantity);
+                // productId is treated as pmId
+                Product p = productRepository.findByPmId(productId);
+                if (p == null) {
+                    System.out.println("Stock Reservation failed: Product with PM ID " + productId + " not found.");
+                    String response = "{\"status\":\"product_not_found\"}";
+                    exchange.getResponseHeaders().set("Content-Type", "application/json");
+                    exchange.sendResponseHeaders(404, response.length());
+                    try (OutputStream os = exchange.getResponseBody()) {
+                        os.write(response.getBytes());
+                    }
+                    return;
+                }
+
+                int warehouseId = p.getId();
+                
+                boolean success = repository.reserveStock(warehouseId, quantity);
                 
                 if (success) {
                     // Trigger sync to Webshop
-                    int newStock = repository.countStock(productId);
-                    Product p = productRepository.findById(productId);
-                    if (p != null && p.getPmId() != null) {
+                    int newStock = repository.countStock(warehouseId);
+                    if (p.getPmId() != null) {
                         stockService.syncStock(p.getPmId(), newStock);
                     }
 

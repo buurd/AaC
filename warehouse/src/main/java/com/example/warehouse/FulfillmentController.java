@@ -16,9 +16,11 @@ import java.net.URLDecoder;
 public class FulfillmentController implements HttpHandler {
 
     private final FulfillmentOrderRepository repository;
+    private final OrderUpdateService orderUpdateService;
 
-    public FulfillmentController(FulfillmentOrderRepository repository) {
+    public FulfillmentController(FulfillmentOrderRepository repository, OrderUpdateService orderUpdateService) {
         this.repository = repository;
+        this.orderUpdateService = orderUpdateService;
     }
 
     private static final String CSS = 
@@ -102,7 +104,12 @@ public class FulfillmentController implements HttpHandler {
             String status = params.get("status");
             
             repository.updateFulfillmentStatus(orderId, status);
-            
+
+            // Notify Order Service
+            if (orderUpdateService != null) {
+                orderUpdateService.updateStatus(orderId, status);
+            }
+
             // Redirect back to list
             exchange.getResponseHeaders().set("Location", "/fulfillment");
             exchange.sendResponseHeaders(302, -1);
