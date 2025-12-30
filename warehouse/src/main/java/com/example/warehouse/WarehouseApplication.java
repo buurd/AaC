@@ -99,7 +99,13 @@ public class WarehouseApplication {
             String path = exchange.getRequestURI().getPath();
             logger.info("Received request: {} {}", exchange.getRequestMethod(), path);
             if ("/".equals(path)) {
-                String html = "<!DOCTYPE html><html><head><style>" + CSS + "</style></head><body><div class='container'>" +
+                String header = "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'>" +
+                                "<button onclick=\"window.location.href='/'\" class='btn btn-primary'>Warehouse Dashboard</button>" +
+                                "<button onclick=\"window.location.href='/logout'\" class='btn btn-secondary'>Logout</button>" +
+                                "</div>";
+
+                String html = "<html><head><style>" + CSS + "</style></head><body><div class='container'>" +
+                              header +
                               "<h1>Warehouse Service</h1>" +
                               "<button onclick=\"window.location.href='/products'\" class='btn btn-primary'>View Products</button>" +
                               "<button onclick=\"window.location.href='/deliveries'\" class='btn btn-primary'>Deliveries</button>" +

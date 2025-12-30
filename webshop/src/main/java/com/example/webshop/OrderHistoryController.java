@@ -26,8 +26,21 @@ public class OrderHistoryController implements HttpHandler {
         "th { background-color: #007BFF; color: #FFFFFF; padding: 12px; text-align: left; }" +
         "td { padding: 12px; border-bottom: 1px solid #DEE2E6; }" +
         "tr:nth-child(even) { background-color: #F2F2F2; }" +
-        ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; }" +
-        ".btn-secondary { background-color: #6C757D; }";
+        ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }" +
+        ".btn-secondary { background-color: #6C757D; }" +
+        ".btn-primary { background-color: #007BFF; }";
+
+    private String getHeader() {
+        return "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'>" +
+               "<div>" +
+               "<button onclick=\"window.location.href='/'\" class='btn btn-primary'>Webshop Home</button>" +
+               "<button onclick=\"window.location.href='/products'\" class='btn btn-secondary'>Products</button>" +
+               "<button onclick=\"window.location.href='/cart'\" class='btn btn-secondary'>Cart</button>" +
+               "<button onclick=\"window.location.href='/my-orders'\" class='btn btn-secondary'>My Orders</button>" +
+               "</div>" +
+               "<button onclick=\"window.location.href='/logout'\" class='btn btn-secondary'>Logout</button>" +
+               "</div>";
+    }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -42,10 +55,9 @@ public class OrderHistoryController implements HttpHandler {
             StringBuilder html = new StringBuilder();
             html.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body>");
             html.append("<div class='container'>");
-            html.append("<div style='display:flex; justify-content:space-between; align-items:center;'>");
+            html.append(getHeader());
             html.append("<h1>My Orders</h1>");
             html.append("<button onclick=\"window.location.href='/products'\" class='btn btn-secondary'>Back to Shop</button>");
-            html.append("</div>");
             
             html.append("<table><thead><tr><th>Order ID</th><th>Status</th></tr></thead><tbody>");
             

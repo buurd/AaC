@@ -41,6 +41,13 @@ public class DeliveryController implements HttpHandler {
         "input[type='text'], select { padding: 8px; border: 1px solid #CED4DA; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }" +
         "label { display: block; font-weight: bold; margin-bottom: 5px; }";
 
+    private String getHeader() {
+        return "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'>" +
+               "<button onclick=\"window.location.href='/'\" class='btn btn-primary'>Warehouse Dashboard</button>" +
+               "<button onclick=\"window.location.href='/logout'\" class='btn btn-secondary'>Logout</button>" +
+               "</div>";
+    }
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
@@ -68,6 +75,7 @@ public class DeliveryController implements HttpHandler {
             List<Delivery> deliveries = deliveryRepository.findAll();
             StringBuilder sb = new StringBuilder();
             sb.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body><div class='container'>");
+            sb.append(getHeader());
             sb.append("<h1>Deliveries</h1>");
             sb.append("<form action='/deliveries' method='post' style='margin-bottom: 20px; border: 1px solid #ddd; padding: 10px;'>");
             sb.append("<h3>New Delivery</h3>");
@@ -122,6 +130,7 @@ public class DeliveryController implements HttpHandler {
 
             StringBuilder sb = new StringBuilder();
             sb.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body><div class='container'>");
+            sb.append(getHeader());
             sb.append("<h1>Delivery #").append(d.getId()).append("</h1>");
             sb.append("<p><strong>Sender:</strong> ").append(d.getSender()).append("</p>");
             

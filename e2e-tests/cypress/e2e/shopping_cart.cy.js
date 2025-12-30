@@ -21,7 +21,7 @@ describe('Shopping Cart', () => {
     });
 
     // 3. Go to cart page
-    cy.contains('button', 'View Cart').click();
+    cy.contains('button', 'Cart').click();
     cy.url().should('include', '/cart');
     cy.contains('h1', 'Shopping Cart');
 
@@ -51,7 +51,7 @@ describe('Shopping Cart', () => {
     }
 
     // 3. Verify cart quantity
-    cy.contains('button', 'View Cart').click();
+    cy.contains('button', 'Cart').click();
     cy.contains('tr', productName).within(() => {
       cy.contains('td', '10'); // Quantity should be 10
     });
@@ -64,7 +64,7 @@ describe('Shopping Cart', () => {
     // We can't easily test the alert, but we can check the cart quantity hasn't changed
 
     // 5. Verify cart quantity is still 10
-    cy.contains('button', 'View Cart').click();
+    cy.contains('button', 'Cart').click();
     cy.contains('tr', productName).within(() => {
       cy.contains('td', '10');
     });

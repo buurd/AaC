@@ -16,10 +16,11 @@ public class ShoppingCartController implements HttpHandler {
         "table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }" +
         "th { background-color: #007BFF; color: #FFFFFF; padding: 12px; text-align: left; }" +
         "td { padding: 12px; border-bottom: 1px solid #DEE2E6; }" +
-        ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; }" +
+        ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }" +
         ".btn-danger { background-color: #DC3545; }" +
         ".btn-secondary { background-color: #6C757D; }" +
-        ".btn-success { background-color: #28A745; }";
+        ".btn-success { background-color: #28A745; }" +
+        ".btn-primary { background-color: #007BFF; }";
 
     private static final String JS = 
         "<script>" +
@@ -82,12 +83,25 @@ public class ShoppingCartController implements HttpHandler {
         "window.onload = renderCart;" +
         "</script>";
 
+    private String getHeader() {
+        return "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'>" +
+               "<div>" +
+               "<button onclick=\"window.location.href='/'\" class='btn btn-primary'>Webshop Home</button>" +
+               "<button onclick=\"window.location.href='/products'\" class='btn btn-secondary'>Products</button>" +
+               "<button onclick=\"window.location.href='/cart'\" class='btn btn-secondary'>Cart</button>" +
+               "<button onclick=\"window.location.href='/my-orders'\" class='btn btn-secondary'>My Orders</button>" +
+               "</div>" +
+               "<button onclick=\"window.location.href='/logout'\" class='btn btn-secondary'>Logout</button>" +
+               "</div>";
+    }
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         StringBuilder html = new StringBuilder();
         html.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style>");
         html.append(JS).append("</head><body>");
         html.append("<div class='container'>");
+        html.append(getHeader());
         html.append("<h1>Shopping Cart</h1>");
         html.append("<table>");
         html.append("<thead><tr><th>Product</th><th>Quantity</th><th>Price</th><th>Action</th></tr></thead>");

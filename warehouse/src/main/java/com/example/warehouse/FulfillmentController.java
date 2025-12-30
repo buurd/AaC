@@ -33,7 +33,15 @@ public class FulfillmentController implements HttpHandler {
         "tr:nth-child(even) { background-color: #F2F2F2; }" +
         ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; }" +
         ".btn-success { background-color: #28A745; }" +
-        ".btn-secondary { background-color: #6C757D; }";
+        ".btn-secondary { background-color: #6C757D; }" +
+        ".btn-primary { background-color: #007BFF; }";
+
+    private String getHeader() {
+        return "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'>" +
+               "<button onclick=\"window.location.href='/'\" class='btn btn-primary'>Warehouse Dashboard</button>" +
+               "<button onclick=\"window.location.href='/logout'\" class='btn btn-secondary'>Logout</button>" +
+               "</div>";
+    }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -55,10 +63,8 @@ public class FulfillmentController implements HttpHandler {
             StringBuilder html = new StringBuilder();
             html.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body>");
             html.append("<div class='container'>");
-            html.append("<div style='display:flex; justify-content:space-between; align-items:center;'>");
+            html.append(getHeader());
             html.append("<h1>Order Fulfillment</h1>");
-            html.append("<button onclick=\"window.location.href='/'\" class='btn btn-secondary'>Back to Dashboard</button>");
-            html.append("</div>");
             
             html.append("<table><thead><tr><th>Order ID</th><th>Status</th><th>Action</th></tr></thead><tbody>");
             

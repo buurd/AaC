@@ -29,7 +29,7 @@ public class ProductController implements HttpHandler {
         "th { background-color: #007BFF; color: #FFFFFF; padding: 12px; text-align: left; }" +
         "td { padding: 12px; border-bottom: 1px solid #DEE2E6; }" +
         "tr:nth-child(even) { background-color: #F2F2F2; }" +
-        ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; }" +
+        ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }" +
         ".btn-primary { background-color: #007BFF; }" +
         ".btn-success { background-color: #28A745; }" +
         ".btn-secondary { background-color: #6C757D; }";
@@ -58,6 +58,18 @@ public class ProductController implements HttpHandler {
         "}" +
         "</script>";
 
+    private String getHeader() {
+        return "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'>" +
+               "<div>" +
+               "<button onclick=\"window.location.href='/'\" class='btn btn-primary'>Webshop Home</button>" +
+               "<button onclick=\"window.location.href='/products'\" class='btn btn-secondary'>Products</button>" +
+               "<button onclick=\"window.location.href='/cart'\" class='btn btn-secondary'>Cart</button>" +
+               "<button onclick=\"window.location.href='/my-orders'\" class='btn btn-secondary'>My Orders</button>" +
+               "</div>" +
+               "<button onclick=\"window.location.href='/logout'\" class='btn btn-secondary'>Logout</button>" +
+               "</div>";
+    }
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
@@ -65,32 +77,12 @@ public class ProductController implements HttpHandler {
         try {
             List<Product> products = repository.findAll();
             
-            // Dynamic URL construction
-            String host = exchange.getRequestHeaders().getFirst("Host");
-            if (host == null) host = "localhost:8443";
-            String baseUrl = "https://" + host;
-            if (baseUrl.endsWith("/")) baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
-
-            String defaultKeycloakUrl = System.getenv().getOrDefault("KEYCLOAK_URL", "https://localhost:8446");
-            String currentKeycloakUrl = defaultKeycloakUrl;
-            if (host.contains(":8443")) {
-                currentKeycloakUrl = "https://" + host.replace(":8443", ":8446");
-            }
-
-            // Use /logout endpoint instead of direct Keycloak logout
-            String logoutUrl = "/logout";
-            
             StringBuilder html = new StringBuilder();
             html.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style>");
             html.append(JS).append("</head><body>");
             html.append("<div class='container'>");
-            html.append("<div style='display:flex; justify-content:space-between; align-items:center;'>");
+            html.append(getHeader());
             html.append("<h1>Webshop Products</h1>");
-            html.append("<div>");
-            html.append("<button onclick=\"window.location.href='/cart'\" class='btn btn-secondary' style='margin-right: 10px;'>View Cart</button>");
-            html.append("<button onclick=\"window.location.href='" + logoutUrl + "'\" class='btn btn-secondary'>Logout</button>");
-            html.append("</div>");
-            html.append("</div>");
             html.append("<table>");
             html.append("<thead><tr><th>Name</th><th>Description</th><th>Price</th><th>Stock</th><th>Action</th></tr></thead>");
             html.append("<tbody>");

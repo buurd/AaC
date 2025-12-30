@@ -37,7 +37,15 @@ public class InvoiceController implements HttpHandler {
         "tr:nth-child(even) { background-color: #F2F2F2; }" +
         ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }" +
         ".btn-success { background-color: #28A745; }" +
-        ".btn-secondary { background-color: #6C757D; }";
+        ".btn-secondary { background-color: #6C757D; }" +
+        ".btn-primary { background-color: #007BFF; }";
+
+    private String getHeader() {
+        return "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'>" +
+               "<button onclick=\"window.location.href='/'\" class='btn btn-primary'>Order Dashboard</button>" +
+               "<button onclick=\"window.location.href='/logout'\" class='btn btn-secondary'>Logout</button>" +
+               "</div>";
+    }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -62,10 +70,8 @@ public class InvoiceController implements HttpHandler {
             List<Invoice> invoices = repository.findAll();
             StringBuilder sb = new StringBuilder();
             sb.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body><div class='container'>");
+            sb.append(getHeader());
             sb.append("<h1>Invoices</h1>");
-            sb.append("<div style='margin-bottom: 20px;'>");
-            sb.append("<button onclick=\"window.location.href='/'\" class='btn btn-secondary'>Back to Dashboard</button>");
-            sb.append("</div>");
             sb.append("<table><thead><tr><th>ID</th><th>Order ID</th><th>Customer</th><th>Amount</th><th>Due Date</th><th>Paid</th><th>Action</th></tr></thead><tbody>");
             
             for (Invoice i : invoices) {

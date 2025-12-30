@@ -34,7 +34,7 @@ public class WebshopApplication {
         "body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }" +
         ".container { max-width: 1200px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }" +
         "h1 { color: #343A40; }" +
-        ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; }" +
+        ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }" +
         ".btn-primary { background-color: #007BFF; }" +
         ".btn-secondary { background-color: #6C757D; }" +
         ".btn-success { background-color: #28A745; }" +
@@ -104,14 +104,25 @@ public class WebshopApplication {
                 String encodedRedirectUri = URLEncoder.encode(baseUrl + "/", StandardCharsets.UTF_8);
                 String registerUrl = currentKeycloakUrl + "/realms/webshop-realm/protocol/openid-connect/registrations?client_id=webshop-client&response_type=code&scope=openid&redirect_uri=" + encodedRedirectUri;
                 
+                String header = "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'>" +
+                                "<div>" +
+                                "<button onclick=\"window.location.href='/'\" class='btn btn-primary'>Webshop Home</button>" +
+                                "<button onclick=\"window.location.href='/products'\" class='btn btn-secondary'>Products</button>" +
+                                "<button onclick=\"window.location.href='/cart'\" class='btn btn-secondary'>Cart</button>" +
+                                "<button onclick=\"window.location.href='/my-orders'\" class='btn btn-secondary'>My Orders</button>" +
+                                "</div>" +
+                                "<div>" +
+                                "<button onclick=\"window.location.href='/login'\" class='btn btn-primary'>Login</button>" +
+                                "<button onclick=\"window.location.href='" + registerUrl + "'\" class='btn btn-success'>Register</button>" +
+                                "<button onclick=\"window.location.href='" + logoutUrl + "'\" class='btn btn-secondary'>Logout</button>" +
+                                "</div>" +
+                                "</div>";
+
                 String html = "<!DOCTYPE html><html><head><style>" + CSS + "</style></head><body><div class='container'>" +
+                              header +
                               "<h1>Welcome to the Webshop!</h1>" +
                               "<p>Browse our amazing products.</p>" +
                               "<button onclick=\"window.location.href='/products'\" class='btn btn-primary'>View Products</button>" +
-                              "<button onclick=\"window.location.href='/my-orders'\" class='btn btn-primary' style='margin-left:10px;'>My Orders</button>" +
-                              "<button onclick=\"window.location.href='/login'\" class='btn btn-primary' style='margin-left:10px;'>Login</button>" +
-                              "<button onclick=\"window.location.href='" + registerUrl + "'\" class='btn btn-success' style='margin-left:10px;'>Register</button>" +
-                              "<button onclick=\"window.location.href='" + logoutUrl + "'\" class='btn btn-secondary' style='margin-left:10px;'>Logout</button>" +
                               "</div></body></html>";
                 byte[] bytes = html.getBytes(StandardCharsets.UTF_8);
                 exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");

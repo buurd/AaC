@@ -29,23 +29,27 @@ public class ProductController implements HttpHandler {
         "td { padding: 12px; border-bottom: 1px solid #DEE2E6; }" +
         "tr:nth-child(even) { background-color: #F2F2F2; }" +
         ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }" +
+        ".btn-primary { background-color: #007BFF; }" +
         ".btn-secondary { background-color: #6C757D; }";
+
+    private String getHeader() {
+        return "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'>" +
+               "<button onclick=\"window.location.href='/'\" class='btn btn-primary'>Warehouse Dashboard</button>" +
+               "<button onclick=\"window.location.href='/logout'\" class='btn btn-secondary'>Logout</button>" +
+               "</div>";
+    }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         logger.info("Received request: {} {}", exchange.getRequestMethod(), exchange.getRequestURI().getPath());
         try {
             List<Product> products = repository.findAll();
-            String keycloakUrl = System.getenv().getOrDefault("KEYCLOAK_URL", "https://localhost:8446");
-            String logoutUrl = keycloakUrl + "/realms/webshop-realm/protocol/openid-connect/logout?redirect_uri=https://localhost:8445/";
             
             StringBuilder html = new StringBuilder();
             html.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body>");
             html.append("<div class='container'>");
+            html.append(getHeader());
             html.append("<h1>Warehouse Products</h1>");
-            html.append("<div style='margin-bottom: 20px;'>");
-            html.append("<a href='" + logoutUrl + "' class='btn btn-secondary' style='float: right;'>Logout</a>");
-            html.append("</div>");
             html.append("<table>");
             html.append("<thead><tr><th>ID</th><th>PM_ID</th><th>Name</th></tr></thead>");
             html.append("<tbody>");

@@ -80,7 +80,7 @@ Cypress.Commands.add('createDeliveryAndAddStock', (senderName, productName, seri
   cy.contains('button', 'Create Delivery').click();
   
   cy.contains('tr', senderName).within(() => {
-    cy.contains('View').click();
+    cy.contains('button', 'View').click();
   });
   cy.get('select[name="productId"]').select(productName);
   cy.get('input[name="serialNumber"]').type(serialNumber);
@@ -99,12 +99,12 @@ Cypress.Commands.add('addProductToCart', (productName) => {
   
   // Wait for product to appear (sync might take time)
   cy.contains('tr', productName, { timeout: 10000 }).within(() => {
-    cy.contains('Add to Cart').click();
+    cy.contains('button', 'Add to Cart').click();
   });
   cy.get('@alertStub').should('have.been.calledWith', `Added ${productName} to cart!`);
 });
 
 Cypress.Commands.add('checkoutCart', () => {
-  cy.contains('button', 'View Cart').click();
-  cy.contains('Checkout').click();
+  cy.contains('button', 'Cart').click();
+  cy.contains('button', 'Checkout').click();
 });

@@ -42,7 +42,15 @@ public class OrderController implements HttpHandler {
         "tr:nth-child(even) { background-color: #F2F2F2; }" +
         ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }" +
         ".btn-secondary { background-color: #6C757D; }" +
-        ".btn-success { background-color: #28A745; }";
+        ".btn-success { background-color: #28A745; }" +
+        ".btn-primary { background-color: #007BFF; }";
+
+    private String getHeader() {
+        return "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'>" +
+               "<button onclick=\"window.location.href='/'\" class='btn btn-primary'>Order Dashboard</button>" +
+               "<button onclick=\"window.location.href='/logout'\" class='btn btn-secondary'>Logout</button>" +
+               "</div>";
+    }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -134,15 +142,10 @@ public class OrderController implements HttpHandler {
             List<Order> orders = repository.findAll();
             System.out.println("Listing " + orders.size() + " orders."); // Added logging
             
-            String keycloakUrl = System.getenv().getOrDefault("KEYCLOAK_URL", "https://localhost:8446");
-            String logoutUrl = keycloakUrl + "/realms/webshop-realm/protocol/openid-connect/logout?redirect_uri=https://localhost:8447/";
-            
             StringBuilder sb = new StringBuilder();
             sb.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body><div class='container'>");
+            sb.append(getHeader());
             sb.append("<h1>Order Management</h1>");
-            sb.append("<div style='margin-bottom: 20px;'>");
-            sb.append("<a href='" + logoutUrl + "' class='btn btn-secondary' style='float: right;'>Logout</a>");
-            sb.append("</div>");
             sb.append("<table><thead><tr><th>ID</th><th>Customer</th><th>Status</th><th>Items</th><th>Actions</th></tr></thead><tbody>");
             
             for (Order o : orders) {

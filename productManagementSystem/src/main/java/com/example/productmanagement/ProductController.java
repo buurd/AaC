@@ -38,6 +38,13 @@ public class ProductController implements HttpHandler {
         "input[type='text'], input[type='number'], input[type='submit'] { padding: 8px; border: 1px solid #CED4DA; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }" +
         "label { display: block; font-weight: bold; margin-bottom: 5px; }";
 
+    private String getHeader() {
+        return "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'>" +
+               "<button onclick=\"window.location.href='/'\" class='btn btn-primary'>PM Dashboard</button>" +
+               "<button onclick=\"window.location.href='/logout'\" class='btn btn-secondary'>Logout</button>" +
+               "</div>";
+    }
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
@@ -77,9 +84,9 @@ public class ProductController implements HttpHandler {
             List<Product> products = repository.findAll();
             StringBuilder html = new StringBuilder();
             html.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body><div class='container'>");
+            html.append(getHeader());
             html.append("<h1>Products</h1>");
             html.append("<button onclick=\"window.location.href='/products/create'\" class='btn btn-primary'>Create New Product</button>");
-            html.append("<button onclick=\"window.location.href='/logout'\" class='btn btn-secondary' style='float: right;'>Logout</button>");
             html.append("<table><thead><tr><th>ID</th><th>Name</th><th>Price</th><th>Actions</th></tr></thead><tbody>");
             for (Product p : products) {
                 html.append("<tr>");
@@ -260,6 +267,6 @@ public class ProductController implements HttpHandler {
     }
 
     private String wrapInContainer(String content) {
-        return "<!DOCTYPE html><html><head><style>" + CSS + "</style></head><body><div class='container'>" + content + "</div></body></html>";
+        return "<!DOCTYPE html><html><head><style>" + CSS + "</style></head><body><div class='container'>" + getHeader() + content + "</div></body></html>";
     }
 }

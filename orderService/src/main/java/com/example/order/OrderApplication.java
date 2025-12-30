@@ -92,26 +92,17 @@ public class OrderApplication {
             String path = exchange.getRequestURI().getPath();
             logger.info("Received request: {} {}", exchange.getRequestMethod(), path);
             if ("/".equals(path)) {
-                String host = exchange.getRequestHeaders().getFirst("Host");
-                if (host == null) host = "localhost:8447"; // Fallback
-                // Assuming HTTPS via proxy
-                String baseUrl = "https://" + host;
-                if (baseUrl.endsWith("/")) baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
-                
-                // Derive Keycloak URL from Host if possible (replace 8447 with 8446)
-                String currentKeycloakUrl = defaultKeycloakUrl;
-                if (host.contains(":8447")) {
-                    currentKeycloakUrl = "https://" + host.replace(":8447", ":8446");
-                }
+                String header = "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'>" +
+                                "<button onclick=\"window.location.href='/'\" class='btn btn-primary'>Order Dashboard</button>" +
+                                "<button onclick=\"window.location.href='/logout'\" class='btn btn-secondary'>Logout</button>" +
+                                "</div>";
 
-                String logoutUrl = "/logout";
-                
                 String html = "<!DOCTYPE html><html><head><style>" + CSS + "</style></head><body><div class='container'>" +
+                              header +
                               "<h1>Order Service</h1>" +
                               "<p>Manage customer orders.</p>" +
-                              "<a href='/orders' class='btn btn-primary'>View Orders</a>" +
-                              "<a href='/invoices' class='btn btn-primary'>View Invoices</a>" +
-                              "<a href='" + logoutUrl + "' class='btn btn-secondary' style='margin-left:10px;'>Logout</a>" +
+                              "<button onclick=\"window.location.href='/orders'\" class='btn btn-primary'>View Orders</button>" +
+                              "<button onclick=\"window.location.href='/invoices'\" class='btn btn-primary'>View Invoices</button>" +
                               "</div></body></html>";
                 byte[] bytes = html.getBytes(StandardCharsets.UTF_8);
                 exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
@@ -216,19 +207,19 @@ public class OrderApplication {
                         redirect(t, "/orders"); // Redirect to orders
                     } else {
                         logger.warn("Login failed for user: {}. Status: {}. Body: {}", username, response.statusCode(), response.body());
-                        sendResponse(t, 401, "<h1>Login Failed</h1><p>Invalid credentials</p><a href='/login'>Try Again</a>");
+                        sendResponse(t, 401, "<h1>Login Failed</h1><p>Invalid credentials</p><button onclick=\"window.location.href='/login'\" class='btn btn-primary'>Try Again</button>");
                     }
                 } catch (InterruptedException e) {
                     logger.error("Error during login", e);
                     sendResponse(t, 500, "<h1>Error</h1><p>" + e.getMessage() + "</p>");
                 }
             } else {
-                String body = "<h1>Login</h1>" +
+                String body = "<html><head><style>" + CSS + "</style></head><body><div class='container'><h1>Login</h1>" +
                               "<form action='/login' method='post'>" +
                               "<label>Username</label><input type='text' name='username'>" +
                               "<label>Password</label><input type='password' name='password'>" +
                               "<button type='submit' class='btn btn-primary'>Login</button>" +
-                              "</form>";
+                              "</form></div></body></html>";
                 sendResponse(t, 200, body);
             }
         }
