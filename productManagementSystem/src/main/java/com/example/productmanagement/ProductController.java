@@ -78,8 +78,8 @@ public class ProductController implements HttpHandler {
             StringBuilder html = new StringBuilder();
             html.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body><div class='container'>");
             html.append("<h1>Products</h1>");
-            html.append("<a href='/products/create' class='btn btn-primary'>Create New Product</a>");
-            html.append("<a href='/logout' class='btn btn-secondary' style='float: right;'>Logout</a>");
+            html.append("<button onclick=\"window.location.href='/products/create'\" class='btn btn-primary'>Create New Product</button>");
+            html.append("<button onclick=\"window.location.href='/logout'\" class='btn btn-secondary' style='float: right;'>Logout</button>");
             html.append("<table><thead><tr><th>ID</th><th>Name</th><th>Price</th><th>Actions</th></tr></thead><tbody>");
             for (Product p : products) {
                 html.append("<tr>");
@@ -87,9 +87,9 @@ public class ProductController implements HttpHandler {
                 html.append("<td>").append(p.getName()).append("</td>");
                 html.append("<td>").append(String.format("%.2f %s", p.getPrice(), p.getUnit())).append("</td>");
                 html.append("<td>");
-                html.append("<a href='/products/edit?id=").append(p.getId()).append("' class='btn btn-secondary'>Edit</a>");
-                html.append("<a href='/products/delete?id=").append(p.getId()).append("' class='btn btn-danger'>Delete</a>");
-                html.append("<a href='/products/sync?id=").append(p.getId()).append("' class='btn btn-primary'>Sync</a>");
+                html.append("<button onclick=\"window.location.href='/products/edit?id=").append(p.getId()).append("'\" class='btn btn-secondary'>Edit</button>");
+                html.append("<button onclick=\"window.location.href='/products/delete?id=").append(p.getId()).append("'\" class='btn btn-danger'>Delete</button>");
+                html.append("<button onclick=\"window.location.href='/products/sync?id=").append(p.getId()).append("'\" class='btn btn-primary'>Sync</button>");
                 html.append("</td>");
                 html.append("</tr>");
             }
@@ -110,6 +110,7 @@ public class ProductController implements HttpHandler {
                       "<label>Price:</label><input type='number' step='0.01' name='price'><br>" +
                       "<label>Unit:</label><input type='text' name='unit' value='pcs'><br>" +
                       "<button type='submit' class='btn btn-primary'>Create</button>" +
+                      "<button onclick=\"window.location.href='/products'\" class='btn btn-secondary'>Cancel</button>" +
                       "</form>";
         sendResponse(exchange, 200, wrapInContainer(form));
     }
@@ -148,6 +149,7 @@ public class ProductController implements HttpHandler {
                           "<label>Price:</label><input type='number' step='0.01' name='price' value='" + p.getPrice() + "'><br>" +
                           "<label>Unit:</label><input type='text' name='unit' value='" + p.getUnit() + "'><br>" +
                           "<button type='submit' class='btn btn-primary'>Update</button>" +
+                          "<button onclick=\"window.location.href='/products'\" class='btn btn-secondary'>Cancel</button>" +
                           "</form>";
             sendResponse(exchange, 200, wrapInContainer(form));
         } catch (SQLException | NumberFormatException e) {
@@ -187,7 +189,7 @@ public class ProductController implements HttpHandler {
                           "<form action='/products/delete' method='post'>" +
                           "<input type='hidden' name='id' value='" + p.getId() + "'>" +
                           "<button type='submit' class='btn btn-danger'>Delete</button>" +
-                          "<a href='/products' class='btn btn-secondary'>Cancel</a>" +
+                          "<button onclick=\"window.location.href='/products'\" class='btn btn-secondary'>Cancel</button>" +
                           "</form>";
             sendResponse(exchange, 200, wrapInContainer(form));
         } catch (SQLException | NumberFormatException e) {

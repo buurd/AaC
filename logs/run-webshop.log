@@ -4413,3 +4413,1177 @@ level=info ts=2025-12-29T08:02:03.853218847Z caller=signals.go:59 msg="=== recei
 level=warn ts=2025-12-29T08:02:03.853765131Z caller=target.go:130 target=docker/2d9ed5c9e5881b274eaa5562b7be455c8f65de65c60aeccd42fcbb828c28815b msg="could not transfer logs" written=0 container=2d9ed5c9e5881b274eaa5562b7be455c8f65de65c60aeccd42fcbb828c28815b err="context canceled"
 level=warn ts=2025-12-29T08:02:04.320723765Z caller=client.go:419 component=client host=loki:3100 msg="error sending batch, will retry" status=-1 tenant= error="Post \"http://loki:3100/loki/api/v1/push\": dial tcp: lookup loki on 127.0.0.11:53: server misbehaving"
 level=warn ts=2025-12-29T08:02:07.785954686Z caller=client.go:419 component=client host=loki:3100 msg="error sending batch, will retry" status=-1 tenant= error="Post \"http://loki:3100/loki/api/v1/push\": dial tcp: lookup loki on 127.0.0.11:53: server misbehaving"
+--- Checking for leftover containers ---
+Removing leftover container: webshop-demo
+Removing leftover container: pm-demo
+Removing leftover container: warehouse-demo
+Removing leftover container: order-service
+Removing leftover container: keycloak
+Removing leftover container: reverse-proxy
+Removing leftover container: db_webshop
+Removing leftover container: db_pm
+Removing leftover container: db_warehouse
+Removing leftover container: db_order
+--- Setting up Certificates ---
+✅ mkcert found. Generating trusted certificates...
+The local CA is already installed in the system trust store! 👍
+Warning: "certutil" is not available, so the CA can't be automatically installed in Firefox and/or Chrome/Chromium! ⚠️
+Install "certutil" with "apt install libnss3-tools" and re-run "mkcert -install" 👈
+
+Note: the local CA is not installed in the Firefox and/or Chrome/Chromium trust store.
+Run "mkcert -install" for certificates to be trusted automatically ⚠️
+
+Created a new certificate valid for the following names 📜
+ - "localhost"
+ - "127.0.0.1"
+ - "::1"
+
+The certificate is at "/home/roland/Good Project/infrastructure/nginx/certs/localhost.pem" and the key at "/home/roland/Good Project/infrastructure/nginx/certs/localhost-key.pem" ✅
+
+It will expire on 30 March 2028 🗓
+
+Certificates generated in /home/roland/Good Project/infrastructure/nginx/certs
+--- Building Webshop ---
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.example:webshop >-------------------------
+[INFO] Building webshop 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ webshop ---
+[INFO] Deleting /usr/src/mymaven/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ webshop ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ webshop ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 13 source files with javac [debug target 21] to target/classes
+[INFO] /usr/src/mymaven/src/main/java/com/example/webshop/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/webshop/SecurityFilter.java uses or overrides a deprecated API.
+[INFO] /usr/src/mymaven/src/main/java/com/example/webshop/SecurityFilter.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ webshop ---
+[INFO] skip non existing resourceDirectory /usr/src/mymaven/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ webshop ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 2 source files with javac [debug target 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.2.3:test (default-test) @ webshop ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ webshop ---
+[INFO] Building jar: /usr/src/mymaven/target/webshop-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- assembly:3.3.0:single (default) @ webshop ---
+[INFO] Building jar: /usr/src/mymaven/target/webshop-1.0-SNAPSHOT-jar-with-dependencies.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.011 s
+[INFO] Finished at: 2025-12-30T07:11:45Z
+[INFO] ------------------------------------------------------------------------
+--- Building Product Management System ---
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------< com.example:productManagementSystem >-----------------
+[INFO] Building productManagementSystem 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ productManagementSystem ---
+[INFO] Deleting /usr/src/mymaven/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ productManagementSystem ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ productManagementSystem ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 8 source files with javac [debug target 21] to target/classes
+[INFO] /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java uses or overrides a deprecated API.
+[INFO] /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java: Recompile with -Xlint:deprecation for details.
+[INFO] /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java uses unchecked or unsafe operations.
+[INFO] /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ productManagementSystem ---
+[INFO] skip non existing resourceDirectory /usr/src/mymaven/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ productManagementSystem ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 2 source files with javac [debug target 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.2.3:test (default-test) @ productManagementSystem ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ productManagementSystem ---
+[INFO] Building jar: /usr/src/mymaven/target/productManagementSystem-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- assembly:3.3.0:single (default) @ productManagementSystem ---
+[INFO] Building jar: /usr/src/mymaven/target/productManagementSystem-1.0-SNAPSHOT-jar-with-dependencies.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.159 s
+[INFO] Finished at: 2025-12-30T07:11:52Z
+[INFO] ------------------------------------------------------------------------
+--- Building Warehouse Service ---
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< com.example:warehouse >------------------------
+[INFO] Building warehouse 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ warehouse ---
+[INFO] Deleting /usr/src/mymaven/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ warehouse ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ warehouse ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 19 source files with javac [debug target 21] to target/classes
+[INFO] /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java uses or overrides a deprecated API.
+[INFO] /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java: Recompile with -Xlint:deprecation for details.
+[INFO] /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java uses unchecked or unsafe operations.
+[INFO] /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ warehouse ---
+[INFO] skip non existing resourceDirectory /usr/src/mymaven/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ warehouse ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 2 source files with javac [debug target 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.2.3:test (default-test) @ warehouse ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ warehouse ---
+[INFO] Building jar: /usr/src/mymaven/target/warehouse-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- assembly:3.3.0:single (default) @ warehouse ---
+[INFO] Building jar: /usr/src/mymaven/target/warehouse-1.0-SNAPSHOT-jar-with-dependencies.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.398 s
+[INFO] Finished at: 2025-12-30T07:11:59Z
+[INFO] ------------------------------------------------------------------------
+--- Building Order Service ---
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.example:orderService >----------------------
+[INFO] Building orderService 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ orderService ---
+[INFO] Deleting /usr/src/mymaven/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ orderService ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ orderService ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 14 source files with javac [debug target 21] to target/classes
+[INFO] /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java uses or overrides a deprecated API.
+[INFO] /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java: Recompile with -Xlint:deprecation for details.
+[INFO] /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java uses unchecked or unsafe operations.
+[INFO] /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ orderService ---
+[INFO] skip non existing resourceDirectory /usr/src/mymaven/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ orderService ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 3 source files with javac [debug target 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.2.3:test (default-test) @ orderService ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ orderService ---
+[INFO] Building jar: /usr/src/mymaven/target/orderService-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- assembly:3.3.0:single (default) @ orderService ---
+[INFO] Building jar: /usr/src/mymaven/target/orderService-1.0-SNAPSHOT-jar-with-dependencies.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.330 s
+[INFO] Finished at: 2025-12-30T07:12:06Z
+[INFO] ------------------------------------------------------------------------
+--- Starting Infrastructure ---
+8fb33318d37ab0a95b0957795ac8f18eb4cfd8536cfccc46b304c824ea57188f
+67854f8c7ea183e4a7278121417c6e2a0577789ffa25eb6467c603efd3130919
+d7dbceedda9e73f27d20a74526fb703341691bf01818e4054a84d8af91b92e76
+ffa1005304774247dde0eebcb1e8d4fc24f734c5de62de637ad6501012dcaa8b
+a7b36efc988451e5ff4c2155060e76d1e8a0bd8972f33597fd4ad3d96709d7e1
+--- Starting Observability Stack ---
+8f7659db5ca9103623471d50caa4b7c463326bffbe259d821b378ee289a9d307
+Waiting for Loki to start...
+18345f10483618c5a8519c04f1e755191bf0e0cde6d7b2a6f98dcc94f03aec50
+f4267280bdcaa580548a7fc682cda3d1d2d926eaf27d12300ff5592ca26b9a4e
+Waiting for Databases to be ready (10s)...
+--- Starting Keycloak ---
+c18bdbefd704369266f792ef47b097c0b75682320c48f4c1fc09e8bf70ed1e98
+--- Starting Webshop ---
+f115318e107982a1cba6436afd978ba4a65eea284b3c619654fd7339e9f69404
+--- Starting Product Management System ---
+39e29d0484610c63c27f759f1f7c45bda4f8ad13ba748247ce53e7eb7ac9897a
+--- Starting Warehouse Service ---
+dc1bcd5df4fc2112388bce01e2dd95772c10a5f66b2f9d448747793f9b348e81
+--- Starting Order Service ---
+a4b413b31b27832a2961c8a1a9a1af53e8f740fd3232f0aba9933606c8bc1262
+--- Starting Reverse Proxy (Nginx) ---
+663fc6de5d386f9183dbeb008311070e3794f1f0ac1b2486b399f1434544ca78
+Waiting for Keycloak to be ready (20s)...
+
+✅ Webshop is running at:            https://localhost:8443
+✅ Product Management is running at: https://localhost:8444
+   (Login: p-user / p-user)
+✅ Warehouse Service is running at:  https://localhost:8445
+   (Login: w-user / w-user)
+✅ Order Service is running at:      https://localhost:8447
+   (Login: o-user / o-user)
+✅ Keycloak is running at:           https://localhost:8446
+   (Admin Console: https://localhost:8446/admin/)
+✅ Grafana is running at:            http://localhost:3000
+   (Login: admin / admin)
+
+--- Checking Loki Labels ---
+{"status":"success","data":["container","level","status"]}
+
+
+Press Ctrl+C to stop the servers.
+[main] INFO com.example.warehouse.WarehouseApplication - Connecting to database at: jdbc:postgresql://db-warehouse:5432/postgres
+[main] INFO com.example.warehouse.WarehouseApplication - Database connection successful.
+[main] INFO com.example.warehouse.WarehouseApplication - Database schema initialized.
+StockService initialized with Webshop Stock API URL: http://webshop-demo:8000/api/stock/sync
+[main] INFO com.example.warehouse.WarehouseApplication - Warehouse Service started on port 8002
+/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+/docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+/docker-entrypoint.sh: Configuration complete; ready for start up
+172.30.0.1 - - [30/Dec/2025:07:12:30 +0000] "GET / HTTP/1.1" 200 1716 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:07:12:43 +0000] "GET /products HTTP/1.1" 200 2165 "https://localhost:8443/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+Updating the configuration and installing your custom providers, if any. Please wait.
+2025-12-30 07:12:32,700 INFO  [io.quarkus.deployment.QuarkusAugmentor] (main) Quarkus augmentation completed in 6048ms
+2025-12-30 07:12:34,127 INFO  [org.keycloak.quarkus.runtime.hostname.DefaultHostnameProvider] (main) Hostname settings: Base URL: https://localhost:8446, Hostname: localhost, Strict HTTPS: true, Path: /, Strict BackChannel: true, Admin URL: <unset>, Admin: <request>, Port: 8446, Proxied: true
+2025-12-30 07:12:35,832 WARN  [io.quarkus.agroal.runtime.DataSources] (main) Datasource <default> enables XA but transaction recovery is not enabled. Please enable transaction recovery by setting quarkus.transaction-manager.enable-recovery=true, otherwise data may be lost if the application is terminated abruptly
+2025-12-30 07:12:36,416 WARN  [org.infinispan.PERSISTENCE] (keycloak-cache-init) ISPN000554: jboss-marshalling is deprecated and planned for removal
+2025-12-30 07:12:36,541 WARN  [org.infinispan.CONFIG] (keycloak-cache-init) ISPN000569: Unable to persist Infinispan internal caches as no global state enabled
+2025-12-30 07:12:36,692 INFO  [org.infinispan.CONTAINER] (keycloak-cache-init) ISPN000556: Starting user marshaller 'org.infinispan.jboss.marshalling.core.JBossUserMarshaller'
+2025-12-30 07:12:37,212 WARN  [io.quarkus.vertx.http.runtime.VertxHttpRecorder] (main) The X-Forwarded-* and Forwarded headers will be considered when determining the proxy address. This configuration can cause a security issue as clients can forge requests and send a forwarded header that is not overwritten by the proxy. Please consider use one of these headers just to forward the proxy address in requests.
+2025-12-30 07:12:37,227 INFO  [org.keycloak.broker.provider.AbstractIdentityProviderMapper] (main) Registering class org.keycloak.broker.provider.mappersync.ConfigSyncEventListener
+2025-12-30 07:12:37,262 INFO  [org.keycloak.connections.infinispan.DefaultInfinispanConnectionProviderFactory] (main) Node name: node_976708, Site name: null
+2025-12-30 07:12:39,638 INFO  [org.keycloak.quarkus.runtime.storage.legacy.liquibase.QuarkusJpaUpdaterProvider] (main) Initializing database schema. Using changelog META-INF/jpa-changelog-master.xml
+
+UPDATE SUMMARY
+Run:                        117
+Previously run:               0
+Filtered out:                 0
+-------------------------------
+Total change sets:          117
+
+2025-12-30 07:12:43,568 INFO  [org.keycloak.services] (main) KC-SERVICES0050: Initializing master realm
+2025-12-30 07:12:44,703 INFO  [org.keycloak.exportimport.singlefile.SingleFileImportProvider] (main) Full importing from file /opt/keycloak/bin/../data/import/realm.json
+2025-12-30 07:12:46,270 INFO  [org.keycloak.exportimport.util.ImportUtils] (main) Realm 'webshop-realm' imported
+2025-12-30 07:12:46,311 INFO  [org.keycloak.exportimport.dir.DirImportProvider] (main) Importing from directory /opt/keycloak/bin/../data/import
+2025-12-30 07:12:46,311 INFO  [org.keycloak.services] (main) KC-SERVICES0030: Full model import requested. Strategy: IGNORE_EXISTING
+2025-12-30 07:12:46,312 INFO  [org.keycloak.services] (main) KC-SERVICES0032: Import finished successfully
+[main] INFO com.example.productmanagement.ProductManagementApplication - Connecting to database at: jdbc:postgresql://db-pm:5432/postgres
+[main] INFO com.example.order.OrderApplication - Connecting to database at: jdbc:postgresql://db-order:5432/postgres
+[main] INFO com.example.productmanagement.ProductManagementApplication - Database connection successful.
+[main] INFO com.example.order.OrderApplication - Database connection successful.
+[main] INFO com.example.productmanagement.ProductManagementApplication - Database schema initialized.
+[main] INFO com.example.order.OrderApplication - Database schema initialized.
+ProductService initialized with Webshop API URL: http://webshop-demo:8000/api/products/sync
+[main] INFO com.example.order.OrderApplication - Order Service started on port 8003
+ProductService initialized with Warehouse API URL: http://warehouse-demo:8002/api/products/sync
+[main] INFO com.example.productmanagement.ProductManagementApplication - Product Management Server started on port 8001
+level=info ts=2025-12-30T07:12:13.974494581Z caller=promtail.go:133 msg="Reloading configuration file" md5sum=26a0dd8c3d6032723331a6938b134676
+level=info ts=2025-12-30T07:12:13.976426504Z caller=server.go:322 http=[::]:9080 grpc=[::]:46525 msg="server listening on addresses"
+level=info ts=2025-12-30T07:12:13.9766618Z caller=main.go:174 msg="Starting Promtail" version="(version=2.9.4, branch=HEAD, revision=f599ebc535)"
+level=warn ts=2025-12-30T07:12:13.976697275Z caller=promtail.go:263 msg="enable watchConfig"
+level=info ts=2025-12-30T07:12:18.976589188Z caller=target_group.go:128 msg="added Docker target" containerID=18345f10483618c5a8519c04f1e755191bf0e0cde6d7b2a6f98dcc94f03aec50
+level=info ts=2025-12-30T07:12:18.976667774Z caller=target_group.go:128 msg="added Docker target" containerID=8f7659db5ca9103623471d50caa4b7c463326bffbe259d821b378ee289a9d307
+level=info ts=2025-12-30T07:12:18.976711181Z caller=target_group.go:128 msg="added Docker target" containerID=a7b36efc988451e5ff4c2155060e76d1e8a0bd8972f33597fd4ad3d96709d7e1
+level=info ts=2025-12-30T07:12:18.976732431Z caller=target_group.go:128 msg="added Docker target" containerID=ffa1005304774247dde0eebcb1e8d4fc24f734c5de62de637ad6501012dcaa8b
+level=info ts=2025-12-30T07:12:18.976752752Z caller=target_group.go:128 msg="added Docker target" containerID=d7dbceedda9e73f27d20a74526fb703341691bf01818e4054a84d8af91b92e76
+level=info ts=2025-12-30T07:12:18.976773209Z caller=target_group.go:128 msg="added Docker target" containerID=67854f8c7ea183e4a7278121417c6e2a0577789ffa25eb6467c603efd3130919
+level=info ts=2025-12-30T07:12:23.975625705Z caller=target_group.go:128 msg="added Docker target" containerID=f4267280bdcaa580548a7fc682cda3d1d2d926eaf27d12300ff5592ca26b9a4e
+level=info ts=2025-12-30T07:12:33.976407578Z caller=target_group.go:128 msg="added Docker target" containerID=663fc6de5d386f9183dbeb008311070e3794f1f0ac1b2486b399f1434544ca78
+level=info ts=2025-12-30T07:12:33.976593974Z caller=target_group.go:128 msg="added Docker target" containerID=a4b413b31b27832a2961c8a1a9a1af53e8f740fd3232f0aba9933606c8bc1262
+level=info ts=2025-12-30T07:12:33.976614652Z caller=target_group.go:128 msg="added Docker target" containerID=dc1bcd5df4fc2112388bce01e2dd95772c10a5f66b2f9d448747793f9b348e81
+level=info ts=2025-12-30T07:12:33.976635079Z caller=target_group.go:128 msg="added Docker target" containerID=39e29d0484610c63c27f759f1f7c45bda4f8ad13ba748247ce53e7eb7ac9897a
+level=info ts=2025-12-30T07:12:33.976653757Z caller=target_group.go:128 msg="added Docker target" containerID=f115318e107982a1cba6436afd978ba4a65eea284b3c619654fd7339e9f69404
+level=info ts=2025-12-30T07:12:33.976688494Z caller=target_group.go:128 msg="added Docker target" containerID=c18bdbefd704369266f792ef47b097c0b75682320c48f4c1fc09e8bf70ed1e98
+[main] INFO com.example.webshop.WebshopApplication - Connecting to database at: jdbc:postgresql://db-webshop:5432/postgres
+[main] INFO com.example.webshop.WebshopApplication - Database connection successful.
+[main] INFO com.example.webshop.WebshopApplication - Database schema initialized.
+[main] INFO com.example.webshop.WebshopApplication - Server started on port 8000
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.ProductController - Received request: GET /products
+level=warn ts=2025-12-30T07:12:08.64663629Z caller=loki.go:288 msg="global timeout not configured, using default engine timeout (\"5m0s\"). This behavior will change in the next major to always use the default global timeout (\"5m\")."
+level=info ts=2025-12-30T07:12:08.648698803Z caller=main.go:108 msg="Starting Loki" version="(version=2.9.4, branch=HEAD, revision=f599ebc535)"
+level=info ts=2025-12-30T07:12:08.648797995Z caller=modules.go:932 msg="Ruler storage is not configured; ruler will not be started."
+level=info ts=2025-12-30T07:12:08.649534448Z caller=server.go:322 http=[::]:3100 grpc=[::]:9095 msg="server listening on addresses"
+level=warn ts=2025-12-30T07:12:08.651051507Z caller=cache.go:127 msg="fifocache config is deprecated. use embedded-cache instead"
+level=warn ts=2025-12-30T07:12:08.651069122Z caller=experimental.go:20 msg="experimental feature in use" feature="In-memory (FIFO) cache - chunksembedded-cache"
+level=info ts=2025-12-30T07:12:08.65431216Z caller=table_manager.go:271 index-store=boltdb-shipper-2020-10-24 msg="query readiness setup completed" duration=1.691µs distinct_users_len=0 distinct_users=
+level=info ts=2025-12-30T07:12:08.654338385Z caller=shipper.go:165 index-store=boltdb-shipper-2020-10-24 msg="starting index shipper in RW mode"
+level=info ts=2025-12-30T07:12:08.654492063Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T07:12:08.654513881Z caller=shipper_index_client.go:76 index-store=boltdb-shipper-2020-10-24 msg="starting boltdb shipper in RW mode"
+level=info ts=2025-12-30T07:12:08.654556574Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=warn ts=2025-12-30T07:12:08.655859862Z caller=modules.go:474 msg="The config setting shutdown marker path is not set. The /ingester/prepare_shutdown endpoint won't work"
+level=info ts=2025-12-30T07:12:08.657137983Z caller=worker.go:112 msg="Starting querier worker using query-scheduler and scheduler ring for addresses"
+level=warn ts=2025-12-30T07:12:08.65791177Z caller=modules.go:951 msg="RulerStorage is nil. Not starting the ruler."
+level=info ts=2025-12-30T07:12:08.659691717Z caller=module_service.go:82 msg=initialising module=server
+level=info ts=2025-12-30T07:12:08.659795793Z caller=module_service.go:82 msg=initialising module=cache-generation-loader
+level=info ts=2025-12-30T07:12:08.65988829Z caller=module_service.go:82 msg=initialising module=memberlist-kv
+level=info ts=2025-12-30T07:12:08.659897501Z caller=module_service.go:82 msg=initialising module=query-frontend-tripperware
+level=info ts=2025-12-30T07:12:08.659939993Z caller=module_service.go:82 msg=initialising module=ring
+level=info ts=2025-12-30T07:12:08.659953428Z caller=module_service.go:82 msg=initialising module=store
+level=info ts=2025-12-30T07:12:08.659964121Z caller=module_service.go:82 msg=initialising module=query-scheduler-ring
+level=info ts=2025-12-30T07:12:08.660114362Z caller=ring.go:273 msg="ring doesn't exist in KV store yet"
+level=info ts=2025-12-30T07:12:08.660119084Z caller=ring.go:273 msg="ring doesn't exist in KV store yet"
+level=info ts=2025-12-30T07:12:08.660114434Z caller=basic_lifecycler.go:297 msg="instance not found in the ring" instance=8f7659db5ca9 ring=scheduler
+level=info ts=2025-12-30T07:12:08.660131578Z caller=basic_lifecycler_delegates.go:63 msg="not loading tokens from file, tokens file path is empty"
+level=info ts=2025-12-30T07:12:08.660175534Z caller=module_service.go:82 msg=initialising module=ingester-querier
+level=info ts=2025-12-30T07:12:08.660182429Z caller=module_service.go:82 msg=initialising module=analytics
+level=info ts=2025-12-30T07:12:08.660234696Z caller=module_service.go:82 msg=initialising module=distributor
+level=info ts=2025-12-30T07:12:08.660233778Z caller=ringmanager.go:201 msg="waiting until scheduler is JOINING in the ring"
+level=info ts=2025-12-30T07:12:08.660255008Z caller=module_service.go:82 msg=initialising module=compactor
+level=info ts=2025-12-30T07:12:08.660284491Z caller=module_service.go:82 msg=initialising module=ingester
+level=info ts=2025-12-30T07:12:08.660312589Z caller=ring.go:273 msg="ring doesn't exist in KV store yet"
+level=info ts=2025-12-30T07:12:08.660333425Z caller=ingester.go:431 msg="recovering from checkpoint"
+level=info ts=2025-12-30T07:12:08.660363153Z caller=ring.go:273 msg="ring doesn't exist in KV store yet"
+level=info ts=2025-12-30T07:12:08.660404203Z caller=basic_lifecycler.go:297 msg="instance not found in the ring" instance=8f7659db5ca9 ring=distributor
+level=info ts=2025-12-30T07:12:08.660410166Z caller=basic_lifecycler.go:297 msg="instance not found in the ring" instance=8f7659db5ca9 ring=compactor
+level=info ts=2025-12-30T07:12:08.660427401Z caller=basic_lifecycler_delegates.go:63 msg="not loading tokens from file, tokens file path is empty"
+level=info ts=2025-12-30T07:12:08.660445303Z caller=recovery.go:40 msg="no checkpoint found, treating as no-op"
+level=info ts=2025-12-30T07:12:08.660513262Z caller=compactor.go:395 msg="waiting until compactor is JOINING in the ring"
+level=info ts=2025-12-30T07:12:08.660554844Z caller=ingester.go:447 msg="recovered WAL checkpoint recovery finished" elapsed=240.066µs errors=false
+level=info ts=2025-12-30T07:12:08.660572842Z caller=ingester.go:453 msg="recovering from WAL"
+level=info ts=2025-12-30T07:12:08.660758573Z caller=ingester.go:469 msg="WAL segment recovery finished" elapsed=444.466µs errors=false
+level=info ts=2025-12-30T07:12:08.660767638Z caller=ingester.go:417 msg="closing recoverer"
+level=info ts=2025-12-30T07:12:08.66077358Z caller=ingester.go:425 msg="WAL recovery finished" time=459.203µs
+level=info ts=2025-12-30T07:12:08.660800792Z caller=wal.go:156 msg=started component=wal
+level=info ts=2025-12-30T07:12:08.660822272Z caller=lifecycler.go:614 msg="not loading tokens from file, tokens file path is empty"
+level=info ts=2025-12-30T07:12:08.660853909Z caller=lifecycler.go:643 msg="instance not found in ring, adding with no tokens" ring=ingester
+level=info ts=2025-12-30T07:12:08.66090997Z caller=lifecycler.go:483 msg="auto-joining cluster after timeout" ring=ingester
+level=info ts=2025-12-30T07:12:08.836453648Z caller=compactor.go:399 msg="compactor is JOINING in the ring"
+level=info ts=2025-12-30T07:12:08.836665869Z caller=compactor.go:409 msg="waiting until compactor is ACTIVE in the ring"
+level=info ts=2025-12-30T07:12:08.852817927Z caller=ringmanager.go:205 msg="scheduler is JOINING in the ring"
+level=info ts=2025-12-30T07:12:08.85303502Z caller=ringmanager.go:214 msg="waiting until scheduler is ACTIVE in the ring"
+level=info ts=2025-12-30T07:12:08.957591603Z caller=compactor.go:413 msg="compactor is ACTIVE in the ring"
+level=info ts=2025-12-30T07:12:08.987713021Z caller=ringmanager.go:218 msg="scheduler is ACTIVE in the ring"
+level=info ts=2025-12-30T07:12:08.987821682Z caller=module_service.go:82 msg=initialising module=query-scheduler
+level=info ts=2025-12-30T07:12:08.98800687Z caller=module_service.go:82 msg=initialising module=querier
+level=info ts=2025-12-30T07:12:08.988041828Z caller=module_service.go:82 msg=initialising module=query-frontend
+level=info ts=2025-12-30T07:12:08.988154607Z caller=loki.go:505 msg="Loki started"
+level=info ts=2025-12-30T07:12:11.987962484Z caller=scheduler.go:615 msg="this scheduler is in the ReplicationSet, will now accept requests."
+level=info ts=2025-12-30T07:12:11.988996618Z caller=worker.go:209 msg="adding connection" addr=127.0.0.1:9095
+level=info ts=2025-12-30T07:12:13.958638059Z caller=compactor.go:474 msg="this instance has been chosen to run the compactor, starting compactor"
+level=info ts=2025-12-30T07:12:13.958780824Z caller=compactor.go:503 msg="waiting 10m0s for ring to stay stable and previous compactions to finish before starting compactor"
+level=info ts=2025-12-30T07:12:18.988266895Z caller=frontend_scheduler_worker.go:107 msg="adding connection to scheduler" addr=127.0.0.1:9095
+level=info ts=2025-12-30T07:12:46.223096212Z caller=roundtrip.go:295 org_id=fake traceID=3132cfb1b4d7c7f7 msg="executing query" type=labels label= length=1h0m0s query=
+level=info ts=2025-12-30T07:12:46.225908224Z caller=table_manager.go:195 index-store=boltdb-shipper-2020-10-24 msg="downloading all files for table index_20452"
+ts=2025-12-30T07:12:46.226222329Z caller=spanlogger.go:86 table-name=index_20452 user-id=fake org_id=fake traceID=3132cfb1b4d7c7f7 level=info msg="downloaded index set at query time" duration=125.733µs
+ts=2025-12-30T07:12:46.226291516Z caller=spanlogger.go:86 table-name=index_20452 org_id=fake traceID=3132cfb1b4d7c7f7 level=info msg="downloaded index set at query time" duration=41.619µs
+ts=2025-12-30T07:12:46.226763981Z caller=spanlogger.go:86 user=fake level=info org_id=fake traceID=3132cfb1b4d7c7f7 latency=fast query_type=labels length=1h0m0s duration=2.282446ms status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=3
+level=info ts=2025-12-30T07:12:46.228149232Z caller=metrics.go:207 component=frontend org_id=fake traceID=3132cfb1b4d7c7f7 latency=fast query_type=labels length=1h0m0s duration=4.740922ms status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=3
+2025-12-30 07:12:46,445 INFO  [io.quarkus] (main) Keycloak 23.0.7 on JVM (powered by Quarkus 3.2.10.Final) started in 13.598s. Listening on: http://0.0.0.0:8080
+2025-12-30 07:12:46,445 INFO  [io.quarkus] (main) Profile dev activated. 
+2025-12-30 07:12:46,445 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, jdbc-h2, jdbc-mariadb, jdbc-mssql, jdbc-mysql, jdbc-oracle, jdbc-postgresql, keycloak, logging-gelf, micrometer, narayana-jta, reactive-routes, resteasy-reactive, resteasy-reactive-jackson, smallrye-context-propagation, smallrye-health, vertx]
+2025-12-30 07:12:46,521 INFO  [org.keycloak.services] (main) KC-SERVICES0009: Added user 'admin' to realm 'master'
+2025-12-30 07:12:46,525 WARN  [org.keycloak.quarkus.runtime.KeycloakMain] (main) Running the server in development mode. DO NOT use this configuration in production.
+SecurityFilter: Checking for role 'order-history'. Found roles: [order-history]
+OrderRepository: Found 0 orders.
+172.30.0.1 - - [30/Dec/2025:07:12:50 +0000] "GET /my-orders HTTP/1.1" 200 1101 "https://localhost:8443/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+[pool-1-thread-1] INFO com.example.webshop.ProductController - Received request: GET /products
+172.30.0.1 - - [30/Dec/2025:07:12:54 +0000] "GET /products HTTP/1.1" 200 2165 "https://localhost:8443/my-orders" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+level=info ts=2025-12-30T07:13:08.655563663Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2025-12-30T07:13:08.655646011Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T07:13:22.827390637Z caller=flush.go:167 msg="flushing stream" user=fake fp=79c7f2efc31482ff immediate=false num_chunks=1 labels="{container=\"db-webshop\", level=\"WARNING\"}"
+level=info ts=2025-12-30T07:13:22.827458167Z caller=flush.go:167 msg="flushing stream" user=fake fp=e83a4f2df5a7c2b3 immediate=false num_chunks=1 labels="{container=\"db-webshop\"}"
+level=info ts=2025-12-30T07:13:22.827515297Z caller=flush.go:167 msg="flushing stream" user=fake fp=734f7c02d96e6eb2 immediate=false num_chunks=1 labels="{container=\"db-pm\"}"
+level=info ts=2025-12-30T07:13:22.827586168Z caller=flush.go:167 msg="flushing stream" user=fake fp=cea5b24374f114b8 immediate=false num_chunks=1 labels="{container=\"db-order\", level=\"WARNING\"}"
+level=info ts=2025-12-30T07:13:22.827717054Z caller=flush.go:167 msg="flushing stream" user=fake fp=a4af3616d361383c immediate=false num_chunks=1 labels="{container=\"db-warehouse\"}"
+level=info ts=2025-12-30T07:13:22.82779256Z caller=flush.go:167 msg="flushing stream" user=fake fp=f36954f207db6b82 immediate=false num_chunks=1 labels="{container=\"db-pm\", level=\"LOG\"}"
+level=info ts=2025-12-30T07:13:22.827909041Z caller=flush.go:167 msg="flushing stream" user=fake fp=232c947b78629c4c immediate=false num_chunks=1 labels="{container=\"db-pm\", level=\"WARNING\"}"
+level=info ts=2025-12-30T07:13:22.82832113Z caller=flush.go:167 msg="flushing stream" user=fake fp=5006ef4944ca9544 immediate=false num_chunks=1 labels="{container=\"db-order\", level=\"LOG\"}"
+level=info ts=2025-12-30T07:13:22.828372484Z caller=flush.go:167 msg="flushing stream" user=fake fp=a043cce8450eb920 immediate=false num_chunks=1 labels="{container=\"db-order\"}"
+level=info ts=2025-12-30T07:13:22.868961054Z caller=flush.go:167 msg="flushing stream" user=fake fp=439c9a20a6648140 immediate=false num_chunks=1 labels="{container=\"db-webshop\", level=\"LOG\"}"
+level=info ts=2025-12-30T07:13:22.884727581Z caller=flush.go:167 msg="flushing stream" user=fake fp=c8565fd380ba0c92 immediate=false num_chunks=1 labels="{container=\"db-warehouse\", level=\"WARNING\"}"
+level=info ts=2025-12-30T07:13:22.894277436Z caller=flush.go:167 msg="flushing stream" user=fake fp=af6c39220006e532 immediate=false num_chunks=1 labels="{container=\"db-warehouse\", level=\"LOG\"}"
+SecurityFilter: Verification failed. Configured Issuer: https://localhost:8446/realms/webshop-realm
+Token Issuer: https://localhost:8446/realms/webshop-realm
+com.auth0.jwk.SigningKeyNotFoundException: No key found in http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs with kid JSZqSpz_SI_ZYhHKbUg9sobaXBI_dbj_Kj_m53u-K-A
+	at com.auth0.jwk.UrlJwkProvider.get(UrlJwkProvider.java:174)
+	at com.auth0.jwk.RateLimitedJwkProvider.get(RateLimitedJwkProvider.java:28)
+	at com.auth0.jwk.GuavaCachedJwkProvider.lambda$get$0(GuavaCachedJwkProvider.java:62)
+	at com.google.common.cache.LocalCache$LocalManualCache$1.load(LocalCache.java:4925)
+	at com.google.common.cache.LocalCache$LoadingValueReference.loadFuture(LocalCache.java:3571)
+	at com.google.common.cache.LocalCache$Segment.loadSync(LocalCache.java:2313)
+	at com.google.common.cache.LocalCache$Segment.lockedGetOrLoad(LocalCache.java:2190)
+	at com.google.common.cache.LocalCache$Segment.get(LocalCache.java:2080)
+	at com.google.common.cache.LocalCache.get(LocalCache.java:4012)
+	at com.google.common.cache.LocalCache$LocalManualCache.get(LocalCache.java:4920)
+	at com.auth0.jwk.GuavaCachedJwkProvider.get(GuavaCachedJwkProvider.java:62)
+	at com.example.productmanagement.SecurityFilter.doFilter(SecurityFilter.java:58)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Exchange.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+172.30.0.1 - - [30/Dec/2025:07:13:48 +0000] "GET /products HTTP/1.1" 302 0 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+[pool-1-thread-1] INFO com.example.productmanagement.ProductManagementApplication - Received request: GET /login
+172.30.0.1 - - [30/Dec/2025:07:13:48 +0000] "GET /login HTTP/1.1" 200 237 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+level=info ts=2025-12-30T07:13:52.799922228Z caller=flush.go:167 msg="flushing stream" user=fake fp=148ff505e96b30c2 immediate=false num_chunks=1 labels="{container=\"keycloak\"}"
+level=info ts=2025-12-30T07:13:52.799987421Z caller=flush.go:167 msg="flushing stream" user=fake fp=3c2738c8b64147a3 immediate=false num_chunks=1 labels="{container=\"warehouse-demo\"}"
+level=info ts=2025-12-30T07:13:52.800058556Z caller=flush.go:167 msg="flushing stream" user=fake fp=28e088ddff4ec45a immediate=false num_chunks=1 labels="{container=\"promtail\"}"
+level=info ts=2025-12-30T07:13:52.800144494Z caller=flush.go:167 msg="flushing stream" user=fake fp=7072881cacfdc197 immediate=false num_chunks=1 labels="{container=\"reverse-proxy\"}"
+level=info ts=2025-12-30T07:13:52.800222436Z caller=flush.go:167 msg="flushing stream" user=fake fp=da4bdae112918dd9 immediate=false num_chunks=1 labels="{container=\"order-service\"}"
+[pool-1-thread-1] INFO com.example.productmanagement.ProductManagementApplication - Received request: POST /login
+[pool-1-thread-1] INFO com.example.productmanagement.ProductManagementApplication - Access Token obtained: true
+[pool-1-thread-1] INFO com.example.productmanagement.ProductManagementApplication - Redirecting to: /products
+172.30.0.1 - - [30/Dec/2025:07:13:58 +0000] "POST /login HTTP/1.1" 302 0 "https://localhost:8444/login" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:07:13:58 +0000] "GET /products HTTP/1.1" 200 1761 "https://localhost:8444/login" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+[pool-1-thread-1] INFO com.example.productmanagement.ProductManagementApplication - Received request: GET /favicon.ico
+172.30.0.1 - - [30/Dec/2025:07:13:58 +0000] "GET /favicon.ico HTTP/1.1" 404 13 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:07:14:04 +0000] "GET /products/edit?id=1 HTTP/1.1" 200 1800 "https://localhost:8444/products" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+level=info ts=2025-12-30T07:14:08.655465721Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2025-12-30T07:14:08.655469407Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T07:14:08.655570261Z caller=table.go:318 msg="handing over indexes to shipper index_20452"
+level=info ts=2025-12-30T07:14:08.655584416Z caller=table.go:334 msg="finished handing over table index_20452"
+[pool-1-thread-1] INFO com.example.warehouse.WarehouseApplication - Received request: GET /
+172.30.0.1 - - [30/Dec/2025:07:14:21 +0000] "GET / HTTP/1.1" 200 171 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+level=info ts=2025-12-30T07:14:22.794454356Z caller=flush.go:167 msg="flushing stream" user=fake fp=3a0c31caef0661a4 immediate=false num_chunks=1 labels="{container=\"grafana\"}"
+level=info ts=2025-12-30T07:14:22.794502267Z caller=flush.go:167 msg="flushing stream" user=fake fp=e0ecf60027eeea4b immediate=false num_chunks=1 labels="{container=\"webshop-demo\"}"
+level=info ts=2025-12-30T07:15:08.655509782Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2025-12-30T07:15:08.655605949Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T07:15:08.655620219Z caller=table.go:318 msg="handing over indexes to shipper index_20452"
+level=info ts=2025-12-30T07:15:08.65563544Z caller=table.go:334 msg="finished handing over table index_20452"
+level=info ts=2025-12-30T07:15:22.811581899Z caller=flush.go:167 msg="flushing stream" user=fake fp=5638dc2b2cddb382 immediate=false num_chunks=1 labels="{container=\"pm-demo\"}"
+level=info ts=2025-12-30T07:15:22.811592372Z caller=flush.go:167 msg="flushing stream" user=fake fp=d4a53533a797e77b immediate=false num_chunks=1 labels="{container=\"reverse-proxy\", status=\"302\"}"
+level=info ts=2025-12-30T07:15:22.8116975Z caller=flush.go:167 msg="flushing stream" user=fake fp=8cea53b36d354d98 immediate=false num_chunks=1 labels="{container=\"reverse-proxy\", status=\"404\"}"
+level=info ts=2025-12-30T07:15:53.004598351Z caller=flush.go:167 msg="flushing stream" user=fake fp=3c2738c8b64147a3 immediate=false num_chunks=1 labels="{container=\"warehouse-demo\"}"
+level=info ts=2025-12-30T07:15:53.004656883Z caller=flush.go:167 msg="flushing stream" user=fake fp=0313ef25ced50d87 immediate=false num_chunks=1 labels="{container=\"reverse-proxy\", status=\"200\"}"
+level=info ts=2025-12-30T07:16:08.655179621Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2025-12-30T07:16:08.655194007Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T07:16:08.655326526Z caller=table.go:318 msg="handing over indexes to shipper index_20452"
+level=info ts=2025-12-30T07:16:08.655366434Z caller=table.go:334 msg="finished handing over table index_20452"
+level=info ts=2025-12-30T07:17:08.150569602Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T07:17:08.150660034Z caller=index_set.go:86 msg="uploading table index_20452"
+level=info ts=2025-12-30T07:17:08.150657523Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2025-12-30T07:17:08.150741348Z caller=table.go:318 msg="handing over indexes to shipper index_20452"
+level=info ts=2025-12-30T07:17:08.150762024Z caller=table.go:334 msg="finished handing over table index_20452"
+level=info ts=2025-12-30T07:17:08.150763765Z caller=table_manager.go:228 index-store=boltdb-shipper-2020-10-24 msg="syncing tables"
+ts=2025-12-30T07:17:08.1508726Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2025-12-30T07:17:08.150918075Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=26.089µs
+ts=2025-12-30T07:17:08.150940084Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2025-12-30T07:17:08.150952878Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=5.365µs
+ts=2025-12-30T07:17:08.150990895Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2025-12-30T07:17:08.151002408Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=4.834µs
+level=info ts=2025-12-30T07:17:08.151035439Z caller=table_manager.go:271 index-store=boltdb-shipper-2020-10-24 msg="query readiness setup completed" duration=4.434µs distinct_users_len=0 distinct_users=
+level=info ts=2025-12-30T07:17:08.157526997Z caller=checkpoint.go:611 msg="starting checkpoint"
+level=info ts=2025-12-30T07:17:08.157872321Z caller=checkpoint.go:336 msg="attempting checkpoint for" dir=wal/checkpoint.000000
+level=info ts=2025-12-30T07:17:08.173255027Z caller=index_set.go:107 msg="finished uploading table index_20452"
+level=info ts=2025-12-30T07:17:08.173294441Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20452"
+level=info ts=2025-12-30T07:18:08.151237088Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T07:18:08.151223974Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2025-12-30T07:18:08.151313468Z caller=index_set.go:86 msg="uploading table index_20452"
+level=info ts=2025-12-30T07:18:08.151326084Z caller=index_set.go:107 msg="finished uploading table index_20452"
+level=info ts=2025-12-30T07:18:08.151335212Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20452"
+level=info ts=2025-12-30T07:18:08.151377365Z caller=table.go:318 msg="handing over indexes to shipper index_20452"
+level=info ts=2025-12-30T07:18:08.151395334Z caller=table.go:334 msg="finished handing over table index_20452"
+level=info ts=2025-12-30T07:19:08.151271169Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2025-12-30T07:19:08.151356563Z caller=table.go:318 msg="handing over indexes to shipper index_20452"
+level=info ts=2025-12-30T07:19:08.151371421Z caller=table.go:334 msg="finished handing over table index_20452"
+level=info ts=2025-12-30T07:19:08.151405861Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T07:19:08.151417109Z caller=index_set.go:86 msg="uploading table index_20452"
+level=info ts=2025-12-30T07:19:08.151424933Z caller=index_set.go:107 msg="finished uploading table index_20452"
+level=info ts=2025-12-30T07:19:08.15143136Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20452"
+level=info ts=2025-12-30T07:20:08.151299096Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2025-12-30T07:20:08.151389252Z caller=table.go:318 msg="handing over indexes to shipper index_20452"
+level=info ts=2025-12-30T07:20:08.151401626Z caller=table.go:334 msg="finished handing over table index_20452"
+level=info ts=2025-12-30T07:20:08.151435148Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T07:20:08.151444032Z caller=index_set.go:86 msg="uploading table index_20452"
+level=info ts=2025-12-30T07:20:08.151450551Z caller=index_set.go:107 msg="finished uploading table index_20452"
+level=info ts=2025-12-30T07:20:08.151456285Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20452"
+level=info ts=2025-12-30T07:21:08.151111618Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2025-12-30T07:21:08.151172161Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T07:21:08.151186518Z caller=table.go:318 msg="handing over indexes to shipper index_20452"
+level=info ts=2025-12-30T07:21:08.151207464Z caller=index_set.go:86 msg="uploading table index_20452"
+level=info ts=2025-12-30T07:21:08.151209572Z caller=table.go:334 msg="finished handing over table index_20452"
+level=info ts=2025-12-30T07:21:08.151219583Z caller=index_set.go:107 msg="finished uploading table index_20452"
+level=info ts=2025-12-30T07:21:08.1512288Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20452"
+level=info ts=2025-12-30T07:21:38.176547118Z caller=checkpoint.go:498 msg="atomic checkpoint finished" old=wal/checkpoint.000000.tmp new=wal/checkpoint.000000
+level=info ts=2025-12-30T07:21:38.176816369Z caller=checkpoint.go:569 msg="checkpoint done" time=4m30.018532332s
+level=info ts=2025-12-30T07:22:08.150564646Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T07:22:08.150604678Z caller=index_set.go:86 msg="uploading table index_20452"
+level=info ts=2025-12-30T07:22:08.150613491Z caller=index_set.go:107 msg="finished uploading table index_20452"
+level=info ts=2025-12-30T07:22:08.150620329Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20452"
+level=info ts=2025-12-30T07:22:08.150663901Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2025-12-30T07:22:08.150682395Z caller=table_manager.go:228 index-store=boltdb-shipper-2020-10-24 msg="syncing tables"
+level=info ts=2025-12-30T07:22:08.150752305Z caller=table.go:318 msg="handing over indexes to shipper index_20452"
+ts=2025-12-30T07:22:08.150757492Z caller=spanlogger.go:86 level=info msg="building table names cache"
+level=info ts=2025-12-30T07:22:08.150769645Z caller=table.go:334 msg="finished handing over table index_20452"
+ts=2025-12-30T07:22:08.150883025Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=114.063µs
+ts=2025-12-30T07:22:08.150899211Z caller=spanlogger.go:86 level=info msg="building table cache"
+ts=2025-12-30T07:22:08.150931771Z caller=spanlogger.go:86 level=info msg="table cache built" duration=26.784µs
+level=info ts=2025-12-30T07:22:08.154517895Z caller=util.go:94 table-name=index_20452 file-name=8f7659db5ca9-1767078728654346112-1767078802.gz size="57 kB" msg="downloaded file" total_time=3.506966ms
+level=info ts=2025-12-30T07:22:08.157218543Z caller=checkpoint.go:611 msg="starting checkpoint"
+level=info ts=2025-12-30T07:22:08.157417837Z caller=checkpoint.go:336 msg="attempting checkpoint for" dir=wal/checkpoint.000001
+level=info ts=2025-12-30T07:22:08.170098675Z caller=table_manager.go:271 index-store=boltdb-shipper-2020-10-24 msg="query readiness setup completed" duration=4.382µs distinct_users_len=0 distinct_users=
+level=info ts=2025-12-30T07:22:13.45498332Z caller=compactor.go:508 msg="compactor startup delay completed"
+level=info ts=2025-12-30T07:22:13.455026548Z caller=compactor.go:562 msg="compactor started"
+ts=2025-12-30T07:22:13.455056969Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2025-12-30T07:22:13.455243532Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=146.09µs
+level=info ts=2025-12-30T07:22:13.455269062Z caller=compactor.go:683 msg="compacting table" table-name=index_20452
+ts=2025-12-30T07:22:13.455417645Z caller=spanlogger.go:86 level=info msg="building table cache"
+ts=2025-12-30T07:22:13.455455178Z caller=spanlogger.go:86 level=info msg="table cache built" duration=29.972µs
+level=info ts=2025-12-30T07:22:13.455463611Z caller=table.go:132 table-name=index_20452 msg="listed files" count=1
+level=info ts=2025-12-30T07:22:13.463605014Z caller=util.go:94 table-name=index_20452 file-name=8f7659db5ca9-1767078728654346112-1767078802.gz size="57 kB" msg="downloaded file" total_time=304.776µs
+level=info ts=2025-12-30T07:22:13.487687206Z caller=index_set.go:269 table-name=index_20452 msg="removing source db files from storage" count=1
+level=info ts=2025-12-30T07:22:13.487856213Z caller=compactor.go:688 msg="finished compacting table" table-name=index_20452
+level=info ts=2025-12-30T07:23:08.151377734Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2025-12-30T07:23:08.151435722Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T07:23:08.151481716Z caller=index_set.go:86 msg="uploading table index_20452"
+level=info ts=2025-12-30T07:23:08.151496889Z caller=index_set.go:107 msg="finished uploading table index_20452"
+level=info ts=2025-12-30T07:23:08.151507194Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20452"
+level=info ts=2025-12-30T07:23:08.151509496Z caller=table.go:318 msg="handing over indexes to shipper index_20452"
+level=info ts=2025-12-30T07:23:08.151528341Z caller=table.go:334 msg="finished handing over table index_20452"
+level=info ts=2025-12-30T07:23:52.285114499Z caller=flush.go:167 msg="flushing stream" user=fake fp=3a0c31caef0661a4 immediate=false num_chunks=1 labels="{container=\"grafana\"}"
+level=info ts=2025-12-30T07:24:08.151509679Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2025-12-30T07:24:08.151657913Z caller=table.go:318 msg="handing over indexes to shipper index_20452"
+level=info ts=2025-12-30T07:24:08.151651236Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T07:24:08.151679943Z caller=table.go:334 msg="finished handing over table index_20452"
+level=info ts=2025-12-30T07:24:08.151700696Z caller=index_set.go:86 msg="uploading table index_20452"
+level=info ts=2025-12-30T07:24:08.151711631Z caller=index_set.go:107 msg="finished uploading table index_20452"
+level=info ts=2025-12-30T07:24:08.15171867Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20452"
+level=info ts=2025-12-30T07:24:59.629380793Z caller=target.go:132 target=docker/f115318e107982a1cba6436afd978ba4a65eea284b3c619654fd7339e9f69404 msg="finished transferring logs" written=866 container=f115318e107982a1cba6436afd978ba4a65eea284b3c619654fd7339e9f69404
+level=info ts=2025-12-30T07:25:00.164379451Z caller=target.go:132 target=docker/39e29d0484610c63c27f759f1f7c45bda4f8ad13ba748247ce53e7eb7ac9897a msg="finished transferring logs" written=3840 container=39e29d0484610c63c27f759f1f7c45bda4f8ad13ba748247ce53e7eb7ac9897a
+level=info ts=2025-12-30T07:25:00.697977747Z caller=target.go:132 target=docker/dc1bcd5df4fc2112388bce01e2dd95772c10a5f66b2f9d448747793f9b348e81 msg="finished transferring logs" written=771 container=dc1bcd5df4fc2112388bce01e2dd95772c10a5f66b2f9d448747793f9b348e81
+level=info ts=2025-12-30T07:25:01.232891435Z caller=target.go:132 target=docker/a4b413b31b27832a2961c8a1a9a1af53e8f740fd3232f0aba9933606c8bc1262 msg="finished transferring logs" written=659 container=a4b413b31b27832a2961c8a1a9a1af53e8f740fd3232f0aba9933606c8bc1262
+2025-12-30 07:25:01,482 INFO  [io.quarkus] (Shutdown thread) Keycloak stopped in 0.044s
+level=info ts=2025-12-30T07:25:01.588777676Z caller=target.go:132 target=docker/c18bdbefd704369266f792ef47b097c0b75682320c48f4c1fc09e8bf70ed1e98 msg="finished transferring logs" written=5106 container=c18bdbefd704369266f792ef47b097c0b75682320c48f4c1fc09e8bf70ed1e98
+level=info ts=2025-12-30T07:25:01.901557338Z caller=target.go:132 target=docker/663fc6de5d386f9183dbeb008311070e3794f1f0ac1b2486b399f1434544ca78 msg="finished transferring logs" written=3310 container=663fc6de5d386f9183dbeb008311070e3794f1f0ac1b2486b399f1434544ca78
+level=info ts=2025-12-30T07:25:02.519099084Z caller=target.go:132 target=docker/67854f8c7ea183e4a7278121417c6e2a0577789ffa25eb6467c603efd3130919 msg="finished transferring logs" written=5064 container=67854f8c7ea183e4a7278121417c6e2a0577789ffa25eb6467c603efd3130919
+level=info ts=2025-12-30T07:25:02.766129184Z caller=target.go:132 target=docker/d7dbceedda9e73f27d20a74526fb703341691bf01818e4054a84d8af91b92e76 msg="finished transferring logs" written=5064 container=d7dbceedda9e73f27d20a74526fb703341691bf01818e4054a84d8af91b92e76
+level=info ts=2025-12-30T07:25:03.012800485Z caller=target.go:132 target=docker/ffa1005304774247dde0eebcb1e8d4fc24f734c5de62de637ad6501012dcaa8b msg="finished transferring logs" written=5064 container=ffa1005304774247dde0eebcb1e8d4fc24f734c5de62de637ad6501012dcaa8b
+level=info ts=2025-12-30T07:25:03.285073989Z caller=target.go:132 target=docker/a7b36efc988451e5ff4c2155060e76d1e8a0bd8972f33597fd4ad3d96709d7e1 msg="finished transferring logs" written=5064 container=a7b36efc988451e5ff4c2155060e76d1e8a0bd8972f33597fd4ad3d96709d7e1
+level=info ts=2025-12-30T07:25:03.471077165Z caller=signals.go:59 msg="=== received SIGINT/SIGTERM ===\n*** exiting"
+level=info ts=2025-12-30T07:25:03.471437937Z caller=basic_lifecycler.go:238 msg="ring lifecycler is shutting down" ring=distributor
+level=error ts=2025-12-30T07:25:03.471578292Z caller=scheduler_processor.go:106 msg="error processing requests from scheduler" err="rpc error: code = Canceled desc = context canceled" addr=127.0.0.1:9095
+level=info ts=2025-12-30T07:25:03.471633316Z caller=basic_lifecycler.go:408 msg="unregistering instance from ring" ring=distributor
+level=error ts=2025-12-30T07:25:03.471658827Z caller=scheduler_processor.go:106 msg="error processing requests from scheduler" err="rpc error: code = Canceled desc = context canceled" addr=127.0.0.1:9095
+level=error ts=2025-12-30T07:25:03.471666932Z caller=scheduler_processor.go:106 msg="error processing requests from scheduler" err="rpc error: code = Canceled desc = context canceled" addr=127.0.0.1:9095
+level=info ts=2025-12-30T07:25:03.471683436Z caller=basic_lifecycler.go:278 msg="instance removed from the ring" ring=distributor
+level=error ts=2025-12-30T07:25:03.471666762Z caller=scheduler_processor.go:106 msg="error processing requests from scheduler" err="rpc error: code = Canceled desc = context canceled" addr=127.0.0.1:9095
+level=error ts=2025-12-30T07:25:03.47170105Z caller=scheduler_processor.go:106 msg="error processing requests from scheduler" err="rpc error: code = Canceled desc = context canceled" addr=127.0.0.1:9095
+level=error ts=2025-12-30T07:25:03.471681887Z caller=scheduler_processor.go:106 msg="error processing requests from scheduler" err="rpc error: code = Canceled desc = context canceled" addr=127.0.0.1:9095
+level=info ts=2025-12-30T07:25:03.471711325Z caller=compactor.go:456 msg="compactor exiting"
+level=error ts=2025-12-30T07:25:03.47172024Z caller=scheduler_processor.go:106 msg="error processing requests from scheduler" err="rpc error: code = Canceled desc = context canceled" addr=127.0.0.1:9095
+level=error ts=2025-12-30T07:25:03.47172367Z caller=scheduler_processor.go:106 msg="error processing requests from scheduler" err="rpc error: code = Canceled desc = context canceled" addr=127.0.0.1:9095
+level=info ts=2025-12-30T07:25:03.47173452Z caller=basic_lifecycler.go:238 msg="ring lifecycler is shutting down" ring=compactor
+level=error ts=2025-12-30T07:25:03.471754608Z caller=scheduler_processor.go:106 msg="error processing requests from scheduler" err="rpc error: code = Canceled desc = context canceled" addr=127.0.0.1:9095
+level=error ts=2025-12-30T07:25:03.47175148Z caller=scheduler_processor.go:106 msg="error processing requests from scheduler" err="rpc error: code = Canceled desc = context canceled" addr=127.0.0.1:9095
+level=info ts=2025-12-30T07:25:03.471763487Z caller=module_service.go:114 msg="module stopped" module=distributor
+level=info ts=2025-12-30T07:25:03.471901136Z caller=basic_lifecycler.go:408 msg="unregistering instance from ring" ring=compactor
+level=info ts=2025-12-30T07:25:03.471938251Z caller=basic_lifecycler.go:278 msg="instance removed from the ring" ring=compactor
+level=info ts=2025-12-30T07:25:03.471998956Z caller=module_service.go:114 msg="module stopped" module=compactor
+level=info ts=2025-12-30T07:25:03.472256404Z caller=module_service.go:114 msg="module stopped" module=querier
+level=info ts=2025-12-30T07:25:03.472312849Z caller=module_service.go:114 msg="module stopped" module=ingester-querier
+level=info ts=2025-12-30T07:25:03.473625566Z caller=checkpoint.go:569 msg="checkpoint done" time=2m55.316004235s
+level=info ts=2025-12-30T07:25:03.476494279Z caller=wal.go:144 msg=stopped component=wal
+level=info ts=2025-12-30T07:25:03.476515851Z caller=lifecycler.go:533 msg="lifecycler loop() exited gracefully" ring=ingester
+level=info ts=2025-12-30T07:25:03.476533649Z caller=lifecycler.go:927 msg="changing instance state from" old_state=ACTIVE new_state=LEAVING ring=ingester
+level=info ts=2025-12-30T07:25:03.476611112Z caller=lifecycler.go:998 msg="transfers are disabled"
+level=info ts=2025-12-30T07:25:03.476625454Z caller=lifecycler.go:1015 msg="lifecycler entering final sleep before shutdown" final_sleep=0s
+level=info ts=2025-12-30T07:25:03.476673653Z caller=lifecycler.go:585 msg="instance removed from the KV store" ring=ingester
+level=info ts=2025-12-30T07:25:03.476809882Z caller=module_service.go:114 msg="module stopped" module=ingester
+level=info ts=2025-12-30T07:25:03.476945987Z caller=table_manager.go:100 index-store=boltdb-shipper-2020-10-24 msg="stopping table manager"
+level=info ts=2025-12-30T07:25:03.47696823Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2025-12-30T07:25:03.477036926Z caller=table.go:318 msg="handing over indexes to shipper index_20452"
+level=info ts=2025-12-30T07:25:03.477054364Z caller=table.go:334 msg="finished handing over table index_20452"
+level=info ts=2025-12-30T07:25:03.477249042Z caller=table_manager.go:77 index-store=boltdb-shipper-2020-10-24 msg="stopping table manager"
+level=info ts=2025-12-30T07:25:03.477269052Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T07:25:03.477279878Z caller=index_set.go:86 msg="uploading table index_20452"
+level=info ts=2025-12-30T07:25:03.487105662Z caller=index_set.go:107 msg="finished uploading table index_20452"
+level=info ts=2025-12-30T07:25:03.487135281Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20452"
+level=info ts=2025-12-30T07:25:03.487399661Z caller=module_service.go:114 msg="module stopped" module=store
+level=error ts=2025-12-30T07:25:03.472982296Z caller=target.go:100 target=docker/663fc6de5d386f9183dbeb008311070e3794f1f0ac1b2486b399f1434544ca78 msg="could not inspect container info" container=663fc6de5d386f9183dbeb008311070e3794f1f0ac1b2486b399f1434544ca78 err="Error response from daemon: No such container: 663fc6de5d386f9183dbeb008311070e3794f1f0ac1b2486b399f1434544ca78"
+level=error ts=2025-12-30T07:25:03.472982992Z caller=target.go:100 target=docker/dc1bcd5df4fc2112388bce01e2dd95772c10a5f66b2f9d448747793f9b348e81 msg="could not inspect container info" container=dc1bcd5df4fc2112388bce01e2dd95772c10a5f66b2f9d448747793f9b348e81 err="Error response from daemon: No such container: dc1bcd5df4fc2112388bce01e2dd95772c10a5f66b2f9d448747793f9b348e81"
+level=error ts=2025-12-30T07:25:03.473060003Z caller=target.go:100 target=docker/c18bdbefd704369266f792ef47b097c0b75682320c48f4c1fc09e8bf70ed1e98 msg="could not inspect container info" container=c18bdbefd704369266f792ef47b097c0b75682320c48f4c1fc09e8bf70ed1e98 err="Error response from daemon: No such container: c18bdbefd704369266f792ef47b097c0b75682320c48f4c1fc09e8bf70ed1e98"
+level=error ts=2025-12-30T07:25:03.473066021Z caller=target.go:100 target=docker/39e29d0484610c63c27f759f1f7c45bda4f8ad13ba748247ce53e7eb7ac9897a msg="could not inspect container info" container=39e29d0484610c63c27f759f1f7c45bda4f8ad13ba748247ce53e7eb7ac9897a err="Error response from daemon: No such container: 39e29d0484610c63c27f759f1f7c45bda4f8ad13ba748247ce53e7eb7ac9897a"
+level=error ts=2025-12-30T07:25:03.47309106Z caller=target.go:100 target=docker/ffa1005304774247dde0eebcb1e8d4fc24f734c5de62de637ad6501012dcaa8b msg="could not inspect container info" container=ffa1005304774247dde0eebcb1e8d4fc24f734c5de62de637ad6501012dcaa8b err="Error response from daemon: No such container: ffa1005304774247dde0eebcb1e8d4fc24f734c5de62de637ad6501012dcaa8b"
+level=error ts=2025-12-30T07:25:03.473095015Z caller=target.go:100 target=docker/a4b413b31b27832a2961c8a1a9a1af53e8f740fd3232f0aba9933606c8bc1262 msg="could not inspect container info" container=a4b413b31b27832a2961c8a1a9a1af53e8f740fd3232f0aba9933606c8bc1262 err="Error response from daemon: No such container: a4b413b31b27832a2961c8a1a9a1af53e8f740fd3232f0aba9933606c8bc1262"
+level=error ts=2025-12-30T07:25:03.473125074Z caller=target.go:100 target=docker/d7dbceedda9e73f27d20a74526fb703341691bf01818e4054a84d8af91b92e76 msg="could not inspect container info" container=d7dbceedda9e73f27d20a74526fb703341691bf01818e4054a84d8af91b92e76 err="Error response from daemon: No such container: d7dbceedda9e73f27d20a74526fb703341691bf01818e4054a84d8af91b92e76"
+level=error ts=2025-12-30T07:25:03.473122295Z caller=target.go:100 target=docker/a7b36efc988451e5ff4c2155060e76d1e8a0bd8972f33597fd4ad3d96709d7e1 msg="could not inspect container info" container=a7b36efc988451e5ff4c2155060e76d1e8a0bd8972f33597fd4ad3d96709d7e1 err="Error response from daemon: No such container: a7b36efc988451e5ff4c2155060e76d1e8a0bd8972f33597fd4ad3d96709d7e1"
+level=error ts=2025-12-30T07:25:03.473160813Z caller=target.go:100 target=docker/f115318e107982a1cba6436afd978ba4a65eea284b3c619654fd7339e9f69404 msg="could not inspect container info" container=f115318e107982a1cba6436afd978ba4a65eea284b3c619654fd7339e9f69404 err="Error response from daemon: No such container: f115318e107982a1cba6436afd978ba4a65eea284b3c619654fd7339e9f69404"
+level=error ts=2025-12-30T07:25:03.473208632Z caller=target.go:100 target=docker/67854f8c7ea183e4a7278121417c6e2a0577789ffa25eb6467c603efd3130919 msg="could not inspect container info" container=67854f8c7ea183e4a7278121417c6e2a0577789ffa25eb6467c603efd3130919 err="Error response from daemon: No such container: 67854f8c7ea183e4a7278121417c6e2a0577789ffa25eb6467c603efd3130919"
+level=info ts=2025-12-30T07:25:03.971911347Z caller=module_service.go:114 msg="module stopped" module=query-frontend
+level=info ts=2025-12-30T07:25:03.972020696Z caller=module_service.go:114 msg="module stopped" module=cache-generation-loader
+level=info ts=2025-12-30T07:25:03.972050828Z caller=module_service.go:114 msg="module stopped" module=query-frontend-tripperware
+level=info ts=2025-12-30T07:25:03.972072885Z caller=module_service.go:114 msg="module stopped" module=query-scheduler
+level=info ts=2025-12-30T07:25:03.972090178Z caller=basic_lifecycler.go:238 msg="ring lifecycler is shutting down" ring=scheduler
+level=info ts=2025-12-30T07:25:03.972122789Z caller=module_service.go:114 msg="module stopped" module=analytics
+level=info ts=2025-12-30T07:25:03.972238231Z caller=basic_lifecycler.go:408 msg="unregistering instance from ring" ring=scheduler
+level=info ts=2025-12-30T07:25:03.972337741Z caller=basic_lifecycler.go:278 msg="instance removed from the ring" ring=scheduler
+level=info ts=2025-12-30T07:25:03.972359426Z caller=module_service.go:114 msg="module stopped" module=query-scheduler-ring
+level=warn ts=2025-12-30T07:25:04.072268927Z caller=logging.go:123 traceID=68d5e38fec8789c3 orgID=fake msg="POST /loki/api/v1/push (500) 255.436µs Response: \"empty ring\\n\" ws: false; Content-Length: 3934; Content-Type: application/x-protobuf; User-Agent: promtail/2.9.4; "
+level=warn ts=2025-12-30T07:25:04.072552674Z caller=client.go:419 component=client host=loki:3100 msg="error sending batch, will retry" status=500 tenant= error="server returned HTTP status 500 Internal Server Error (500): empty ring"
+level=info ts=2025-12-30T07:25:04.657561941Z caller=target.go:132 target=docker/8f7659db5ca9103623471d50caa4b7c463326bffbe259d821b378ee289a9d307 msg="finished transferring logs" written=41264 container=8f7659db5ca9103623471d50caa4b7c463326bffbe259d821b378ee289a9d307
+level=warn ts=2025-12-30T07:25:04.780167965Z caller=client.go:419 component=client host=loki:3100 msg="error sending batch, will retry" status=-1 tenant= error="Post \"http://loki:3100/loki/api/v1/push\": dial tcp: lookup loki on 127.0.0.11:53: server misbehaving"
+level=info ts=2025-12-30T07:25:04.894128622Z caller=signals.go:59 msg="=== received SIGINT/SIGTERM ===\n*** exiting"
+level=warn ts=2025-12-30T07:25:04.894917568Z caller=target.go:130 target=docker/18345f10483618c5a8519c04f1e755191bf0e0cde6d7b2a6f98dcc94f03aec50 msg="could not transfer logs" written=0 container=18345f10483618c5a8519c04f1e755191bf0e0cde6d7b2a6f98dcc94f03aec50 err="context canceled"
+level=warn ts=2025-12-30T07:25:04.895008856Z caller=target.go:130 target=docker/f4267280bdcaa580548a7fc682cda3d1d2d926eaf27d12300ff5592ca26b9a4e msg="could not transfer logs" written=0 container=f4267280bdcaa580548a7fc682cda3d1d2d926eaf27d12300ff5592ca26b9a4e err="context canceled"
+level=warn ts=2025-12-30T07:25:05.973283325Z caller=client.go:419 component=client host=loki:3100 msg="error sending batch, will retry" status=-1 tenant= error="Post \"http://loki:3100/loki/api/v1/push\": dial tcp: lookup loki on 127.0.0.11:53: server misbehaving"
+level=warn ts=2025-12-30T07:25:09.458620538Z caller=client.go:419 component=client host=loki:3100 msg="error sending batch, will retry" status=-1 tenant= error="Post \"http://loki:3100/loki/api/v1/push\": dial tcp: lookup loki on 127.0.0.11:53: server misbehaving"
+level=warn ts=2025-12-30T07:25:13.634892972Z caller=client.go:419 component=client host=loki:3100 msg="error sending batch, will retry" status=-1 tenant= error="Post \"http://loki:3100/loki/api/v1/push\": dial tcp: lookup loki on 127.0.0.11:53: server misbehaving"
+--- Checking for leftover containers ---
+Removing leftover container: webshop-demo
+Removing leftover container: pm-demo
+Removing leftover container: warehouse-demo
+Removing leftover container: order-service
+Removing leftover container: keycloak
+Removing leftover container: reverse-proxy
+Removing leftover container: db_webshop
+Removing leftover container: db_pm
+Removing leftover container: db_warehouse
+Removing leftover container: db_order
+Removing leftover network: webshop-net
+--- Setting up Certificates ---
+✅ mkcert found. Generating trusted certificates...
+The local CA is already installed in the system trust store! 👍
+Warning: "certutil" is not available, so the CA can't be automatically installed in Firefox and/or Chrome/Chromium! ⚠️
+Install "certutil" with "apt install libnss3-tools" and re-run "mkcert -install" 👈
+
+Note: the local CA is not installed in the Firefox and/or Chrome/Chromium trust store.
+Run "mkcert -install" for certificates to be trusted automatically ⚠️
+
+Created a new certificate valid for the following names 📜
+ - "localhost"
+ - "127.0.0.1"
+ - "::1"
+
+The certificate is at "/home/roland/Good Project/infrastructure/nginx/certs/localhost.pem" and the key at "/home/roland/Good Project/infrastructure/nginx/certs/localhost-key.pem" ✅
+
+It will expire on 30 March 2028 🗓
+
+Certificates generated in /home/roland/Good Project/infrastructure/nginx/certs
+--- Building Webshop ---
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.example:webshop >-------------------------
+[INFO] Building webshop 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ webshop ---
+[INFO] Deleting /usr/src/mymaven/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ webshop ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ webshop ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 13 source files with javac [debug target 21] to target/classes
+[INFO] /usr/src/mymaven/src/main/java/com/example/webshop/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/webshop/SecurityFilter.java uses or overrides a deprecated API.
+[INFO] /usr/src/mymaven/src/main/java/com/example/webshop/SecurityFilter.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ webshop ---
+[INFO] skip non existing resourceDirectory /usr/src/mymaven/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ webshop ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 2 source files with javac [debug target 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.2.3:test (default-test) @ webshop ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ webshop ---
+[INFO] Building jar: /usr/src/mymaven/target/webshop-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- assembly:3.3.0:single (default) @ webshop ---
+[INFO] Building jar: /usr/src/mymaven/target/webshop-1.0-SNAPSHOT-jar-with-dependencies.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.306 s
+[INFO] Finished at: 2025-12-30T19:34:58Z
+[INFO] ------------------------------------------------------------------------
+--- Building Product Management System ---
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------< com.example:productManagementSystem >-----------------
+[INFO] Building productManagementSystem 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ productManagementSystem ---
+[INFO] Deleting /usr/src/mymaven/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ productManagementSystem ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ productManagementSystem ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 8 source files with javac [debug target 21] to target/classes
+[INFO] /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java uses or overrides a deprecated API.
+[INFO] /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java: Recompile with -Xlint:deprecation for details.
+[INFO] /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java uses unchecked or unsafe operations.
+[INFO] /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ productManagementSystem ---
+[INFO] skip non existing resourceDirectory /usr/src/mymaven/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ productManagementSystem ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 2 source files with javac [debug target 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.2.3:test (default-test) @ productManagementSystem ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ productManagementSystem ---
+[INFO] Building jar: /usr/src/mymaven/target/productManagementSystem-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- assembly:3.3.0:single (default) @ productManagementSystem ---
+[INFO] Building jar: /usr/src/mymaven/target/productManagementSystem-1.0-SNAPSHOT-jar-with-dependencies.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.047 s
+[INFO] Finished at: 2025-12-30T19:35:05Z
+[INFO] ------------------------------------------------------------------------
+--- Building Warehouse Service ---
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< com.example:warehouse >------------------------
+[INFO] Building warehouse 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ warehouse ---
+[INFO] Deleting /usr/src/mymaven/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ warehouse ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ warehouse ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 19 source files with javac [debug target 21] to target/classes
+[INFO] /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java uses or overrides a deprecated API.
+[INFO] /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java: Recompile with -Xlint:deprecation for details.
+[INFO] /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java uses unchecked or unsafe operations.
+[INFO] /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ warehouse ---
+[INFO] skip non existing resourceDirectory /usr/src/mymaven/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ warehouse ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 2 source files with javac [debug target 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.2.3:test (default-test) @ warehouse ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ warehouse ---
+[INFO] Building jar: /usr/src/mymaven/target/warehouse-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- assembly:3.3.0:single (default) @ warehouse ---
+[INFO] Building jar: /usr/src/mymaven/target/warehouse-1.0-SNAPSHOT-jar-with-dependencies.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.223 s
+[INFO] Finished at: 2025-12-30T19:35:12Z
+[INFO] ------------------------------------------------------------------------
+--- Building Order Service ---
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.example:orderService >----------------------
+[INFO] Building orderService 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ orderService ---
+[INFO] Deleting /usr/src/mymaven/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ orderService ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ orderService ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 14 source files with javac [debug target 21] to target/classes
+[INFO] /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java uses or overrides a deprecated API.
+[INFO] /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java: Recompile with -Xlint:deprecation for details.
+[INFO] /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java uses unchecked or unsafe operations.
+[INFO] /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ orderService ---
+[INFO] skip non existing resourceDirectory /usr/src/mymaven/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ orderService ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 3 source files with javac [debug target 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.2.3:test (default-test) @ orderService ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ orderService ---
+[INFO] Building jar: /usr/src/mymaven/target/orderService-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- assembly:3.3.0:single (default) @ orderService ---
+[INFO] Building jar: /usr/src/mymaven/target/orderService-1.0-SNAPSHOT-jar-with-dependencies.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.985 s
+[INFO] Finished at: 2025-12-30T19:35:19Z
+[INFO] ------------------------------------------------------------------------
+--- Starting Infrastructure ---
+fda4cd8252d03b26d3bd85406b77917e0759c96c0c03f0e56d2753efcd120473
+7dcc799da39243bd8f1176a46f2fbe140189a8f1c5e6b9289002a1f1604e025b
+38685cf66dc745e74fc168dd563c0774227d7372fc451f0ad8b96cf279402daf
+624b36e4d1db63e7a1a742ae9787e87f3ddeffb679cfdfd49539db2231216ea5
+77c146971deb9a276b24f80e40394f8aaa3b0d17cb355a614e3ab187d9169d31
+--- Starting Observability Stack ---
+a8059d3918d7c7015883933e04847f4165cea5aaeb94535a9f20817d4a10681e
+Waiting for Loki to start...
+5f3f8dfb825bcf693989a304637f9f1ab1002a4dccf7c252c054ac1209c68f13
+cb8127b62d4363cbcf0979b22c0ac43da9d20c5debe816c59a5508786b45cc74
+Waiting for Databases to be ready (10s)...
+--- Starting Keycloak ---
+2c2fa0fc8ec5335e8a7b7e2bbcd98fed252a26f966ea169fb7205183204325cb
+--- Starting Webshop ---
+5b32628e293bab66bffc2bfbcc1022b9a21b72600a5406f806866ccb8283841f
+--- Starting Product Management System ---
+a520927fdfb8ff37eded9b28ed575ae32bff92854cb7ab145ee1d6a428c811b4
+--- Starting Warehouse Service ---
+9bc6b92d5a7ec8ed6fab0f91fb63a8cb7cb2c0fa46dfceac9a8e0dc11ca9fa5d
+--- Starting Order Service ---
+e0a586966ec2bf66a58ccbd50f2e31355e714279672facca51b8ff98e2d7b85b
+--- Starting Reverse Proxy (Nginx) ---
+29642da7739f02db1d598c450a80764980aca847bf686767be30b6fa003f2b13
+Waiting for Keycloak to be ready (20s)...
+
+✅ Webshop is running at:            https://localhost:8443
+✅ Product Management is running at: https://localhost:8444
+   (Login: p-user / p-user)
+✅ Warehouse Service is running at:  https://localhost:8445
+   (Login: w-user / w-user)
+✅ Order Service is running at:      https://localhost:8447
+   (Login: o-user / o-user)
+✅ Keycloak is running at:           https://localhost:8446
+   (Admin Console: https://localhost:8446/admin/)
+✅ Grafana is running at:            http://localhost:3000
+   (Login: admin / admin)
+
+--- Checking Loki Labels ---
+{"status":"success","data":["container","level"]}
+
+
+Press Ctrl+C to stop the servers.
+[main] INFO com.example.warehouse.WarehouseApplication - Connecting to database at: jdbc:postgresql://db-warehouse:5432/postgres
+[main] INFO com.example.warehouse.WarehouseApplication - Database connection successful.
+[main] INFO com.example.warehouse.WarehouseApplication - Database schema initialized.
+StockService initialized with Webshop Stock API URL: http://webshop-demo:8000/api/stock/sync
+[main] INFO com.example.warehouse.WarehouseApplication - Warehouse Service started on port 8002
+/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+/docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+/docker-entrypoint.sh: Configuration complete; ready for start up
+Updating the configuration and installing your custom providers, if any. Please wait.
+2025-12-30 19:35:45,285 INFO  [io.quarkus.deployment.QuarkusAugmentor] (main) Quarkus augmentation completed in 5893ms
+2025-12-30 19:35:46,895 INFO  [org.keycloak.quarkus.runtime.hostname.DefaultHostnameProvider] (main) Hostname settings: Base URL: https://localhost:8446, Hostname: localhost, Strict HTTPS: true, Path: /, Strict BackChannel: true, Admin URL: <unset>, Admin: <request>, Port: 8446, Proxied: true
+2025-12-30 19:35:48,408 WARN  [io.quarkus.agroal.runtime.DataSources] (main) Datasource <default> enables XA but transaction recovery is not enabled. Please enable transaction recovery by setting quarkus.transaction-manager.enable-recovery=true, otherwise data may be lost if the application is terminated abruptly
+2025-12-30 19:35:48,933 WARN  [org.infinispan.PERSISTENCE] (keycloak-cache-init) ISPN000554: jboss-marshalling is deprecated and planned for removal
+2025-12-30 19:35:49,085 WARN  [org.infinispan.CONFIG] (keycloak-cache-init) ISPN000569: Unable to persist Infinispan internal caches as no global state enabled
+2025-12-30 19:35:49,204 INFO  [org.infinispan.CONTAINER] (keycloak-cache-init) ISPN000556: Starting user marshaller 'org.infinispan.jboss.marshalling.core.JBossUserMarshaller'
+2025-12-30 19:35:49,705 WARN  [io.quarkus.vertx.http.runtime.VertxHttpRecorder] (main) The X-Forwarded-* and Forwarded headers will be considered when determining the proxy address. This configuration can cause a security issue as clients can forge requests and send a forwarded header that is not overwritten by the proxy. Please consider use one of these headers just to forward the proxy address in requests.
+2025-12-30 19:35:49,714 INFO  [org.keycloak.broker.provider.AbstractIdentityProviderMapper] (main) Registering class org.keycloak.broker.provider.mappersync.ConfigSyncEventListener
+2025-12-30 19:35:49,780 INFO  [org.keycloak.connections.infinispan.DefaultInfinispanConnectionProviderFactory] (main) Node name: node_69316, Site name: null
+2025-12-30 19:35:52,294 INFO  [org.keycloak.quarkus.runtime.storage.legacy.liquibase.QuarkusJpaUpdaterProvider] (main) Initializing database schema. Using changelog META-INF/jpa-changelog-master.xml
+
+UPDATE SUMMARY
+Run:                        117
+Previously run:               0
+Filtered out:                 0
+-------------------------------
+Total change sets:          117
+
+2025-12-30 19:35:56,157 INFO  [org.keycloak.services] (main) KC-SERVICES0050: Initializing master realm
+2025-12-30 19:35:57,471 INFO  [org.keycloak.exportimport.singlefile.SingleFileImportProvider] (main) Full importing from file /opt/keycloak/bin/../data/import/realm.json
+[main] INFO com.example.order.OrderApplication - Connecting to database at: jdbc:postgresql://db-order:5432/postgres
+level=warn ts=2025-12-30T19:35:21.358073237Z caller=loki.go:288 msg="global timeout not configured, using default engine timeout (\"5m0s\"). This behavior will change in the next major to always use the default global timeout (\"5m\")."
+[main] INFO com.example.order.OrderApplication - Database connection successful.
+[main] INFO com.example.order.OrderApplication - Database schema initialized.
+[main] INFO com.example.order.OrderApplication - Order Service started on port 8003
+level=info ts=2025-12-30T19:35:21.359848693Z caller=main.go:108 msg="Starting Loki" version="(version=2.9.4, branch=HEAD, revision=f599ebc535)"
+level=info ts=2025-12-30T19:35:21.360869659Z caller=server.go:322 http=[::]:3100 grpc=[::]:9095 msg="server listening on addresses"
+level=info ts=2025-12-30T19:35:21.361096807Z caller=modules.go:932 msg="Ruler storage is not configured; ruler will not be started."
+level=warn ts=2025-12-30T19:35:21.366703167Z caller=cache.go:127 msg="fifocache config is deprecated. use embedded-cache instead"
+level=warn ts=2025-12-30T19:35:21.366724464Z caller=experimental.go:20 msg="experimental feature in use" feature="In-memory (FIFO) cache - chunksembedded-cache"
+level=info ts=2025-12-30T19:35:21.36703994Z caller=table_manager.go:271 index-store=boltdb-shipper-2020-10-24 msg="query readiness setup completed" duration=1.237µs distinct_users_len=0 distinct_users=
+level=info ts=2025-12-30T19:35:21.3670695Z caller=shipper.go:165 index-store=boltdb-shipper-2020-10-24 msg="starting index shipper in RW mode"
+level=info ts=2025-12-30T19:35:21.367075125Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T19:35:21.367234791Z caller=shipper_index_client.go:76 index-store=boltdb-shipper-2020-10-24 msg="starting boltdb shipper in RW mode"
+level=info ts=2025-12-30T19:35:21.367325348Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=warn ts=2025-12-30T19:35:21.367438196Z caller=modules.go:474 msg="The config setting shutdown marker path is not set. The /ingester/prepare_shutdown endpoint won't work"
+level=warn ts=2025-12-30T19:35:21.368190893Z caller=modules.go:951 msg="RulerStorage is nil. Not starting the ruler."
+level=info ts=2025-12-30T19:35:21.368435933Z caller=worker.go:112 msg="Starting querier worker using query-scheduler and scheduler ring for addresses"
+level=info ts=2025-12-30T19:35:21.370196552Z caller=module_service.go:82 msg=initialising module=cache-generation-loader
+level=info ts=2025-12-30T19:35:21.370227409Z caller=module_service.go:82 msg=initialising module=server
+level=info ts=2025-12-30T19:35:21.370268767Z caller=module_service.go:82 msg=initialising module=query-frontend-tripperware
+level=info ts=2025-12-30T19:35:21.370291009Z caller=module_service.go:82 msg=initialising module=memberlist-kv
+level=info ts=2025-12-30T19:35:21.370323347Z caller=module_service.go:82 msg=initialising module=store
+level=info ts=2025-12-30T19:35:21.370347207Z caller=module_service.go:82 msg=initialising module=ring
+level=info ts=2025-12-30T19:35:21.370366316Z caller=module_service.go:82 msg=initialising module=query-scheduler-ring
+level=info ts=2025-12-30T19:35:21.370483911Z caller=ring.go:273 msg="ring doesn't exist in KV store yet"
+level=info ts=2025-12-30T19:35:21.370520052Z caller=module_service.go:82 msg=initialising module=analytics
+level=info ts=2025-12-30T19:35:21.370533351Z caller=ring.go:273 msg="ring doesn't exist in KV store yet"
+level=info ts=2025-12-30T19:35:21.370613781Z caller=module_service.go:82 msg=initialising module=ingester-querier
+level=info ts=2025-12-30T19:35:21.370685311Z caller=basic_lifecycler.go:297 msg="instance not found in the ring" instance=a8059d3918d7 ring=scheduler
+level=info ts=2025-12-30T19:35:21.370694807Z caller=module_service.go:82 msg=initialising module=compactor
+level=info ts=2025-12-30T19:35:21.370697762Z caller=module_service.go:82 msg=initialising module=ingester
+level=info ts=2025-12-30T19:35:21.370700855Z caller=basic_lifecycler_delegates.go:63 msg="not loading tokens from file, tokens file path is empty"
+level=info ts=2025-12-30T19:35:21.370725059Z caller=module_service.go:82 msg=initialising module=distributor
+level=info ts=2025-12-30T19:35:21.3707348Z caller=ingester.go:431 msg="recovering from checkpoint"
+level=info ts=2025-12-30T19:35:21.370773414Z caller=ring.go:273 msg="ring doesn't exist in KV store yet"
+level=info ts=2025-12-30T19:35:21.370819576Z caller=basic_lifecycler.go:297 msg="instance not found in the ring" instance=a8059d3918d7 ring=compactor
+level=info ts=2025-12-30T19:35:21.370834063Z caller=basic_lifecycler_delegates.go:63 msg="not loading tokens from file, tokens file path is empty"
+level=info ts=2025-12-30T19:35:21.370840565Z caller=ring.go:273 msg="ring doesn't exist in KV store yet"
+level=info ts=2025-12-30T19:35:21.370843473Z caller=recovery.go:40 msg="no checkpoint found, treating as no-op"
+level=info ts=2025-12-30T19:35:21.37089825Z caller=ringmanager.go:201 msg="waiting until scheduler is JOINING in the ring"
+level=info ts=2025-12-30T19:35:21.370917019Z caller=ringmanager.go:205 msg="scheduler is JOINING in the ring"
+level=info ts=2025-12-30T19:35:21.370924467Z caller=ingester.go:447 msg="recovered WAL checkpoint recovery finished" elapsed=214.656µs errors=false
+level=info ts=2025-12-30T19:35:21.370939088Z caller=compactor.go:395 msg="waiting until compactor is JOINING in the ring"
+level=info ts=2025-12-30T19:35:21.370941971Z caller=ingester.go:453 msg="recovering from WAL"
+level=info ts=2025-12-30T19:35:21.370995362Z caller=ringmanager.go:214 msg="waiting until scheduler is ACTIVE in the ring"
+level=info ts=2025-12-30T19:35:21.371034773Z caller=basic_lifecycler.go:297 msg="instance not found in the ring" instance=a8059d3918d7 ring=distributor
+level=info ts=2025-12-30T19:35:21.371150687Z caller=ingester.go:469 msg="WAL segment recovery finished" elapsed=440.407µs errors=false
+level=info ts=2025-12-30T19:35:21.371169208Z caller=ingester.go:417 msg="closing recoverer"
+level=info ts=2025-12-30T19:35:21.371179006Z caller=ingester.go:425 msg="WAL recovery finished" time=468.592µs
+level=info ts=2025-12-30T19:35:21.37121198Z caller=wal.go:156 msg=started component=wal
+level=info ts=2025-12-30T19:35:21.371293654Z caller=lifecycler.go:614 msg="not loading tokens from file, tokens file path is empty"
+level=info ts=2025-12-30T19:35:21.371368171Z caller=lifecycler.go:643 msg="instance not found in ring, adding with no tokens" ring=ingester
+level=info ts=2025-12-30T19:35:21.371474671Z caller=lifecycler.go:483 msg="auto-joining cluster after timeout" ring=ingester
+level=info ts=2025-12-30T19:35:21.520135617Z caller=compactor.go:399 msg="compactor is JOINING in the ring"
+level=info ts=2025-12-30T19:35:21.520382957Z caller=compactor.go:409 msg="waiting until compactor is ACTIVE in the ring"
+level=info ts=2025-12-30T19:35:21.530314504Z caller=ringmanager.go:218 msg="scheduler is ACTIVE in the ring"
+level=info ts=2025-12-30T19:35:21.530414975Z caller=module_service.go:82 msg=initialising module=query-scheduler
+level=info ts=2025-12-30T19:35:21.530524199Z caller=module_service.go:82 msg=initialising module=querier
+level=info ts=2025-12-30T19:35:21.53056823Z caller=module_service.go:82 msg=initialising module=query-frontend
+level=info ts=2025-12-30T19:35:21.714051696Z caller=compactor.go:413 msg="compactor is ACTIVE in the ring"
+level=info ts=2025-12-30T19:35:21.714179719Z caller=loki.go:505 msg="Loki started"
+level=info ts=2025-12-30T19:35:24.530902766Z caller=scheduler.go:615 msg="this scheduler is in the ReplicationSet, will now accept requests."
+level=info ts=2025-12-30T19:35:24.530921587Z caller=worker.go:209 msg="adding connection" addr=127.0.0.1:9095
+level=info ts=2025-12-30T19:35:26.71461988Z caller=compactor.go:474 msg="this instance has been chosen to run the compactor, starting compactor"
+level=info ts=2025-12-30T19:35:26.714783514Z caller=compactor.go:503 msg="waiting 10m0s for ring to stay stable and previous compactions to finish before starting compactor"
+level=info ts=2025-12-30T19:35:31.530873834Z caller=frontend_scheduler_worker.go:107 msg="adding connection to scheduler" addr=127.0.0.1:9095
+level=info ts=2025-12-30T19:35:58.998831733Z caller=roundtrip.go:295 org_id=fake traceID=44e12bbe1c13077e msg="executing query" type=labels label= length=1h0m0s query=
+level=info ts=2025-12-30T19:35:59.002196745Z caller=table_manager.go:195 index-store=boltdb-shipper-2020-10-24 msg="downloading all files for table index_20452"
+ts=2025-12-30T19:35:59.002637771Z caller=spanlogger.go:86 table-name=index_20452 user-id=fake org_id=fake traceID=44e12bbe1c13077e level=info msg="downloaded index set at query time" duration=160.354µs
+ts=2025-12-30T19:35:59.002735648Z caller=spanlogger.go:86 table-name=index_20452 org_id=fake traceID=44e12bbe1c13077e level=info msg="downloaded index set at query time" duration=59.685µs
+ts=2025-12-30T19:35:59.00327188Z caller=spanlogger.go:86 user=fake level=info org_id=fake traceID=44e12bbe1c13077e latency=fast query_type=labels length=1h0m0s duration=2.887037ms status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=2
+level=info ts=2025-12-30T19:35:59.004853308Z caller=metrics.go:207 component=frontend org_id=fake traceID=44e12bbe1c13077e latency=fast query_type=labels length=1h0m0s duration=5.750114ms status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=2
+[main] INFO com.example.webshop.WebshopApplication - Connecting to database at: jdbc:postgresql://db-webshop:5432/postgres
+[main] INFO com.example.webshop.WebshopApplication - Database connection successful.
+[main] INFO com.example.webshop.WebshopApplication - Database schema initialized.
+[main] INFO com.example.webshop.WebshopApplication - Server started on port 8000
+level=info ts=2025-12-30T19:35:26.707689119Z caller=promtail.go:133 msg="Reloading configuration file" md5sum=26a0dd8c3d6032723331a6938b134676
+level=info ts=2025-12-30T19:35:26.709211241Z caller=server.go:322 http=[::]:9080 grpc=[::]:40763 msg="server listening on addresses"
+level=info ts=2025-12-30T19:35:26.709367184Z caller=main.go:174 msg="Starting Promtail" version="(version=2.9.4, branch=HEAD, revision=f599ebc535)"
+level=warn ts=2025-12-30T19:35:26.709393288Z caller=promtail.go:263 msg="enable watchConfig"
+level=info ts=2025-12-30T19:35:31.709032798Z caller=target_group.go:128 msg="added Docker target" containerID=5f3f8dfb825bcf693989a304637f9f1ab1002a4dccf7c252c054ac1209c68f13
+level=info ts=2025-12-30T19:35:31.709091302Z caller=target_group.go:128 msg="added Docker target" containerID=a8059d3918d7c7015883933e04847f4165cea5aaeb94535a9f20817d4a10681e
+level=info ts=2025-12-30T19:35:31.709113Z caller=target_group.go:128 msg="added Docker target" containerID=77c146971deb9a276b24f80e40394f8aaa3b0d17cb355a614e3ab187d9169d31
+level=info ts=2025-12-30T19:35:31.709125409Z caller=target_group.go:128 msg="added Docker target" containerID=624b36e4d1db63e7a1a742ae9787e87f3ddeffb679cfdfd49539db2231216ea5
+level=info ts=2025-12-30T19:35:31.70913654Z caller=target_group.go:128 msg="added Docker target" containerID=38685cf66dc745e74fc168dd563c0774227d7372fc451f0ad8b96cf279402daf
+level=info ts=2025-12-30T19:35:31.709157788Z caller=target_group.go:128 msg="added Docker target" containerID=7dcc799da39243bd8f1176a46f2fbe140189a8f1c5e6b9289002a1f1604e025b
+level=info ts=2025-12-30T19:35:36.708911401Z caller=target_group.go:128 msg="added Docker target" containerID=cb8127b62d4363cbcf0979b22c0ac43da9d20c5debe816c59a5508786b45cc74
+level=info ts=2025-12-30T19:35:46.708716937Z caller=target_group.go:128 msg="added Docker target" containerID=29642da7739f02db1d598c450a80764980aca847bf686767be30b6fa003f2b13
+level=info ts=2025-12-30T19:35:46.708870047Z caller=target_group.go:128 msg="added Docker target" containerID=e0a586966ec2bf66a58ccbd50f2e31355e714279672facca51b8ff98e2d7b85b
+level=info ts=2025-12-30T19:35:46.708901716Z caller=target_group.go:128 msg="added Docker target" containerID=9bc6b92d5a7ec8ed6fab0f91fb63a8cb7cb2c0fa46dfceac9a8e0dc11ca9fa5d
+level=info ts=2025-12-30T19:35:46.708920822Z caller=target_group.go:128 msg="added Docker target" containerID=a520927fdfb8ff37eded9b28ed575ae32bff92854cb7ab145ee1d6a428c811b4
+level=info ts=2025-12-30T19:35:46.708940435Z caller=target_group.go:128 msg="added Docker target" containerID=5b32628e293bab66bffc2bfbcc1022b9a21b72600a5406f806866ccb8283841f
+level=info ts=2025-12-30T19:35:46.708981921Z caller=target_group.go:128 msg="added Docker target" containerID=2c2fa0fc8ec5335e8a7b7e2bbcd98fed252a26f966ea169fb7205183204325cb
+[main] INFO com.example.productmanagement.ProductManagementApplication - Connecting to database at: jdbc:postgresql://db-pm:5432/postgres
+[main] INFO com.example.productmanagement.ProductManagementApplication - Database connection successful.
+[main] INFO com.example.productmanagement.ProductManagementApplication - Database schema initialized.
+ProductService initialized with Webshop API URL: http://webshop-demo:8000/api/products/sync
+ProductService initialized with Warehouse API URL: http://warehouse-demo:8002/api/products/sync
+[main] INFO com.example.productmanagement.ProductManagementApplication - Product Management Server started on port 8001
+2025-12-30 19:35:59,178 INFO  [org.keycloak.exportimport.util.ImportUtils] (main) Realm 'webshop-realm' imported
+2025-12-30 19:35:59,219 INFO  [org.keycloak.exportimport.dir.DirImportProvider] (main) Importing from directory /opt/keycloak/bin/../data/import
+2025-12-30 19:35:59,219 INFO  [org.keycloak.services] (main) KC-SERVICES0030: Full model import requested. Strategy: IGNORE_EXISTING
+2025-12-30 19:35:59,220 INFO  [org.keycloak.services] (main) KC-SERVICES0032: Import finished successfully
+2025-12-30 19:35:59,339 INFO  [io.quarkus] (main) Keycloak 23.0.7 on JVM (powered by Quarkus 3.2.10.Final) started in 13.899s. Listening on: http://0.0.0.0:8080
+2025-12-30 19:35:59,339 INFO  [io.quarkus] (main) Profile dev activated. 
+2025-12-30 19:35:59,339 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, jdbc-h2, jdbc-mariadb, jdbc-mssql, jdbc-mysql, jdbc-oracle, jdbc-postgresql, keycloak, logging-gelf, micrometer, narayana-jta, reactive-routes, resteasy-reactive, resteasy-reactive-jackson, smallrye-context-propagation, smallrye-health, vertx]
+2025-12-30 19:35:59,421 INFO  [org.keycloak.services] (main) KC-SERVICES0009: Added user 'admin' to realm 'master'
+2025-12-30 19:35:59,423 WARN  [org.keycloak.quarkus.runtime.KeycloakMain] (main) Running the server in development mode. DO NOT use this configuration in production.
+level=info ts=2025-12-30T19:36:21.367204894Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T19:36:21.368555439Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+172.30.0.1 - - [30/Dec/2025:19:36:25 +0000] "GET / HTTP/1.1" 200 1716 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+[pool-1-thread-1] INFO com.example.webshop.ProductController - Received request: GET /products
+172.30.0.1 - - [30/Dec/2025:19:36:27 +0000] "GET /products HTTP/1.1" 200 2237 "https://localhost:8443/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+SecurityFilter: Checking for role 'order-history'. Found roles: [order-history]
+OrderRepository: Found 0 orders.
+172.30.0.1 - - [30/Dec/2025:19:36:33 +0000] "GET /my-orders HTTP/1.1" 200 1137 "https://localhost:8443/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:36:46 +0000] "GET /realms/webshop-realm/protocol/openid-connect/registrations?client_id=webshop-client&response_type=code&scope=openid&redirect_uri=https%3A%2F%2Flocalhost%3A8443%2F HTTP/1.1" 200 7705 "https://localhost:8443/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:36:46 +0000] "GET /resources/5scoq/common/keycloak/lib/pficon/pficon.css HTTP/1.1" 200 540 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:36:46 +0000] "GET /resources/5scoq/login/keycloak/css/login.css HTTP/1.1" 200 10381 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:36:46 +0000] "GET /resources/5scoq/common/keycloak/node_modules/patternfly/dist/css/patternfly.min.css HTTP/1.1" 200 182777 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:36:46 +0000] "GET /resources/5scoq/login/keycloak/js/passwordVisibility.js HTTP/1.1" 200 698 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:36:46 +0000] "GET /resources/5scoq/login/keycloak/js/authChecker.js HTTP/1.1" 200 1823 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:36:46 +0000] "GET /resources/5scoq/common/keycloak/node_modules/patternfly/dist/css/patternfly-additions.min.css HTTP/1.1" 200 225053 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:36:46 +0000] "GET /resources/5scoq/common/keycloak/node_modules/@patternfly/patternfly/patternfly.min.css HTTP/1.1" 200 1422037 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:36:46 +0000] "GET /resources/5scoq/login/keycloak/img/keycloak-bg.png HTTP/1.1" 200 81876 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:36:46 +0000] "GET /resources/5scoq/common/keycloak/node_modules/patternfly/dist/fonts/OpenSans-Regular-webfont.woff2 HTTP/1.1" 200 61993 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:36:46 +0000] "GET /resources/5scoq/common/keycloak/node_modules/patternfly/dist/fonts/OpenSans-Light-webfont.woff2 HTTP/1.1" 200 63193 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:36:46 +0000] "GET /resources/5scoq/common/keycloak/node_modules/patternfly/dist/fonts/fontawesome-webfont.woff2?v=4.7.0 HTTP/1.1" 200 77174 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:36:46 +0000] "GET /resources/5scoq/login/keycloak/img/favicon.ico HTTP/1.1" 200 627 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:37:00 +0000] "POST /realms/webshop-realm/login-actions/registration?session_code=I37D5vPe6K3X073Hr1bQ6LacRJ8FSD9g2UTtbXlMq9c&execution=ed346d1a-ff99-436c-8e23-653c9d36160f&client_id=webshop-client&tab_id=S_AtmBXBczM HTTP/1.1" 302 0 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+172.30.0.1 - - [30/Dec/2025:19:37:00 +0000] "GET /?session_state=0d74ce2d-9705-48cb-9e95-07e45fd350a1&iss=https%3A%2F%2Flocalhost%3A8446%2Frealms%2Fwebshop-realm&code=b19033e2-9fd3-4573-8f58-3ef06d195e50.0d74ce2d-9705-48cb-9e95-07e45fd350a1.a4f8ceac-9ee5-4465-8aca-6b0d89e85ff5 HTTP/1.1" 200 1716 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /https://localhost:8446/favicon.ico
+172.30.0.1 - - [30/Dec/2025:19:37:00 +0000] "GET /https://localhost:8446/favicon.ico HTTP/1.1" 404 13 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+level=info ts=2025-12-30T19:37:02.04255062Z caller=flush.go:167 msg="flushing stream" user=fake fp=7072881cacfdc197 immediate=false num_chunks=1 labels="{container=\"reverse-proxy\"}"
+level=info ts=2025-12-30T19:37:02.042648278Z caller=flush.go:167 msg="flushing stream" user=fake fp=232c947b78629c4c immediate=false num_chunks=1 labels="{container=\"db-pm\", level=\"WARNING\"}"
+level=info ts=2025-12-30T19:37:02.042713179Z caller=flush.go:167 msg="flushing stream" user=fake fp=cea5b24374f114b8 immediate=false num_chunks=1 labels="{container=\"db-order\", level=\"WARNING\"}"
+level=info ts=2025-12-30T19:37:02.042778764Z caller=flush.go:167 msg="flushing stream" user=fake fp=f36954f207db6b82 immediate=false num_chunks=1 labels="{container=\"db-pm\", level=\"LOG\"}"
+level=info ts=2025-12-30T19:37:02.04291466Z caller=flush.go:167 msg="flushing stream" user=fake fp=28e088ddff4ec45a immediate=false num_chunks=1 labels="{container=\"promtail\"}"
+level=info ts=2025-12-30T19:37:02.043036243Z caller=flush.go:167 msg="flushing stream" user=fake fp=3c2738c8b64147a3 immediate=false num_chunks=1 labels="{container=\"warehouse-demo\"}"
+level=info ts=2025-12-30T19:37:02.043217328Z caller=flush.go:167 msg="flushing stream" user=fake fp=e83a4f2df5a7c2b3 immediate=false num_chunks=1 labels="{container=\"db-webshop\"}"
+level=info ts=2025-12-30T19:37:02.042565493Z caller=flush.go:167 msg="flushing stream" user=fake fp=c8565fd380ba0c92 immediate=false num_chunks=1 labels="{container=\"db-warehouse\", level=\"WARNING\"}"
+level=info ts=2025-12-30T19:37:02.043634266Z caller=flush.go:167 msg="flushing stream" user=fake fp=a4af3616d361383c immediate=false num_chunks=1 labels="{container=\"db-warehouse\"}"
+level=info ts=2025-12-30T19:37:02.043693411Z caller=flush.go:167 msg="flushing stream" user=fake fp=79c7f2efc31482ff immediate=false num_chunks=1 labels="{container=\"db-webshop\", level=\"WARNING\"}"
+level=info ts=2025-12-30T19:37:02.044872778Z caller=flush.go:167 msg="flushing stream" user=fake fp=a043cce8450eb920 immediate=false num_chunks=1 labels="{container=\"db-order\"}"
+level=info ts=2025-12-30T19:37:02.045445809Z caller=flush.go:167 msg="flushing stream" user=fake fp=5006ef4944ca9544 immediate=false num_chunks=1 labels="{container=\"db-order\", level=\"LOG\"}"
+level=info ts=2025-12-30T19:37:02.063774761Z caller=flush.go:167 msg="flushing stream" user=fake fp=734f7c02d96e6eb2 immediate=false num_chunks=1 labels="{container=\"db-pm\"}"
+level=info ts=2025-12-30T19:37:02.094246952Z caller=flush.go:167 msg="flushing stream" user=fake fp=5638dc2b2cddb382 immediate=false num_chunks=1 labels="{container=\"pm-demo\"}"
+level=info ts=2025-12-30T19:37:02.106674281Z caller=flush.go:167 msg="flushing stream" user=fake fp=439c9a20a6648140 immediate=false num_chunks=1 labels="{container=\"db-webshop\", level=\"LOG\"}"
+level=info ts=2025-12-30T19:37:02.115237385Z caller=flush.go:167 msg="flushing stream" user=fake fp=af6c39220006e532 immediate=false num_chunks=1 labels="{container=\"db-warehouse\", level=\"LOG\"}"
+level=info ts=2025-12-30T19:37:02.118022997Z caller=flush.go:167 msg="flushing stream" user=fake fp=148ff505e96b30c2 immediate=false num_chunks=1 labels="{container=\"keycloak\"}"
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /login
+172.30.0.1 - - [30/Dec/2025:19:37:05 +0000] "GET /login HTTP/1.1" 200 237 "https://localhost:8443/?session_state=0d74ce2d-9705-48cb-9e95-07e45fd350a1&iss=https%3A%2F%2Flocalhost%3A8446%2Frealms%2Fwebshop-realm&code=b19033e2-9fd3-4573-8f58-3ef06d195e50.0d74ce2d-9705-48cb-9e95-07e45fd350a1.a4f8ceac-9ee5-4465-8aca-6b0d89e85ff5" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: POST /login
+172.30.0.1 - - [30/Dec/2025:19:37:11 +0000] "POST /login HTTP/1.1" 302 0 "https://localhost:8443/login" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+[pool-1-thread-1] INFO com.example.webshop.ProductController - Received request: GET /products
+172.30.0.1 - - [30/Dec/2025:19:37:11 +0000] "GET /products HTTP/1.1" 200 2237 "https://localhost:8443/login" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /favicon.ico
+172.30.0.1 - - [30/Dec/2025:19:37:11 +0000] "GET /favicon.ico HTTP/1.1" 404 13 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+level=info ts=2025-12-30T19:37:21.367704521Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2025-12-30T19:37:21.36770433Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T19:37:21.367844442Z caller=table.go:318 msg="handing over indexes to shipper index_20452"
+level=info ts=2025-12-30T19:37:21.367863483Z caller=table.go:334 msg="finished handing over table index_20452"
+172.30.0.1 - - [30/Dec/2025:19:37:27 +0000] "GET /cart HTTP/1.1" 200 3097 "https://localhost:8443/products" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+[pool-1-thread-1] INFO com.example.webshop.ProductController - Received request: GET /products
+172.30.0.1 - - [30/Dec/2025:19:37:34 +0000] "GET /products HTTP/1.1" 200 2237 "https://localhost:8443/cart" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:37:40 +0000] "GET /cart HTTP/1.1" 200 3097 "https://localhost:8443/products" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+SecurityFilter: Checking for role 'order-history'. Found roles: [order-history]
+Received Order: {"customerName":"John Doe","items":[{"productId":1,"quantity":7}]}
+OrderRepository: Created order with ID 1
+StockReservationService: Reserving stock for product 1 at http://warehouse-demo:8002/api/stock/reserve
+KeycloakTokenService: Requesting new token for client order-client from http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token
+KeycloakTokenService: Token obtained successfully. Length: 1081
+StockReservationService: Got token (length: 1081)
+Stock Reservation received: {"productId":1,"quantity":7}
+StockReservationService: Response status: 200
+OrderRepository: Updated status for order 1 to PENDING_CONFIRMATION. Rows affected: 1
+172.30.0.1 - - [30/Dec/2025:19:37:46 +0000] "POST /api/orders HTTP/1.1" 200 46 "https://localhost:8443/cart" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+Syncing stock for product 1 (Stock: 3) to http://webshop-demo:8000/api/stock/sync
+Stock Sync received: {"pmId":1,"stock":3}
+Synced stock for product 1 to Webshop.
+[pool-1-thread-1] INFO com.example.webshop.ProductController - Received request: GET /products
+172.30.0.1 - - [30/Dec/2025:19:37:48 +0000] "GET /products HTTP/1.1" 200 2235 "https://localhost:8443/cart" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+level=info ts=2025-12-30T19:38:01.91065501Z caller=flush.go:167 msg="flushing stream" user=fake fp=3a0c31caef0661a4 immediate=false num_chunks=1 labels="{container=\"grafana\"}"
+[pool-1-thread-1] INFO com.example.productmanagement.ProductManagementApplication - Received request: GET /
+172.30.0.1 - - [30/Dec/2025:19:38:09 +0000] "GET / HTTP/1.1" 200 1041 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+SecurityFilter: No token found. Headers: [Cookie, Accept-encoding, X-real-ip, Sec-fetch-dest, Accept, Priority, Sec-fetch-user, Referer, Connection, Sec-fetch-site, Host, Sec-fetch-mode, User-agent, Accept-language, Upgrade-insecure-requests]
+Cookies: grafana_session=2576d8f2fa8e53788ac7b421210e407f; grafana_session_expiry=1766484957; webshop_auth_token=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI1R1B6bzVaMDkyeEEtN1BCQ3EydG1LLW5DY1F3aEhwa28xZXdwbG5GRk1ZIn0.eyJleHAiOjE3NjcxMjM3MzEsImlhdCI6MTc2NzEyMzQzMSwianRpIjoiYjI0ZWUxNWEtZGVkNS00NzA4LWE0MzctOTU0NmMxMDFiM2ZiIiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6ODQ0Ni9yZWFsbXMvd2Vic2hvcC1yZWFsbSIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiIzYTNiZmUzYi0xZjc1LTQwYTYtOWU1ZC1mNTQxMDJhMjc5ZTUiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJ3ZWJzaG9wLWNsaWVudCIsInNlc3Npb25fc3RhdGUiOiIxYWNmMjRjZC04NDAyLTRmYmUtODhkOC1mYmE3OWI5NzEyOGYiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJkZWZhdWx0LXJvbGVzLXdlYnNob3AtcmVhbG0iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiIxYWNmMjRjZC04NDAyLTRmYmUtODhkOC1mYmE3OWI5NzEyOGYiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsIm5hbWUiOiJ0ZXN0IHRlc3QiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJ0ZXN0IiwiZ2l2ZW5fbmFtZSI6InRlc3QiLCJmYW1pbHlfbmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAdGVzdC5zZSJ9.eHjqQk0VbRxMxL5KsUR-AMGAdiOH-02wDwcvbr3WagOSJdhtiBoCZnfJ0GPYRdq5MEzcbQN3BK-2qPP5zHpqHIfF7VbvcU5HrSk5Rh-hILkIFh2CVtT4-g39XuujoMermtWApE7j8FjYjIOpp0E-wHvthcqnQBNStk2E5sFBgQOIPmDIs9JSWkRrMklU1zERc2etuiGwLQToMfKDAtxdMFNpJmQ5SvceKClYuiiQk9Bb8C0__QXB9bcsMt6jA5JX8p82J3IFzqnWGYTulZC3eMHACtS7KPrrREtt3v5LDU56u9dpAXIFy3lIRRlbNU6UtBN3YaIQVhfjGRZNOw1cZg
+172.30.0.1 - - [30/Dec/2025:19:38:12 +0000] "GET /products HTTP/1.1" 302 0 "https://localhost:8444/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+[pool-1-thread-1] INFO com.example.productmanagement.ProductManagementApplication - Received request: GET /login
+172.30.0.1 - - [30/Dec/2025:19:38:12 +0000] "GET /login HTTP/1.1" 200 1132 "https://localhost:8444/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+level=info ts=2025-12-30T19:38:21.36716539Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T19:38:21.367400787Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2025-12-30T19:38:21.367459537Z caller=table.go:318 msg="handing over indexes to shipper index_20452"
+level=info ts=2025-12-30T19:38:21.367478525Z caller=table.go:334 msg="finished handing over table index_20452"
+[pool-1-thread-1] INFO com.example.productmanagement.ProductManagementApplication - Received request: POST /login
+[pool-1-thread-1] INFO com.example.productmanagement.ProductManagementApplication - Access Token obtained: true
+[pool-1-thread-1] INFO com.example.productmanagement.ProductManagementApplication - Redirecting to: /products
+172.30.0.1 - - [30/Dec/2025:19:38:26 +0000] "POST /login HTTP/1.1" 302 0 "https://localhost:8444/login" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:38:26 +0000] "GET /products HTTP/1.1" 200 1941 "https://localhost:8444/login" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+[pool-1-thread-1] INFO com.example.productmanagement.ProductManagementApplication - Received request: GET /favicon.ico
+172.30.0.1 - - [30/Dec/2025:19:38:26 +0000] "GET /favicon.ico HTTP/1.1" 404 13 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:38:33 +0000] "GET /products/edit?id=1 HTTP/1.1" 200 1892 "https://localhost:8444/products" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:38:36 +0000] "GET /products HTTP/1.1" 499 0 "https://localhost:8444/products/edit?id=1" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+SecurityFilter: Verification failed. Configured Issuer: https://localhost:8446/realms/webshop-realm
+Token Issuer: https://localhost:8446/realms/webshop-realm
+java.io.IOException: Broken pipe
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(Unknown Source)
+	at java.base/sun.nio.ch.IOUtil.writeFromNativeBuffer(Unknown Source)
+	at java.base/sun.nio.ch.IOUtil.write(Unknown Source)
+	at java.base/sun.nio.ch.IOUtil.write(Unknown Source)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(Unknown Source)
+	at jdk.httpserver/sun.net.httpserver.Request$WriteStream.write(Unknown Source)
+	at jdk.httpserver/sun.net.httpserver.FixedLengthOutputStream.write(Unknown Source)
+	at java.base/java.io.FilterOutputStream.write(Unknown Source)
+	at jdk.httpserver/sun.net.httpserver.PlaceholderOutputStream.write(Unknown Source)
+	at com.example.productmanagement.ProductController.sendResponse(ProductController.java:252)
+	at com.example.productmanagement.ProductController.handleList(ProductController.java:97)
+	at com.example.productmanagement.ProductController.handle(ProductController.java:47)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at jdk.httpserver/sun.net.httpserver.AuthFilter.doFilter(Unknown Source)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(Unknown Source)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at com.example.productmanagement.SecurityFilter.doFilter(SecurityFilter.java:72)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Exchange.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+	Suppressed: java.io.IOException: insufficient bytes written to stream
+		at jdk.httpserver/sun.net.httpserver.FixedLengthOutputStream.close(Unknown Source)
+		at jdk.httpserver/sun.net.httpserver.PlaceholderOutputStream.close(Unknown Source)
+		at com.example.productmanagement.ProductController.sendResponse(ProductController.java:251)
+		... 13 more
+172.30.0.1 - - [30/Dec/2025:19:38:36 +0000] "POST /products/edit HTTP/1.1" 302 0 "https://localhost:8444/products/edit?id=1" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:38:36 +0000] "GET /products HTTP/1.1" 200 1919 "https://localhost:8444/products/edit?id=1" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+level=info ts=2025-12-30T19:39:02.097436446Z caller=flush.go:167 msg="flushing stream" user=fake fp=3c2738c8b64147a3 immediate=false num_chunks=1 labels="{container=\"warehouse-demo\"}"
+level=info ts=2025-12-30T19:39:02.097474693Z caller=flush.go:167 msg="flushing stream" user=fake fp=e0ecf60027eeea4b immediate=false num_chunks=1 labels="{container=\"webshop-demo\"}"
+level=info ts=2025-12-30T19:39:02.097532Z caller=flush.go:167 msg="flushing stream" user=fake fp=da4bdae112918dd9 immediate=false num_chunks=1 labels="{container=\"order-service\"}"
+172.30.0.1 - - [30/Dec/2025:19:39:08 +0000] "GET /products/create HTTP/1.1" 200 1764 "https://localhost:8444/products" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:39:18 +0000] "POST /products/create HTTP/1.1" 302 0 "https://localhost:8444/products/create" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+172.30.0.1 - - [30/Dec/2025:19:39:18 +0000] "GET /products HTTP/1.1" 200 2277 "https://localhost:8444/products/create" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+level=info ts=2025-12-30T19:39:21.368131522Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2025-12-30T19:39:21.368222416Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2025-12-30T19:39:21.368296439Z caller=table.go:318 msg="handing over indexes to shipper index_20452"
+level=info ts=2025-12-30T19:39:21.3683113Z caller=table.go:334 msg="finished handing over table index_20452"
+level=info ts=2025-12-30T19:39:32.020025957Z caller=flush.go:167 msg="flushing stream" user=fake fp=8cea53b36d354d98 immediate=false num_chunks=1 labels="{container=\"reverse-proxy\", status=\"404\"}"
+[pool-1-thread-2] INFO com.example.warehouse.WarehouseApplication - Received request: GET /
+172.30.0.1 - - [30/Dec/2025:19:39:37 +0000] "GET / HTTP/1.1" 200 1210 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+SecurityFilter: Insufficient permissions. Roles: [product-manager]
+SecurityFilter: Sending error 403: Insufficient permissions
+172.30.0.1 - - [30/Dec/2025:19:39:42 +0000] "GET /products HTTP/1.1" 403 75 "https://localhost:8445/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+SecurityFilter: Insufficient permissions. Roles: [product-manager]
+SecurityFilter: Sending error 403: Insufficient permissions
+172.30.0.1 - - [30/Dec/2025:19:39:57 +0000] "GET /fulfillment HTTP/1.1" 403 75 "https://localhost:8445/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"

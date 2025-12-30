@@ -17,11 +17,11 @@ describe('Shopping Cart', () => {
 
     // 2. Add product to cart
     cy.contains('tr', productName).within(() => {
-      cy.contains('Add to Cart').click();
+      cy.contains('button', 'Add to Cart').click();
     });
 
     // 3. Go to cart page
-    cy.contains('View Cart').click();
+    cy.contains('button', 'View Cart').click();
     cy.url().should('include', '/cart');
     cy.contains('h1', 'Shopping Cart');
 
@@ -31,7 +31,7 @@ describe('Shopping Cart', () => {
 
     // 5. Remove product from cart
     cy.contains('tr', productName).within(() => {
-      cy.contains('Remove').click();
+      cy.contains('button', 'Remove').click();
     });
 
     // 6. Verify cart is empty
@@ -46,25 +46,25 @@ describe('Shopping Cart', () => {
     // The sample product has stock=10
     for (let i = 0; i < 10; i++) {
       cy.contains('tr', productName).within(() => {
-        cy.contains('Add to Cart').click();
+        cy.contains('button', 'Add to Cart').click();
       });
     }
 
     // 3. Verify cart quantity
-    cy.contains('View Cart').click();
+    cy.contains('button', 'View Cart').click();
     cy.contains('tr', productName).within(() => {
       cy.contains('td', '10'); // Quantity should be 10
     });
 
     // 4. Go back and try to add one more
-    cy.contains('Back to Products').click();
+    cy.contains('button', 'Back to Products').click();
     cy.contains('tr', productName).within(() => {
-      cy.contains('Add to Cart').click();
+      cy.contains('button', 'Add to Cart').click();
     });
     // We can't easily test the alert, but we can check the cart quantity hasn't changed
 
     // 5. Verify cart quantity is still 10
-    cy.contains('View Cart').click();
+    cy.contains('button', 'View Cart').click();
     cy.contains('tr', productName).within(() => {
       cy.contains('td', '10');
     });

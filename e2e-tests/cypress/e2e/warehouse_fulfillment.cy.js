@@ -10,7 +10,7 @@ describe('Warehouse Order Fulfillment', () => {
 
     // Manual Sync required
     cy.contains('tr', productName).within(() => {
-      cy.contains('Sync').click();
+      cy.contains('button', 'Sync').click();
     });
 
     cy.clearCookies();
@@ -27,7 +27,7 @@ describe('Warehouse Order Fulfillment', () => {
     cy.clearCookies();
     cy.loginToOrderService();
     cy.contains('tr', 'PENDING_CONFIRMATION', { timeout: 10000 }).within(() => {
-        cy.contains('Confirm').click();
+        cy.contains('button', 'Confirm').click();
     });
 
     // 4. Verify: Order appears in Warehouse Fulfillment UI

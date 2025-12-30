@@ -49,7 +49,7 @@ Cypress.Commands.add('loginToOrderService', (username = 'o-user', password = 'o-
 Cypress.Commands.add('createProductInPM', (product) => {
   const pmUrl = 'https://reverse-proxy:8444';
   cy.visit(pmUrl + '/products');
-  cy.contains('Create New Product').click();
+  cy.contains('button', 'Create New Product').click();
   cy.get('input[name="type"]').clear().type(product.type || 'TestType');
   cy.get('input[name="name"]').type(product.name);
   cy.get('input[name="price"]').clear().type(product.price || '10.00');
@@ -65,7 +65,7 @@ Cypress.Commands.add('deleteProductInPM', (productName) => {
   const pmUrl = 'https://reverse-proxy:8444';
   cy.visit(pmUrl + '/products');
   cy.contains('tr', productName).within(() => {
-    cy.contains('Delete').click();
+    cy.contains('button', 'Delete').click();
   });
   cy.get('button[type="submit"]').click();
   cy.contains(productName).should('not.exist');
@@ -105,6 +105,6 @@ Cypress.Commands.add('addProductToCart', (productName) => {
 });
 
 Cypress.Commands.add('checkoutCart', () => {
-  cy.contains('View Cart').click();
+  cy.contains('button', 'View Cart').click();
   cy.contains('Checkout').click();
 });

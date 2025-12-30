@@ -82,7 +82,7 @@ public class DeliveryController implements HttpHandler {
                 sb.append("<td>").append(d.getSender()).append("</td>");
                 sb.append("<td>").append(d.getIndividuals().size()).append("</td>");
                 sb.append("<td>");
-                sb.append("<a href='/deliveries/view?id=").append(d.getId()).append("' class='btn btn-primary'>View</a>");
+                sb.append("<button onclick=\"window.location.href='/deliveries/view?id=").append(d.getId()).append("'\" class='btn btn-primary'>View</button>");
                 sb.append("<form action='/deliveries/return' method='post' style='display:inline;'>");
                 sb.append("<input type='hidden' name='id' value='").append(d.getId()).append("'>");
                 sb.append("<button type='submit' class='btn btn-danger'>Return</button>");
@@ -91,7 +91,7 @@ public class DeliveryController implements HttpHandler {
                 sb.append("</tr>");
             }
             sb.append("</tbody></table>");
-            sb.append("<a href='/products' class='btn btn-secondary'>Back to Products</a>");
+            sb.append("<button onclick=\"window.location.href='/products'\" class='btn btn-secondary'>Back to Products</button>");
             sb.append("</div></body></html>");
             sendResponse(exchange, 200, sb.toString());
         } catch (SQLException e) {
@@ -148,7 +148,7 @@ public class DeliveryController implements HttpHandler {
                 sb.append("</tr>");
             }
             sb.append("</tbody></table>");
-            sb.append("<a href='/deliveries' class='btn btn-secondary'>Back to Deliveries</a>");
+            sb.append("<button onclick=\"window.location.href='/deliveries'\" class='btn btn-secondary'>Back to Deliveries</button>");
             sb.append("</div></body></html>");
             sendResponse(exchange, 200, sb.toString());
         } catch (SQLException e) {

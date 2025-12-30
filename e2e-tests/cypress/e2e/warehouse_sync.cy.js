@@ -51,7 +51,7 @@ describe('Warehouse Synchronization', () => {
     // Manual Sync required
     cy.url().should('include', '/products');
     cy.contains('tr', productName).should('be.visible').within(() => {
-      cy.contains('a', 'Sync').should('be.visible').click();
+      cy.contains('button', 'Sync').should('be.visible').click();
     });
     
     cy.wait(1000);
@@ -69,7 +69,7 @@ describe('Warehouse Synchronization', () => {
     cy.visit('https://reverse-proxy:8444/products');
     
     cy.contains('tr', productName).within(() => {
-      cy.contains('Edit').click();
+      cy.contains('button', 'Edit').click();
     });
     cy.get('input[name="name"]').clear().type(productUpdatedName);
     cy.get('button[type="submit"]').click();
@@ -77,7 +77,7 @@ describe('Warehouse Synchronization', () => {
 
     // Manual Sync required
     cy.contains('tr', productUpdatedName).within(() => {
-      cy.contains('a', 'Sync').should('be.visible').click();
+      cy.contains('button', 'Sync').should('be.visible').click();
     });
     
     cy.wait(1000);

@@ -31,6 +31,17 @@ public class ProductManagementApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductManagementApplication.class);
 
+    private static final String CSS = 
+        "body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }" +
+        ".container { max-width: 1200px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }" +
+        "h1 { color: #343A40; }" +
+        ".btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; }" +
+        ".btn-primary { background-color: #007BFF; }" +
+        ".btn-secondary { background-color: #6C757D; }" +
+        ".btn-success { background-color: #28A745; }" +
+        "input[type='text'], input[type='password'] { padding: 8px; border: 1px solid #CED4DA; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }" +
+        "label { display: block; font-weight: bold; margin-bottom: 5px; }";
+
     public static void main(String[] args) throws IOException, SQLException {
         // --- Database Setup ---
         String dbUrl = System.getenv().getOrDefault("DB_URL", "jdbc:postgresql://localhost:5433/postgres");
@@ -72,7 +83,10 @@ public class ProductManagementApplication {
             logger.info("Received request: {} {}", exchange.getRequestMethod(), path);
             if ("/".equals(path)) {
                 // Fixed: Changed title to match Cypress test expectation
-                String html = "<html><body><h1>Product Management System</h1><a href='/products'>View Products</a></body></html>";
+                String html = "<!DOCTYPE html><html><head><style>" + CSS + "</style></head><body><div class='container'>" +
+                              "<h1>Product Management System</h1>" +
+                              "<button onclick=\"window.location.href='/products'\" class='btn btn-primary'>View Products</button>" +
+                              "</div></body></html>";
                 byte[] bytes = html.getBytes(StandardCharsets.UTF_8);
                 exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
                 exchange.sendResponseHeaders(200, bytes.length);
@@ -161,19 +175,19 @@ public class ProductManagementApplication {
                         redirect(t, "/products");
                     } else {
                         logger.warn("Login failed for user: {}. Status: {}. Body: {}", username, response.statusCode(), response.body());
-                        sendResponse(t, 401, "<h1>Login Failed</h1><p>Invalid credentials</p><a href='/login'>Try Again</a>");
+                        sendResponse(t, 401, "<h1>Login Failed</h1><p>Invalid credentials</p><button onclick=\"window.location.href='/login'\" class='btn btn-primary'>Try Again</button>");
                     }
                 } catch (InterruptedException e) {
                     logger.error("Error during login", e);
                     sendResponse(t, 500, "<h1>Error</h1><p>" + e.getMessage() + "</p>");
                 }
             } else {
-                String body = "<h1>Login</h1>" +
+                String body = "<html><head><style>" + CSS + "</style></head><body><div class='container'><h1>Login</h1>" +
                               "<form action='/login' method='post'>" +
                               "<label>Username</label><input type='text' name='username'>" +
                               "<label>Password</label><input type='password' name='password'>" +
                               "<button type='submit' class='btn btn-primary'>Login</button>" +
-                              "</form>";
+                              "</form></div></body></html>";
                 sendResponse(t, 200, body);
             }
         }

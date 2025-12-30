@@ -6,7 +6,7 @@ describe('Navigation Links', () => {
   it('should navigate correctly in Webshop', () => {
     cy.visit(webshopUrl);
     cy.contains('h1', 'Welcome to the Webshop!');
-    cy.contains('View Products').click();
+    cy.contains('button', 'View Products').click();
     cy.url().should('include', '/products');
     cy.contains('h1', 'Webshop Products');
   });
@@ -20,7 +20,7 @@ describe('Navigation Links', () => {
 
     cy.visit(pmUrl);
     cy.contains('h1', 'Product Management System');
-    cy.contains('View Products').click();
+    cy.contains('button', 'View Products').click();
     cy.url().should('include', '/products');
     cy.contains('h1', 'Products');
   });
@@ -36,7 +36,7 @@ describe('Navigation Links', () => {
     cy.contains('h1', 'Warehouse Service');
     
     // Check Products Link
-    cy.contains('View Products').click();
+    cy.contains('button', 'View Products').click();
     cy.url().should('include', '/products');
     cy.contains('h1', 'Warehouse Products');
 
@@ -44,7 +44,7 @@ describe('Navigation Links', () => {
     cy.visit(warehouseUrl);
     
     // Check Deliveries Link
-    cy.contains('Deliveries').click();
+    cy.contains('button', 'Deliveries').click();
     cy.url().should('include', '/deliveries');
     cy.contains('h1', 'Deliveries');
   });

@@ -87,8 +87,8 @@ public class ProductController implements HttpHandler {
             html.append("<div style='display:flex; justify-content:space-between; align-items:center;'>");
             html.append("<h1>Webshop Products</h1>");
             html.append("<div>");
-            html.append("<a href='/cart' class='btn btn-secondary' style='margin-right: 10px;'>View Cart</a>");
-            html.append("<a href='" + logoutUrl + "' class='btn btn-secondary'>Logout</a>");
+            html.append("<button onclick=\"window.location.href='/cart'\" class='btn btn-secondary' style='margin-right: 10px;'>View Cart</button>");
+            html.append("<button onclick=\"window.location.href='" + logoutUrl + "'\" class='btn btn-secondary'>Logout</button>");
             html.append("</div>");
             html.append("</div>");
             html.append("<table>");

@@ -17,7 +17,7 @@ describe('Warehouse Delivery Management', () => {
 
     // 2. Add Item
     cy.contains('tr', senderName).within(() => {
-      cy.contains('View').click();
+      cy.contains('button', 'View').click();
     });
     cy.contains('h1', 'Delivery #');
     cy.get('select[name="productId"]').select(productName);
@@ -30,9 +30,9 @@ describe('Warehouse Delivery Management', () => {
     cy.contains('td', 'New').should('be.visible');
 
     // 4. Return Delivery
-    cy.contains('Back to Deliveries').click();
+    cy.contains('button', 'Back to Deliveries').click();
     cy.contains('tr', senderName).within(() => {
-      cy.contains('Return').click();
+      cy.contains('button', 'Return').click();
     });
     cy.contains('td', senderName).should('not.exist');
   });

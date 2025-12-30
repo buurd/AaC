@@ -94,7 +94,7 @@ public class ShoppingCartController implements HttpHandler {
         html.append("<tbody id='cart-body'></tbody>");
         html.append("</table>");
         html.append("<button id='checkout-btn' onclick='checkout()' class='btn btn-success'>Checkout</button> ");
-        html.append("<a href='/products' class='btn btn-secondary'>Back to Products</a>");
+        html.append("<button onclick=\"window.location.href='/products'\" class='btn btn-secondary'>Back to Products</button>");
         html.append("</div></body></html>");
         
         String response = html.toString();

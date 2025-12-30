@@ -107,11 +107,11 @@ public class WebshopApplication {
                 String html = "<!DOCTYPE html><html><head><style>" + CSS + "</style></head><body><div class='container'>" +
                               "<h1>Welcome to the Webshop!</h1>" +
                               "<p>Browse our amazing products.</p>" +
-                              "<a href='/products' class='btn btn-primary'>View Products</a>" +
-                              "<a href='/my-orders' class='btn btn-primary' style='margin-left:10px;'>My Orders</a>" +
-                              "<a href='/login' class='btn btn-primary' style='margin-left:10px;'>Login</a>" +
-                              "<a href='" + registerUrl + "' class='btn btn-success' style='margin-left:10px;'>Register</a>" +
-                              "<a href='" + logoutUrl + "' class='btn btn-secondary' style='margin-left:10px;'>Logout</a>" +
+                              "<button onclick=\"window.location.href='/products'\" class='btn btn-primary'>View Products</button>" +
+                              "<button onclick=\"window.location.href='/my-orders'\" class='btn btn-primary' style='margin-left:10px;'>My Orders</button>" +
+                              "<button onclick=\"window.location.href='/login'\" class='btn btn-primary' style='margin-left:10px;'>Login</button>" +
+                              "<button onclick=\"window.location.href='" + registerUrl + "'\" class='btn btn-success' style='margin-left:10px;'>Register</button>" +
+                              "<button onclick=\"window.location.href='" + logoutUrl + "'\" class='btn btn-secondary' style='margin-left:10px;'>Logout</button>" +
                               "</div></body></html>";
                 byte[] bytes = html.getBytes(StandardCharsets.UTF_8);
                 exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");

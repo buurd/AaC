@@ -45,7 +45,7 @@ describe('Product Synchronization', () => {
     cy.url().should('include', '/products');
     cy.contains('tr', productName).should('be.visible').within(() => {
       // Force click in case of overlay or visibility issues, though should be visible
-      cy.contains('a', 'Sync').should('be.visible').click();
+      cy.contains('button', 'Sync').should('be.visible').click();
     });
     
     // Wait a moment for the server to process the sync request (async)
@@ -57,7 +57,7 @@ describe('Product Synchronization', () => {
 
     // 3. Update
     cy.contains('tr', productName).within(() => {
-      cy.contains('Edit').click();
+      cy.contains('button', 'Edit').click();
     });
     cy.get('input[name="price"]').clear().type('200.00');
     cy.get('button[type="submit"]').click();
@@ -65,7 +65,7 @@ describe('Product Synchronization', () => {
 
     // Manual Sync required
     cy.contains('tr', productName).within(() => {
-      cy.contains('a', 'Sync').should('be.visible').click();
+      cy.contains('button', 'Sync').should('be.visible').click();
     });
     
     cy.wait(1000);

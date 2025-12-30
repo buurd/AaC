@@ -30,7 +30,7 @@ describe('User Registration Flow', () => {
     cy.url().should('include', webshopUrl);
     
     // 4. Login with the new credentials
-    cy.contains('a', 'Login').click();
+    cy.contains('button', 'Login').click();
     
     cy.get('input[name="username"]').type(username);
     cy.get('input[name="password"]').type(password);
@@ -41,7 +41,7 @@ describe('User Registration Flow', () => {
     cy.getCookie('webshop_auth_token').should('exist');
 
     // 6. Logout
-    cy.contains('a', 'Logout').click();
+    cy.contains('button', 'Logout').click();
 
     // 7. Handle Keycloak logout confirmation page
     cy.origin(keycloakUrl, () => {

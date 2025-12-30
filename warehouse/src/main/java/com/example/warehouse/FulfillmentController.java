@@ -57,7 +57,7 @@ public class FulfillmentController implements HttpHandler {
             html.append("<div class='container'>");
             html.append("<div style='display:flex; justify-content:space-between; align-items:center;'>");
             html.append("<h1>Order Fulfillment</h1>");
-            html.append("<a href='/' class='btn btn-secondary'>Back to Dashboard</a>");
+            html.append("<button onclick=\"window.location.href='/'\" class='btn btn-secondary'>Back to Dashboard</button>");
             html.append("</div>");
             
             html.append("<table><thead><tr><th>Order ID</th><th>Status</th><th>Action</th></tr></thead><tbody>");

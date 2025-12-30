@@ -12,7 +12,7 @@ describe('Product Management CRUD', () => {
 
     // 2. Edit
     cy.contains('tr', productName).within(() => {
-      cy.contains('Edit').click();
+      cy.contains('button', 'Edit').click();
     });
     cy.url().should('include', '/products/edit');
     cy.get('input[name="name"]').clear().type(productEditedName);
