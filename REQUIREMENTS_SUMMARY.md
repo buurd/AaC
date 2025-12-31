@@ -28,6 +28,7 @@ Warehouse Staff manage the physical inventory.
 *   **Access**: The Warehouse Staff uses the Warehouse Service (**REQ-027**).
 *   **Inventory View**: Staff can view the list of products known to the warehouse (**REQ-034**).
 *   **Delivery Management**: The system supports the concept of Deliveries containing Product Individuals (**REQ-036**). Staff can create deliveries (**REQ-037**), add items to them (**REQ-038**), and return deliveries (**REQ-039**).
+*   **Variant Visibility**: Staff can see the full variant name (including attributes) for items in a delivery (**REQ-073**).
 *   **Order Fulfillment**: Staff can view pending orders and mark them as shipped (**REQ-062**).
 
 ### Order Management (Order Manager)

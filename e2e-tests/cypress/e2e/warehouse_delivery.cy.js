@@ -28,6 +28,8 @@ describe('Warehouse Delivery Management', () => {
     // 3. Verify Item
     cy.contains('td', serialNumber).should('be.visible');
     cy.contains('td', 'New').should('be.visible');
+    // Verify that the product name is displayed (REQ-073)
+    cy.contains('td', productName).should('be.visible');
 
     // 4. Return Delivery
     cy.contains('button', 'Back to Deliveries').click();

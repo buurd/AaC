@@ -139,6 +139,7 @@ public class DeliveryController implements HttpHandler {
             sb.append("<input type='hidden' name='deliveryId' value='").append(d.getId()).append("'>");
             sb.append("<label>Product</label><select name='productId'>");
             for (Product p : products) {
+                // Display the product name which now includes variant info (e.g. "T-Shirt - Red M")
                 sb.append("<option value='").append(p.getId()).append("'>").append(p.getName()).append("</option>");
             }
             sb.append("</select>");
@@ -148,10 +149,14 @@ public class DeliveryController implements HttpHandler {
             sb.append("</form>");
 
             sb.append("<h3>Items</h3>");
-            sb.append("<table><thead><tr><th>Product ID</th><th>Serial Number</th><th>State</th></tr></thead><tbody>");
+            sb.append("<table><thead><tr><th>Product</th><th>Serial Number</th><th>State</th></tr></thead><tbody>");
             for (ProductIndividual item : d.getIndividuals()) {
+                Product p = productRepository.findById(item.getProductId());
+                String productName = (p != null) ? p.getName() : "Unknown Product (" + item.getProductId() + ")";
+                
                 sb.append("<tr>");
-                sb.append("<td>").append(item.getProductId()).append("</td>");
+                // REQ-073: Display variant name
+                sb.append("<td>").append(productName).append("</td>");
                 sb.append("<td>").append(item.getSerialNumber()).append("</td>");
                 sb.append("<td>").append(item.getState()).append("</td>");
                 sb.append("</tr>");
