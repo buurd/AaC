@@ -10,6 +10,11 @@ CREATE TABLE IF NOT EXISTS products (
 );
 
 -- Seed Data
--- Matches PM ID 1 and Warehouse Stock 10
-INSERT INTO products (pm_id, type, name, description, price, unit, stock)
-VALUES (1, 'Book', 'The Hitchhiker''s Guide to the Galaxy', 'A sci-fi comedy classic.', 12.50, 'pcs', 10);
+-- Matches PM IDs 1-6 and Warehouse Stock levels
+INSERT INTO products (pm_id, type, name, description, price, unit, stock) VALUES
+(1, 'T-Shirt', 'Classic T-Shirt - Red S', '100% Cotton', 20.00, 'pcs', 5),
+(2, 'T-Shirt', 'Classic T-Shirt - Red M', '100% Cotton', 20.00, 'pcs', 8),
+(3, 'T-Shirt', 'Classic T-Shirt - Red L', '100% Cotton', 20.00, 'pcs', 2),
+(4, 'T-Shirt', 'Classic T-Shirt - Blue S', '100% Cotton', 20.00, 'pcs', 4),
+(5, 'T-Shirt', 'Classic T-Shirt - Blue M', '100% Cotton', 20.00, 'pcs', 6),
+(6, 'T-Shirt', 'Classic T-Shirt - Blue L', '100% Cotton', 20.00, 'pcs', 3);

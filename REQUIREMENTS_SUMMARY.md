@@ -10,6 +10,7 @@ The primary goal is to provide a seamless shopping experience for customers.
 *   **Registration**: Customers can register a new account (**REQ-063**).
 *   **Navigation**: The root page provides clear navigation buttons to main functionalities (**REQ-040**).
 *   **Browsing**: Customers can view a list of available products (**REQ-007**).
+*   **Variant Display**: Customers see product variants as distinct items with full descriptive names (**REQ-074**).
 *   **Stock Visibility**: The current stock quantity is displayed for each product (**REQ-041**).
 *   **Shopping Cart**: Customers can add products to a client-side shopping cart, view their cart, and remove items (**REQ-047**).
 *   **Ordering**: Customers can place orders via the Order Service (**REQ-050**).
@@ -35,6 +36,7 @@ Warehouse Staff manage the physical inventory.
 Order Managers oversee the order fulfillment process.
 *   **Access**: The Order Manager uses the Order Service (**REQ-051**).
 *   **Order List**: Managers can view a list of placed orders (**REQ-052**).
+*   **Variant Handling**: The system handles orders for specific product variants (**REQ-075**).
 
 ---
 

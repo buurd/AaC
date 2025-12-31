@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: order-variant-handling
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-075
+      type: functional
+      c4_level: component
+      description: "The Order Service shall handle orders for specific product variants."
+      priority: high
+      tracesTo: "REQ-050"
+      functional_validation:
+        test_file: "e2e-tests/cypress/e2e/order_flow.cy.js"

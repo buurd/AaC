@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: webshop-variant-display
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-074
+      type: functional
+      c4_level: component
+      description: "The Webshop shall display product variants as distinct items with their full descriptive names."
+      priority: high
+      tracesTo: "REQ-006"
+      functional_validation:
+        test_file: "e2e-tests/cypress/e2e/product_variations.cy.js"
