@@ -13,7 +13,7 @@ spec:
       tracesTo: "REQ-065"
       validation_policy: "policies/check_code_structure.rego"
       code_validation:
-        file_path: "orderService/src/main/java/com/example/order/InvoiceController.java"
+        file_path: "applications/orderService/src/main/java/com/example/order/InvoiceController.java"
         method_name: "markPaid"
       model_validation:
         source: "Order Manager"

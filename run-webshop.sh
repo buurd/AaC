@@ -45,25 +45,25 @@ mkdir -p ./m2-cache
 
 echo "--- Building Webshop ---"
 docker run --rm \
-    -v "$(pwd)/webshop:/usr/src/mymaven" \
+    -v "$(pwd)/applications/webshop:/usr/src/mymaven" \
     -v "$(pwd)/m2-cache:/root/.m2" \
     -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
 echo "--- Building Product Management System ---"
 docker run --rm \
-    -v "$(pwd)/productManagementSystem:/usr/src/mymaven" \
+    -v "$(pwd)/applications/productManagementSystem:/usr/src/mymaven" \
     -v "$(pwd)/m2-cache:/root/.m2" \
     -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
 echo "--- Building Warehouse Service ---"
 docker run --rm \
-    -v "$(pwd)/warehouse:/usr/src/mymaven" \
+    -v "$(pwd)/applications/warehouse:/usr/src/mymaven" \
     -v "$(pwd)/m2-cache:/root/.m2" \
     -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
 echo "--- Building Order Service ---"
 docker run --rm \
-    -v "$(pwd)/orderService:/usr/src/mymaven" \
+    -v "$(pwd)/applications/orderService:/usr/src/mymaven" \
     -v "$(pwd)/m2-cache:/root/.m2" \
     -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
@@ -143,7 +143,7 @@ docker run -d --rm --network webshop-net --name keycloak \
 # Start Webshop
 echo "--- Starting Webshop ---"
 docker run -d --rm --network webshop-net --name webshop-demo \
-    -v "$(pwd)/webshop/target:/app" \
+    -v "$(pwd)/applications/webshop/target:/app" \
     -e DB_URL=jdbc:postgresql://db-webshop:5432/postgres \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
@@ -154,7 +154,7 @@ docker run -d --rm --network webshop-net --name webshop-demo \
 # Start Product Management System
 echo "--- Starting Product Management System ---"
 docker run -d --rm --network webshop-net --name pm-demo \
-    -v "$(pwd)/productManagementSystem/target:/app" \
+    -v "$(pwd)/applications/productManagementSystem/target:/app" \
     -e DB_URL=jdbc:postgresql://db-pm:5432/postgres \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
@@ -170,7 +170,7 @@ docker run -d --rm --network webshop-net --name pm-demo \
 # Start Warehouse Service
 echo "--- Starting Warehouse Service ---"
 docker run -d --rm --network webshop-net --name warehouse-demo \
-    -v "$(pwd)/warehouse/target:/app" \
+    -v "$(pwd)/applications/warehouse/target:/app" \
     -e DB_URL=jdbc:postgresql://db-warehouse:5432/postgres \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
@@ -185,7 +185,7 @@ docker run -d --rm --network webshop-net --name warehouse-demo \
 # Start Order Service
 echo "--- Starting Order Service ---"
 docker run -d --rm --network webshop-net --name order-service \
-    -v "$(pwd)/orderService/target:/app" \
+    -v "$(pwd)/applications/orderService/target:/app" \
     -e DB_URL=jdbc:postgresql://db-order:5432/postgres \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \

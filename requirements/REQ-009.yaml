@@ -13,5 +13,5 @@ spec:
       tracesTo: "REQ-006"
       validation_policy: "policies/check_dependency.rego"
       code_validation:
-        source_file: "webshop/src/main/java/com/example/webshop/ProductController.java"
+        source_file: "applications/webshop/src/main/java/com/example/webshop/ProductController.java"
         dependency_class: "ProductRepository"

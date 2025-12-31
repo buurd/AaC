@@ -224,13 +224,13 @@ MODULES="webshop productManagementSystem warehouse orderService"
 # 1. Run Consumer Tests (Generate Pacts)
 echo "Phase 1: Generating Contracts (Consumer Tests)..."
 for module in $MODULES; do
-    if [ -d "$module" ] && [ -f "$module/pom.xml" ]; then
+    if [ -d "applications/$module" ] && [ -f "applications/$module/pom.xml" ]; then
         echo "  Scanning $module for consumer tests..."
         # We use 'mvn test' but filter by tag 'pact-consumer'.
         # If no tests match, it might fail or pass depending on config, so we allow failure if no tests found but check output?
         # Better: Just run it. If it fails, it fails. If no tests, it passes (usually).
         if ! docker run --rm \
-            -v "$(pwd)/$module:/usr/src/mymaven" \
+            -v "$(pwd)/applications/$module:/usr/src/mymaven" \
             -v "$(pwd)/pacts:/usr/pacts" \
             -v "$(pwd)/m2-cache:/root/.m2" \
             -w /usr/src/mymaven \
@@ -244,10 +244,10 @@ done
 # 2. Run Provider Tests (Verify Pacts)
 echo "Phase 2: Verifying Contracts (Provider Tests)..."
 for module in $MODULES; do
-    if [ -d "$module" ] && [ -f "$module/pom.xml" ]; then
+    if [ -d "applications/$module" ] && [ -f "applications/$module/pom.xml" ]; then
         echo "  Scanning $module for provider tests..."
         if ! docker run --rm \
-            -v "$(pwd)/$module:/usr/src/mymaven" \
+            -v "$(pwd)/applications/$module:/usr/src/mymaven" \
             -v "$(pwd)/pacts:/usr/pacts" \
             -v "$(pwd)/m2-cache:/root/.m2" \
             -w /usr/src/mymaven \
@@ -272,25 +272,25 @@ mkdir -p ./m2-cache
 
 echo "Compiling Webshop application..."
 docker run --rm \
-    -v "$(pwd)/webshop:/usr/src/mymaven" \
+    -v "$(pwd)/applications/webshop:/usr/src/mymaven" \
     -v "$(pwd)/m2-cache:/root/.m2" \
     -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
 echo "Compiling Product Management application..."
 docker run --rm \
-    -v "$(pwd)/productManagementSystem:/usr/src/mymaven" \
+    -v "$(pwd)/applications/productManagementSystem:/usr/src/mymaven" \
     -v "$(pwd)/m2-cache:/root/.m2" \
     -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
 echo "Compiling Warehouse Service..."
 docker run --rm \
-    -v "$(pwd)/warehouse:/usr/src/mymaven" \
+    -v "$(pwd)/applications/warehouse:/usr/src/mymaven" \
     -v "$(pwd)/m2-cache:/root/.m2" \
     -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
 echo "Compiling Order Service..."
 docker run --rm \
-    -v "$(pwd)/orderService:/usr/src/mymaven" \
+    -v "$(pwd)/applications/orderService:/usr/src/mymaven" \
     -v "$(pwd)/m2-cache:/root/.m2" \
     -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
@@ -340,7 +340,7 @@ echo "Keycloak container started with ID: $KEYCLOAK_CONTAINER_ID"
 echo "Starting Webshop server in a Docker container..."
 # Named webshop-demo for PM to find it
 WEBSHOP_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name webshop-demo \
-    -v "$(pwd)/webshop/target:/app" \
+    -v "$(pwd)/applications/webshop/target:/app" \
     -e DB_URL=jdbc:postgresql://db_webshop:5432/postgres \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
@@ -353,7 +353,7 @@ echo "Webshop container started with ID: $WEBSHOP_CONTAINER_ID"
 echo "Starting Product Management server in a Docker container..."
 # Fixed name to pm-demo to match nginx.conf
 PM_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name pm-demo \
-    -v "$(pwd)/productManagementSystem/target:/app" \
+    -v "$(pwd)/applications/productManagementSystem/target:/app" \
     -e DB_URL=jdbc:postgresql://db_pm:5432/postgres \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
@@ -371,7 +371,7 @@ echo "Product Management container started with ID: $PM_CONTAINER_ID"
 echo "Starting Warehouse Service in a Docker container..."
 # Named warehouse-demo for PM to find it
 WAREHOUSE_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name warehouse-demo \
-    -v "$(pwd)/warehouse/target:/app" \
+    -v "$(pwd)/applications/warehouse/target:/app" \
     -e DB_URL=jdbc:postgresql://db_warehouse:5432/postgres \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
@@ -387,7 +387,7 @@ echo "Warehouse container started with ID: $WAREHOUSE_CONTAINER_ID"
 # Start Order Service container
 echo "Starting Order Service in a Docker container..."
 ORDER_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name order-service \
-    -v "$(pwd)/orderService/target:/app" \
+    -v "$(pwd)/applications/orderService/target:/app" \
     -e DB_URL=jdbc:postgresql://db_order:5432/postgres \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \

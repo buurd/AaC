@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: product-groups
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-070
+      type: functional
+      c4_level: component
+      description: "The Product Management System shall support Product Groups to organize variants."
+      priority: high
+      tracesTo: "REQ-012"
+      validation_policy: "policies/check_code_structure.rego"
+      code_validation:
+        file_path: "applications/productManagementSystem/src/main/java/com/example/productmanagement/ProductGroup.java"
+        contains: "class ProductGroup"

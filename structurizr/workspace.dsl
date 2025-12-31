@@ -377,6 +377,11 @@ workspace "My System" "My System Description" {
             tags "Interaction"
         }
 
+        // Added for ProductVariationFlow
+        productManager -> pmProductController "Requests generation of variants" {
+            tags "Interaction"
+        }
+
 
         // Component-level relationships for webshop
         productController -> productRepository "Uses"
@@ -487,6 +492,14 @@ workspace "My System" "My System Description" {
             warehouseStockService -> stockSyncController "5. Sends stock update to Webshop"
             stockSyncController -> productRepository "6. Updates stock in Webshop DB"
             productRepository -> database "7. Writes to DB"
+        }
+
+        dynamic pmWebServer "ProductVariationFlow" "Product Variation Generation" {
+            productManager -> pmProductController "1. Requests generation of variants"
+            pmProductController -> pmProductService "2. Generates variants"
+            pmProductService -> pmProductRepository "3. Saves variants to DB"
+            pmProductService -> webServer "4. Syncs variants to Webshop"
+            pmProductService -> warehouseWebServer "5. Syncs variants to Warehouse"
         }
 
         container webshop "Webshop_Containers" "Webshop - Containers" {

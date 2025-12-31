@@ -91,6 +91,7 @@ public class ProductManagementApplication {
                               header +
                               "<h1>Product Management System</h1>" +
                               "<button onclick=\"window.location.href='/products'\" class='btn btn-primary'>View Products</button>" +
+                              "<button onclick=\"window.location.href='/groups'\" class='btn btn-primary'>View Product Groups</button>" +
                               "</div></body></html>";
                 byte[] bytes = html.getBytes(StandardCharsets.UTF_8);
                 exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
@@ -136,6 +137,9 @@ public class ProductManagementApplication {
 
         HttpContext productContext = server.createContext("/products", new ProductController(repository, productService));
         productContext.getFilters().add(securityFilter);
+        
+        HttpContext groupContext = server.createContext("/groups", new ProductController(repository, productService));
+        groupContext.getFilters().add(securityFilter);
 
         server.setExecutor(Executors.newCachedThreadPool());
         server.start();

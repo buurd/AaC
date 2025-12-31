@@ -13,7 +13,7 @@ spec:
       tracesTo: "REQ-016"
       validation_policy: "policies/check_class_structure.rego"
       code_validation:
-        file_path: "productManagementSystem/src/main/java/com/example/productmanagement/Product.java"
+        file_path: "applications/productManagementSystem/src/main/java/com/example/productmanagement/Product.java"
         class_name: "Product"
         fields:
           - name: "id"

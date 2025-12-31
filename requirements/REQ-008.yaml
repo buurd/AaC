@@ -13,7 +13,7 @@ spec:
       tracesTo: "REQ-006"
       validation_policy: "policies/check_class_structure.rego"
       code_validation:
-        file_path: "webshop/src/main/java/com/example/webshop/Product.java"
+        file_path: "applications/webshop/src/main/java/com/example/webshop/Product.java"
         class_name: "Product"
         fields:
           - name: "id"

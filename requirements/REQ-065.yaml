@@ -13,7 +13,7 @@ spec:
       tracesTo: "REQ-050"
       validation_policy: "policies/check_code_structure.rego"
       code_validation:
-        file_path: "orderService/src/main/java/com/example/order/Invoice.java"
+        file_path: "applications/orderService/src/main/java/com/example/order/Invoice.java"
         class_name: "Invoice"
       model_validation:
         component: "InvoiceRepository"

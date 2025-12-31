@@ -8,7 +8,7 @@ This document presents the system requirements in a narrative format, grouping t
 The primary goal is to provide a seamless shopping experience for customers.
 *   **Access**: The Customer uses the Webshop system (**REQ-001**).
 *   **Registration**: Customers can register a new account (**REQ-063**).
-*   **Navigation**: The root page provides clear navigation links to main functionalities (**REQ-040**).
+*   **Navigation**: The root page provides clear navigation buttons to main functionalities (**REQ-040**).
 *   **Browsing**: Customers can view a list of available products (**REQ-007**).
 *   **Stock Visibility**: The current stock quantity is displayed for each product (**REQ-041**).
 *   **Shopping Cart**: Customers can add products to a client-side shopping cart, view their cart, and remove items (**REQ-047**).
@@ -21,6 +21,7 @@ Product Managers need tools to maintain the product catalog.
 *   **Access**: The Product Manager uses the Product Management System (**REQ-010**).
 *   **Product List**: Managers can view all products in the system (**REQ-015**).
 *   **CRUD Operations**: The system provides a UI to Create (**REQ-016**, **REQ-021**), Edit (**REQ-017**, **REQ-022**), and Delete (**REQ-018**, **REQ-023**) products.
+*   **Product Variations**: Managers can create Product Groups (**REQ-070**) and generate variants based on attributes (**REQ-071**).
 
 ### Warehouse Operations (Warehouse Staff)
 Warehouse Staff manage the physical inventory.
@@ -45,6 +46,7 @@ When a Product Manager changes the catalog, updates are propagated.
 *   **Trigger**: The Product Management System sends updates when a product is created or updated (**REQ-025**) and deletions when a product is removed (**REQ-026**).
 *   **Destinations**: Updates are sent to the Webshop (**REQ-024**) and the Warehouse Service (**REQ-033**, **REQ-035**).
 *   **Mechanism**: The Warehouse exposes a sync API to receive these updates (**REQ-032**).
+*   **Flattening**: Variants are synced as individual products with descriptive names (**REQ-072**).
 
 ### Stock Synchronization (Warehouse -> Webshop)
 When inventory changes in the warehouse, the webshop is updated.

@@ -13,4 +13,4 @@ spec:
       tracesTo: "REQ-048"
       validation_policy: "policies/check_implementation.rego"
       implementation_validation:
-        file_path: "orderService/pom.xml"
+        file_path: "applications/orderService/pom.xml"

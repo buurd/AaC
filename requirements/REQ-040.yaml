@@ -8,7 +8,7 @@ spec:
     - id: REQ-040
       type: functional
       c4_level: component
-      description: "The root page of each service shall provide navigation links to its main functionalities."
+      description: "The root page of each service shall provide navigation buttons to its main functionalities."
       priority: medium
       tracesTo: "REQ-020"
       functional_validation:

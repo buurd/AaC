@@ -13,4 +13,4 @@ spec:
       tracesTo: "REQ-001"
       validation_policy: "policies/check_implementation.rego"
       implementation_validation:
-        file_path: "webshop/pom.xml"
+        file_path: "applications/webshop/pom.xml"

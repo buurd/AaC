@@ -9,9 +9,12 @@ import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ProductController implements HttpHandler {
 
@@ -35,12 +38,16 @@ public class ProductController implements HttpHandler {
         ".btn-primary { background-color: #007BFF; }" +
         ".btn-secondary { background-color: #6C757D; }" +
         ".btn-danger { background-color: #DC3545; }" +
-        "input[type='text'], input[type='number'], input[type='submit'] { padding: 8px; border: 1px solid #CED4DA; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }" +
+        "input[type='text'], input[type='number'], input[type='submit'], textarea { padding: 8px; border: 1px solid #CED4DA; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }" +
         "label { display: block; font-weight: bold; margin-bottom: 5px; }";
 
     private String getHeader() {
         return "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'>" +
+               "<div>" +
                "<button onclick=\"window.location.href='/'\" class='btn btn-primary'>PM Dashboard</button>" +
+               "<button onclick=\"window.location.href='/products'\" class='btn btn-secondary'>Products</button>" +
+               "<button onclick=\"window.location.href='/groups'\" class='btn btn-secondary'>Product Groups</button>" +
+               "</div>" +
                "<button onclick=\"window.location.href='/logout'\" class='btn btn-secondary'>Logout</button>" +
                "</div>";
     }
@@ -74,6 +81,24 @@ public class ProductController implements HttpHandler {
             if ("GET".equalsIgnoreCase(method)) {
                 handleSync(exchange);
             }
+        } else if ("/groups".equals(path) && "GET".equalsIgnoreCase(method)) {
+            handleListGroups(exchange);
+        } else if ("/groups/create".equals(path)) {
+            if ("GET".equalsIgnoreCase(method)) {
+                handleShowCreateGroupForm(exchange);
+            } else if ("POST".equalsIgnoreCase(method)) {
+                handleCreateGroup(exchange);
+            }
+        } else if (path.startsWith("/groups/generate")) {
+            if ("GET".equalsIgnoreCase(method)) {
+                handleShowGenerateVariantsForm(exchange);
+            } else if ("POST".equalsIgnoreCase(method)) {
+                handleGenerateVariants(exchange);
+            }
+        } else if (path.startsWith("/groups/sync")) {
+            if ("GET".equalsIgnoreCase(method)) {
+                handleSyncGroup(exchange);
+            }
         } else {
             sendResponse(exchange, 404, "Not Found");
         }
@@ -87,11 +112,13 @@ public class ProductController implements HttpHandler {
             html.append(getHeader());
             html.append("<h1>Products</h1>");
             html.append("<button onclick=\"window.location.href='/products/create'\" class='btn btn-primary'>Create New Product</button>");
-            html.append("<table><thead><tr><th>ID</th><th>Name</th><th>Price</th><th>Actions</th></tr></thead><tbody>");
+            html.append("<table><thead><tr><th>ID</th><th>Group</th><th>Name</th><th>Attributes</th><th>Price</th><th>Actions</th></tr></thead><tbody>");
             for (Product p : products) {
                 html.append("<tr>");
                 html.append("<td>").append(p.getId()).append("</td>");
+                html.append("<td>").append(p.getGroupId() != null ? p.getGroupId() : "-").append("</td>");
                 html.append("<td>").append(p.getName()).append("</td>");
+                html.append("<td>").append(formatAttributes(p.getAttributes())).append("</td>");
                 html.append("<td>").append(String.format("%.2f %s", p.getPrice(), p.getUnit())).append("</td>");
                 html.append("<td>");
                 html.append("<button onclick=\"window.location.href='/products/edit?id=").append(p.getId()).append("'\" class='btn btn-secondary'>Edit</button>");
@@ -147,9 +174,16 @@ public class ProductController implements HttpHandler {
                 sendResponse(exchange, 404, "Product not found");
                 return;
             }
+            String groupIdVal = p.getGroupId() != null ? String.valueOf(p.getGroupId()) : "";
+            // Ensure attributes are not null to avoid issues in form
+            String attributesVal = p.getAttributes() != null ? p.getAttributes() : "";
+            
             String form = "<h1>Edit Product</h1>" +
                           "<form action='/products/edit' method='post'>" +
                           "<input type='hidden' name='id' value='" + p.getId() + "'>" +
+                          "<input type='hidden' name='groupId' value='" + groupIdVal + "'>" +
+                          // Preserve attributes in a hidden field so they aren't lost on update
+                          "<input type='hidden' name='attributes' value='" + attributesVal.replace("'", "&apos;") + "'>" +
                           "<label>Type:</label><input type='text' name='type' value='" + p.getType() + "'><br>" +
                           "<label>Name:</label><input type='text' name='name' value='" + p.getName() + "'><br>" +
                           "<label>Description:</label><input type='text' name='description' value='" + p.getDescription() + "'><br>" +
@@ -170,11 +204,20 @@ public class ProductController implements HttpHandler {
             Map<String, String> params = parseFormData(exchange.getRequestBody());
             Product p = new Product();
             p.setId(Integer.parseInt(params.get("id")));
+            String groupIdStr = params.get("groupId");
+            if (groupIdStr != null && !groupIdStr.isEmpty()) {
+                p.setGroupId(Integer.parseInt(groupIdStr));
+            }
             p.setType(params.get("type"));
             p.setName(params.get("name"));
             p.setDescription(params.get("description"));
             p.setPrice(Double.parseDouble(params.get("price")));
             p.setUnit(params.get("unit"));
+            // Retrieve and set attributes so they are persisted
+            String attributes = params.get("attributes");
+            if (attributes != null) {
+                p.setAttributes(attributes);
+            }
             productService.updateProduct(p);
             redirect(exchange, "/products");
         } catch (SQLException | NumberFormatException e) {
@@ -228,6 +271,119 @@ public class ProductController implements HttpHandler {
         }
     }
 
+    // --- Group Handlers ---
+
+    private void handleListGroups(HttpExchange exchange) throws IOException {
+        try {
+            List<ProductGroup> groups = repository.findAllGroups();
+            StringBuilder html = new StringBuilder();
+            html.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body><div class='container'>");
+            html.append(getHeader());
+            html.append("<h1>Product Groups</h1>");
+            html.append("<button onclick=\"window.location.href='/groups/create'\" class='btn btn-primary'>Create New Group</button>");
+            html.append("<table><thead><tr><th>ID</th><th>Name</th><th>Base Price</th><th>Actions</th></tr></thead><tbody>");
+            for (ProductGroup g : groups) {
+                html.append("<tr>");
+                html.append("<td>").append(g.getId()).append("</td>");
+                html.append("<td>").append(g.getName()).append("</td>");
+                html.append("<td>").append(String.format("%.2f %s", g.getBasePrice(), g.getBaseUnit())).append("</td>");
+                html.append("<td>");
+                html.append("<button onclick=\"window.location.href='/groups/generate?id=").append(g.getId()).append("'\" class='btn btn-secondary'>Generate Variants</button>");
+                html.append("<button onclick=\"window.location.href='/groups/sync?id=").append(g.getId()).append("'\" class='btn btn-primary'>Sync All</button>");
+                html.append("</td>");
+                html.append("</tr>");
+            }
+            html.append("</tbody></table></div></body></html>");
+            sendResponse(exchange, 200, html.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            sendResponse(exchange, 500, "Database error");
+        }
+    }
+
+    private void handleShowCreateGroupForm(HttpExchange exchange) throws IOException {
+        String form = "<h1>Create Product Group</h1>" +
+                      "<form action='/groups/create' method='post'>" +
+                      "<label>Name:</label><input type='text' name='name'><br>" +
+                      "<label>Description:</label><input type='text' name='description'><br>" +
+                      "<label>Base Price:</label><input type='number' step='0.01' name='basePrice'><br>" +
+                      "<label>Base Unit:</label><input type='text' name='baseUnit' value='pcs'><br>" +
+                      "<button type='submit' class='btn btn-primary'>Create</button>" +
+                      "<button onclick=\"window.location.href='/groups'\" class='btn btn-secondary'>Cancel</button>" +
+                      "</form>";
+        sendResponse(exchange, 200, wrapInContainer(form));
+    }
+
+    private void handleCreateGroup(HttpExchange exchange) throws IOException {
+        try {
+            Map<String, String> params = parseFormData(exchange.getRequestBody());
+            ProductGroup g = new ProductGroup();
+            g.setName(params.get("name"));
+            g.setDescription(params.get("description"));
+            g.setBasePrice(Double.parseDouble(params.get("basePrice")));
+            g.setBaseUnit(params.get("baseUnit"));
+            productService.createProductGroup(g);
+            redirect(exchange, "/groups");
+        } catch (SQLException | NumberFormatException e) {
+            e.printStackTrace();
+            sendResponse(exchange, 500, "Failed to create group");
+        }
+    }
+
+    private void handleShowGenerateVariantsForm(HttpExchange exchange) throws IOException {
+        int id = Integer.parseInt(getQueryParam(exchange.getRequestURI().getQuery(), "id"));
+        String form = "<h1>Generate Variants</h1>" +
+                      "<form action='/groups/generate' method='post'>" +
+                      "<input type='hidden' name='id' value='" + id + "'>" +
+                      "<label>Attributes (Format: Name: Value1, Value2; Name2: Value3, Value4):</label><br>" +
+                      "<textarea name='attributes' rows='5' cols='50'>Color: Red, Blue\nSize: S, M, L</textarea><br>" +
+                      "<button type='submit' class='btn btn-primary'>Generate</button>" +
+                      "<button onclick=\"window.location.href='/groups'\" class='btn btn-secondary'>Cancel</button>" +
+                      "</form>";
+        sendResponse(exchange, 200, wrapInContainer(form));
+    }
+
+    private void handleGenerateVariants(HttpExchange exchange) throws IOException {
+        try {
+            Map<String, String> params = parseFormData(exchange.getRequestBody());
+            int id = Integer.parseInt(params.get("id"));
+            String attributesRaw = params.get("attributes");
+            
+            Map<String, List<String>> attributes = new HashMap<>();
+            if (attributesRaw != null) {
+                String[] lines = attributesRaw.split("\\r?\\n");
+                for (String line : lines) {
+                    if (line.trim().isEmpty()) continue;
+                    String[] parts = line.split(":");
+                    if (parts.length == 2) {
+                        String key = parts[0].trim();
+                        List<String> values = Arrays.stream(parts[1].split(","))
+                                                  .map(String::trim)
+                                                  .collect(Collectors.toList());
+                        attributes.put(key, values);
+                    }
+                }
+            }
+            
+            productService.generateVariants(id, attributes);
+            redirect(exchange, "/products");
+        } catch (SQLException | NumberFormatException e) {
+            e.printStackTrace();
+            sendResponse(exchange, 500, "Failed to generate variants");
+        }
+    }
+
+    private void handleSyncGroup(HttpExchange exchange) throws IOException {
+        try {
+            int id = Integer.parseInt(getQueryParam(exchange.getRequestURI().getQuery(), "id"));
+            productService.syncGroup(id);
+            redirect(exchange, "/products");
+        } catch (SQLException | NumberFormatException e) {
+            e.printStackTrace();
+            sendResponse(exchange, 500, "Failed to sync group");
+        }
+    }
+
     private String getQueryParam(String query, String paramName) {
         if (query == null) return null;
         for (String param : query.split("&")) {
@@ -268,5 +424,10 @@ public class ProductController implements HttpHandler {
 
     private String wrapInContainer(String content) {
         return "<!DOCTYPE html><html><head><style>" + CSS + "</style></head><body><div class='container'>" + getHeader() + content + "</div></body></html>";
+    }
+
+    private String formatAttributes(String json) {
+        if (json == null || json.isEmpty()) return "-";
+        return json.replace("{", "").replace("}", "").replace("\"", "").replace(",", ", ");
     }
 }

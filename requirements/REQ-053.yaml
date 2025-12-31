@@ -13,6 +13,6 @@ spec:
       tracesTo: "REQ-052"
       validation_policy: "policies/check_dependency.rego"
       code_validation:
-        file_path: "orderService/src/main/java/com/example/order/StockReservationService.java"
+        file_path: "applications/orderService/src/main/java/com/example/order/StockReservationService.java"
         imports:
           - "java.net.http.HttpClient"

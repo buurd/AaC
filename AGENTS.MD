@@ -19,10 +19,10 @@ This document serves as a persistent context for the AI agent to understand the 
 *   `/requirements`: Contains YAML files defining system requirements (e.g., `REQ-001.yaml`).
 *   `/policies`: Contains Rego scripts (`.rego`) used by OPA to verify requirements against the architecture and code.
 *   `/structurizr`: Contains the Structurizr DSL (`workspace.dsl`) and properties. This is the source of truth for the architecture model.
-*   `/webshop`: Source code for the customer-facing Webshop System.
-*   `/productManagementSystem`: Source code for the internal Product Management System.
-*   `/warehouse`: Source code for the internal Warehouse Service.
-*   `/orderService`: Source code for the internal Order Service.
+*   `/applications/webshop`: Source code for the customer-facing Webshop System.
+*   `/applications/productManagementSystem`: Source code for the internal Product Management System.
+*   `/applications/warehouse`: Source code for the internal Warehouse Service.
+*   `/applications/orderService`: Source code for the internal Order Service.
 *   `/infrastructure`: Infrastructure configurations (Nginx, Keycloak, Monitoring).
 *   `/e2e-tests`: Cypress end-to-end tests.
 *   `/pacts`: Pact contract tests for integration verification.
@@ -56,6 +56,7 @@ The system consists of four main software systems:
 *   `ARCHITECTURE_SUMMARY.md`: Detailed description of the architecture, containers, and components.
 *   `REQUIREMENTS_SUMMARY.md`: Narrative summary of requirements by user journey.
 *   `DESIGN_GUIDELINES.md`: UI consistency standards.
+*   `STRATEGY_PRODUCT_VARIATIONS.md`: Strategy for implementing product variations (sizes, colors) using a flattening approach.
 
 ## 7. Workflow for Adding Features
 1.  **Define Requirements**: Create a new YAML file in `/requirements` (e.g., `REQ-063.yaml`).

@@ -13,4 +13,4 @@ spec:
       tracesTo: "REQ-029"
       validation_policy: "policies/check_implementation.rego"
       implementation_validation:
-        file_path: "warehouse/src/main/java/com/example/warehouse/ProductSyncController.java"
+        file_path: "applications/warehouse/src/main/java/com/example/warehouse/ProductSyncController.java"

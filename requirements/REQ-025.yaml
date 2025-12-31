@@ -14,7 +14,7 @@ spec:
       # Validated by code check AND functional test
       validation_policy: "policies/check_dependency.rego"
       code_validation:
-        file_path: "productManagementSystem/src/main/java/com/example/productmanagement/ProductService.java"
+        file_path: "applications/productManagementSystem/src/main/java/com/example/productmanagement/ProductService.java"
         imports:
           - "java.net.http.HttpClient"
       functional_validation:

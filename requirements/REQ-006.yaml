@@ -16,4 +16,4 @@ spec:
         container: "WebServer"
         component: "ProductController"
       implementation_validation:
-        file_path: "webshop/src/main/java/com/example/webshop/ProductController.java"
+        file_path: "applications/webshop/src/main/java/com/example/webshop/ProductController.java"
