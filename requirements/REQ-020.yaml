@@ -1,7 +1,7 @@
 apiVersion: policy/v1
 kind: RequirementSet
 metadata:
-  name: design-consistency
+  name: design-guidelines
   version: "1.0"
 spec:
   requirements:
@@ -10,8 +10,6 @@ spec:
       c4_level: context
       description: "All user interfaces shall adhere to the Design Guidelines defined in DESIGN_GUIDELINES.md."
       priority: medium
-      tracesTo: "REQ-001"
-      # Validation is manual for now, or could be a check that CSS files exist and contain specific hex codes
       validation_policy: "policies/check_implementation.rego"
       implementation_validation:
-        file_path: "DESIGN_GUIDELINES.md"
+        file_path: "documentation/DESIGN_GUIDELINES.md"

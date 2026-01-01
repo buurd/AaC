@@ -1,16 +1,23 @@
 apiVersion: policy/v1
 kind: RequirementSet
 metadata:
-  name: webshop-sync-api
+  name: product-synchronization
   version: "1.0"
 spec:
   requirements:
     - id: REQ-024
-      type: architectural
+      type: functional
       c4_level: component
-      description: "The Webshop shall expose a REST API endpoint /api/products/sync to receive product updates."
+      description: "The Product Management System shall synchronize product creations, updates, and deletions to both the Webshop and the Warehouse systems. Downstream systems must expose a compatible REST API for this purpose."
       priority: high
-      tracesTo: "REQ-003"
-      validation_policy: "policies/check_implementation.rego"
-      implementation_validation:
-        file_path: "applications/webshop/src/main/java/com/example/webshop/ProductSyncController.java"
+      tracesTo: 
+        - "REQ-010"
+        - "REQ-059"
+      pact_validation:
+        - consumer: "ProductManagementSystem"
+          provider: "WebshopService"
+        - consumer: "ProductManagementSystem"
+          provider: "WarehouseService"
+      functional_validation:
+        - test_file: "e2e-tests/cypress/e2e/product_sync.cy.js"
+        - test_file: "e2e-tests/cypress/e2e/warehouse_sync.cy.js"

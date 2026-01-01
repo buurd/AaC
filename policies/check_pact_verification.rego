@@ -12,17 +12,30 @@ violation contains {"msg": msg} if {
 
     # Check if this requirement has a pact_validation block
     req.pact_validation
-    req.pact_validation.provider
-    req.pact_validation.consumer
+
+    # Handle both single object and array of objects
+    some validation in get_pact_validations(req.pact_validation)
+
+    validation.provider
+    validation.consumer
 
     # Construct the expected Pact file name
     # Standard Pact naming: Consumer-Provider.json
-    pact_file_name := sprintf("pacts/%s-%s.json", [req.pact_validation.consumer, req.pact_validation.provider])
+    pact_file_name := sprintf("pacts/%s-%s.json", [validation.consumer, validation.provider])
 
     # Check if the file exists in the list of project files
     not file_exists(input.files, pact_file_name)
 
     msg := sprintf("Requirement %s not fulfilled: Pact contract file '%s' is missing.", [req.id, pact_file_name])
+}
+
+# Helper to normalize pact_validation to a list
+get_pact_validations(val) = [val] if {
+    is_object(val)
+}
+
+get_pact_validations(val) = val if {
+    is_array(val)
 }
 
 # Helper to check if a file exists in the list

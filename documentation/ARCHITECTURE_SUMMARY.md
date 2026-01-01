@@ -136,6 +136,7 @@ We use **Open Policy Agent (OPA)** to validate our architecture model and code a
 *   **Relations**: Ensures the model reflects the logical and physical dependencies.
 *   **Code**: Scans Java source code to ensure domain entities and repositories are implemented correctly.
 *   **Security**: Scans test code to ensure no insecure `http://` URLs are used.
+*   **Contract Verification**: Checks that all integration requirements have a corresponding Pact contract file.
 
 ### B. Runtime Verification
 We spin up the entire landscape (4 Apps, 4 DBs, 1 Proxy, 1 Keycloak, Observability Stack) in Docker to verify the system works as expected.
@@ -143,6 +144,7 @@ We spin up the entire landscape (4 Apps, 4 DBs, 1 Proxy, 1 Keycloak, Observabili
 *   **Deployment**: Starts application containers with security configuration.
 *   **Functional Check**: Verifies HTTP endpoints and redirects (302 Found) for secured resources.
 *   **E2E Testing**: Uses **Cypress** to verify complex user flows and cross-system synchronization, running tests against the secure HTTPS endpoints and performing full login flows.
+*   **Contract Testing**: Uses **Pact** to verify that consumer expectations match provider implementations for all inter-system integrations.
 
 ---
 
@@ -158,6 +160,7 @@ We use **Structurizr** to visualize our model. The DSL file (`workspace.dsl`) is
     *   **User Login Flow**: Interaction between User, App, and Keycloak.
     *   **M2M Sync Flow**: Interaction between PM Service, Keycloak, and Webshop.
     *   **Stock Update Flow**: Interaction between Warehouse, Keycloak, and Webshop.
+    *   **Product Variation Flow**: Interaction between PM Controller, Service, and downstream systems for variant generation.
 
 ---
 
@@ -168,5 +171,5 @@ We have successfully scaled our **"Architecture as Code"** approach to a secure,
 *   **Consistency**: We introduced Design Guidelines to maintain UI consistency across systems.
 *   **Security**: We implemented a production-like security stack with Reverse Proxy and Keycloak IAM.
 *   **Observability**: We added a full logging stack to monitor the health and activity of all services.
-*   **New Features**: Added Order Service and Stock Reservation flows.
+*   **New Features**: Added Order Service, Stock Reservation flows, and Product Variations.
 *   **Verification**: Our automated pipeline now validates the integrity of a distributed system, ensuring that the implementation never drifts from the architectural intent.

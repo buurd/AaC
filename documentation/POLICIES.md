@@ -8,7 +8,7 @@ This document describes the Open Policy Agent (OPA) policies used to validate th
 Ensures that every requirement (except top-level "context" requirements) traces back to a parent requirement. This enforces a hierarchical requirement structure, ensuring that low-level implementation details are justified by high-level architectural or business goals.
 
 **How it works:**  
-The policy iterates through all requirements defined in the YAML files. For each requirement where `c4_level` is not "context", it checks if the `tracesTo` field is present and non-empty. It also verifies that the ID referenced in `tracesTo` actually exists within the set of defined requirements.
+The policy iterates through all requirements defined in the YAML files. For each requirement where `c4_level` is not "context", it checks if the `tracesTo` field is present and non-empty. It also verifies that the ID referenced in `tracesTo` actually exists within the set of defined requirements. It supports `tracesTo` being either a single string or a list of strings.
 
 ## 2. Relation Validation (`check_relation.rego`)
 
@@ -65,3 +65,11 @@ Scans the codebase (specifically test files) to ensure that no insecure HTTP URL
 
 **How it works:**  
 The policy iterates through the content of all JavaScript test files (e.g., Cypress tests). It searches for the string `http://` using a simple containment check. If found, it flags the file as containing an insecure URL violation.
+
+## 9. Pact Verification Validation (`check_pact_verification.rego`)
+
+**Purpose:**
+Ensures that for every integration requirement specifying a consumer and provider, a corresponding Pact contract file exists. This enforces the "Contract Testing" policy (`REQ-059`).
+
+**How it works:**
+The policy checks requirements that have a `pact_validation` block containing `consumer` and `provider` fields. It constructs the expected Pact file path (e.g., `pacts/Consumer-Provider.json`) and verifies its existence in the project file list.

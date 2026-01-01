@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: unit-testing-strategy
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-077
+      type: architectural
+      c4_level: context
+      description: "Business logic within the system shall be verified using isolated unit tests (e.g., JUnit, Mockito)."
+      priority: high
+      validation_policy: "policies/check_implementation.rego"
+      implementation_validation:
+        file_path: "applications/productManagementSystem/src/test/java/com/example/productmanagement/ProductServiceTest.java"

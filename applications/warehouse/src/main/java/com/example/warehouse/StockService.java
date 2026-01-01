@@ -16,6 +16,7 @@ public class StockService {
 
     public StockService() {
         this(
+            HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build(),
             System.getenv().getOrDefault("WEBSHOP_STOCK_API_URL", "http://localhost:8000/api/stock/sync"),
             new KeycloakTokenService(
                 System.getenv().getOrDefault("TOKEN_URL", "http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token"),
@@ -26,9 +27,16 @@ public class StockService {
     }
 
     public StockService(String webshopStockApiUrl, TokenService tokenService) {
-        this.httpClient = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(5))
-                .build();
+        this(
+            HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build(),
+            webshopStockApiUrl,
+            tokenService
+        );
+    }
+
+    // Constructor for testing with a mock HttpClient
+    public StockService(HttpClient httpClient, String webshopStockApiUrl, TokenService tokenService) {
+        this.httpClient = httpClient;
         this.webshopStockApiUrl = webshopStockApiUrl;
         this.tokenService = tokenService;
         
