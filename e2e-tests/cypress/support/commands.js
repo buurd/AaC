@@ -98,7 +98,10 @@ Cypress.Commands.add('addProductToCart', (productName) => {
   });
   
   // Wait for product to appear (sync might take time)
-  cy.contains('tr', productName, { timeout: 10000 }).within(() => {
+  // With the new UI, products are in cards, not rows (tr)
+  // We look for the product name in a card
+  // Increased timeout to 15000 to ensure file change is picked up and sync has time
+  cy.contains('.product-card', productName, { timeout: 15000 }).within(() => {
     cy.contains('button', 'Add to Cart').click();
   });
   cy.get('@alertStub').should('have.been.calledWith', `Added ${productName} to cart!`);

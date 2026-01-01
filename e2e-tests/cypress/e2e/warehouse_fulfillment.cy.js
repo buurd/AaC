@@ -9,7 +9,8 @@ describe('Warehouse Order Fulfillment', () => {
     cy.createProductInPM({ name: productName, type: 'FulfillType', price: '25.00' });
 
     // Manual Sync required
-    cy.contains('tr', productName).within(() => {
+    // Use a more robust selector to find the row
+    cy.get('td').contains(productName).parents('tr').within(() => {
       cy.contains('button', 'Sync').click();
     });
 
@@ -20,6 +21,10 @@ describe('Warehouse Order Fulfillment', () => {
     // 2. Action: Place Order
     cy.clearCookies();
     cy.loginToWebshop();
+    // The product name in Webshop might be just the name if no attributes, or flattened.
+    // Since we created it as a standalone product in PM (not via group), it has no attributes.
+    // So the name remains 'Fulfillment Test Product'.
+    // However, the Webshop UI now groups by name.
     cy.addProductToCart(productName);
     cy.checkoutCart();
     
@@ -37,6 +42,9 @@ describe('Warehouse Order Fulfillment', () => {
     cy.contains('h1', 'Order Fulfillment');
     
     // Wait for the order to appear (async process)
+    // The table shows Order ID and Status. It does NOT show the product name directly in the list.
+    // The test was failing because it looked for 'Fulfillment Test Product' in the 'tr'.
+    // We should look for 'PENDING' status instead.
     cy.contains('td', 'PENDING', { timeout: 10000 }).should('be.visible');
     
     // 5. Action: Mark as Shipped

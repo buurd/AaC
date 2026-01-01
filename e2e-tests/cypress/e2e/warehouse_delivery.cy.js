@@ -2,7 +2,8 @@ describe('Warehouse Delivery Management', () => {
   const warehouseUrl = 'https://reverse-proxy:8445';
   const senderName = 'Supplier A';
   const serialNumber = 'SN123';
-  const productName = "The Hitchhiker's Guide to the Galaxy";
+  // Updated product name to match new seed data
+  const productName = "Classic T-Shirt - Red S";
 
   beforeEach(() => {
     cy.loginToWarehouse();

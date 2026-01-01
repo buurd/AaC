@@ -7,7 +7,11 @@ describe('Order Flow', () => {
     if (attempts > 40) throw new Error(`Timed out waiting for stock to be ${expectedStock}`);
     cy.wait(1000);
     cy.request({ url: webshopUrl + '/products', failOnStatusCode: false }).then((res) => {
-      if (res.status === 200 && res.body.includes(`<td>${expectedStock}</td>`)) {
+      // The response body is HTML. We need to check if the stock number appears in the context of our product.
+      // Since the UI now uses JS to display stock, checking raw HTML might be tricky if it's in a script tag.
+      // However, the initial render or the JSON data block should contain it.
+      // Let's check the JSON data block for simplicity and robustness.
+      if (res.status === 200 && res.body.includes(`"stock":${expectedStock}`)) {
         return;
       }
       cy.log(`Stock ${expectedStock} not found yet. Retrying...`);
@@ -22,8 +26,9 @@ describe('Order Flow', () => {
     cy.createProductInPM({ name: productName, type: 'OrderType' });
 
     // Manual Sync required
-    cy.contains('tr', productName).within(() => {
-      cy.contains('Sync').click();
+    // Use a more robust selector to find the row
+    cy.get('td').contains(productName).parents('tr').within(() => {
+      cy.contains('button', 'Sync').click();
     });
 
     cy.clearCookies();
@@ -47,8 +52,10 @@ describe('Order Flow', () => {
     cy.clearCookies();
     cy.loginToOrderService();
     // Wait for order to appear
+    // The table might not have the product name directly visible if it's just ID, 
+    // but we can look for the status PENDING_CONFIRMATION
     cy.contains('tr', 'PENDING_CONFIRMATION', { timeout: 10000 }).within(() => {
-        cy.contains('Confirm').click();
+        cy.contains('button', 'Confirm').click();
     });
     // Verify status changed to CONFIRMED
     cy.contains('tr', 'CONFIRMED').should('be.visible');

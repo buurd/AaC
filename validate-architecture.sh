@@ -425,7 +425,7 @@ fi
 # Run the actual runtime checks (via HTTPS Proxy)
 # Note: We use -k to ignore self-signed cert errors in validation
 run_runtime_check "Runtime Validation (REQ-005) - HTTPS" "https://localhost:8443/" "200" "" "$WEBSHOP_CONTAINER_ID"
-run_runtime_check "Runtime Validation (REQ-007) - HTTPS" "https://localhost:8443/products" "200" "The Hitchhiker's Guide to the Galaxy" "$WEBSHOP_CONTAINER_ID"
+run_runtime_check "Runtime Validation (REQ-007) - HTTPS" "https://localhost:8443/products" "200" "Classic T-Shirt" "$WEBSHOP_CONTAINER_ID"
 # PM and Warehouse are now SECURED. They should return 302 Found (Redirect to Login) if accessed without token.
 run_runtime_check "Runtime Validation (REQ-014) - HTTPS (Secured)" "https://localhost:8444/products" "302" "" "$PM_CONTAINER_ID"
 run_runtime_check "Runtime Validation (REQ-031) - HTTPS (Secured)" "https://localhost:8445/products" "302" "" "$WAREHOUSE_CONTAINER_ID"
