@@ -10,7 +10,9 @@ spec:
       c4_level: component
       description: "The WebServer shall have a ProductController component to list products."
       priority: high
-      tracesTo: "REQ-003"
+      tracesTo: 
+        - "REQ-003"
+        - "REQ-020" # Design Guidelines
       validation_policy: "policies/check_components.rego"
       model_validation:
         container: "WebServer"

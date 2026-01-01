@@ -10,7 +10,10 @@ spec:
       c4_level: container
       description: "The Order Service WebServer shall be accessible via HTTP and return 200 OK on the root path."
       priority: critical
-      tracesTo: "REQ-050"
+      tracesTo: 
+        - "REQ-050"
+        - "REQ-043" # HTTPS Security
+      validation_policy: "policies/check_runtime.rego"
       runtime_validation:
         url: "https://localhost:8447/"
         expected_status: 200

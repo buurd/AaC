@@ -1,16 +1,19 @@
 apiVersion: policy/v1
 kind: RequirementSet
 metadata:
-  name: runtime-product-management-webserver
+  name: runtime-pm-http
   version: "1.0"
 spec:
   requirements:
     - id: REQ-014
       type: runtime
       c4_level: container
-      description: "The Product Management System WebServer shall be accessible via HTTP and return 200 OK on the root path."
+      description: "The Product Management System WebServer shall be accessible via HTTP and return 200 OK at /."
       priority: critical
-      tracesTo: "REQ-012"
+      tracesTo: 
+        - "REQ-012"
+        - "REQ-043" # HTTPS Security
+      validation_policy: "policies/check_runtime.rego"
       runtime_validation:
-        url: "http://localhost:8001/"
-        expected_status: 200
+        url: "https://localhost:8444/products"
+        expected_status: 302 # Redirects to login

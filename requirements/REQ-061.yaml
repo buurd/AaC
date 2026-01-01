@@ -10,8 +10,13 @@ spec:
       c4_level: component
       description: "The Order Service shall notify the Warehouse Service when an order is confirmed, so that fulfillment can begin."
       priority: high
-      tracesTo: "REQ-051"
+      tracesTo: 
+        - "REQ-051"
+        - "REQ-059"
       model_validation:
         source: "Order WebServer"
         destination: "Warehouse WebServer"
         description_contains: "Notifies of confirmed order"
+      pact_validation:
+        consumer: "OrderService"
+        provider: "WarehouseService"

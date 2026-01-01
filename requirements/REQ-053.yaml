@@ -10,9 +10,14 @@ spec:
       c4_level: component
       description: "The Order Service shall reserve stock in the Warehouse Service when an order is placed."
       priority: high
-      tracesTo: "REQ-052"
+      tracesTo: 
+        - "REQ-052"
+        - "REQ-059"
       validation_policy: "policies/check_dependency.rego"
       code_validation:
         file_path: "applications/orderService/src/main/java/com/example/order/StockReservationService.java"
         imports:
           - "java.net.http.HttpClient"
+      pact_validation:
+        consumer: "OrderService"
+        provider: "WarehouseService"

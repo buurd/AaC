@@ -41,6 +41,9 @@ find: ‘e2e-tests/cypress/downloads’: Åtkomst nekas
 --- Running: HTTPS Usage Validation ---
 ✅ Validation Passed.
 
+--- Running: Pact Verification Validation ---
+✅ Validation Passed.
+
 --- Running: Contract Validation (Pact) ---
 Phase 1: Generating Contracts (Consumer Tests)...
   Scanning webshop for consumer tests...
@@ -88,7 +91,7 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
             variable to 'true'.
             
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.424 s -- in com.example.webshop.OrderServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.597 s -- in com.example.webshop.OrderServicePactTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -97,8 +100,8 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.424 s
-[INFO] Finished at: 2026-01-01T12:54:22Z
+[INFO] Total time:  3.885 s
+[INFO] Finished at: 2026-01-01T15:25:30Z
 [INFO] ------------------------------------------------------------------------
   Scanning productManagementSystem for consumer tests...
 [INFO] Scanning for projects...
@@ -136,33 +139,53 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.productmanagement.ProductServicePactTest
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/root/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-ProductService initialized with Webshop API URL: http://localhost:36595/api/products/sync
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+ProductService initialized with Webshop API URL: http://localhost:46437/api/products/sync
 ProductService initialized with Warehouse API URL: http://warehouse-dummy
-Syncing product 1 to http://localhost:36595/api/products/sync
+Syncing product 1 to http://localhost:46437/api/products/sync
 Syncing product 1 to http://warehouse-dummy
 Exception during sync to http://warehouse-dummy: java.net.ConnectException
-Synced to http://localhost:36595/api/products/sync. Response: {"status":"success"}
 [Thread-2] WARN au.com.dius.pact.core.support.Metrics - 
             Please note: we are tracking events anonymously to gather important usage statistics like JVM version
             and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
             variable to 'true'.
             
+Exception during sync to http://localhost:46437/api/products/sync: java.io.IOException: HTTP/1.1 header parser received no bytes
+[HTTP-Dispatcher] ERROR au.com.dius.pact.consumer.BaseJdkMockServer$Companion - Failed to generate response
+java.io.IOException: stream is closed
+	at jdk.httpserver/sun.net.httpserver.Request$WriteStream.write(Request.java:379)
+	at java.base/java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:125)
+	at java.base/java.io.BufferedOutputStream.implFlush(BufferedOutputStream.java:252)
+	at java.base/java.io.BufferedOutputStream.flush(BufferedOutputStream.java:240)
+	at jdk.httpserver/sun.net.httpserver.ExchangeImpl.sendResponseHeaders(ExchangeImpl.java:281)
+	at jdk.httpserver/sun.net.httpserver.HttpExchangeImpl.sendResponseHeaders(HttpExchangeImpl.java:85)
+	at au.com.dius.pact.consumer.BaseJdkMockServer.pactResponseToHttpExchange(MockHttpServer.kt:283)
+	at au.com.dius.pact.consumer.BaseJdkMockServer.handle(MockHttpServer.kt:260)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:98)
+	at jdk.httpserver/sun.net.httpserver.AuthFilter.doFilter(AuthFilter.java:82)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:101)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(ServerImpl.java:871)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:98)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Exchange.run(ServerImpl.java:847)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$DefaultExecutor.execute(ServerImpl.java:204)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Dispatcher.handle(ServerImpl.java:566)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Dispatcher.run(ServerImpl.java:532)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.863 s -- in com.example.productmanagement.ProductServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.891 s -- in com.example.productmanagement.ProductServicePactTest
 [INFO] Running com.example.productmanagement.ProductServiceWarehousePactTest
 ProductService initialized with Webshop API URL: http://webshop-dummy
-ProductService initialized with Warehouse API URL: http://localhost:36019/api/products/sync
+ProductService initialized with Warehouse API URL: http://localhost:42443/api/products/sync
 Syncing product 1 to http://webshop-dummy
-Syncing product 1 to http://localhost:36019/api/products/sync
-Synced to http://localhost:36019/api/products/sync. Response: {"status":"success"}
+Syncing product 1 to http://localhost:42443/api/products/sync
 Exception during sync to http://webshop-dummy: java.net.ConnectException
+Synced to http://localhost:42443/api/products/sync. Response: {"status":"success"}
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.628 s -- in com.example.productmanagement.ProductServiceWarehousePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.690 s -- in com.example.productmanagement.ProductServiceWarehousePactTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -171,8 +194,8 @@ Exception during sync to http://webshop-dummy: java.net.ConnectException
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  4.709 s
-[INFO] Finished at: 2026-01-01T12:54:28Z
+[INFO] Total time:  12.272 s
+[INFO] Finished at: 2026-01-01T15:25:44Z
 [INFO] ------------------------------------------------------------------------
   Scanning warehouse for consumer tests...
 [INFO] Scanning for projects...
@@ -210,13 +233,13 @@ Exception during sync to http://webshop-dummy: java.net.ConnectException
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.warehouse.StockServicePactTest
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/root/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-StockService initialized with Webshop Stock API URL: http://localhost:46711/api/stock/sync
-Syncing stock for product 1 (Stock: 50) to http://localhost:46711/api/stock/sync
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+StockService initialized with Webshop Stock API URL: http://localhost:35015/api/stock/sync
+Syncing stock for product 1 (Stock: 50) to http://localhost:35015/api/stock/sync
 Synced stock for product 1 to Webshop.
 [Thread-2] WARN au.com.dius.pact.core.support.Metrics - 
             Please note: we are tracking events anonymously to gather important usage statistics like JVM version
@@ -224,7 +247,7 @@ Synced stock for product 1 to Webshop.
             variable to 'true'.
             
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.846 s -- in com.example.warehouse.StockServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.847 s -- in com.example.warehouse.StockServicePactTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -233,8 +256,8 @@ Synced stock for product 1 to Webshop.
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.965 s
-[INFO] Finished at: 2026-01-01T12:54:33Z
+[INFO] Total time:  4.649 s
+[INFO] Finished at: 2026-01-01T15:25:52Z
 [INFO] ------------------------------------------------------------------------
   Scanning orderService for consumer tests...
 [INFO] Scanning for projects...
@@ -272,27 +295,27 @@ Synced stock for product 1 to Webshop.
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.order.StockReservationServicePactTest
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/root/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-StockReservationService: Reserving stock for product 1 at http://localhost:33689/api/stock/reserve
+StockReservationService: Reserving stock for product 1 at http://localhost:38671/api/stock/reserve
 StockReservationService: Got token (length: 11)
-StockReservationService: Response status: 200
 [Thread-2] WARN au.com.dius.pact.core.support.Metrics - 
             Please note: we are tracking events anonymously to gather important usage statistics like JVM version
             and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
             variable to 'true'.
             
+StockReservationService: Response status: 200
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.481 s -- in com.example.order.StockReservationServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.625 s -- in com.example.order.StockReservationServicePactTest
 [INFO] Running com.example.order.OrderFulfillmentServicePactTest
-OrderFulfillmentService: Notifying fulfillment for order 123 at http://localhost:38469/api/fulfillment/order
+OrderFulfillmentService: Notifying fulfillment for order 123 at http://localhost:37063/api/fulfillment/order
 OrderFulfillmentService: Got token (length: 11)
 OrderFulfillmentService: Response status: 200
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.126 s -- in com.example.order.OrderFulfillmentServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.121 s -- in com.example.order.OrderFulfillmentServicePactTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -301,8 +324,8 @@ OrderFulfillmentService: Response status: 200
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  4.044 s
-[INFO] Finished at: 2026-01-01T12:54:38Z
+[INFO] Total time:  4.467 s
+[INFO] Finished at: 2026-01-01T15:25:57Z
 [INFO] ------------------------------------------------------------------------
 Phase 2: Verifying Contracts (Provider Tests)...
   Scanning webshop for provider tests...
@@ -358,8 +381,8 @@ Stock Sync received: {"pmId":1,"stock":50}
 Mock Repository: Updated stock for product 1 to 50
     returns a response which
       has status code 200 (OK)
-[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
       has a matching body (OK)
+[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
 [main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Webshop is up':SETUP
 
 Verifying a pact between ProductManagementSystem and WebshopService
@@ -377,7 +400,7 @@ Mock Repository: Upserted product Pact Book
       has status code 200 (OK)
       has a matching body (OK)
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.683 s -- in com.example.webshop.WebshopPactProviderTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.806 s -- in com.example.webshop.WebshopPactProviderTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -386,8 +409,8 @@ Mock Repository: Upserted product Pact Book
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  2.721 s
-[INFO] Finished at: 2026-01-01T12:54:42Z
+[INFO] Total time:  3.155 s
+[INFO] Finished at: 2026-01-01T15:26:02Z
 [INFO] ------------------------------------------------------------------------
   Scanning productManagementSystem for provider tests...
 [INFO] Scanning for projects...
@@ -432,8 +455,8 @@ Mock Repository: Upserted product Pact Book
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  2.091 s
-[INFO] Finished at: 2026-01-01T12:54:45Z
+[INFO] Total time:  2.355 s
+[INFO] Finished at: 2026-01-01T15:26:05Z
 [INFO] ------------------------------------------------------------------------
   Scanning warehouse for provider tests...
 [INFO] Scanning for projects...
@@ -483,12 +506,12 @@ Verifying a pact between OrderService and WarehouseService
   Comments:
 
 Fulfillment request received: {"orderId":123}
-Mock Repository: Created fulfillment order 123
 [Thread-3] WARN au.com.dius.pact.core.support.Metrics - 
             Please note: we are tracking events anonymously to gather important usage statistics like JVM version
             and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
             variable to 'true'.
             
+Mock Repository: Created fulfillment order 123
     returns a response which
       has status code 200 (OK)
       has a matching body (OK)
@@ -525,7 +548,7 @@ Mock Repository: Upserted product Pact Book
       has status code 200 (OK)
       has a matching body (OK)
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.734 s -- in com.example.warehouse.WarehousePactProviderTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.849 s -- in com.example.warehouse.WarehousePactProviderTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -534,8 +557,8 @@ Mock Repository: Upserted product Pact Book
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.250 s
-[INFO] Finished at: 2026-01-01T12:54:50Z
+[INFO] Total time:  3.688 s
+[INFO] Finished at: 2026-01-01T15:26:10Z
 [INFO] ------------------------------------------------------------------------
   Scanning orderService for provider tests...
 [INFO] Scanning for projects...
@@ -574,6 +597,7 @@ Mock Repository: Upserted product Pact Book
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.order.OrderPactProviderTest
 Test Server started on port 8083
+[main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Orders exist for customer':SETUP
 
 Verifying a pact between Webshop and OrderService
   [Using File ../../pacts/Webshop-OrderService.json]
@@ -582,7 +606,6 @@ Verifying a pact between Webshop and OrderService
 
   Comments:
 
-[main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Orders exist for customer':SETUP
 [Thread-3] WARN au.com.dius.pact.core.support.Metrics - 
             Please note: we are tracking events anonymously to gather important usage statistics like JVM version
             and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
@@ -592,7 +615,7 @@ Verifying a pact between Webshop and OrderService
       has status code 200 (OK)
       has a matching body (OK)
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.692 s -- in com.example.order.OrderPactProviderTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.768 s -- in com.example.order.OrderPactProviderTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -601,8 +624,8 @@ Verifying a pact between Webshop and OrderService
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.134 s
-[INFO] Finished at: 2026-01-01T12:54:54Z
+[INFO] Total time:  3.560 s
+[INFO] Finished at: 2026-01-01T15:26:15Z
 [INFO] ------------------------------------------------------------------------
 ✅ Contract Validation Passed.
 
@@ -664,8 +687,8 @@ Compiling Webshop application...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.392 s
-[INFO] Finished at: 2026-01-01T12:54:58Z
+[INFO] Total time:  4.050 s
+[INFO] Finished at: 2026-01-01T15:26:20Z
 [INFO] ------------------------------------------------------------------------
 Compiling Product Management application...
 [INFO] Scanning for projects...
@@ -707,8 +730,8 @@ Compiling Product Management application...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.763 s
-[INFO] Finished at: 2026-01-01T12:55:03Z
+[INFO] Total time:  8.395 s
+[INFO] Finished at: 2026-01-01T15:26:30Z
 [INFO] ------------------------------------------------------------------------
 Compiling Warehouse Service...
 [INFO] Scanning for projects...
@@ -750,8 +773,8 @@ Compiling Warehouse Service...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.518 s
-[INFO] Finished at: 2026-01-01T12:55:08Z
+[INFO] Total time:  4.014 s
+[INFO] Finished at: 2026-01-01T15:26:35Z
 [INFO] ------------------------------------------------------------------------
 Compiling Order Service...
 [INFO] Scanning for projects...
@@ -793,32 +816,32 @@ Compiling Order Service...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.726 s
-[INFO] Finished at: 2026-01-01T12:55:13Z
+[INFO] Total time:  3.940 s
+[INFO] Finished at: 2026-01-01T15:26:40Z
 [INFO] ------------------------------------------------------------------------
-f492d54b1624f38aabac24675cbf4a84e5dbae865b00c92cc419b305d4771634
+1ebef722ead650d2f5b37531d8c8605a22708b42d068b94e3ae525b25d49930e
 Starting Webshop Database container...
-Webshop Database container started with ID: 7030e71857376b62d93a95d79deaf9e6b25062a72ec378d21f60f55dba6f05cd
+Webshop Database container started with ID: e57c70bb1a3d391b28ddf86c196392f466033e7d10a2eff5d4aab3452ee93ab2
 Starting PM Database container...
-PM Database container started with ID: 1a06fdcab94e66790822e2a6d3699882b892129a5ec596ee52e2279c7062d0d0
+PM Database container started with ID: 34ebff9ed656aaa7245370c64fb2fdd0707867c75e20988eb205b0aac4d5c4e6
 Starting Warehouse Database container...
-Warehouse Database container started with ID: 597454fa08e248af18e82401852d0e8a2f12ad3061c63f8977f3f31344053b33
+Warehouse Database container started with ID: e596e4cffbe40ec244de2abb72edd393f3b2a047715df8a8f806cb81ed117005
 Starting Order Database container...
-Order Database container started with ID: 0856a6a874ccda5ab5401688c8941e4d83fe51e41f59e8f3ff37675a6681a295
+Order Database container started with ID: 0bcea487e6c36504629cdc816591aed764c615da98080d8b88efa2a5a825141d
 Waiting for Databases to initialize (15s)...
 Starting Keycloak container...
-Keycloak container started with ID: 3cffca3b516d7f7dc5e961d637d3d2d81610648082bb0587514c490fbfcc7e6d
+Keycloak container started with ID: ca5bf344e74d03522db8caa156c76a5602aeef1522f622003c3c953e427bd04b
 Starting Webshop server in a Docker container...
-Webshop container started with ID: 2cc9df776f20cd39a2d0b43e181488bcef74ed300690cf5d8ba1f59fc2114875
+Webshop container started with ID: ac0b1a8c4b0bf165dabeb7b3b8a93ad9d28ec4de8e3481936b11cfe3872472e8
 Starting Product Management server in a Docker container...
-Product Management container started with ID: cd651b7a77fe7e95d4e730067ee1065fd0a76a9a35af4727347dc21a9a136a75
+Product Management container started with ID: af096aac7053be85f99267ec974deb579f81fa65d971f36126cf2dcfaad7adb0
 Starting Warehouse Service in a Docker container...
-Warehouse container started with ID: d5a36d75425e3057cb478d9b677e91e733be49f93bae2366a643810969aec781
+Warehouse container started with ID: 807d6aae995e9ffaf147e7ac5baa7e0ed880d676eef4c281c2416bcb218bf4f9
 Starting Order Service in a Docker container...
-Order Service container started with ID: f3424dbc97075fbb17b357a42c0e9a3186a4db2fabe4cb71646659182188860b
+Order Service container started with ID: e92bfa9cf4aa2b835dedbffe78951b7797046b3d8fab696207c3eede92ea6736
 Waiting 2 seconds for Docker DNS to propagate...
 Starting Reverse Proxy (Nginx)...
-Proxy container started with ID: 442ada3064324354eccc481b874dff988d3286260a29c035abac7dacbcee2776
+Proxy container started with ID: 9e940b6e78f2a096cb9f77aa0bfe1f852d4f8834623477665e2175f997a4d5ba
 Waiting for services to initialize (40s)...
 
 --- Running: Runtime Validation (REQ-005) - HTTPS ---
@@ -864,7 +887,7 @@ Running Cypress tests against https://reverse-proxy:8444...
 [STARTED] Task without title.
 [SUCCESS] Task without title.
 
-DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8d5c-7e11be748201
+DevTools listening on ws://127.0.0.1:46583/devtools/browser/210c32d3-3cae-40d4-9dc1-3c5d75e31dae
 [35mThe [33mexperimentalSessionAndOrigin[35m configuration option was removed in Cypress version 12.0.0.[39m
 [35m[39m
 [35mYou can safely remove this option from your config.[39m
@@ -894,9 +917,9 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 
 [0m[0m
 [0m  Navigation Links[0m
-  [32m  ✓[0m[90m should navigate correctly in Webshop[0m[90m (126ms)[0m
-  [32m  ✓[0m[90m should navigate correctly in Product Management[0m[90m (1009ms)[0m
-  [32m  ✓[0m[90m should navigate correctly in Warehouse[0m[90m (787ms)[0m
+  [32m  ✓[0m[90m should navigate correctly in Webshop[0m[90m (138ms)[0m
+  [32m  ✓[0m[90m should navigate correctly in Product Management[0m[90m (1050ms)[0m
+  [32m  ✓[0m[90m should navigate correctly in Warehouse[0m[90m (800ms)[0m
 
 
 [92m [0m[32m 3 passing[0m[90m (5s)[0m
@@ -923,7 +946,7 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 
 [0m[0m
 [0m  Order Flow[0m
-  [32m  ✓[0m[90m should place an order, reduce stock, and show in order history[0m[90m (8101ms)[0m
+  [32m  ✓[0m[90m should place an order, reduce stock, and show in order history[0m[90m (8226ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (8s)[0m
@@ -950,8 +973,8 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 
 [0m[0m
 [0m  Order Service Navigation[0m
-  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (704ms)[0m
-  [32m  ✓[0m[90m should logout correctly from header[0m[90m (735ms)[0m
+  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (714ms)[0m
+  [32m  ✓[0m[90m should logout correctly from header[0m[90m (806ms)[0m
 
 
 [92m [0m[32m 2 passing[0m[90m (3s)[0m
@@ -978,8 +1001,8 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 
 [0m[0m
 [0m  Product Management Navigation[0m
-  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (2237ms)[0m
-  [32m  ✓[0m[90m should logout correctly from header[0m[90m (625ms)[0m
+  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (2313ms)[0m
+  [32m  ✓[0m[90m should logout correctly from header[0m[90m (651ms)[0m
 
 
 [92m [0m[32m 2 passing[0m[90m (3s)[0m
@@ -1006,7 +1029,7 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 
 [0m[0m
 [0m  Product Management CRUD[0m
-  [32m  ✓[0m[90m should create, edit, and delete a product[0m[90m (3080ms)[0m
+  [32m  ✓[0m[90m should create, edit, and delete a product[0m[90m (3129ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (3s)[0m
@@ -1033,7 +1056,7 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 
 [0m[0m
 [0m  Product Synchronization[0m
-  [32m  ✓[0m[90m should sync create, update, and delete to webshop[0m[90m (9122ms)[0m
+  [32m  ✓[0m[90m should sync create, update, and delete to webshop[0m[90m (9330ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (9s)[0m
@@ -1060,7 +1083,7 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 
 [0m[0m
 [0m  Product Variations[0m
-  [32m  ✓[0m[90m should handle dynamic attributes and prevent duplicates[0m[90m (5794ms)[0m
+  [32m  ✓[0m[90m should handle dynamic attributes and prevent duplicates[0m[90m (5922ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (6s)[0m
@@ -1087,7 +1110,7 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 
 [0m[0m
 [0m  User Registration Flow[0m
-  [32m  ✓[0m[90m should allow a new user to register, login, and logout[0m[90m (3942ms)[0m
+  [32m  ✓[0m[90m should allow a new user to register, login, and logout[0m[90m (3994ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (4s)[0m
@@ -1103,7 +1126,7 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mfalse[39m                                                                            [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m3 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m4 seconds[39m                                                                        [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mregistration_flow.cy.js[32m[39m                                                          [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -1114,13 +1137,13 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 
 [0m[0m
 [0m  Security and Error Handling[0m
-  [32m  ✓[0m[90m should reject login with invalid credentials[0m[90m (1688ms)[0m
-  [32m  ✓[0m[90m should enforce Role-Based Access Control (RBAC)[0m[90m (1113ms)[0m
-  [32m  ✓[0m[90m should redirect to login when accessing protected resources without auth[0m[90m (99ms)[0m
-  [32m  ✓[0m[90m should validate input when creating a product[0m[90m (1477ms)[0m
+  [32m  ✓[0m[90m should reject login with invalid credentials[0m[90m (1787ms)[0m
+  [32m  ✓[0m[90m should enforce Role-Based Access Control (RBAC)[0m[90m (1631ms)[0m
+  [32m  ✓[0m[90m should redirect to login when accessing protected resources without auth[0m[90m (117ms)[0m
+  [32m  ✓[0m[90m should validate input when creating a product[0m[90m (1497ms)[0m
 
 
-[92m [0m[32m 4 passing[0m[90m (7s)[0m
+[92m [0m[32m 4 passing[0m[90m (10s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -1133,7 +1156,7 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mfalse[39m                                                                            [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m7 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m10 seconds[39m                                                                       [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32msecurity_and_errors.cy.js[32m[39m                                                        [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -1144,8 +1167,8 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 
 [0m[0m
 [0m  Shopping Cart[0m
-  [32m  ✓[0m[90m should add, view, and remove a product from the cart[0m[90m (333ms)[0m
-  [32m  ✓[0m[90m should not allow adding more items than available in stock[0m[90m (751ms)[0m
+  [32m  ✓[0m[90m should add, view, and remove a product from the cart[0m[90m (340ms)[0m
+  [32m  ✓[0m[90m should not allow adding more items than available in stock[0m[90m (763ms)[0m
 
 
 [92m [0m[32m 2 passing[0m[90m (2s)[0m
@@ -1172,7 +1195,7 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 
 [0m[0m
 [0m  Warehouse Delivery Management[0m
-  [32m  ✓[0m[90m should create delivery, add items, and return delivery[0m[90m (1692ms)[0m
+  [32m  ✓[0m[90m should create delivery, add items, and return delivery[0m[90m (1735ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (3s)[0m
@@ -1199,7 +1222,7 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 
 [0m[0m
 [0m  Warehouse Order Fulfillment[0m
-  [32m  ✓[0m[90m should display confirmed orders in warehouse and allow fulfillment[0m[90m (6229ms)[0m
+  [32m  ✓[0m[90m should display confirmed orders in warehouse and allow fulfillment[0m[90m (6320ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (6s)[0m
@@ -1226,8 +1249,8 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 
 [0m[0m
 [0m  Warehouse Navigation[0m
-  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (1168ms)[0m
-  [32m  ✓[0m[90m should logout correctly from header[0m[90m (607ms)[0m
+  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (1215ms)[0m
+  [32m  ✓[0m[90m should logout correctly from header[0m[90m (629ms)[0m
 
 
 [92m [0m[32m 2 passing[0m[90m (3s)[0m
@@ -1243,7 +1266,7 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mfalse[39m                                                                            [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m2 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m3 seconds[39m                                                                        [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mwarehouse_navigation.cy.js[32m[39m                                                       [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -1254,7 +1277,7 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 
 [0m[0m
 [0m  Warehouse Synchronization[0m
-  [32m  ✓[0m[90m should sync create, update, and delete to warehouse[0m[33m (12836ms)[0m
+  [32m  ✓[0m[90m should sync create, update, and delete to warehouse[0m[33m (13281ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (13s)[0m
@@ -1270,7 +1293,7 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mfalse[39m                                                                            [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m12 seconds[39m                                                                       [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m13 seconds[39m                                                                       [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mwarehouse_sync.cy.js[32m[39m                                                             [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -1281,8 +1304,8 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 
 [0m[0m
 [0m  Webshop Navigation[0m
-  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (893ms)[0m
-  [32m  ✓[0m[90m should logout correctly from header[0m[90m (645ms)[0m
+  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (915ms)[0m
+  [32m  ✓[0m[90m should logout correctly from header[0m[90m (660ms)[0m
 
 
 [92m [0m[32m 2 passing[0m[90m (3s)[0m
@@ -1324,9 +1347,9 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0mproduct_variations.cy.js[0m                 [90m00:05[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mregistration_flow.cy.js[0m                  [90m00:03[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mregistration_flow.cy.js[0m                  [90m00:04[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0msecurity_and_errors.cy.js[0m                [90m00:07[39m        [0m4[0m        [32m4[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0msecurity_and_errors.cy.js[0m                [90m00:10[39m        [0m4[0m        [32m4[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0mshopping_cart.cy.js[0m                      [90m00:02[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
@@ -1334,13 +1357,13 @@ DevTools listening on ws://127.0.0.1:42437/devtools/browser/3f961400-bbde-4461-8
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0mwarehouse_fulfillment.cy.js[0m              [90m00:06[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mwarehouse_navigation.cy.js[0m               [90m00:02[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mwarehouse_navigation.cy.js[0m               [90m00:03[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mwarehouse_sync.cy.js[0m                     [90m00:12[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mwarehouse_sync.cy.js[0m                     [90m00:13[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0mwebshop_navigation.cy.js[0m                 [90m00:02[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
-[90m   [39m [32m✔[39m  [32mAll specs passed![39m                        [90m01:17[39m       [0m25[0m       [32m25[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m [39m
+[90m   [39m [32m✔[39m  [32mAll specs passed![39m                        [90m01:22[39m       [0m25[0m       [32m25[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m [39m
 
 ✅ Functional Validation Passed.
 
@@ -1348,5 +1371,5 @@ All validations passed successfully!
 
 --- Cleaning up temporary files ---
 --- Stopping containers ---
-Removing network: webshop-net-38709
-Total execution time: 224 seconds
+Removing network: webshop-net-106288
+Total execution time: 254 seconds

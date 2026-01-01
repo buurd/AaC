@@ -210,6 +210,7 @@ run_opa_validation "Implementation Validation" "/project/implementation-input.js
 run_opa_validation "Code Structure Validation" "/project/code-structure-input.json" "/project/policies/check_class_structure.rego" "data.code.structure.violation"
 run_opa_validation "Dependency Validation" "/project/code-structure-input.json" "/project/policies/check_dependency.rego" "data.code.dependency.violation"
 run_opa_validation "HTTPS Usage Validation" "/project/test-content-input.json" "/project/policies/check_https_usage.rego" "data.security.https.violation"
+run_opa_validation "Pact Verification Validation" "/project/implementation-input.json" "/project/policies/check_pact_verification.rego" "data.integration.pact.violation"
 
 # --- Contract Validation (Pact) ---
 echo

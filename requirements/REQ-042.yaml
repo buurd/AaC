@@ -8,11 +8,16 @@ spec:
     - id: REQ-042
       type: functional
       c4_level: component
-      description: "The Warehouse Service shall send stock updates to the Webshop when inventory changes (e.g., delivery received)."
+      description: "The Warehouse Service shall send stock updates to the Webshop when inventory changes."
       priority: high
-      tracesTo: "REQ-027"
+      tracesTo: 
+        - "REQ-027"
+        - "REQ-059"
       validation_policy: "policies/check_dependency.rego"
       code_validation:
         file_path: "applications/warehouse/src/main/java/com/example/warehouse/StockService.java"
         imports:
           - "java.net.http.HttpClient"
+      pact_validation:
+        consumer: "WarehouseService"
+        provider: "WebshopService"

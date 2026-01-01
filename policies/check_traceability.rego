@@ -26,7 +26,8 @@ violation contains {"msg": msg} if {
     has_trace(req)
 
     # Check if the target requirement exists
-    not trace_target_exists(req.tracesTo)
+    # We need to handle both single string and array of strings
+    not all_trace_targets_exist(req.tracesTo)
 
     msg := sprintf("Requirement %s traces to non-existent requirement: %s", [req.id, req.tracesTo])
 }
@@ -34,6 +35,19 @@ violation contains {"msg": msg} if {
 has_trace(req) if {
     req.tracesTo
     req.tracesTo != ""
+    count(req.tracesTo) > 0
+}
+
+# Helper to check if all targets exist
+all_trace_targets_exist(targets) if {
+    is_array(targets)
+    # Check that for every target in the array, it exists
+    count({t | t := targets[_]; trace_target_exists(t)}) == count(targets)
+}
+
+all_trace_targets_exist(target) if {
+    is_string(target)
+    trace_target_exists(target)
 }
 
 trace_target_exists(target_id) if {

@@ -10,6 +10,7 @@ spec:
       c4_level: component
       description: "The root page of each service shall provide navigation buttons to its main functionalities."
       priority: medium
-      tracesTo: "REQ-020"
+      tracesTo: 
+        - "REQ-020" # Design Guidelines
       functional_validation:
         test_file: "e2e-tests/cypress/e2e/navigation.cy.js"

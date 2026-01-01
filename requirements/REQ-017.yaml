@@ -1,16 +1,19 @@
 apiVersion: policy/v1
 kind: RequirementSet
 metadata:
-  name: runtime-product-management-edit
+  name: pm-edit-product-ui
   version: "1.0"
 spec:
   requirements:
     - id: REQ-017
-      type: runtime
+      type: functional
       c4_level: component
-      description: "The ProductController shall allow a productManager to edit a product entry at /products/edit."
-      priority: critical
-      tracesTo: "REQ-014"
-      runtime_validation:
-        url: "http://localhost:8001/products/edit"
-        expected_status: 200
+      description: "The Product Management System shall provide a UI to edit existing products."
+      priority: high
+      tracesTo: 
+        - "REQ-010"
+        - "REQ-020" # Design Guidelines
+      validation_policy: "policies/check_code_structure.rego"
+      code_validation:
+        file_path: "applications/productManagementSystem/src/main/java/com/example/productmanagement/ProductController.java"
+        method_name: "handleEdit"

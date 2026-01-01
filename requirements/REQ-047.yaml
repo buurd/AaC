@@ -10,6 +10,8 @@ spec:
       c4_level: component
       description: "The Webshop shall provide a client-side shopping cart feature, allowing users to add, view, and remove products, respecting available stock."
       priority: high
-      tracesTo: "REQ-001"
+      tracesTo: 
+        - "REQ-001"
+        - "REQ-020" # Design Guidelines
       functional_validation:
         test_file: "e2e-tests/cypress/e2e/shopping_cart.cy.js"
