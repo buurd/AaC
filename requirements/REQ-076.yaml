@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: webshop-variant-selection
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-076
+      type: functional
+      c4_level: component
+      description: "The Webshop shall allow customers to select a specific product variant from a product group page and add it to the cart."
+      priority: high
+      tracesTo: 
+        - "REQ-074" # Depends on variants being displayed
+        - "REQ-047" # Extends shopping cart functionality
+      functional_validation:
+        test_file: "e2e-tests/cypress/e2e/order_flow.cy.js"
