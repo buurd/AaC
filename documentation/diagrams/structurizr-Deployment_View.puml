@@ -1,0 +1,151 @@
+@startuml
+title <size:24>Deployment View: Production</size>\n<size:24>Production Deployment</size>
+
+set separator none
+top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
+hide stereotype
+
+<style>
+  root {
+    BackgroundColor: #ffffff;
+    FontColor: #444444;
+  }
+  // Element,Container,Database
+  .Element-RWxlbWVudCxDb250YWluZXIsRGF0YWJhc2U= {
+    BackgroundColor: #999999;
+    LineColor: #6b6b6b;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Container,Infrastructure
+  .Element-RWxlbWVudCxDb250YWluZXIsSW5mcmFzdHJ1Y3R1cmU= {
+    BackgroundColor: #333333;
+    LineColor: #232323;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Container,Infrastructure,Security
+  .Element-RWxlbWVudCxDb250YWluZXIsSW5mcmFzdHJ1Y3R1cmUsU2VjdXJpdHk= {
+    BackgroundColor: #333333;
+    LineColor: #232323;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Container,Web Server
+  .Element-RWxlbWVudCxDb250YWluZXIsV2ViIFNlcnZlcg== {
+    BackgroundColor: #438dd5;
+    LineColor: #2e6295;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element
+  .DeploymentNode-RWxlbWVudA== {
+    BackgroundColor: #ffffff;
+    LineColor: #444444;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #444444;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+  }
+  // Element,Infrastructure
+  .DeploymentNode-RWxlbWVudCxJbmZyYXN0cnVjdHVyZQ== {
+    BackgroundColor: #333333;
+    LineColor: #232323;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+  }
+</style>
+
+rectangle "Kubernetes Cluster\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudCxJbmZyYXN0cnVjdHVyZQ==>> as Production.KubernetesCluster {
+  rectangle "Ingress Controller\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudCxJbmZyYXN0cnVjdHVyZQ==>> as Production.KubernetesCluster.IngressController {
+    rectangle "==Nginx\n<size:16>[Container]</size>\n\nHandles SSL termination and routing." <<Element-RWxlbWVudCxDb250YWluZXIsSW5mcmFzdHJ1Y3R1cmU=>> as Production.KubernetesCluster.IngressController.Nginx_1
+  }
+
+  rectangle "Webshop Namespace\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudA==>> as Production.KubernetesCluster.WebshopNamespace {
+    rectangle "Webshop Deployment (x2)\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudA==>> as Production.KubernetesCluster.WebshopNamespace.WebshopDeployment {
+      rectangle "==Webshop WebServer\n<size:16>[Container]</size>\n\nThe web server." <<Element-RWxlbWVudCxDb250YWluZXIsV2ViIFNlcnZlcg==>> as Production.KubernetesCluster.WebshopNamespace.WebshopDeployment.WebshopWebServer_1
+    }
+
+    rectangle "Webshop DB Pod\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudA==>> as Production.KubernetesCluster.WebshopNamespace.WebshopDBPod {
+      database "==Webshop Database\n<size:16>[Container]</size>\n\nThe database." <<Element-RWxlbWVudCxDb250YWluZXIsRGF0YWJhc2U=>> as Production.KubernetesCluster.WebshopNamespace.WebshopDBPod.WebshopDatabase_1
+    }
+
+  }
+
+  rectangle "PM Namespace\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudA==>> as Production.KubernetesCluster.PMNamespace {
+    rectangle "PM Deployment\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudA==>> as Production.KubernetesCluster.PMNamespace.PMDeployment {
+      rectangle "==PM WebServer\n<size:16>[Container]</size>\n\nThe web server." <<Element-RWxlbWVudCxDb250YWluZXIsV2ViIFNlcnZlcg==>> as Production.KubernetesCluster.PMNamespace.PMDeployment.PMWebServer_1
+    }
+
+    rectangle "PM DB Pod\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudA==>> as Production.KubernetesCluster.PMNamespace.PMDBPod {
+      database "==PM Database\n<size:16>[Container]</size>\n\nThe database." <<Element-RWxlbWVudCxDb250YWluZXIsRGF0YWJhc2U=>> as Production.KubernetesCluster.PMNamespace.PMDBPod.PMDatabase_1
+    }
+
+  }
+
+  rectangle "Warehouse Namespace\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudA==>> as Production.KubernetesCluster.WarehouseNamespace {
+    rectangle "Warehouse Deployment\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudA==>> as Production.KubernetesCluster.WarehouseNamespace.WarehouseDeployment {
+      rectangle "==Warehouse WebServer\n<size:16>[Container]</size>\n\nThe web server." <<Element-RWxlbWVudCxDb250YWluZXIsV2ViIFNlcnZlcg==>> as Production.KubernetesCluster.WarehouseNamespace.WarehouseDeployment.WarehouseWebServer_1
+    }
+
+    rectangle "Warehouse DB Pod\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudA==>> as Production.KubernetesCluster.WarehouseNamespace.WarehouseDBPod {
+      database "==Warehouse Database\n<size:16>[Container]</size>\n\nThe database." <<Element-RWxlbWVudCxDb250YWluZXIsRGF0YWJhc2U=>> as Production.KubernetesCluster.WarehouseNamespace.WarehouseDBPod.WarehouseDatabase_1
+    }
+
+  }
+
+  rectangle "Order Namespace\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudA==>> as Production.KubernetesCluster.OrderNamespace {
+    rectangle "Order Deployment (x2)\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudA==>> as Production.KubernetesCluster.OrderNamespace.OrderDeployment {
+      rectangle "==Order WebServer\n<size:16>[Container]</size>\n\nThe web server." <<Element-RWxlbWVudCxDb250YWluZXIsV2ViIFNlcnZlcg==>> as Production.KubernetesCluster.OrderNamespace.OrderDeployment.OrderWebServer_1
+    }
+
+    rectangle "Order DB Pod\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudA==>> as Production.KubernetesCluster.OrderNamespace.OrderDBPod {
+      database "==Order Database\n<size:16>[Container]</size>\n\nThe database." <<Element-RWxlbWVudCxDb250YWluZXIsRGF0YWJhc2U=>> as Production.KubernetesCluster.OrderNamespace.OrderDBPod.OrderDatabase_1
+    }
+
+  }
+
+  rectangle "Infrastructure Namespace\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudA==>> as Production.KubernetesCluster.InfrastructureNamespace {
+    rectangle "Keycloak Deployment\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudA==>> as Production.KubernetesCluster.InfrastructureNamespace.KeycloakDeployment {
+      hexagon "==Keycloak Server\n<size:16>[Container]</size>\n\nHandles AuthN/AuthZ." <<Element-RWxlbWVudCxDb250YWluZXIsSW5mcmFzdHJ1Y3R1cmUsU2VjdXJpdHk=>> as Production.KubernetesCluster.InfrastructureNamespace.KeycloakDeployment.KeycloakServer_1
+    }
+
+    rectangle "Observability Deployment\n<size:16>[Deployment Node]</size>" <<DeploymentNode-RWxlbWVudA==>> as Production.KubernetesCluster.InfrastructureNamespace.ObservabilityDeployment {
+      rectangle "==Loki\n<size:16>[Container]</size>\n\nLog aggregation system." <<Element-RWxlbWVudCxDb250YWluZXIsSW5mcmFzdHJ1Y3R1cmU=>> as Production.KubernetesCluster.InfrastructureNamespace.ObservabilityDeployment.Loki_1
+      rectangle "==Promtail\n<size:16>[Container]</size>\n\nLog collector agent." <<Element-RWxlbWVudCxDb250YWluZXIsSW5mcmFzdHJ1Y3R1cmU=>> as Production.KubernetesCluster.InfrastructureNamespace.ObservabilityDeployment.Promtail_1
+      rectangle "==Grafana\n<size:16>[Container]</size>\n\nVisualization dashboard." <<Element-RWxlbWVudCxDb250YWluZXIsSW5mcmFzdHJ1Y3R1cmU=>> as Production.KubernetesCluster.InfrastructureNamespace.ObservabilityDeployment.Grafana_1
+    }
+
+  }
+
+}
+
+@enduml

@@ -1,0 +1,151 @@
+@startuml
+title <size:24>Component View: Order Service - Order WebServer</size>\n<size:24>Order Service - Components</size>
+
+set separator none
+top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
+hide stereotype
+
+<style>
+  root {
+    BackgroundColor: #ffffff;
+    FontColor: #444444;
+  }
+  // Element,Component
+  .Element-RWxlbWVudCxDb21wb25lbnQ= {
+    BackgroundColor: #85bbf0;
+    LineColor: #5d82a8;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #000000;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Component,Repository
+  .Element-RWxlbWVudCxDb21wb25lbnQsUmVwb3NpdG9yeQ== {
+    BackgroundColor: #999999;
+    LineColor: #6b6b6b;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #000000;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Component,Service
+  .Element-RWxlbWVudCxDb21wb25lbnQsU2VydmljZQ== {
+    BackgroundColor: #666666;
+    LineColor: #474747;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Container,Database
+  .Element-RWxlbWVudCxDb250YWluZXIsRGF0YWJhc2U= {
+    BackgroundColor: #999999;
+    LineColor: #6b6b6b;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Software System
+  .Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0= {
+    BackgroundColor: #1168bd;
+    LineColor: #0b4884;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Software System,Infrastructure,Security
+  .Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0sSW5mcmFzdHJ1Y3R1cmUsU2VjdXJpdHk= {
+    BackgroundColor: #333333;
+    LineColor: #232323;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Relationship
+  .Relationship-UmVsYXRpb25zaGlw {
+    LineThickness: 2;
+    LineStyle: 10-10;
+    LineColor: #444444;
+    FontColor: #444444;
+    FontSize: 24;
+  }
+  // Order Service
+  .Boundary-T3JkZXIgU2VydmljZQ== {
+    BackgroundColor: #ffffff;
+    LineColor: #0b4884;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+  }
+  // Order WebServer
+  .Boundary-T3JkZXIgV2ViU2VydmVy {
+    BackgroundColor: #ffffff;
+    LineColor: #2e6295;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+  }
+</style>
+
+rectangle "==Webshop\n<size:16>[Software System]</size>\n\nThe webshop system." <<Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0=>> as Webshop
+rectangle "==Warehouse Service\n<size:16>[Software System]</size>\n\nThe warehouse inventory system." <<Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0=>> as WarehouseService
+hexagon "==Keycloak IAM\n<size:16>[Software System]</size>\n\nIdentity and Access Management." <<Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0sSW5mcmFzdHJ1Y3R1cmUsU2VjdXJpdHk=>> as KeycloakIAM
+
+rectangle "Order Service\n<size:16>[Software System]</size>" <<Boundary-T3JkZXIgU2VydmljZQ==>> {
+  rectangle "Order WebServer\n<size:16>[Container]</size>" <<Boundary-T3JkZXIgV2ViU2VydmVy>> {
+    rectangle "==OrderController\n<size:16>[Component]</size>\n\nHandles order placement and management." <<Element-RWxlbWVudCxDb21wb25lbnQ=>> as OrderService.OrderWebServer.OrderController
+    rectangle "==OrderRepository\n<size:16>[Component]</size>\n\nHandles data access for orders." <<Element-RWxlbWVudCxDb21wb25lbnQsUmVwb3NpdG9yeQ==>> as OrderService.OrderWebServer.OrderRepository
+    rectangle "==StockReservationService\n<size:16>[Component]</size>\n\nHandles stock reservation with Warehouse." <<Element-RWxlbWVudCxDb21wb25lbnQsU2VydmljZQ==>> as OrderService.OrderWebServer.StockReservationService
+    rectangle "==OrderFulfillmentService\n<size:16>[Component]</size>\n\nNotifies Warehouse of confirmed orders." <<Element-RWxlbWVudCxDb21wb25lbnQsU2VydmljZQ==>> as OrderService.OrderWebServer.OrderFulfillmentService
+    rectangle "==InvoiceRepository\n<size:16>[Component]</size>\n\nHandles data access for invoices." <<Element-RWxlbWVudCxDb21wb25lbnQsUmVwb3NpdG9yeQ==>> as OrderService.OrderWebServer.InvoiceRepository
+    rectangle "==CreditService\n<size:16>[Component]</size>\n\nHandles credit checks and overdue invoices." <<Element-RWxlbWVudCxDb21wb25lbnQsU2VydmljZQ==>> as OrderService.OrderWebServer.CreditService
+  }
+
+  database "==Order Database\n<size:16>[Container]</size>\n\nThe database." <<Element-RWxlbWVudCxDb250YWluZXIsRGF0YWJhc2U=>> as OrderService.OrderDatabase
+}
+
+Webshop --> KeycloakIAM <<Relationship-UmVsYXRpb25zaGlw>> : "Verifies tokens with"
+WarehouseService --> KeycloakIAM <<Relationship-UmVsYXRpb25zaGlw>> : "Verifies tokens with"
+OrderService.OrderWebServer.OrderFulfillmentService --> KeycloakIAM <<Relationship-UmVsYXRpb25zaGlw>> : "Requests token from"
+Webshop --> OrderService.OrderWebServer.OrderController <<Relationship-UmVsYXRpb25zaGlw>> : "Fetches orders from"
+OrderService.OrderWebServer.OrderController --> OrderService.OrderWebServer.OrderRepository <<Relationship-UmVsYXRpb25zaGlw>> : "Uses"
+OrderService.OrderWebServer.OrderController --> OrderService.OrderWebServer.StockReservationService <<Relationship-UmVsYXRpb25zaGlw>> : "Uses"
+OrderService.OrderWebServer.OrderController --> OrderService.OrderWebServer.OrderFulfillmentService <<Relationship-UmVsYXRpb25zaGlw>> : "Uses"
+OrderService.OrderWebServer.OrderController --> OrderService.OrderWebServer.CreditService <<Relationship-UmVsYXRpb25zaGlw>> : "Uses"
+OrderService.OrderWebServer.StockReservationService --> WarehouseService <<Relationship-UmVsYXRpb25zaGlw>> : "Reserves stock via"
+OrderService.OrderWebServer.OrderFulfillmentService --> WarehouseService <<Relationship-UmVsYXRpb25zaGlw>> : "Notifies of confirmed order"
+OrderService.OrderWebServer.OrderRepository --> OrderService.OrderDatabase <<Relationship-UmVsYXRpb25zaGlw>> : "Reads from and writes to"
+OrderService.OrderWebServer.InvoiceRepository --> OrderService.OrderDatabase <<Relationship-UmVsYXRpb25zaGlw>> : "Reads from and writes to"
+OrderService.OrderWebServer.CreditService --> OrderService.OrderWebServer.InvoiceRepository <<Relationship-UmVsYXRpb25zaGlw>> : "Uses"
+WarehouseService --> Webshop <<Relationship-UmVsYXRpb25zaGlw>> : "Sends stock updates to"
+
+@enduml

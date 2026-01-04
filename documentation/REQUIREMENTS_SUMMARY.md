@@ -129,3 +129,10 @@ The system follows a microservices-inspired architecture using the C4 model.
 ## 7. Design Standards
 
 *   **Consistency**: All user interfaces must adhere to the Design Guidelines defined in `documentation/DESIGN_GUIDELINES.md` (**REQ-020**).
+
+---
+
+## 8. Deployment & Operations
+
+*   **Kubernetes Deployment**: The system must be deployable to Kubernetes, and the deployment configuration must include all required services and databases (**REQ-078**).
+*   **Persistence**: All stateful services (Databases) must use persistent storage volumes (PVCs) in the production environment (**REQ-079**).

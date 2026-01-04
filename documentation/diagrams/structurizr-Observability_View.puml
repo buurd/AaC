@@ -1,0 +1,193 @@
+@startuml
+title <size:24>Container View: Observability System</size>\n<size:24>Observability Architecture</size>
+
+set separator none
+top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
+hide stereotype
+
+<style>
+  root {
+    BackgroundColor: #ffffff;
+    FontColor: #444444;
+  }
+  // Element,Container,Infrastructure
+  .Element-RWxlbWVudCxDb250YWluZXIsSW5mcmFzdHJ1Y3R1cmU= {
+    BackgroundColor: #333333;
+    LineColor: #232323;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Container,Web Server
+  .Element-RWxlbWVudCxDb250YWluZXIsV2ViIFNlcnZlcg== {
+    BackgroundColor: #438dd5;
+    LineColor: #2e6295;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Person
+  .Element-RWxlbWVudCxQZXJzb24= {
+    BackgroundColor: #08427b;
+    LineColor: #052e56;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Software System,Infrastructure
+  .Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0sSW5mcmFzdHJ1Y3R1cmU= {
+    BackgroundColor: #333333;
+    LineColor: #232323;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Software System,Infrastructure,Security
+  .Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0sSW5mcmFzdHJ1Y3R1cmUsU2VjdXJpdHk= {
+    BackgroundColor: #333333;
+    LineColor: #232323;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Relationship
+  .Relationship-UmVsYXRpb25zaGlw {
+    LineThickness: 2;
+    LineStyle: 10-10;
+    LineColor: #444444;
+    FontColor: #444444;
+    FontSize: 24;
+  }
+  // Observability System
+  .Boundary-T2JzZXJ2YWJpbGl0eSBTeXN0ZW0= {
+    BackgroundColor: #ffffff;
+    LineColor: #232323;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+  }
+  // Order Service
+  .Boundary-T3JkZXIgU2VydmljZQ== {
+    BackgroundColor: #ffffff;
+    LineColor: #0b4884;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+  }
+  // Product Management System
+  .Boundary-UHJvZHVjdCBNYW5hZ2VtZW50IFN5c3RlbQ== {
+    BackgroundColor: #ffffff;
+    LineColor: #0b4884;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+  }
+  // Warehouse Service
+  .Boundary-V2FyZWhvdXNlIFNlcnZpY2U= {
+    BackgroundColor: #ffffff;
+    LineColor: #0b4884;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+  }
+  // Webshop
+  .Boundary-V2Vic2hvcA== {
+    BackgroundColor: #ffffff;
+    LineColor: #0b4884;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+  }
+</style>
+
+person "==Customer\n<size:16>[Person]</size>\n\nA customer of the webshop." <<Element-RWxlbWVudCxQZXJzb24=>> as Customer
+person "==Product Manager\n<size:16>[Person]</size>\n\nA manager of products" <<Element-RWxlbWVudCxQZXJzb24=>> as ProductManager
+person "==Warehouse Staff\n<size:16>[Person]</size>\n\nStaff managing inventory." <<Element-RWxlbWVudCxQZXJzb24=>> as WarehouseStaff
+person "==Order Manager\n<size:16>[Person]</size>\n\nA manager of orders." <<Element-RWxlbWVudCxQZXJzb24=>> as OrderManager
+person "==Developer\n<size:16>[Person]</size>\n\nA software developer." <<Element-RWxlbWVudCxQZXJzb24=>> as Developer
+rectangle "==API Gateway / Reverse Proxy\n<size:16>[Software System]</size>\n\nEntry point for all traffic (HTTPS)." <<Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0sSW5mcmFzdHJ1Y3R1cmU=>> as APIGatewayReverseProxy
+hexagon "==Keycloak IAM\n<size:16>[Software System]</size>\n\nIdentity and Access Management." <<Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0sSW5mcmFzdHJ1Y3R1cmUsU2VjdXJpdHk=>> as KeycloakIAM
+
+rectangle "Observability System\n<size:16>[Software System]</size>" <<Boundary-T2JzZXJ2YWJpbGl0eSBTeXN0ZW0=>> {
+  rectangle "==Loki\n<size:16>[Container]</size>\n\nLog aggregation system." <<Element-RWxlbWVudCxDb250YWluZXIsSW5mcmFzdHJ1Y3R1cmU=>> as ObservabilitySystem.Loki
+  rectangle "==Promtail\n<size:16>[Container]</size>\n\nLog collector agent." <<Element-RWxlbWVudCxDb250YWluZXIsSW5mcmFzdHJ1Y3R1cmU=>> as ObservabilitySystem.Promtail
+  rectangle "==Grafana\n<size:16>[Container]</size>\n\nVisualization dashboard." <<Element-RWxlbWVudCxDb250YWluZXIsSW5mcmFzdHJ1Y3R1cmU=>> as ObservabilitySystem.Grafana
+}
+
+rectangle "Webshop\n<size:16>[Software System]</size>" <<Boundary-V2Vic2hvcA==>> {
+  rectangle "==Webshop WebServer\n<size:16>[Container]</size>\n\nThe web server." <<Element-RWxlbWVudCxDb250YWluZXIsV2ViIFNlcnZlcg==>> as Webshop.WebshopWebServer
+}
+
+rectangle "Product Management System\n<size:16>[Software System]</size>" <<Boundary-UHJvZHVjdCBNYW5hZ2VtZW50IFN5c3RlbQ==>> {
+  rectangle "==PM WebServer\n<size:16>[Container]</size>\n\nThe web server." <<Element-RWxlbWVudCxDb250YWluZXIsV2ViIFNlcnZlcg==>> as ProductManagementSystem.PMWebServer
+}
+
+rectangle "Warehouse Service\n<size:16>[Software System]</size>" <<Boundary-V2FyZWhvdXNlIFNlcnZpY2U=>> {
+  rectangle "==Warehouse WebServer\n<size:16>[Container]</size>\n\nThe web server." <<Element-RWxlbWVudCxDb250YWluZXIsV2ViIFNlcnZlcg==>> as WarehouseService.WarehouseWebServer
+}
+
+rectangle "Order Service\n<size:16>[Software System]</size>" <<Boundary-T3JkZXIgU2VydmljZQ==>> {
+  rectangle "==Order WebServer\n<size:16>[Container]</size>\n\nThe web server." <<Element-RWxlbWVudCxDb250YWluZXIsV2ViIFNlcnZlcg==>> as OrderService.OrderWebServer
+}
+
+APIGatewayReverseProxy --> Webshop.WebshopWebServer <<Relationship-UmVsYXRpb25zaGlw>> : "Routes to (HTTP)"
+APIGatewayReverseProxy --> ProductManagementSystem.PMWebServer <<Relationship-UmVsYXRpb25zaGlw>> : "Routes to (HTTP)"
+APIGatewayReverseProxy --> WarehouseService.WarehouseWebServer <<Relationship-UmVsYXRpb25zaGlw>> : "Routes to (HTTP)"
+APIGatewayReverseProxy --> OrderService.OrderWebServer <<Relationship-UmVsYXRpb25zaGlw>> : "Routes to (HTTP)"
+APIGatewayReverseProxy --> KeycloakIAM <<Relationship-UmVsYXRpb25zaGlw>> : "Routes to (HTTP)"
+ObservabilitySystem.Promtail --> Webshop.WebshopWebServer <<Relationship-UmVsYXRpb25zaGlw>> : "Reads logs from"
+ObservabilitySystem.Promtail --> ProductManagementSystem.PMWebServer <<Relationship-UmVsYXRpb25zaGlw>> : "Reads logs from"
+ObservabilitySystem.Promtail --> WarehouseService.WarehouseWebServer <<Relationship-UmVsYXRpb25zaGlw>> : "Reads logs from"
+ObservabilitySystem.Promtail --> OrderService.OrderWebServer <<Relationship-UmVsYXRpb25zaGlw>> : "Reads logs from"
+ObservabilitySystem.Promtail --> APIGatewayReverseProxy <<Relationship-UmVsYXRpb25zaGlw>> : "Reads logs from"
+ObservabilitySystem.Promtail --> KeycloakIAM <<Relationship-UmVsYXRpb25zaGlw>> : "Reads logs from"
+ObservabilitySystem.Promtail --> ObservabilitySystem.Loki <<Relationship-UmVsYXRpb25zaGlw>> : "Pushes logs to"
+ObservabilitySystem.Grafana --> ObservabilitySystem.Loki <<Relationship-UmVsYXRpb25zaGlw>> : "Queries logs from"
+ProductManagementSystem.PMWebServer --> APIGatewayReverseProxy <<Relationship-UmVsYXRpb25zaGlw>> : "Sends product updates to (HTTPS)"
+WarehouseService.WarehouseWebServer --> APIGatewayReverseProxy <<Relationship-UmVsYXRpb25zaGlw>> : "Sends stock updates to (HTTPS)"
+OrderService.OrderWebServer --> APIGatewayReverseProxy <<Relationship-UmVsYXRpb25zaGlw>> : "Reserves stock in (HTTPS)"
+Webshop.WebshopWebServer --> APIGatewayReverseProxy <<Relationship-UmVsYXRpb25zaGlw>> : "Fetches customer orders from (HTTPS)"
+Customer --> APIGatewayReverseProxy <<Relationship-UmVsYXRpb25zaGlw>> : "Uses (HTTPS)"
+ProductManager --> APIGatewayReverseProxy <<Relationship-UmVsYXRpb25zaGlw>> : "Uses (HTTPS)"
+WarehouseStaff --> APIGatewayReverseProxy <<Relationship-UmVsYXRpb25zaGlw>> : "Uses (HTTPS)"
+OrderManager --> APIGatewayReverseProxy <<Relationship-UmVsYXRpb25zaGlw>> : "Uses (HTTPS)"
+Developer --> ObservabilitySystem.Grafana <<Relationship-UmVsYXRpb25zaGlw>> : "Views logs in"
+
+@enduml

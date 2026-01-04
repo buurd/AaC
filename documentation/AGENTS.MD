@@ -11,7 +11,7 @@ This document serves as a persistent context for the AI agent to understand the 
 *   **Requirements Management**: YAML-based requirements
 *   **Validation**: Open Policy Agent (OPA) & Rego scripts
 *   **Testing**: Cypress (E2E), Pact (Contract Testing)
-*   **Infrastructure**: Docker, Nginx (Reverse Proxy), Keycloak (IAM)
+*   **Infrastructure**: Kubernetes (Minikube), Docker, Nginx (Reverse Proxy), Keycloak (IAM)
 *   **Observability**: Loki, Promtail, Grafana
 *   **Database**: PostgreSQL
 
@@ -19,52 +19,61 @@ This document serves as a persistent context for the AI agent to understand the 
 *   `/documentation`: Contains high-level documentation like summaries, strategies, and guidelines.
 *   `/requirements`: Contains YAML files defining system requirements (e.g., `REQ-001.yaml`).
 *   `/policies`: Contains Rego scripts (`.rego`) used by OPA to verify requirements against the architecture and code.
-*   `/structurizr`: Contains the Structurizr DSL (`workspace.dsl`) and properties. This is the source of truth for the architecture model.
-*   `/applications/webshop`: Source code for the customer-facing Webshop System.
-*   `/applications/productManagementSystem`: Source code for the internal Product Management System.
-*   `/applications/warehouse`: Source code for the internal Warehouse Service.
-*   `/applications/orderService`: Source code for the internal Order Service.
-*   `/infrastructure`: Infrastructure configurations (Nginx, Keycloak, Monitoring).
+*   `/structurizr`: Contains the Structurizr DSL (`workspace.dsl`). This is the source of truth for the architecture model.
+*   `/applications`: Contains the source code for the microservices.
+*   `/infrastructure`: Contains infrastructure configurations (Kubernetes, Nginx, Keycloak, Monitoring).
 *   `/e2e-tests`: Cypress end-to-end tests.
 *   `/pacts`: Pact contract tests for integration verification.
 
 ## 3. Architecture (C4 Model)
 The system consists of four main software systems:
 1.  **Webshop System**: Customer-facing e-commerce platform.
-2.  **Product Management System (PM)**: Internal system for managing products, including product groups and variants.
+2.  **Product Management System (PM)**: Internal system for managing products.
 3.  **Warehouse Service**: Internal system for inventory and delivery management.
 4.  **Order Service**: Internal system for order management.
 
 ### Key Integrations
-*   **Product Sync**: PM System -> Webshop & Warehouse (Updates product details). Variants are "flattened" into individual products with descriptive names.
-*   **Stock Sync**: Warehouse -> Webshop (Updates stock levels).
-*   **Stock Reservation**: Order Service -> Warehouse (Reserves stock on order).
+*   **Product Sync**: PM System -> Webshop & Warehouse.
+*   **Stock Sync**: Warehouse -> Webshop.
+*   **Stock Reservation**: Order Service -> Warehouse.
 
-## 4. Validation & Verification
-*   **Architecture Validation**: `validate-architecture.sh` runs OPA policies to check if the code and Structurizr model adhere to the requirements in `/requirements`.
-*   **E2E Testing**: Cypress tests in `/e2e-tests` verify UI functionality and user flows.
-*   **Integration Testing**: Pact tests in `/pacts` verify service-to-service communication. Requirements for integrations trace to `REQ-059` and are validated by the `check_pact_verification.rego` policy.
+## 4. Development Environment
+The primary development environment is run on Kubernetes using **Minikube**.
 
-## 5. Security & Observability
+*   **To start the entire environment**: Run `./run-k8s.sh`. This script handles Docker image building and Kubernetes deployment.
+*   **To stop the environment**: Run `minikube stop`.
+
+## 5. Validation & Verification
+*   **Architecture Validation**: The `./validate-architecture.sh` script is the primary tool for ensuring the system is coherent. It runs multiple checks:
+    *   **Static Analysis**: OPA policies in `/policies` are run against requirements, the Structurizr model, and source code. This now includes `check_k8s_deployment.rego` to validate the Kubernetes manifests against `REQ-078`.
+    *   **Contract Testing**: Pact tests are executed to verify consumer-provider contracts.
+    *   **Runtime & Functional Testing**: A temporary environment is spun up to run Cypress E2E tests.
+*   **Integration Testing**: Pact tests in `/pacts` verify service-to-service communication.
+
+## 6. Security & Observability
 *   **Security**: Nginx handles SSL termination. Keycloak manages authentication (RBAC) and authorization.
-    *   **Registration**: Users can register via Keycloak (enabled in `realm-export.json`).
-    *   **Login/Logout**: Applications provide Login/Logout functionality integrating with Keycloak.
-    *   **Dynamic Redirects**: Applications dynamically construct redirect URIs based on the `Host` header to support various environments (localhost, reverse-proxy).
-    *   **Backchannel Security**: Keycloak is configured with `KC_HOSTNAME_STRICT_BACKCHANNEL=true` to ensure consistent issuer claims for internal service-to-service validation.
 *   **Observability**: Promtail collects logs, Loki aggregates them, and Grafana provides visualization.
 
-## 6. Key Documents
-*   `documentation/ARCHITECTURE_SUMMARY.md`: Detailed description of the architecture, containers, and components.
-*   `documentation/REQUIREMENTS_SUMMARY.md`: Narrative summary of requirements by user journey.
-*   `documentation/DESIGN_GUIDELINES.md`: UI consistency standards.
-*   `documentation/STRATEGY_PRODUCT_VARIATIONS.md`: Strategy for implementing product variations (sizes, colors) using a flattening approach.
-*   `documentation/POLICIES.md`: Describes the Rego policies used for validation.
-
 ## 7. Workflow for Adding Features
-1.  **Define Requirements**: Create a new YAML file in `/requirements` (e.g., `REQ-076.yaml`). Ensure it traces to a parent requirement and any relevant policy requirements (e.g., `REQ-059` for integrations).
-2.  **Update Domain/Architecture**: Update `structurizr/workspace.dsl` to reflect new relationships or components.
-3.  **Implement Code**: Write the Java code to satisfy the requirement.
-4.  **Verify**: Run `validate-architecture.sh` and tests.
+1.  **Define Requirements**: Create a new YAML file in `/requirements`. **Important**: Follow the `RequirementSet` format used by existing files (e.g., `REQ-079.yaml`) to ensure it's parsed correctly.
+2.  **Update Domain/Architecture**: If necessary, update `structurizr/workspace.dsl`.
+3.  **Implement Code**: Write the Java code, tests, and any new Rego policies.
+4.  **Verify**: Run `./validate-architecture.sh` to ensure all checks pass.
 
-## 8. Known Issues
-*   The project is currently stable and all validation checks are passing.
+## 8. Debugging & Common Issues
+A suite of debugging scripts is available to inspect the running Kubernetes environment:
+*   `./debug-k8s-status.sh`: Provides a comprehensive overview of all pods, services, and recent events. This is the best starting point for any issue.
+*   `./debug-app-logs.sh`: Tails the logs for the main applications (`webshop`, `product-management`, `loki`).
+*   `./debug-endpoints.sh`: Checks if the Kubernetes services are correctly pointing to running pods.
+*   `./debug-storage.sh`: Inspects the contents of the persistent volumes.
+
+### Common Problem: Pods are in `CrashLoopBackOff` or `Pending`
+*   **Symptom**: Applications fail to start, often with database or volume-related errors. `debug-endpoints.sh` shows empty endpoints for the failing service.
+*   **Cause**: This is typically due to an issue with Persistent Volume initialization, where the database container starts with a data directory that is not properly initialized.
+*   **Solution**: The most reliable fix is to perform a clean reset of the environment:
+    1.  Stop Minikube: `minikube stop`
+    2.  Clean the persistent data directories: `sudo rm -rf production-data/*`
+    3.  Restart the environment: `./run-k8s.sh`
+
+## 9. Known Issues
+*   The Kubernetes deployment is now stable after resolving database and Loki initialization issues. All validation checks are passing.

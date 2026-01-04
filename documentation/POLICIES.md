@@ -73,3 +73,11 @@ Ensures that for every integration requirement specifying a consumer and provide
 
 **How it works:**
 The policy checks requirements that have a `pact_validation` block containing `consumer` and `provider` fields. It constructs the expected Pact file path (e.g., `pacts/Consumer-Provider.json`) and verifies its existence in the project file list.
+
+## 10. Kubernetes Deployment Validation (`check_k8s_deployment.rego`)
+
+**Purpose:**
+Ensures that the Kubernetes manifests in `infrastructure/k8s/` contain all the required Deployments and Services as defined in `REQ-078`. This provides a "double bookkeeping" check to keep the infrastructure-as-code synchronized with the architectural requirements.
+
+**How it works:**
+The policy reads the `k8s_validation` block from `REQ-078`. It then iterates through the list of `required_deployments` and `required_services`, checking if a corresponding resource with a matching `kind` and `metadata.name` exists in the set of parsed Kubernetes manifests.

@@ -1,0 +1,171 @@
+@startuml
+title <size:24>Dynamic View: Warehouse Service - Warehouse WebServer</size>\n<size:24>Stock Update on Delivery</size>
+
+set separator none
+top to bottom direction
+hide stereotype
+
+<style>
+  root {
+    BackgroundColor: #ffffff;
+    FontColor: #444444;
+  }
+  // Element,Component
+  .Element-RWxlbWVudCxDb21wb25lbnQ= {
+    BackgroundColor: #85bbf0;
+    LineColor: #5d82a8;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #000000;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Component,Repository
+  .Element-RWxlbWVudCxDb21wb25lbnQsUmVwb3NpdG9yeQ== {
+    BackgroundColor: #999999;
+    LineColor: #6b6b6b;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #000000;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Component,Service
+  .Element-RWxlbWVudCxDb21wb25lbnQsU2VydmljZQ== {
+    BackgroundColor: #666666;
+    LineColor: #474747;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Container,Database
+  .Element-RWxlbWVudCxDb250YWluZXIsRGF0YWJhc2U= {
+    BackgroundColor: #999999;
+    LineColor: #6b6b6b;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Container,Infrastructure,Security
+  .Element-RWxlbWVudCxDb250YWluZXIsSW5mcmFzdHJ1Y3R1cmUsU2VjdXJpdHk= {
+    BackgroundColor: #333333;
+    LineColor: #232323;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Person
+  .Element-RWxlbWVudCxQZXJzb24= {
+    BackgroundColor: #08427b;
+    LineColor: #052e56;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Relationship
+  .Relationship-UmVsYXRpb25zaGlw {
+    LineThickness: 2;
+    LineStyle: 10-10;
+    LineColor: #444444;
+    FontColor: #444444;
+    FontSize: 24;
+  }
+  // Warehouse Service
+  .Boundary-V2FyZWhvdXNlIFNlcnZpY2U= {
+    BackgroundColor: #ffffff;
+    LineColor: #0b4884;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+  }
+  // Warehouse WebServer
+  .Boundary-V2FyZWhvdXNlIFdlYlNlcnZlcg== {
+    BackgroundColor: #ffffff;
+    LineColor: #2e6295;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+  }
+  // Webshop
+  .Boundary-V2Vic2hvcA== {
+    BackgroundColor: #ffffff;
+    LineColor: #0b4884;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+  }
+  // Webshop WebServer
+  .Boundary-V2Vic2hvcCBXZWJTZXJ2ZXI= {
+    BackgroundColor: #ffffff;
+    LineColor: #2e6295;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+  }
+</style>
+
+person "==Warehouse Staff\n<size:16>[Person]</size>\n\nStaff managing inventory." <<Element-RWxlbWVudCxQZXJzb24=>> as WarehouseStaff
+
+rectangle "Webshop\n<size:16>[Software System]</size>" <<Boundary-V2Vic2hvcA==>> {
+  rectangle "Webshop WebServer\n<size:16>[Container]</size>" <<Boundary-V2Vic2hvcCBXZWJTZXJ2ZXI=>> {
+    rectangle "==StockSyncController\n<size:16>[Component]</size>\n\nHandles stock synchronization API." <<Element-RWxlbWVudCxDb21wb25lbnQ=>> as Webshop.WebshopWebServer.StockSyncController
+    rectangle "==ProductRepository\n<size:16>[Component]</size>\n\nHandles data access for products." <<Element-RWxlbWVudCxDb21wb25lbnQsUmVwb3NpdG9yeQ==>> as Webshop.WebshopWebServer.ProductRepository
+  }
+
+  database "==Webshop Database\n<size:16>[Container]</size>\n\nThe database." <<Element-RWxlbWVudCxDb250YWluZXIsRGF0YWJhc2U=>> as Webshop.WebshopDatabase
+}
+
+rectangle "Warehouse Service\n<size:16>[Software System]</size>" <<Boundary-V2FyZWhvdXNlIFNlcnZpY2U=>> {
+  rectangle "Warehouse WebServer\n<size:16>[Container]</size>" <<Boundary-V2FyZWhvdXNlIFdlYlNlcnZlcg==>> {
+    rectangle "==DeliveryController\n<size:16>[Component]</size>\n\nHandles delivery management." <<Element-RWxlbWVudCxDb21wb25lbnQ=>> as WarehouseService.WarehouseWebServer.DeliveryController
+    rectangle "==StockService\n<size:16>[Component]</size>\n\nHandles stock sync to Webshop." <<Element-RWxlbWVudCxDb21wb25lbnQsU2VydmljZQ==>> as WarehouseService.WarehouseWebServer.StockService
+    rectangle "==DeliveryRepository\n<size:16>[Component]</size>\n\nHandles data access for deliveries." <<Element-RWxlbWVudCxDb21wb25lbnQsUmVwb3NpdG9yeQ==>> as WarehouseService.WarehouseWebServer.DeliveryRepository
+  }
+
+}
+
+person "==Warehouse Staff\n<size:16>[Person]</size>\n\nStaff managing inventory." <<Element-RWxlbWVudCxQZXJzb24=>> as WarehouseStaff
+hexagon "==Keycloak Server\n<size:16>[Container]</size>\n\nHandles AuthN/AuthZ." <<Element-RWxlbWVudCxDb250YWluZXIsSW5mcmFzdHJ1Y3R1cmUsU2VjdXJpdHk=>> as KeycloakIAM.KeycloakServer
+database "==Webshop Database\n<size:16>[Container]</size>\n\nThe database." <<Element-RWxlbWVudCxDb250YWluZXIsRGF0YWJhc2U=>> as Webshop.WebshopDatabase
+
+WarehouseStaff --> WarehouseService.WarehouseWebServer.DeliveryController <<Relationship-UmVsYXRpb25zaGlw>> : "1: 1. Adds item to delivery"
+WarehouseService.WarehouseWebServer.DeliveryController --> WarehouseService.WarehouseWebServer.DeliveryRepository <<Relationship-UmVsYXRpb25zaGlw>> : "2: 2. Saves new item"
+WarehouseService.WarehouseWebServer.DeliveryController --> WarehouseService.WarehouseWebServer.StockService <<Relationship-UmVsYXRpb25zaGlw>> : "3: 3. Triggers stock update"
+WarehouseService.WarehouseWebServer.StockService --> KeycloakIAM.KeycloakServer <<Relationship-UmVsYXRpb25zaGlw>> : "4: 4. Requests token (Client Credentials)"
+WarehouseService.WarehouseWebServer.StockService --> Webshop.WebshopWebServer.StockSyncController <<Relationship-UmVsYXRpb25zaGlw>> : "5: 5. Sends stock update to Webshop"
+Webshop.WebshopWebServer.StockSyncController --> Webshop.WebshopWebServer.ProductRepository <<Relationship-UmVsYXRpb25zaGlw>> : "6: 6. Updates stock in Webshop DB"
+Webshop.WebshopWebServer.ProductRepository --> Webshop.WebshopDatabase <<Relationship-UmVsYXRpb25zaGlw>> : "7: 7. Writes to DB"
+
+@enduml

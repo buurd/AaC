@@ -5,3 +5,13 @@ structurizr/workspace.json
 */cypress/downloads
 m2-cache
 production-data/
+
+# Ignore SSL/TLS keys and certs
+*.key
+*.crt
+*.pem
+infrastructure/nginx/certs/
+
+# Ignore logs
+logs/
+*.log

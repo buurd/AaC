@@ -19,7 +19,7 @@ We are building a landscape consisting of four distinct software systems followi
 *   **Developer**: A person who monitors the system logs.
 
 ### Containers (Level 2)
-The landscape is composed of independent containers to ensure loose coupling:
+The landscape is composed of independent containers, deployed to **Kubernetes**, to ensure loose coupling:
 
 **1. Webshop System**
 *   **Webshop WebServer**: A Java application (Java 21) handling customer traffic.
@@ -38,12 +38,12 @@ The landscape is composed of independent containers to ensure loose coupling:
 *   **Order Database**: A dedicated PostgreSQL database for the Order Service.
 
 **5. Infrastructure & Security**
-*   **API Gateway / Reverse Proxy**: An **Nginx** container handling SSL termination and routing.
+*   **API Gateway / Reverse Proxy**: An **Nginx** Ingress Controller handling SSL termination and routing.
 *   **Keycloak IAM**: A centralized Identity and Access Management server handling authentication and authorization.
 
 **6. Observability**
 *   **Loki**: Log aggregation system.
-*   **Promtail**: Log collector agent.
+*   **Promtail**: Log collector agent (DaemonSet).
 *   **Grafana**: Visualization dashboard.
 
 ### Inter-System Communication
@@ -92,6 +92,7 @@ We define our requirements as code (YAML), allowing us to trace them from high-l
 *   **Runtime**: Ensuring services are live and accessible.
 *   **Security**: Mandating HTTPS, Reverse Proxy, and IAM (Keycloak).
 *   **Observability**: Mandating log aggregation and monitoring (Loki, Promtail, Grafana).
+*   **Deployment**: Mandating Kubernetes deployment configuration (`REQ-078`).
 *   **Design**: Enforcing a consistent UI via `DESIGN_GUIDELINES.md`.
 
 ---
@@ -101,9 +102,9 @@ We define our requirements as code (YAML), allowing us to trace them from high-l
 We have implemented a robust security architecture:
 
 ### A. SSL Termination
-*   **Reverse Proxy**: An **Nginx** container acts as the single entry point for all external traffic.
+*   **Reverse Proxy**: An **Nginx** Ingress Controller acts as the single entry point for all external traffic.
 *   **HTTPS**: All traffic from users to the Reverse Proxy is encrypted via HTTPS (using self-signed certs for dev).
-*   **Internal Traffic**: Traffic between the Reverse Proxy and the application containers is unencrypted HTTP within the trusted Docker network.
+*   **Internal Traffic**: Traffic between the Reverse Proxy and the application containers is unencrypted HTTP within the trusted Kubernetes network.
 
 ### B. Identity and Access Management (IAM)
 *   **Keycloak**: Used as the centralized IdP.
@@ -119,7 +120,7 @@ We have implemented a robust security architecture:
 ## 4. Observability Architecture
 
 We have implemented a centralized logging and monitoring stack:
-*   **Log Aggregation**: **Promtail** collects logs from all Docker containers (Webshop, PM, Warehouse, Order, Nginx, Postgres) and pushes them to **Loki**.
+*   **Log Aggregation**: **Promtail** collects logs from all Kubernetes pods (Webshop, PM, Warehouse, Order, Nginx, Postgres) and pushes them to **Loki**.
 *   **Visualization**: **Grafana** queries Loki to display log volumes and details.
 *   **Dashboards**: A custom dashboard provides insights into log volume per container and log level (INFO, ERROR, etc.), with filtering capabilities.
 *   **Standardization**: All Java applications use **SLF4J** to produce structured logs that are parsed by Promtail for better analysis.
@@ -137,9 +138,10 @@ We use **Open Policy Agent (OPA)** to validate our architecture model and code a
 *   **Code**: Scans Java source code to ensure domain entities and repositories are implemented correctly.
 *   **Security**: Scans test code to ensure no insecure `http://` URLs are used.
 *   **Contract Verification**: Checks that all integration requirements have a corresponding Pact contract file.
+*   **Kubernetes Deployment**: Validates that the Kubernetes manifests (`infrastructure/k8s`) contain all required Deployments and Services as defined in `REQ-078`.
 
 ### B. Runtime Verification
-We spin up the entire landscape (4 Apps, 4 DBs, 1 Proxy, 1 Keycloak, Observability Stack) in Docker to verify the system works as expected.
+We spin up the entire landscape (4 Apps, 4 DBs, 1 Proxy, 1 Keycloak, Observability Stack) in Docker/Kubernetes to verify the system works as expected.
 *   **Infrastructure**: Starts all databases, Keycloak, Nginx, and Observability tools.
 *   **Deployment**: Starts application containers with security configuration.
 *   **Functional Check**: Verifies HTTP endpoints and redirects (302 Found) for secured resources.
