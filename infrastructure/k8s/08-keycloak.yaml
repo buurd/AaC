@@ -1,0 +1,315 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak-db
+  namespace: infrastructure
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak-db
+  template:
+    metadata:
+      labels:
+        app: keycloak-db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          env:
+            - name: POSTGRES_DB
+              value: keycloak
+            - name: POSTGRES_USER
+              value: keycloak
+            - name: POSTGRES_PASSWORD
+              value: keycloak
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: db-data
+      volumes:
+        - name: db-data
+          persistentVolumeClaim:
+            claimName: keycloak-db-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak-db
+  namespace: infrastructure
+spec:
+  selector:
+    app: keycloak-db
+  ports:
+    - port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: infrastructure
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox:1.28
+          command: ['sh', '-c', "until nslookup keycloak-db; do echo waiting for keycloak-db; sleep 2; done"]
+      containers:
+        - name: keycloak
+          image: quay.io/keycloak/keycloak:23.0.7
+          args: ["start-dev", "--import-realm"]
+          env:
+            - name: KC_DB
+              value: postgres
+            - name: KC_DB_URL_HOST
+              value: keycloak-db
+            - name: KC_DB_URL_DATABASE
+              value: keycloak
+            - name: KC_DB_USERNAME
+              value: keycloak
+            - name: KC_DB_PASSWORD
+              value: keycloak
+            - name: KEYCLOAK_ADMIN
+              value: admin
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              value: admin
+            - name: KC_PROXY
+              value: "edge"
+            - name: KC_HOSTNAME_STRICT
+              value: "false"
+            - name: KC_HTTP_ENABLED
+              value: "true"
+            - name: KC_HEALTH_ENABLED
+              value: "true"
+          ports:
+            - name: http
+              containerPort: 8080
+          volumeMounts:
+            - name: realm-config
+              mountPath: /opt/keycloak/data/import
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+      volumes:
+        - name: realm-config
+          configMap:
+            name: keycloak-realm-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  namespace: infrastructure
+spec:
+  selector:
+    app: keycloak
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak-ingress
+  namespace: infrastructure
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: keycloak
+                port:
+                  number: 8080
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-realm-config
+  namespace: infrastructure
+data:
+  realm-export.json: |
+    {
+      "realm": "webshop-realm",
+      "enabled": true,
+      "registrationAllowed": true,
+      "roles": {
+        "realm": [
+          {
+            "name": "product-manager",
+            "description": "Can manage products"
+          },
+          {
+            "name": "warehouse-staff",
+            "description": "Can manage inventory"
+          },
+          {
+            "name": "order-manager",
+            "description": "Can manage orders"
+          },
+          {
+            "name": "product-sync",
+            "description": "Can sync products"
+          },
+          {
+            "name": "stock-sync",
+            "description": "Can sync stock"
+          },
+          {
+            "name": "stock-reserve",
+            "description": "Can reserve stock"
+          },
+          {
+            "name": "order-history",
+            "description": "Can view order history"
+          },
+          {
+            "name": "order-fulfillment",
+            "description": "Can trigger order fulfillment"
+          }
+        ]
+      },
+      "users": [
+        {
+          "username": "manager",
+          "enabled": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "password"
+            }
+          ],
+          "realmRoles": [ "product-manager" ]
+        },
+        {
+          "username": "staff",
+          "enabled": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "password"
+            }
+          ],
+          "realmRoles": [ "warehouse-staff" ]
+        },
+        {
+          "username": "p-user",
+          "enabled": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "p-user"
+            }
+          ],
+          "realmRoles": [ "product-manager" ]
+        },
+        {
+          "username": "w-user",
+          "enabled": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "w-user"
+            }
+          ],
+          "realmRoles": [ "warehouse-staff" ]
+        },
+        {
+          "username": "o-user",
+          "enabled": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "o-user"
+            }
+          ],
+          "realmRoles": [ "order-manager" ]
+        },
+        {
+          "username": "service-account-pm-client",
+          "enabled": true,
+          "serviceAccountClientId": "pm-client",
+          "realmRoles": [ "product-sync" ]
+        },
+        {
+          "username": "service-account-warehouse-client",
+          "enabled": true,
+          "serviceAccountClientId": "warehouse-client",
+          "realmRoles": [ "stock-sync" ]
+        },
+        {
+          "username": "service-account-order-client",
+          "enabled": true,
+          "serviceAccountClientId": "order-client",
+          "realmRoles": [ "stock-reserve", "order-fulfillment" ]
+        },
+        {
+          "username": "service-account-webshop-backend-client",
+          "enabled": true,
+          "serviceAccountClientId": "webshop-backend-client",
+          "realmRoles": [ "order-history" ]
+        }
+      ],
+      "clients": [
+        {
+          "clientId": "webshop-client",
+          "enabled": true,
+          "publicClient": true,
+          "directAccessGrantsEnabled": true,
+          "redirectUris": [
+            "https://localhost:8443/*",
+            "https://reverse-proxy:8443/*",
+            "https://localhost:8444/*",
+            "https://reverse-proxy:8444/*",
+            "*"
+          ],
+          "webOrigins": [ "*" ]
+        },
+        {
+          "clientId": "webshop-backend-client",
+          "enabled": true,
+          "serviceAccountsEnabled": true,
+          "secret": "webshop-backend-secret",
+          "clientAuthenticatorType": "client-secret"
+        },
+        {
+          "clientId": "pm-client",
+          "enabled": true,
+          "serviceAccountsEnabled": true,
+          "secret": "pm-secret",
+          "clientAuthenticatorType": "client-secret"
+        },
+        {
+          "clientId": "warehouse-client",
+          "enabled": true,
+          "serviceAccountsEnabled": true,
+          "secret": "warehouse-secret",
+          "clientAuthenticatorType": "client-secret"
+        },
+        {
+          "clientId": "order-client",
+          "enabled": true,
+          "serviceAccountsEnabled": true,
+          "secret": "order-secret",
+          "clientAuthenticatorType": "client-secret"
+        }
+      ]
+    }

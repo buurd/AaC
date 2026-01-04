@@ -1,0 +1,23 @@
+--- Starting Fix v3 for 503 Errors (PV Binding Fix) ---
+   Scaling down databases...
+deployment.apps/webshop-db scaled
+deployment.apps/pm-db scaled
+   Patching PVs to release them...
+persistentvolume/webshop-db-pv patched
+persistentvolume/pm-db-pv patched
+   Waiting for PVs to become Available...
+   Scaling databases back up...
+deployment.apps/webshop-db scaled
+deployment.apps/pm-db scaled
+   Waiting for databases to be ready...
+pod/webshop-db-74885b88df-hdm7m condition met
+pod/pm-db-bd78669d4-6lfb5 condition met
+   Waiting 15s for Postgres initialization...
+   Scaling applications back up...
+deployment.apps/webshop scaled
+deployment.apps/product-management scaled
+deployment.apps/webshop restarted
+deployment.apps/product-management restarted
+
+--- Fix v3 Complete ---
+Please wait a few moments for the applications to start, then run ./debug-endpoints.sh to verify.

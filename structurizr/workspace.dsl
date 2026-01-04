@@ -149,6 +149,68 @@ workspace "My System" "My System Description" {
             }
         }
 
+        // Kubernetes Cluster Representation
+        // MOVED AFTER SYSTEM DEFINITIONS because containerInstance references must exist
+        k8sCluster = deploymentEnvironment "Production" {
+            deploymentNode "Kubernetes Cluster" {
+                tags "Infrastructure" "Kubernetes"
+
+                deploymentNode "Ingress Controller" {
+                    tags "Infrastructure" "Kubernetes"
+                    containerInstance reverseProxy
+                }
+
+                deploymentNode "Webshop Namespace" {
+                    deploymentNode "Webshop Deployment" {
+                        instances 2
+                        containerInstance webServer
+                    }
+                    deploymentNode "Webshop DB Pod" {
+                        containerInstance database
+                    }
+                }
+
+                deploymentNode "PM Namespace" {
+                    deploymentNode "PM Deployment" {
+                        containerInstance pmWebServer
+                    }
+                    deploymentNode "PM DB Pod" {
+                        containerInstance pmDatabase
+                    }
+                }
+
+                deploymentNode "Warehouse Namespace" {
+                    deploymentNode "Warehouse Deployment" {
+                        containerInstance warehouseWebServer
+                    }
+                    deploymentNode "Warehouse DB Pod" {
+                        containerInstance warehouseDatabase
+                    }
+                }
+
+                deploymentNode "Order Namespace" {
+                    deploymentNode "Order Deployment" {
+                        instances 2
+                        containerInstance orderWebServer
+                    }
+                    deploymentNode "Order DB Pod" {
+                        containerInstance orderDatabase
+                    }
+                }
+
+                deploymentNode "Infrastructure Namespace" {
+                    deploymentNode "Keycloak Deployment" {
+                        containerInstance keycloakContainer
+                    }
+                    deploymentNode "Observability Deployment" {
+                        containerInstance loki
+                        containerInstance promtail
+                        containerInstance grafana
+                    }
+                }
+            }
+        }
+
         // --- Logical Relationships (Business View) ---
         customer -> webshop "Uses" {
             tags "Logical"
@@ -464,6 +526,12 @@ workspace "My System" "My System Description" {
             exclude "relationship.tag==Logical"
             exclude "relationship.tag==Security"
             exclude "relationship.tag==Interaction"
+            autolayout tb
+        }
+
+        // Deployment View for Production
+        deployment * "Production" "Deployment_View" "Production Deployment" {
+            include *
             autolayout tb
         }
 

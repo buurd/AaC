@@ -4,3 +4,4 @@ structurizr/.structurizr
 structurizr/workspace.json
 */cypress/downloads
 m2-cache
+production-data/

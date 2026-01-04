@@ -1,0 +1,81 @@
+--- Starting Fix for 503 Errors ---
+1. Patching Loki Configuration...
+   Applying updated observability configuration...
+configmap/grafana-datasources unchanged
+configmap/loki-config configured
+deployment.apps/loki unchanged
+service/loki unchanged
+serviceaccount/promtail-sa unchanged
+daemonset.apps/promtail unchanged
+configmap/promtail-config unchanged
+clusterrole.rbac.authorization.k8s.io/promtail-clusterrole unchanged
+clusterrolebinding.rbac.authorization.k8s.io/promtail-clusterrolebinding unchanged
+deployment.apps/grafana unchanged
+service/grafana unchanged
+ingress.networking.k8s.io/grafana-ingress unchanged
+deployment.apps/loki restarted
+
+2. Resetting Webshop and Product Management Databases...
+   Scaling down applications...
+deployment.apps/webshop scaled
+deployment.apps/product-management scaled
+   Scaling down databases...
+deployment.apps/webshop-db scaled
+deployment.apps/pm-db scaled
+   Waiting for pods to terminate...
+pod/webshop-db-74885b88df-d4mtq condition met
+pod/pm-db-bd78669d4-xjg8v condition met
+   Deleting local database data (forcing re-initialization)...
+   Scaling databases back up...
+deployment.apps/webshop-db scaled
+deployment.apps/pm-db scaled
+   Waiting for databases to be ready...
+pod/webshop-db-74885b88df-hvzsb condition met
+pod/pm-db-bd78669d4-zsjnv condition met
+   Waiting 10s for Postgres initialization...
+   Scaling applications back up...
+deployment.apps/webshop scaled
+deployment.apps/product-management scaled
+
+--- Fix Complete ---
+Please wait a few moments for the applications to start, then run ./debug-endpoints.sh to verify.
+--- Starting Fix for 503 Errors ---
+1. Patching Loki Configuration...
+   Applying updated observability configuration...
+configmap/grafana-datasources unchanged
+configmap/loki-config configured
+deployment.apps/loki unchanged
+service/loki unchanged
+serviceaccount/promtail-sa unchanged
+daemonset.apps/promtail unchanged
+configmap/promtail-config unchanged
+clusterrole.rbac.authorization.k8s.io/promtail-clusterrole unchanged
+clusterrolebinding.rbac.authorization.k8s.io/promtail-clusterrolebinding unchanged
+deployment.apps/grafana unchanged
+service/grafana unchanged
+ingress.networking.k8s.io/grafana-ingress unchanged
+deployment.apps/loki restarted
+
+2. Resetting Webshop and Product Management Databases...
+   Scaling down applications...
+deployment.apps/webshop scaled
+deployment.apps/product-management scaled
+   Scaling down databases...
+deployment.apps/webshop-db scaled
+deployment.apps/pm-db scaled
+   Waiting for pods to terminate...
+pod/webshop-db-74885b88df-hvzsb condition met
+   Deleting local database data (forcing re-initialization)...
+   Scaling databases back up...
+deployment.apps/webshop-db scaled
+deployment.apps/pm-db scaled
+   Waiting for databases to be ready...
+pod/webshop-db-74885b88df-8sfz4 condition met
+pod/pm-db-bd78669d4-7vbxs condition met
+   Waiting 10s for Postgres initialization...
+   Scaling applications back up...
+deployment.apps/webshop scaled
+deployment.apps/product-management scaled
+
+--- Fix Complete ---
+Please wait a few moments for the applications to start, then run ./debug-endpoints.sh to verify.

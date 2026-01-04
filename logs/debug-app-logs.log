@@ -1,0 +1,109 @@
+--- Webshop Logs ---
+Defaulted container "webshop" out of: webshop, wait-for-db (init)
+Defaulted container "webshop" out of: webshop, wait-for-db (init)
+[pod/webshop-866578cbfc-59c5f/webshop] [main] INFO com.example.webshop.WebshopApplication - Connecting to database at: jdbc:postgresql://webshop-db:5432/webshop
+[pod/webshop-866578cbfc-59c5f/webshop] Exception in thread "main" org.postgresql.util.PSQLException: FATAL: database "webshop" does not exist
+[pod/webshop-866578cbfc-59c5f/webshop] 	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2725)
+[pod/webshop-866578cbfc-59c5f/webshop] 	at org.postgresql.core.v3.QueryExecutorImpl.readStartupMessages(QueryExecutorImpl.java:2837)
+[pod/webshop-866578cbfc-59c5f/webshop] 	at org.postgresql.core.v3.QueryExecutorImpl.<init>(QueryExecutorImpl.java:175)
+[pod/webshop-866578cbfc-59c5f/webshop] 	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:317)
+[pod/webshop-866578cbfc-59c5f/webshop] 	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:54)
+[pod/webshop-866578cbfc-59c5f/webshop] 	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:273)
+[pod/webshop-866578cbfc-59c5f/webshop] 	at org.postgresql.Driver.makeConnection(Driver.java:446)
+[pod/webshop-866578cbfc-59c5f/webshop] 	at org.postgresql.Driver.connect(Driver.java:298)
+[pod/webshop-866578cbfc-59c5f/webshop] 	at java.sql/java.sql.DriverManager.getConnection(Unknown Source)
+[pod/webshop-866578cbfc-59c5f/webshop] 	at java.sql/java.sql.DriverManager.getConnection(Unknown Source)
+[pod/webshop-866578cbfc-59c5f/webshop] 	at com.example.webshop.WebshopApplication.main(WebshopApplication.java:58)
+[pod/webshop-866578cbfc-jtvrb/webshop] [main] INFO com.example.webshop.WebshopApplication - Connecting to database at: jdbc:postgresql://webshop-db:5432/webshop
+[pod/webshop-866578cbfc-jtvrb/webshop] Exception in thread "main" org.postgresql.util.PSQLException: FATAL: database "webshop" does not exist
+[pod/webshop-866578cbfc-jtvrb/webshop] 	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2725)
+[pod/webshop-866578cbfc-jtvrb/webshop] 	at org.postgresql.core.v3.QueryExecutorImpl.readStartupMessages(QueryExecutorImpl.java:2837)
+[pod/webshop-866578cbfc-jtvrb/webshop] 	at org.postgresql.core.v3.QueryExecutorImpl.<init>(QueryExecutorImpl.java:175)
+[pod/webshop-866578cbfc-jtvrb/webshop] 	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:317)
+[pod/webshop-866578cbfc-jtvrb/webshop] 	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:54)
+[pod/webshop-866578cbfc-jtvrb/webshop] 	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:273)
+[pod/webshop-866578cbfc-jtvrb/webshop] 	at org.postgresql.Driver.makeConnection(Driver.java:446)
+[pod/webshop-866578cbfc-jtvrb/webshop] 	at org.postgresql.Driver.connect(Driver.java:298)
+[pod/webshop-866578cbfc-jtvrb/webshop] 	at java.sql/java.sql.DriverManager.getConnection(Unknown Source)
+[pod/webshop-866578cbfc-jtvrb/webshop] 	at java.sql/java.sql.DriverManager.getConnection(Unknown Source)
+[pod/webshop-866578cbfc-jtvrb/webshop] 	at com.example.webshop.WebshopApplication.main(WebshopApplication.java:58)
+
+--- Product Management Logs ---
+Defaulted container "product-management" out of: product-management, wait-for-db (init)
+[pod/product-management-75c8dd496f-4prjn/product-management] [main] INFO com.example.productmanagement.ProductManagementApplication - Connecting to database at: jdbc:postgresql://pm-db:5432/product_management
+[pod/product-management-75c8dd496f-4prjn/product-management] Exception in thread "main" org.postgresql.util.PSQLException: FATAL: database "product_management" does not exist
+[pod/product-management-75c8dd496f-4prjn/product-management] 	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2725)
+[pod/product-management-75c8dd496f-4prjn/product-management] 	at org.postgresql.core.v3.QueryExecutorImpl.readStartupMessages(QueryExecutorImpl.java:2837)
+[pod/product-management-75c8dd496f-4prjn/product-management] 	at org.postgresql.core.v3.QueryExecutorImpl.<init>(QueryExecutorImpl.java:175)
+[pod/product-management-75c8dd496f-4prjn/product-management] 	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:317)
+[pod/product-management-75c8dd496f-4prjn/product-management] 	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:54)
+[pod/product-management-75c8dd496f-4prjn/product-management] 	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:273)
+[pod/product-management-75c8dd496f-4prjn/product-management] 	at org.postgresql.Driver.makeConnection(Driver.java:446)
+[pod/product-management-75c8dd496f-4prjn/product-management] 	at org.postgresql.Driver.connect(Driver.java:298)
+[pod/product-management-75c8dd496f-4prjn/product-management] 	at java.sql/java.sql.DriverManager.getConnection(Unknown Source)
+[pod/product-management-75c8dd496f-4prjn/product-management] 	at java.sql/java.sql.DriverManager.getConnection(Unknown Source)
+[pod/product-management-75c8dd496f-4prjn/product-management] 	at com.example.productmanagement.ProductManagementApplication.main(ProductManagementApplication.java:58)
+
+--- Loki Logs ---
+[pod/loki-6cb4fbf8b9-rcsdt/loki] creating WAL folder at "/wal": mkdir wal: permission denied
+[pod/loki-6cb4fbf8b9-rcsdt/loki] error initialising module: ingester
+[pod/loki-6cb4fbf8b9-rcsdt/loki] github.com/grafana/dskit/modules.(*Manager).initModule
+[pod/loki-6cb4fbf8b9-rcsdt/loki] 	/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:138
+[pod/loki-6cb4fbf8b9-rcsdt/loki] github.com/grafana/dskit/modules.(*Manager).InitModuleServices
+[pod/loki-6cb4fbf8b9-rcsdt/loki] 	/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:108
+[pod/loki-6cb4fbf8b9-rcsdt/loki] github.com/grafana/loki/pkg/loki.(*Loki).Run
+[pod/loki-6cb4fbf8b9-rcsdt/loki] 	/src/loki/pkg/loki/loki.go:461
+[pod/loki-6cb4fbf8b9-rcsdt/loki] main.main
+[pod/loki-6cb4fbf8b9-rcsdt/loki] 	/src/loki/cmd/loki/main.go:110
+[pod/loki-6cb4fbf8b9-rcsdt/loki] runtime.main
+[pod/loki-6cb4fbf8b9-rcsdt/loki] 	/usr/local/go/src/runtime/proc.go:267
+[pod/loki-6cb4fbf8b9-rcsdt/loki] runtime.goexit
+[pod/loki-6cb4fbf8b9-rcsdt/loki] 	/usr/local/go/src/runtime/asm_amd64.s:1650
+[pod/loki-6cb4fbf8b9-rcsdt/loki] level=warn ts=2026-01-03T21:03:51.247089182Z caller=loki.go:288 msg="global timeout not configured, using default engine timeout (\"5m0s\"). This behavior will change in the next major to always use the default global timeout (\"5m\")."
+[pod/loki-6cb4fbf8b9-rcsdt/loki] level=info ts=2026-01-03T21:03:51.249692804Z caller=main.go:108 msg="Starting Loki" version="(version=2.9.4, branch=HEAD, revision=f599ebc535)"
+[pod/loki-6cb4fbf8b9-rcsdt/loki] level=info ts=2026-01-03T21:03:51.250624488Z caller=server.go:322 http=[::]:3100 grpc=[::]:9095 msg="server listening on addresses"
+[pod/loki-6cb4fbf8b9-rcsdt/loki] level=info ts=2026-01-03T21:03:51.251943756Z caller=modules.go:932 msg="Ruler storage is not configured; ruler will not be started."
+[pod/loki-6cb4fbf8b9-rcsdt/loki] level=warn ts=2026-01-03T21:03:51.254155229Z caller=cache.go:127 msg="fifocache config is deprecated. use embedded-cache instead"
+[pod/loki-6cb4fbf8b9-rcsdt/loki] level=warn ts=2026-01-03T21:03:51.254192904Z caller=experimental.go:20 msg="experimental feature in use" feature="In-memory (FIFO) cache - chunksembedded-cache"
+[pod/loki-6cb4fbf8b9-rcsdt/loki] level=info ts=2026-01-03T21:03:51.254783863Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+[pod/loki-6cb4fbf8b9-rcsdt/loki] level=info ts=2026-01-03T21:03:51.254811188Z caller=table_manager.go:271 index-store=boltdb-shipper-2020-10-24 msg="query readiness setup completed" duration=2.248µs distinct_users_len=0 distinct_users=
+[pod/loki-6cb4fbf8b9-rcsdt/loki] level=info ts=2026-01-03T21:03:51.254859381Z caller=shipper.go:165 index-store=boltdb-shipper-2020-10-24 msg="starting index shipper in RW mode"
+[pod/loki-6cb4fbf8b9-rcsdt/loki] level=info ts=2026-01-03T21:03:51.254979873Z caller=shipper_index_client.go:76 index-store=boltdb-shipper-2020-10-24 msg="starting boltdb shipper in RW mode"
+[pod/loki-6cb4fbf8b9-rcsdt/loki] level=info ts=2026-01-03T21:03:51.255090488Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+[pod/loki-6cb4fbf8b9-rcsdt/loki] level=warn ts=2026-01-03T21:03:51.255294523Z caller=modules.go:474 msg="The config setting shutdown marker path is not set. The /ingester/prepare_shutdown endpoint won't work"
+[pod/loki-6cb4fbf8b9-rcsdt/loki] level=error ts=2026-01-03T21:03:51.255874066Z caller=log.go:230 msg="error running loki" err="creating WAL folder at \"/wal\": mkdir wal: permission denied\nerror initialising module: ingester\ngithub.com/grafana/dskit/modules.(*Manager).initModule\n\t/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:138\ngithub.com/grafana/dskit/modules.(*Manager).InitModuleServices\n\t/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:108\ngithub.com/grafana/loki/pkg/loki.(*Loki).Run\n\t/src/loki/pkg/loki/loki.go:461\nmain.main\n\t/src/loki/cmd/loki/main.go:110\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:267\nruntime.goexit\n\t/usr/local/go/src/runtime/asm_amd64.s:1650"
+--- Webshop Logs ---
+Defaulted container "webshop" out of: webshop, wait-for-db (init)
+[pod/webshop-866578cbfc-h97mc/webshop] [main] INFO com.example.webshop.WebshopApplication - Connecting to database at: jdbc:postgresql://webshop-db:5432/webshop
+[pod/webshop-866578cbfc-h97mc/webshop] Exception in thread "main" org.postgresql.util.PSQLException: FATAL: database "webshop" does not exist
+[pod/webshop-866578cbfc-h97mc/webshop] 	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2725)
+[pod/webshop-866578cbfc-h97mc/webshop] 	at org.postgresql.core.v3.QueryExecutorImpl.readStartupMessages(QueryExecutorImpl.java:2837)
+[pod/webshop-866578cbfc-h97mc/webshop] 	at org.postgresql.core.v3.QueryExecutorImpl.<init>(QueryExecutorImpl.java:175)
+[pod/webshop-866578cbfc-h97mc/webshop] 	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:317)
+[pod/webshop-866578cbfc-h97mc/webshop] 	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:54)
+[pod/webshop-866578cbfc-h97mc/webshop] 	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:273)
+[pod/webshop-866578cbfc-h97mc/webshop] 	at org.postgresql.Driver.makeConnection(Driver.java:446)
+[pod/webshop-866578cbfc-h97mc/webshop] 	at org.postgresql.Driver.connect(Driver.java:298)
+[pod/webshop-866578cbfc-h97mc/webshop] 	at java.sql/java.sql.DriverManager.getConnection(Unknown Source)
+[pod/webshop-866578cbfc-h97mc/webshop] 	at java.sql/java.sql.DriverManager.getConnection(Unknown Source)
+[pod/webshop-866578cbfc-h97mc/webshop] 	at com.example.webshop.WebshopApplication.main(WebshopApplication.java:58)
+
+--- Product Management Logs ---
+Defaulted container "product-management" out of: product-management, wait-for-db (init)
+[pod/product-management-75c8dd496f-kq7pm/product-management] [main] INFO com.example.productmanagement.ProductManagementApplication - Connecting to database at: jdbc:postgresql://pm-db:5432/product_management
+[pod/product-management-75c8dd496f-kq7pm/product-management] Exception in thread "main" org.postgresql.util.PSQLException: FATAL: database "product_management" does not exist
+[pod/product-management-75c8dd496f-kq7pm/product-management] 	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2725)
+[pod/product-management-75c8dd496f-kq7pm/product-management] 	at org.postgresql.core.v3.QueryExecutorImpl.readStartupMessages(QueryExecutorImpl.java:2837)
+[pod/product-management-75c8dd496f-kq7pm/product-management] 	at org.postgresql.core.v3.QueryExecutorImpl.<init>(QueryExecutorImpl.java:175)
+[pod/product-management-75c8dd496f-kq7pm/product-management] 	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:317)
+[pod/product-management-75c8dd496f-kq7pm/product-management] 	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:54)
+[pod/product-management-75c8dd496f-kq7pm/product-management] 	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:273)
+[pod/product-management-75c8dd496f-kq7pm/product-management] 	at org.postgresql.Driver.makeConnection(Driver.java:446)
+[pod/product-management-75c8dd496f-kq7pm/product-management] 	at org.postgresql.Driver.connect(Driver.java:298)
+[pod/product-management-75c8dd496f-kq7pm/product-management] 	at java.sql/java.sql.DriverManager.getConnection(Unknown Source)
+[pod/product-management-75c8dd496f-kq7pm/product-management] 	at java.sql/java.sql.DriverManager.getConnection(Unknown Source)
+[pod/product-management-75c8dd496f-kq7pm/product-management] 	at com.example.productmanagement.ProductManagementApplication.main(ProductManagementApplication.java:58)
+
+--- Loki Logs ---
+[pod/loki-7dc87878b5-s465l/loki] failed parsing config: /etc/loki/local-config.yaml: yaml: unmarshal errors:
+[pod/loki-7dc87878b5-s465l/loki]   line 7: field wal already set in type ingester.Config. Use `-config.expand-env=true` flag if you want to expand environment variables in your config file

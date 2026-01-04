@@ -1,0 +1,1085 @@
+--- Loki Pod Status ---
+NAME                    READY   STATUS             RESTARTS         AGE
+loki-68b95fc768-2ts8d   0/1     CrashLoopBackOff   19 (3m37s ago)   3h45m
+
+--- Loki Logs ---
+
+--- Describe Loki Pod ---
+Name:             loki-68b95fc768-2ts8d
+Namespace:        infrastructure
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Fri, 02 Jan 2026 15:37:00 +0100
+Labels:           app=loki
+                  pod-template-hash=68b95fc768
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.113
+IPs:
+  IP:           10.244.0.113
+Controlled By:  ReplicaSet/loki-68b95fc768
+Containers:
+  loki:
+    Container ID:  docker://26da7559ed2fb3f78b8c3a4013c2b28c93d4c0d0b2359053e52f562fd950f1d8
+    Image:         grafana/loki:2.9.4
+    Image ID:      docker-pullable://grafana/loki@sha256:f379a20ce9dd815884ed6446aad8819b81a8ba4d36b548ca14be8cecbc6cbca0
+    Port:          3100/TCP
+    Host Port:     0/TCP
+    Command:
+      -config.file=/etc/loki/local-config.yaml
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       ContainerCannotRun
+      Message:      failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "-config.file=/etc/loki/local-config.yaml": stat -config.file=/etc/loki/local-config.yaml: no such file or directory: unknown
+      Exit Code:    127
+      Started:      Fri, 02 Jan 2026 19:19:17 +0100
+      Finished:     Fri, 02 Jan 2026 19:19:17 +0100
+    Ready:          False
+    Restart Count:  19
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-xbj4x (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-xbj4x:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason   Age                      From     Message
+  ----     ------   ----                     ----     -------
+  Normal   Created  168m (x17 over 3h45m)    kubelet  spec.containers{loki}: Created container: loki
+  Normal   Pulled   3m37s (x19 over 3h45m)   kubelet  spec.containers{loki}: Container image "grafana/loki:2.9.4" already present on machine
+  Warning  BackOff  3m25s (x315 over 3h45m)  kubelet  spec.containers{loki}: Back-off restarting failed container loki in pod loki-68b95fc768-2ts8d_infrastructure(d55a398f-b744-479c-8156-32a9a3c7d16f)
+--- Loki Pod Status ---
+NAME                    READY   STATUS             RESTARTS         AGE
+loki-68b95fc768-2ts8d   0/1     CrashLoopBackOff   19 (3m57s ago)   3h46m
+
+--- Loki Logs ---
+
+--- Describe Loki Pod ---
+Name:             loki-68b95fc768-2ts8d
+Namespace:        infrastructure
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Fri, 02 Jan 2026 15:37:00 +0100
+Labels:           app=loki
+                  pod-template-hash=68b95fc768
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.113
+IPs:
+  IP:           10.244.0.113
+Controlled By:  ReplicaSet/loki-68b95fc768
+Containers:
+  loki:
+    Container ID:  docker://26da7559ed2fb3f78b8c3a4013c2b28c93d4c0d0b2359053e52f562fd950f1d8
+    Image:         grafana/loki:2.9.4
+    Image ID:      docker-pullable://grafana/loki@sha256:f379a20ce9dd815884ed6446aad8819b81a8ba4d36b548ca14be8cecbc6cbca0
+    Port:          3100/TCP
+    Host Port:     0/TCP
+    Command:
+      -config.file=/etc/loki/local-config.yaml
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       ContainerCannotRun
+      Message:      failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "-config.file=/etc/loki/local-config.yaml": stat -config.file=/etc/loki/local-config.yaml: no such file or directory: unknown
+      Exit Code:    127
+      Started:      Fri, 02 Jan 2026 19:19:17 +0100
+      Finished:     Fri, 02 Jan 2026 19:19:17 +0100
+    Ready:          False
+    Restart Count:  19
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-xbj4x (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-xbj4x:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason   Age                      From     Message
+  ----     ------   ----                     ----     -------
+  Normal   Created  168m (x17 over 3h46m)    kubelet  spec.containers{loki}: Created container: loki
+  Normal   Pulled   3m57s (x19 over 3h46m)   kubelet  spec.containers{loki}: Container image "grafana/loki:2.9.4" already present on machine
+  Warning  BackOff  3m45s (x315 over 3h46m)  kubelet  spec.containers{loki}: Back-off restarting failed container loki in pod loki-68b95fc768-2ts8d_infrastructure(d55a398f-b744-479c-8156-32a9a3c7d16f)
+--- Loki Pod Status ---
+NAME                    READY   STATUS             RESTARTS        AGE
+loki-59558c96f7-qsgtk   0/1     Error              5 (101s ago)    3m10s
+loki-68b95fc768-2ts8d   0/1     CrashLoopBackOff   21 (108s ago)   3h54m
+
+--- Loki Logs ---
+creating WAL folder at "/wal": mkdir wal: permission denied
+error initialising module: ingester
+github.com/grafana/dskit/modules.(*Manager).initModule
+	/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:138
+github.com/grafana/dskit/modules.(*Manager).InitModuleServices
+	/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:108
+github.com/grafana/loki/pkg/loki.(*Loki).Run
+	/src/loki/pkg/loki/loki.go:461
+main.main
+	/src/loki/cmd/loki/main.go:110
+runtime.main
+	/usr/local/go/src/runtime/proc.go:267
+runtime.goexit
+	/usr/local/go/src/runtime/asm_amd64.s:1650
+level=warn ts=2026-01-02T18:31:13.717177487Z caller=loki.go:288 msg="global timeout not configured, using default engine timeout (\"5m0s\"). This behavior will change in the next major to always use the default global timeout (\"5m\")."
+level=info ts=2026-01-02T18:31:13.718924953Z caller=main.go:108 msg="Starting Loki" version="(version=2.9.4, branch=HEAD, revision=f599ebc535)"
+level=info ts=2026-01-02T18:31:13.71939064Z caller=server.go:322 http=[::]:3100 grpc=[::]:9095 msg="server listening on addresses"
+level=info ts=2026-01-02T18:31:13.71955563Z caller=modules.go:932 msg="Ruler storage is not configured; ruler will not be started."
+level=warn ts=2026-01-02T18:31:13.720927068Z caller=cache.go:127 msg="fifocache config is deprecated. use embedded-cache instead"
+level=warn ts=2026-01-02T18:31:13.720941356Z caller=experimental.go:20 msg="experimental feature in use" feature="In-memory (FIFO) cache - chunksembedded-cache"
+level=info ts=2026-01-02T18:31:13.72568685Z caller=table_manager.go:271 index-store=boltdb-shipper-2020-10-24 msg="query readiness setup completed" duration=1.611µs distinct_users_len=0 distinct_users=
+level=info ts=2026-01-02T18:31:13.725705092Z caller=shipper.go:165 index-store=boltdb-shipper-2020-10-24 msg="starting index shipper in RW mode"
+level=info ts=2026-01-02T18:31:13.725858765Z caller=shipper_index_client.go:76 index-store=boltdb-shipper-2020-10-24 msg="starting boltdb shipper in RW mode"
+level=info ts=2026-01-02T18:31:13.726297364Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:31:13.726327345Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:31:13.726814524Z caller=worker.go:112 msg="Starting querier worker using query-scheduler and scheduler ring for addresses"
+level=warn ts=2026-01-02T18:31:13.726923143Z caller=modules.go:474 msg="The config setting shutdown marker path is not set. The /ingester/prepare_shutdown endpoint won't work"
+level=error ts=2026-01-02T18:31:13.727134129Z caller=log.go:230 msg="error running loki" err="creating WAL folder at \"/wal\": mkdir wal: permission denied\nerror initialising module: ingester\ngithub.com/grafana/dskit/modules.(*Manager).initModule\n\t/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:138\ngithub.com/grafana/dskit/modules.(*Manager).InitModuleServices\n\t/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:108\ngithub.com/grafana/loki/pkg/loki.(*Loki).Run\n\t/src/loki/pkg/loki/loki.go:461\nmain.main\n\t/src/loki/cmd/loki/main.go:110\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:267\nruntime.goexit\n\t/usr/local/go/src/runtime/asm_amd64.s:1650"
+
+--- Describe Loki Pod ---
+Name:             loki-59558c96f7-qsgtk
+Namespace:        infrastructure
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Fri, 02 Jan 2026 19:28:15 +0100
+Labels:           app=loki
+                  pod-template-hash=59558c96f7
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.135
+IPs:
+  IP:           10.244.0.135
+Controlled By:  ReplicaSet/loki-59558c96f7
+Containers:
+  loki:
+    Container ID:  docker://f66fa43122ba6fc38d39d624707f452b70c1036fe70f1cec77a58dd60627758e
+    Image:         grafana/loki:2.9.4
+    Image ID:      docker-pullable://grafana/loki@sha256:f379a20ce9dd815884ed6446aad8819b81a8ba4d36b548ca14be8cecbc6cbca0
+    Port:          3100/TCP
+    Host Port:     0/TCP
+    Args:
+      -config.file=/etc/loki/local-config.yaml
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    1
+      Started:      Fri, 02 Jan 2026 19:31:13 +0100
+      Finished:     Fri, 02 Jan 2026 19:31:13 +0100
+    Ready:          False
+    Restart Count:  5
+    Environment:    <none>
+    Mounts:
+      /etc/loki from loki-config (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-vnm6n (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  loki-config:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      loki-config
+    Optional:  false
+  kube-api-access-vnm6n:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                  From               Message
+  ----     ------     ----                 ----               -------
+  Normal   Scheduled  3m10s                default-scheduler  Successfully assigned infrastructure/loki-59558c96f7-qsgtk to minikube
+  Normal   Pulled     12s (x6 over 3m10s)  kubelet            spec.containers{loki}: Container image "grafana/loki:2.9.4" already present on machine
+  Normal   Created    12s (x6 over 3m9s)   kubelet            spec.containers{loki}: Created container: loki
+  Normal   Started    12s (x6 over 3m9s)   kubelet            spec.containers{loki}: Started container loki
+  Warning  BackOff    0s (x15 over 3m8s)   kubelet            spec.containers{loki}: Back-off restarting failed container loki in pod loki-59558c96f7-qsgtk_infrastructure(c839d29b-6f87-48cb-950e-7e704bac7ba4)
+
+
+Name:             loki-68b95fc768-2ts8d
+Namespace:        infrastructure
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Fri, 02 Jan 2026 15:37:00 +0100
+Labels:           app=loki
+                  pod-template-hash=68b95fc768
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.113
+IPs:
+  IP:           10.244.0.113
+Controlled By:  ReplicaSet/loki-68b95fc768
+Containers:
+  loki:
+    Container ID:  docker://c5601e1e7e6bbd7fcbcc036d9332e67b0cf59259adcd08a2b73b0ebf655297da
+    Image:         grafana/loki:2.9.4
+    Image ID:      docker-pullable://grafana/loki@sha256:f379a20ce9dd815884ed6446aad8819b81a8ba4d36b548ca14be8cecbc6cbca0
+    Port:          3100/TCP
+    Host Port:     0/TCP
+    Command:
+      -config.file=/etc/loki/local-config.yaml
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       ContainerCannotRun
+      Message:      failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "-config.file=/etc/loki/local-config.yaml": stat -config.file=/etc/loki/local-config.yaml: no such file or directory: unknown
+      Exit Code:    127
+      Started:      Fri, 02 Jan 2026 19:29:37 +0100
+      Finished:     Fri, 02 Jan 2026 19:29:37 +0100
+    Ready:          False
+    Restart Count:  21
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-xbj4x (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-xbj4x:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason   Age                     From     Message
+  ----     ------   ----                    ----     -------
+  Warning  BackOff  11m (x315 over 3h54m)   kubelet  spec.containers{loki}: Back-off restarting failed container loki in pod loki-68b95fc768-2ts8d_infrastructure(d55a398f-b744-479c-8156-32a9a3c7d16f)
+  Normal   Created  6m57s (x21 over 3h54m)  kubelet  spec.containers{loki}: Created container: loki
+  Warning  Failed   108s (x22 over 3h54m)   kubelet  spec.containers{loki}: Error: failed to start container "loki": Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "-config.file=/etc/loki/local-config.yaml": stat -config.file=/etc/loki/local-config.yaml: no such file or directory: unknown
+  Normal   Pulled   108s (x21 over 3h54m)   kubelet  spec.containers{loki}: Container image "grafana/loki:2.9.4" already present on machine
+--- Loki Pod Status ---
+NAME                    READY   STATUS             RESTARTS        AGE
+loki-59558c96f7-qsgtk   0/1     CrashLoopBackOff   5 (21s ago)     3m19s
+loki-68b95fc768-2ts8d   0/1     CrashLoopBackOff   21 (117s ago)   3h54m
+
+--- Loki Logs ---
+creating WAL folder at "/wal": mkdir wal: permission denied
+error initialising module: ingester
+github.com/grafana/dskit/modules.(*Manager).initModule
+	/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:138
+github.com/grafana/dskit/modules.(*Manager).InitModuleServices
+	/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:108
+github.com/grafana/loki/pkg/loki.(*Loki).Run
+	/src/loki/pkg/loki/loki.go:461
+main.main
+	/src/loki/cmd/loki/main.go:110
+runtime.main
+	/usr/local/go/src/runtime/proc.go:267
+runtime.goexit
+	/usr/local/go/src/runtime/asm_amd64.s:1650
+level=warn ts=2026-01-02T18:31:13.717177487Z caller=loki.go:288 msg="global timeout not configured, using default engine timeout (\"5m0s\"). This behavior will change in the next major to always use the default global timeout (\"5m\")."
+level=info ts=2026-01-02T18:31:13.718924953Z caller=main.go:108 msg="Starting Loki" version="(version=2.9.4, branch=HEAD, revision=f599ebc535)"
+level=info ts=2026-01-02T18:31:13.71939064Z caller=server.go:322 http=[::]:3100 grpc=[::]:9095 msg="server listening on addresses"
+level=info ts=2026-01-02T18:31:13.71955563Z caller=modules.go:932 msg="Ruler storage is not configured; ruler will not be started."
+level=warn ts=2026-01-02T18:31:13.720927068Z caller=cache.go:127 msg="fifocache config is deprecated. use embedded-cache instead"
+level=warn ts=2026-01-02T18:31:13.720941356Z caller=experimental.go:20 msg="experimental feature in use" feature="In-memory (FIFO) cache - chunksembedded-cache"
+level=info ts=2026-01-02T18:31:13.72568685Z caller=table_manager.go:271 index-store=boltdb-shipper-2020-10-24 msg="query readiness setup completed" duration=1.611µs distinct_users_len=0 distinct_users=
+level=info ts=2026-01-02T18:31:13.725705092Z caller=shipper.go:165 index-store=boltdb-shipper-2020-10-24 msg="starting index shipper in RW mode"
+level=info ts=2026-01-02T18:31:13.725858765Z caller=shipper_index_client.go:76 index-store=boltdb-shipper-2020-10-24 msg="starting boltdb shipper in RW mode"
+level=info ts=2026-01-02T18:31:13.726297364Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:31:13.726327345Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:31:13.726814524Z caller=worker.go:112 msg="Starting querier worker using query-scheduler and scheduler ring for addresses"
+level=warn ts=2026-01-02T18:31:13.726923143Z caller=modules.go:474 msg="The config setting shutdown marker path is not set. The /ingester/prepare_shutdown endpoint won't work"
+level=error ts=2026-01-02T18:31:13.727134129Z caller=log.go:230 msg="error running loki" err="creating WAL folder at \"/wal\": mkdir wal: permission denied\nerror initialising module: ingester\ngithub.com/grafana/dskit/modules.(*Manager).initModule\n\t/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:138\ngithub.com/grafana/dskit/modules.(*Manager).InitModuleServices\n\t/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:108\ngithub.com/grafana/loki/pkg/loki.(*Loki).Run\n\t/src/loki/pkg/loki/loki.go:461\nmain.main\n\t/src/loki/cmd/loki/main.go:110\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:267\nruntime.goexit\n\t/usr/local/go/src/runtime/asm_amd64.s:1650"
+
+--- Describe Loki Pod ---
+Name:             loki-59558c96f7-qsgtk
+Namespace:        infrastructure
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Fri, 02 Jan 2026 19:28:15 +0100
+Labels:           app=loki
+                  pod-template-hash=59558c96f7
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.135
+IPs:
+  IP:           10.244.0.135
+Controlled By:  ReplicaSet/loki-59558c96f7
+Containers:
+  loki:
+    Container ID:  docker://f66fa43122ba6fc38d39d624707f452b70c1036fe70f1cec77a58dd60627758e
+    Image:         grafana/loki:2.9.4
+    Image ID:      docker-pullable://grafana/loki@sha256:f379a20ce9dd815884ed6446aad8819b81a8ba4d36b548ca14be8cecbc6cbca0
+    Port:          3100/TCP
+    Host Port:     0/TCP
+    Args:
+      -config.file=/etc/loki/local-config.yaml
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    1
+      Started:      Fri, 02 Jan 2026 19:31:13 +0100
+      Finished:     Fri, 02 Jan 2026 19:31:13 +0100
+    Ready:          False
+    Restart Count:  5
+    Environment:    <none>
+    Mounts:
+      /etc/loki from loki-config (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-vnm6n (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  loki-config:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      loki-config
+    Optional:  false
+  kube-api-access-vnm6n:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                  From               Message
+  ----     ------     ----                 ----               -------
+  Normal   Scheduled  3m19s                default-scheduler  Successfully assigned infrastructure/loki-59558c96f7-qsgtk to minikube
+  Normal   Pulled     21s (x6 over 3m19s)  kubelet            spec.containers{loki}: Container image "grafana/loki:2.9.4" already present on machine
+  Normal   Created    21s (x6 over 3m18s)  kubelet            spec.containers{loki}: Created container: loki
+  Normal   Started    21s (x6 over 3m18s)  kubelet            spec.containers{loki}: Started container loki
+  Warning  BackOff    9s (x15 over 3m17s)  kubelet            spec.containers{loki}: Back-off restarting failed container loki in pod loki-59558c96f7-qsgtk_infrastructure(c839d29b-6f87-48cb-950e-7e704bac7ba4)
+
+
+Name:             loki-68b95fc768-2ts8d
+Namespace:        infrastructure
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Fri, 02 Jan 2026 15:37:00 +0100
+Labels:           app=loki
+                  pod-template-hash=68b95fc768
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.113
+IPs:
+  IP:           10.244.0.113
+Controlled By:  ReplicaSet/loki-68b95fc768
+Containers:
+  loki:
+    Container ID:  docker://c5601e1e7e6bbd7fcbcc036d9332e67b0cf59259adcd08a2b73b0ebf655297da
+    Image:         grafana/loki:2.9.4
+    Image ID:      docker-pullable://grafana/loki@sha256:f379a20ce9dd815884ed6446aad8819b81a8ba4d36b548ca14be8cecbc6cbca0
+    Port:          3100/TCP
+    Host Port:     0/TCP
+    Command:
+      -config.file=/etc/loki/local-config.yaml
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       ContainerCannotRun
+      Message:      failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "-config.file=/etc/loki/local-config.yaml": stat -config.file=/etc/loki/local-config.yaml: no such file or directory: unknown
+      Exit Code:    127
+      Started:      Fri, 02 Jan 2026 19:29:37 +0100
+      Finished:     Fri, 02 Jan 2026 19:29:37 +0100
+    Ready:          False
+    Restart Count:  21
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-xbj4x (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-xbj4x:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason   Age                    From     Message
+  ----     ------   ----                   ----     -------
+  Warning  BackOff  12m (x315 over 3h54m)  kubelet  spec.containers{loki}: Back-off restarting failed container loki in pod loki-68b95fc768-2ts8d_infrastructure(d55a398f-b744-479c-8156-32a9a3c7d16f)
+  Normal   Created  7m6s (x21 over 3h54m)  kubelet  spec.containers{loki}: Created container: loki
+  Warning  Failed   117s (x22 over 3h54m)  kubelet  spec.containers{loki}: Error: failed to start container "loki": Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "-config.file=/etc/loki/local-config.yaml": stat -config.file=/etc/loki/local-config.yaml: no such file or directory: unknown
+  Normal   Pulled   117s (x21 over 3h54m)  kubelet  spec.containers{loki}: Container image "grafana/loki:2.9.4" already present on machine
+--- Loki Pod Status ---
+NAME                    READY   STATUS             RESTARTS         AGE
+loki-59558c96f7-qsgtk   0/1     CrashLoopBackOff   6 (3m5s ago)     8m51s
+loki-68b95fc768-2ts8d   0/1     CrashLoopBackOff   22 (2m19s ago)   4h
+
+--- Loki Logs ---
+creating WAL folder at "/wal": mkdir wal: permission denied
+error initialising module: ingester
+github.com/grafana/dskit/modules.(*Manager).initModule
+	/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:138
+github.com/grafana/dskit/modules.(*Manager).InitModuleServices
+	/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:108
+github.com/grafana/loki/pkg/loki.(*Loki).Run
+	/src/loki/pkg/loki/loki.go:461
+main.main
+	/src/loki/cmd/loki/main.go:110
+runtime.main
+	/usr/local/go/src/runtime/proc.go:267
+runtime.goexit
+	/usr/local/go/src/runtime/asm_amd64.s:1650
+level=warn ts=2026-01-02T18:34:01.680754047Z caller=loki.go:288 msg="global timeout not configured, using default engine timeout (\"5m0s\"). This behavior will change in the next major to always use the default global timeout (\"5m\")."
+level=info ts=2026-01-02T18:34:01.682305654Z caller=main.go:108 msg="Starting Loki" version="(version=2.9.4, branch=HEAD, revision=f599ebc535)"
+level=info ts=2026-01-02T18:34:01.682773364Z caller=server.go:322 http=[::]:3100 grpc=[::]:9095 msg="server listening on addresses"
+level=info ts=2026-01-02T18:34:01.683173482Z caller=modules.go:932 msg="Ruler storage is not configured; ruler will not be started."
+level=warn ts=2026-01-02T18:34:01.683727741Z caller=cache.go:127 msg="fifocache config is deprecated. use embedded-cache instead"
+level=warn ts=2026-01-02T18:34:01.683746849Z caller=experimental.go:20 msg="experimental feature in use" feature="In-memory (FIFO) cache - chunksembedded-cache"
+level=info ts=2026-01-02T18:34:01.687068149Z caller=table_manager.go:271 index-store=boltdb-shipper-2020-10-24 msg="query readiness setup completed" duration=1.246µs distinct_users_len=0 distinct_users=
+level=info ts=2026-01-02T18:34:01.687090019Z caller=shipper.go:165 index-store=boltdb-shipper-2020-10-24 msg="starting index shipper in RW mode"
+level=info ts=2026-01-02T18:34:01.68712524Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:34:01.687190923Z caller=shipper_index_client.go:76 index-store=boltdb-shipper-2020-10-24 msg="starting boltdb shipper in RW mode"
+level=info ts=2026-01-02T18:34:01.687254538Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=warn ts=2026-01-02T18:34:01.687464354Z caller=modules.go:474 msg="The config setting shutdown marker path is not set. The /ingester/prepare_shutdown endpoint won't work"
+level=error ts=2026-01-02T18:34:01.687732595Z caller=log.go:230 msg="error running loki" err="creating WAL folder at \"/wal\": mkdir wal: permission denied\nerror initialising module: ingester\ngithub.com/grafana/dskit/modules.(*Manager).initModule\n\t/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:138\ngithub.com/grafana/dskit/modules.(*Manager).InitModuleServices\n\t/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:108\ngithub.com/grafana/loki/pkg/loki.(*Loki).Run\n\t/src/loki/pkg/loki/loki.go:461\nmain.main\n\t/src/loki/cmd/loki/main.go:110\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:267\nruntime.goexit\n\t/usr/local/go/src/runtime/asm_amd64.s:1650"
+
+--- Describe Loki Pod ---
+Name:             loki-59558c96f7-qsgtk
+Namespace:        infrastructure
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Fri, 02 Jan 2026 19:28:15 +0100
+Labels:           app=loki
+                  pod-template-hash=59558c96f7
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.135
+IPs:
+  IP:           10.244.0.135
+Controlled By:  ReplicaSet/loki-59558c96f7
+Containers:
+  loki:
+    Container ID:  docker://f9b44d0f665ec74987b55ca181b3a3c2c3ec9bc842470358d39c1f9c4d3b2b64
+    Image:         grafana/loki:2.9.4
+    Image ID:      docker-pullable://grafana/loki@sha256:f379a20ce9dd815884ed6446aad8819b81a8ba4d36b548ca14be8cecbc6cbca0
+    Port:          3100/TCP
+    Host Port:     0/TCP
+    Args:
+      -config.file=/etc/loki/local-config.yaml
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    1
+      Started:      Fri, 02 Jan 2026 19:34:01 +0100
+      Finished:     Fri, 02 Jan 2026 19:34:01 +0100
+    Ready:          False
+    Restart Count:  6
+    Environment:    <none>
+    Mounts:
+      /etc/loki from loki-config (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-vnm6n (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  loki-config:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      loki-config
+    Optional:  false
+  kube-api-access-vnm6n:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                     From               Message
+  ----     ------     ----                    ----               -------
+  Normal   Scheduled  8m51s                   default-scheduler  Successfully assigned infrastructure/loki-59558c96f7-qsgtk to minikube
+  Warning  BackOff    3m18s (x26 over 8m49s)  kubelet            spec.containers{loki}: Back-off restarting failed container loki in pod loki-59558c96f7-qsgtk_infrastructure(c839d29b-6f87-48cb-950e-7e704bac7ba4)
+  Normal   Pulled     3m5s (x7 over 8m51s)    kubelet            spec.containers{loki}: Container image "grafana/loki:2.9.4" already present on machine
+  Normal   Created    3m5s (x7 over 8m50s)    kubelet            spec.containers{loki}: Created container: loki
+  Normal   Started    3m5s (x7 over 8m50s)    kubelet            spec.containers{loki}: Started container loki
+
+
+Name:             loki-68b95fc768-2ts8d
+Namespace:        infrastructure
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Fri, 02 Jan 2026 15:37:00 +0100
+Labels:           app=loki
+                  pod-template-hash=68b95fc768
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.113
+IPs:
+  IP:           10.244.0.113
+Controlled By:  ReplicaSet/loki-68b95fc768
+Containers:
+  loki:
+    Container ID:  docker://a15d2c46949cf0d36f4510740cb563f69e06c13acc603573abcaf4b160788212
+    Image:         grafana/loki:2.9.4
+    Image ID:      docker-pullable://grafana/loki@sha256:f379a20ce9dd815884ed6446aad8819b81a8ba4d36b548ca14be8cecbc6cbca0
+    Port:          3100/TCP
+    Host Port:     0/TCP
+    Command:
+      -config.file=/etc/loki/local-config.yaml
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       ContainerCannotRun
+      Message:      failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "-config.file=/etc/loki/local-config.yaml": stat -config.file=/etc/loki/local-config.yaml: no such file or directory: unknown
+      Exit Code:    127
+      Started:      Fri, 02 Jan 2026 19:34:47 +0100
+      Finished:     Fri, 02 Jan 2026 19:34:47 +0100
+    Ready:          False
+    Restart Count:  22
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-xbj4x (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-xbj4x:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason   Age                      From     Message
+  ----     ------   ----                     ----     -------
+  Normal   Created  12m (x21 over 4h)        kubelet  spec.containers{loki}: Created container: loki
+  Warning  Failed   7m29s (x22 over 4h)      kubelet  spec.containers{loki}: Error: failed to start container "loki": Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "-config.file=/etc/loki/local-config.yaml": stat -config.file=/etc/loki/local-config.yaml: no such file or directory: unknown
+  Warning  BackOff  2m41s (x383 over 3h59m)  kubelet  spec.containers{loki}: Back-off restarting failed container loki in pod loki-68b95fc768-2ts8d_infrastructure(d55a398f-b744-479c-8156-32a9a3c7d16f)
+  Normal   Pulled   2m19s (x22 over 4h)      kubelet  spec.containers{loki}: Container image "grafana/loki:2.9.4" already present on machine
+--- Loki Pod Status ---
+NAME                    READY   STATUS    RESTARTS   AGE
+loki-5658ffcb8b-dhmwp   1/1     Running   0          19s
+
+--- Loki Logs ---
+level=warn ts=2026-01-02T18:41:12.363068688Z caller=loki.go:288 msg="global timeout not configured, using default engine timeout (\"5m0s\"). This behavior will change in the next major to always use the default global timeout (\"5m\")."
+level=info ts=2026-01-02T18:41:12.364909051Z caller=main.go:108 msg="Starting Loki" version="(version=2.9.4, branch=HEAD, revision=f599ebc535)"
+level=info ts=2026-01-02T18:41:12.365376284Z caller=modules.go:932 msg="Ruler storage is not configured; ruler will not be started."
+level=info ts=2026-01-02T18:41:12.365919378Z caller=server.go:322 http=[::]:3100 grpc=[::]:9095 msg="server listening on addresses"
+level=warn ts=2026-01-02T18:41:12.367388679Z caller=cache.go:127 msg="fifocache config is deprecated. use embedded-cache instead"
+level=warn ts=2026-01-02T18:41:12.367414637Z caller=experimental.go:20 msg="experimental feature in use" feature="In-memory (FIFO) cache - chunksembedded-cache"
+level=info ts=2026-01-02T18:41:12.367669312Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:41:12.367716963Z caller=table_manager.go:271 index-store=boltdb-shipper-2020-10-24 msg="query readiness setup completed" duration=1.732µs distinct_users_len=0 distinct_users=
+level=info ts=2026-01-02T18:41:12.367740322Z caller=shipper.go:165 index-store=boltdb-shipper-2020-10-24 msg="starting index shipper in RW mode"
+level=info ts=2026-01-02T18:41:12.36786233Z caller=shipper_index_client.go:76 index-store=boltdb-shipper-2020-10-24 msg="starting boltdb shipper in RW mode"
+level=info ts=2026-01-02T18:41:12.367925478Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:41:12.368701068Z caller=worker.go:112 msg="Starting querier worker using query-scheduler and scheduler ring for addresses"
+level=warn ts=2026-01-02T18:41:12.369194713Z caller=modules.go:474 msg="The config setting shutdown marker path is not set. The /ingester/prepare_shutdown endpoint won't work"
+level=warn ts=2026-01-02T18:41:12.370371396Z caller=modules.go:951 msg="RulerStorage is nil. Not starting the ruler."
+level=info ts=2026-01-02T18:41:12.372281655Z caller=module_service.go:82 msg=initialising module=cache-generation-loader
+level=info ts=2026-01-02T18:41:12.372301688Z caller=module_service.go:82 msg=initialising module=server
+level=info ts=2026-01-02T18:41:12.372501374Z caller=module_service.go:82 msg=initialising module=memberlist-kv
+level=info ts=2026-01-02T18:41:12.372520469Z caller=module_service.go:82 msg=initialising module=ring
+level=info ts=2026-01-02T18:41:12.372514977Z caller=module_service.go:82 msg=initialising module=query-frontend-tripperware
+level=info ts=2026-01-02T18:41:12.372553662Z caller=module_service.go:82 msg=initialising module=store
+level=info ts=2026-01-02T18:41:12.372580043Z caller=module_service.go:82 msg=initialising module=query-scheduler-ring
+level=info ts=2026-01-02T18:41:12.372593497Z caller=ring.go:273 msg="ring doesn't exist in KV store yet"
+level=info ts=2026-01-02T18:41:12.37264299Z caller=module_service.go:82 msg=initialising module=ingester-querier
+level=info ts=2026-01-02T18:41:12.372654916Z caller=module_service.go:82 msg=initialising module=analytics
+level=info ts=2026-01-02T18:41:12.372700676Z caller=ring.go:273 msg="ring doesn't exist in KV store yet"
+level=info ts=2026-01-02T18:41:12.37274213Z caller=basic_lifecycler.go:297 msg="instance not found in the ring" instance=loki-5658ffcb8b-dhmwp ring=scheduler
+level=info ts=2026-01-02T18:41:12.372755501Z caller=basic_lifecycler_delegates.go:63 msg="not loading tokens from file, tokens file path is empty"
+level=info ts=2026-01-02T18:41:12.372772744Z caller=module_service.go:82 msg=initialising module=distributor
+level=info ts=2026-01-02T18:41:12.372763135Z caller=module_service.go:82 msg=initialising module=compactor
+level=info ts=2026-01-02T18:41:12.372880848Z caller=basic_lifecycler.go:297 msg="instance not found in the ring" instance=loki-5658ffcb8b-dhmwp ring=compactor
+level=info ts=2026-01-02T18:41:12.372889767Z caller=module_service.go:82 msg=initialising module=ingester
+level=info ts=2026-01-02T18:41:12.372889663Z caller=basic_lifecycler_delegates.go:63 msg="not loading tokens from file, tokens file path is empty"
+level=info ts=2026-01-02T18:41:12.372902239Z caller=ringmanager.go:201 msg="waiting until scheduler is JOINING in the ring"
+level=info ts=2026-01-02T18:41:12.372904601Z caller=ring.go:273 msg="ring doesn't exist in KV store yet"
+level=info ts=2026-01-02T18:41:12.372910062Z caller=ringmanager.go:205 msg="scheduler is JOINING in the ring"
+level=info ts=2026-01-02T18:41:12.372911998Z caller=ring.go:273 msg="ring doesn't exist in KV store yet"
+level=info ts=2026-01-02T18:41:12.37293954Z caller=ingester.go:431 msg="recovering from checkpoint"
+level=info ts=2026-01-02T18:41:12.372947809Z caller=ringmanager.go:214 msg="waiting until scheduler is ACTIVE in the ring"
+level=info ts=2026-01-02T18:41:12.372980959Z caller=basic_lifecycler.go:297 msg="instance not found in the ring" instance=loki-5658ffcb8b-dhmwp ring=distributor
+level=info ts=2026-01-02T18:41:12.373029182Z caller=compactor.go:395 msg="waiting until compactor is JOINING in the ring"
+level=info ts=2026-01-02T18:41:12.373037204Z caller=compactor.go:399 msg="compactor is JOINING in the ring"
+level=info ts=2026-01-02T18:41:12.373049517Z caller=recovery.go:40 msg="no checkpoint found, treating as no-op"
+level=info ts=2026-01-02T18:41:12.373077578Z caller=compactor.go:409 msg="waiting until compactor is ACTIVE in the ring"
+level=info ts=2026-01-02T18:41:12.373118813Z caller=ingester.go:447 msg="recovered WAL checkpoint recovery finished" elapsed=214.517µs errors=false
+level=info ts=2026-01-02T18:41:12.373130147Z caller=ingester.go:453 msg="recovering from WAL"
+level=info ts=2026-01-02T18:41:12.373274881Z caller=ingester.go:469 msg="WAL segment recovery finished" elapsed=373.061µs errors=false
+level=info ts=2026-01-02T18:41:12.373283717Z caller=ingester.go:417 msg="closing recoverer"
+level=info ts=2026-01-02T18:41:12.37328924Z caller=ingester.go:425 msg="WAL recovery finished" time=387.413µs
+level=info ts=2026-01-02T18:41:12.373300122Z caller=wal.go:156 msg=started component=wal
+level=info ts=2026-01-02T18:41:12.373336464Z caller=lifecycler.go:614 msg="not loading tokens from file, tokens file path is empty"
+level=info ts=2026-01-02T18:41:12.373392451Z caller=lifecycler.go:643 msg="instance not found in ring, adding with no tokens" ring=ingester
+level=info ts=2026-01-02T18:41:12.37344831Z caller=lifecycler.go:483 msg="auto-joining cluster after timeout" ring=ingester
+level=info ts=2026-01-02T18:41:12.523302479Z caller=compactor.go:413 msg="compactor is ACTIVE in the ring"
+level=info ts=2026-01-02T18:41:12.572276297Z caller=ringmanager.go:218 msg="scheduler is ACTIVE in the ring"
+level=info ts=2026-01-02T18:41:12.572338014Z caller=module_service.go:82 msg=initialising module=query-scheduler
+level=info ts=2026-01-02T18:41:12.572436851Z caller=module_service.go:82 msg=initialising module=query-frontend
+level=info ts=2026-01-02T18:41:12.572470018Z caller=module_service.go:82 msg=initialising module=querier
+level=info ts=2026-01-02T18:41:12.57250985Z caller=loki.go:505 msg="Loki started"
+level=info ts=2026-01-02T18:41:15.573375731Z caller=scheduler.go:615 msg="this scheduler is in the ReplicationSet, will now accept requests."
+level=info ts=2026-01-02T18:41:15.573402311Z caller=worker.go:209 msg="adding connection" addr=127.0.0.1:9095
+level=info ts=2026-01-02T18:41:17.523586482Z caller=compactor.go:474 msg="this instance has been chosen to run the compactor, starting compactor"
+level=info ts=2026-01-02T18:41:17.523737853Z caller=compactor.go:503 msg="waiting 10m0s for ring to stay stable and previous compactions to finish before starting compactor"
+level=info ts=2026-01-02T18:41:22.572805811Z caller=frontend_scheduler_worker.go:107 msg="adding connection to scheduler" addr=127.0.0.1:9095
+
+--- Describe Loki Pod ---
+Name:             loki-5658ffcb8b-dhmwp
+Namespace:        infrastructure
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Fri, 02 Jan 2026 19:41:11 +0100
+Labels:           app=loki
+                  pod-template-hash=5658ffcb8b
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.166
+IPs:
+  IP:           10.244.0.166
+Controlled By:  ReplicaSet/loki-5658ffcb8b
+Containers:
+  loki:
+    Container ID:  docker://16e4cee480f41e3ff62efd57fc8c88e2eaf9743bca66950394431075c48f93e1
+    Image:         grafana/loki:2.9.4
+    Image ID:      docker-pullable://grafana/loki@sha256:f379a20ce9dd815884ed6446aad8819b81a8ba4d36b548ca14be8cecbc6cbca0
+    Port:          3100/TCP
+    Host Port:     0/TCP
+    Args:
+      -config.file=/etc/loki/local-config.yaml
+    State:          Running
+      Started:      Fri, 02 Jan 2026 19:41:12 +0100
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /etc/loki from loki-config (rw)
+      /loki from loki-data (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-q62jp (ro)
+      /wal from loki-wal (rw)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  loki-config:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      loki-config
+    Optional:  false
+  loki-data:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  loki-wal:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  kube-api-access-q62jp:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  19s   default-scheduler  Successfully assigned infrastructure/loki-5658ffcb8b-dhmwp to minikube
+  Normal  Pulled     18s   kubelet            spec.containers{loki}: Container image "grafana/loki:2.9.4" already present on machine
+  Normal  Created    18s   kubelet            spec.containers{loki}: Created container: loki
+  Normal  Started    18s   kubelet            spec.containers{loki}: Started container loki
+--- Loki Pod Status ---
+NAME                    READY   STATUS    RESTARTS   AGE
+loki-5658ffcb8b-dhmwp   1/1     Running   0          19m
+
+--- Loki Logs ---
+level=info ts=2026-01-02T18:41:12.572470018Z caller=module_service.go:82 msg=initialising module=querier
+level=info ts=2026-01-02T18:41:12.57250985Z caller=loki.go:505 msg="Loki started"
+level=info ts=2026-01-02T18:41:15.573375731Z caller=scheduler.go:615 msg="this scheduler is in the ReplicationSet, will now accept requests."
+level=info ts=2026-01-02T18:41:15.573402311Z caller=worker.go:209 msg="adding connection" addr=127.0.0.1:9095
+level=info ts=2026-01-02T18:41:17.523586482Z caller=compactor.go:474 msg="this instance has been chosen to run the compactor, starting compactor"
+level=info ts=2026-01-02T18:41:17.523737853Z caller=compactor.go:503 msg="waiting 10m0s for ring to stay stable and previous compactions to finish before starting compactor"
+level=info ts=2026-01-02T18:41:22.572805811Z caller=frontend_scheduler_worker.go:107 msg="adding connection to scheduler" addr=127.0.0.1:9095
+level=info ts=2026-01-02T18:41:40.449214984Z caller=roundtrip.go:309 org_id=fake traceID=458b91a18db0fae3 msg="executing query" type=instant query=vector(1)+vector(1) query_hash=2536976802
+level=info ts=2026-01-02T18:41:40.450050152Z caller=engine.go:232 component=querier org_id=fake traceID=458b91a18db0fae3 msg="executing query" type=instant query=vector(1)+vector(1) query_hash=2536976802
+level=info ts=2026-01-02T18:41:40.450485733Z caller=metrics.go:159 component=querier org_id=fake traceID=458b91a18db0fae3 latency=fast query=vector(1)+vector(1) query_hash=2536976802 query_type=metric range_type=instant length=0s start_delta=-620172h24m59.549523293s end_delta=-620172h24m59.549523024s step=0s duration=244.351µs status=200 limit=100 returned_lines=0 throughput=0B total_bytes=0B total_bytes_structured_metadata=0B lines_per_second=0 total_lines=0 post_filter_lines=0 total_entries=1 store_chunks_download_time=0s queue_time=38.25µs splits=0 shards=0 cache_chunk_req=0 cache_chunk_hit=0 cache_chunk_bytes_stored=0 cache_chunk_bytes_fetched=0 cache_chunk_download_time=0s cache_index_req=0 cache_index_hit=0 cache_index_download_time=0s cache_stats_results_req=0 cache_stats_results_hit=0 cache_stats_results_download_time=0s cache_result_req=0 cache_result_hit=0 cache_result_download_time=0s
+level=info ts=2026-01-02T18:41:40.452928267Z caller=metrics.go:159 component=frontend org_id=fake traceID=458b91a18db0fae3 latency=fast query=vector(1)+vector(1) query_hash=2536976802 query_type=metric range_type=instant length=0s start_delta=-620172h24m59.547078173s end_delta=-620172h24m59.547078032s step=0s duration=3.092104ms status=200 limit=100 returned_lines=0 throughput=0B total_bytes=0B total_bytes_structured_metadata=0B lines_per_second=0 total_lines=0 post_filter_lines=0 total_entries=1 store_chunks_download_time=0s queue_time=38µs splits=0 shards=0 cache_chunk_req=0 cache_chunk_hit=0 cache_chunk_bytes_stored=0 cache_chunk_bytes_fetched=0 cache_chunk_download_time=0s cache_index_req=0 cache_index_hit=0 cache_index_download_time=0s cache_stats_results_req=0 cache_stats_results_hit=0 cache_stats_results_download_time=0s cache_result_req=0 cache_result_hit=0 cache_result_download_time=0s
+level=info ts=2026-01-02T18:41:56.263053147Z caller=roundtrip.go:295 org_id=fake traceID=75aed0d5706954e8 msg="executing query" type=labels label= length=6h0m0s query=
+level=info ts=2026-01-02T18:41:56.263804038Z caller=table_manager.go:195 index-store=boltdb-shipper-2020-10-24 msg="downloading all files for table index_20455"
+ts=2026-01-02T18:41:56.26407677Z caller=spanlogger.go:86 table-name=index_20455 user-id=fake org_id=fake traceID=75aed0d5706954e8 level=info msg="downloaded index set at query time" duration=102.385µs
+ts=2026-01-02T18:41:56.264146414Z caller=spanlogger.go:86 table-name=index_20455 org_id=fake traceID=75aed0d5706954e8 level=info msg="downloaded index set at query time" duration=42.88µs
+ts=2026-01-02T18:41:56.265125583Z caller=spanlogger.go:86 user=fake level=info org_id=fake traceID=75aed0d5706954e8 latency=fast query_type=labels length=6h0m0s duration=1.490705ms status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=0
+level=info ts=2026-01-02T18:41:56.265621168Z caller=metrics.go:207 component=frontend org_id=fake traceID=75aed0d5706954e8 latency=fast query_type=labels length=6h0m0s duration=2.468392ms status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=0
+level=info ts=2026-01-02T18:42:12.367725994Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:42:12.368073162Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:43:12.937473877Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:43:12.937469585Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:44:12.936508943Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:44:12.936748854Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:45:12.936467273Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:45:12.936765577Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:45:24.578431082Z caller=roundtrip.go:295 org_id=fake traceID=5f28eca9bd48e43b msg="executing query" type=labels label= length=6h0m0s query=
+ts=2026-01-02T18:45:24.579470366Z caller=spanlogger.go:86 user=fake level=info org_id=fake traceID=5f28eca9bd48e43b latency=fast query_type=labels length=6h0m0s duration=591.015µs status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=0
+level=info ts=2026-01-02T18:45:24.579790225Z caller=metrics.go:207 component=frontend org_id=fake traceID=5f28eca9bd48e43b latency=fast query_type=labels length=6h0m0s duration=1.240988ms status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=0
+level=info ts=2026-01-02T18:46:12.936516054Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:46:12.936529721Z caller=table_manager.go:228 index-store=boltdb-shipper-2020-10-24 msg="syncing tables"
+ts=2026-01-02T18:46:12.936586445Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-01-02T18:46:12.936608821Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=14.468µs
+ts=2026-01-02T18:46:12.936622633Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-01-02T18:46:12.936628481Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=2.505µs
+ts=2026-01-02T18:46:12.93664582Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-01-02T18:46:12.936651063Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=2.194µs
+level=info ts=2026-01-02T18:46:12.936665516Z caller=table_manager.go:271 index-store=boltdb-shipper-2020-10-24 msg="query readiness setup completed" duration=1.909µs distinct_users_len=0 distinct_users=
+level=info ts=2026-01-02T18:46:12.9367867Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:46:12.942531358Z caller=checkpoint.go:611 msg="starting checkpoint"
+level=info ts=2026-01-02T18:46:12.942694258Z caller=checkpoint.go:336 msg="attempting checkpoint for" dir=wal/checkpoint.000000
+level=info ts=2026-01-02T18:46:12.952336738Z caller=checkpoint.go:498 msg="atomic checkpoint finished" old=wal/checkpoint.000000.tmp new=wal/checkpoint.000000
+level=info ts=2026-01-02T18:47:12.937463684Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:47:12.937469293Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:48:12.936502203Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:48:12.936719497Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:49:12.936474931Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:49:12.93669735Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:50:12.937565211Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:50:12.937616167Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:51:12.937490668Z caller=table_manager.go:228 index-store=boltdb-shipper-2020-10-24 msg="syncing tables"
+level=info ts=2026-01-02T18:51:12.937502675Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:51:12.937519088Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+ts=2026-01-02T18:51:12.937567589Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-01-02T18:51:12.937584261Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=8.537µs
+ts=2026-01-02T18:51:12.93760268Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-01-02T18:51:12.937607458Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=1.761µs
+level=info ts=2026-01-02T18:51:12.937621293Z caller=table_manager.go:271 index-store=boltdb-shipper-2020-10-24 msg="query readiness setup completed" duration=2.802µs distinct_users_len=0 distinct_users=
+level=info ts=2026-01-02T18:51:12.943077252Z caller=checkpoint.go:611 msg="starting checkpoint"
+level=info ts=2026-01-02T18:51:12.943163444Z caller=checkpoint.go:336 msg="attempting checkpoint for" dir=wal/checkpoint.000001
+level=info ts=2026-01-02T18:51:12.952966956Z caller=checkpoint.go:498 msg="atomic checkpoint finished" old=wal/checkpoint.000001.tmp new=wal/checkpoint.000001
+level=info ts=2026-01-02T18:51:18.092922759Z caller=compactor.go:508 msg="compactor startup delay completed"
+level=info ts=2026-01-02T18:51:18.092975107Z caller=compactor.go:562 msg="compactor started"
+ts=2026-01-02T18:51:18.09301037Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-01-02T18:51:18.093086066Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=21.736µs
+level=info ts=2026-01-02T18:52:12.937162578Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:52:12.937153475Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:53:12.936485043Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:53:12.937553058Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:54:12.937322515Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:54:12.937339312Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:55:12.9364948Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:55:12.936701745Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:56:12.936593968Z caller=table_manager.go:228 index-store=boltdb-shipper-2020-10-24 msg="syncing tables"
+level=info ts=2026-01-02T18:56:12.936585649Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+ts=2026-01-02T18:56:12.936666892Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-01-02T18:56:12.936691099Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=14.193µs
+ts=2026-01-02T18:56:12.936712993Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-01-02T18:56:12.936719164Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=2.531µs
+level=info ts=2026-01-02T18:56:12.936733444Z caller=table_manager.go:271 index-store=boltdb-shipper-2020-10-24 msg="query readiness setup completed" duration=2.79µs distinct_users_len=0 distinct_users=
+level=info ts=2026-01-02T18:56:12.936752226Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:56:12.942093065Z caller=checkpoint.go:611 msg="starting checkpoint"
+level=info ts=2026-01-02T18:56:12.942249551Z caller=checkpoint.go:336 msg="attempting checkpoint for" dir=wal/checkpoint.000002
+level=info ts=2026-01-02T18:56:12.952432611Z caller=checkpoint.go:498 msg="atomic checkpoint finished" old=wal/checkpoint.000002.tmp new=wal/checkpoint.000002
+level=info ts=2026-01-02T18:56:13.495821942Z caller=roundtrip.go:295 org_id=fake traceID=44b89bfe3a4069d0 msg="executing query" type=labels label= length=6h0m0s query=
+ts=2026-01-02T18:56:13.497127553Z caller=spanlogger.go:86 user=fake level=info org_id=fake traceID=44b89bfe3a4069d0 latency=fast query_type=labels length=6h0m0s duration=626.335µs status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=0
+level=info ts=2026-01-02T18:56:13.497471549Z caller=metrics.go:207 component=frontend org_id=fake traceID=44b89bfe3a4069d0 latency=fast query_type=labels length=6h0m0s duration=1.532182ms status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=0
+level=info ts=2026-01-02T18:56:27.512966162Z caller=roundtrip.go:295 org_id=fake traceID=1d04e73512861ff6 msg="executing query" type=labels label= length=6h0m0s query=
+ts=2026-01-02T18:56:27.514000126Z caller=spanlogger.go:86 user=fake level=info org_id=fake traceID=1d04e73512861ff6 latency=fast query_type=labels length=6h0m0s duration=545.208µs status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=0
+level=info ts=2026-01-02T18:56:27.51434677Z caller=metrics.go:207 component=frontend org_id=fake traceID=1d04e73512861ff6 latency=fast query_type=labels length=6h0m0s duration=1.269742ms status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=0
+level=info ts=2026-01-02T18:57:12.936560824Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:57:12.936696784Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:58:12.93645799Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:58:12.937737413Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T18:59:12.936550851Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T18:59:12.936728735Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T19:00:12.936463612Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-02T19:00:12.937597881Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=info ts=2026-01-02T19:00:33.635414382Z caller=roundtrip.go:295 org_id=fake traceID=5151ec7183d5b8c2 msg="executing query" type=labels label= length=6h0m0s query=
+ts=2026-01-02T19:00:33.636526024Z caller=spanlogger.go:86 user=fake level=info org_id=fake traceID=5151ec7183d5b8c2 latency=fast query_type=labels length=6h0m0s duration=543.899µs status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=0
+level=info ts=2026-01-02T19:00:33.636840595Z caller=metrics.go:207 component=frontend org_id=fake traceID=5151ec7183d5b8c2 latency=fast query_type=labels length=6h0m0s duration=1.324442ms status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=0
+
+--- Describe Loki Pod ---
+Name:             loki-5658ffcb8b-dhmwp
+Namespace:        infrastructure
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Fri, 02 Jan 2026 19:41:11 +0100
+Labels:           app=loki
+                  pod-template-hash=5658ffcb8b
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.166
+IPs:
+  IP:           10.244.0.166
+Controlled By:  ReplicaSet/loki-5658ffcb8b
+Containers:
+  loki:
+    Container ID:  docker://16e4cee480f41e3ff62efd57fc8c88e2eaf9743bca66950394431075c48f93e1
+    Image:         grafana/loki:2.9.4
+    Image ID:      docker-pullable://grafana/loki@sha256:f379a20ce9dd815884ed6446aad8819b81a8ba4d36b548ca14be8cecbc6cbca0
+    Port:          3100/TCP
+    Host Port:     0/TCP
+    Args:
+      -config.file=/etc/loki/local-config.yaml
+    State:          Running
+      Started:      Fri, 02 Jan 2026 19:41:12 +0100
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /etc/loki from loki-config (rw)
+      /loki from loki-data (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-q62jp (ro)
+      /wal from loki-wal (rw)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  loki-config:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      loki-config
+    Optional:  false
+  loki-data:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  loki-wal:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  kube-api-access-q62jp:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  19m   default-scheduler  Successfully assigned infrastructure/loki-5658ffcb8b-dhmwp to minikube
+  Normal  Pulled     19m   kubelet            spec.containers{loki}: Container image "grafana/loki:2.9.4" already present on machine
+  Normal  Created    19m   kubelet            spec.containers{loki}: Created container: loki
+  Normal  Started    19m   kubelet            spec.containers{loki}: Started container loki
+--- Loki Pod Status ---
+NAME                    READY   STATUS    RESTARTS   AGE
+loki-5658ffcb8b-8nmfq   1/1     Running   0          37s
+
+--- Loki Logs ---
+level=warn ts=2026-01-03T08:43:25.244890057Z caller=loki.go:288 msg="global timeout not configured, using default engine timeout (\"5m0s\"). This behavior will change in the next major to always use the default global timeout (\"5m\")."
+level=info ts=2026-01-03T08:43:25.246903872Z caller=main.go:108 msg="Starting Loki" version="(version=2.9.4, branch=HEAD, revision=f599ebc535)"
+level=info ts=2026-01-03T08:43:25.247327355Z caller=server.go:322 http=[::]:3100 grpc=[::]:9095 msg="server listening on addresses"
+level=info ts=2026-01-03T08:43:25.247807313Z caller=modules.go:932 msg="Ruler storage is not configured; ruler will not be started."
+level=warn ts=2026-01-03T08:43:25.249133967Z caller=cache.go:127 msg="fifocache config is deprecated. use embedded-cache instead"
+level=warn ts=2026-01-03T08:43:25.249156576Z caller=experimental.go:20 msg="experimental feature in use" feature="In-memory (FIFO) cache - chunksembedded-cache"
+level=info ts=2026-01-03T08:43:25.249374605Z caller=table_manager.go:271 index-store=boltdb-shipper-2020-10-24 msg="query readiness setup completed" duration=1.245µs distinct_users_len=0 distinct_users=
+level=info ts=2026-01-03T08:43:25.249365078Z caller=table_manager.go:136 index-store=boltdb-shipper-2020-10-24 msg="uploading tables"
+level=info ts=2026-01-03T08:43:25.249391973Z caller=shipper.go:165 index-store=boltdb-shipper-2020-10-24 msg="starting index shipper in RW mode"
+level=info ts=2026-01-03T08:43:25.249501464Z caller=shipper_index_client.go:76 index-store=boltdb-shipper-2020-10-24 msg="starting boltdb shipper in RW mode"
+level=info ts=2026-01-03T08:43:25.249542147Z caller=table_manager.go:171 index-store=boltdb-shipper-2020-10-24 msg="handing over indexes to shipper"
+level=warn ts=2026-01-03T08:43:25.249646144Z caller=modules.go:474 msg="The config setting shutdown marker path is not set. The /ingester/prepare_shutdown endpoint won't work"
+level=warn ts=2026-01-03T08:43:25.250201237Z caller=modules.go:951 msg="RulerStorage is nil. Not starting the ruler."
+level=info ts=2026-01-03T08:43:25.250903852Z caller=worker.go:112 msg="Starting querier worker using query-scheduler and scheduler ring for addresses"
+level=info ts=2026-01-03T08:43:25.252251276Z caller=module_service.go:82 msg=initialising module=cache-generation-loader
+level=info ts=2026-01-03T08:43:25.25230948Z caller=module_service.go:82 msg=initialising module=server
+level=info ts=2026-01-03T08:43:25.252411728Z caller=module_service.go:82 msg=initialising module=memberlist-kv
+level=info ts=2026-01-03T08:43:25.252441445Z caller=module_service.go:82 msg=initialising module=query-scheduler-ring
+level=info ts=2026-01-03T08:43:25.252435269Z caller=module_service.go:82 msg=initialising module=query-frontend-tripperware
+level=info ts=2026-01-03T08:43:25.252459633Z caller=module_service.go:82 msg=initialising module=store
+level=info ts=2026-01-03T08:43:25.252478125Z caller=module_service.go:82 msg=initialising module=ring
+level=info ts=2026-01-03T08:43:25.252538893Z caller=ring.go:273 msg="ring doesn't exist in KV store yet"
+level=info ts=2026-01-03T08:43:25.252530523Z caller=basic_lifecycler.go:297 msg="instance not found in the ring" instance=loki-5658ffcb8b-8nmfq ring=scheduler
+level=info ts=2026-01-03T08:43:25.252547425Z caller=basic_lifecycler_delegates.go:63 msg="not loading tokens from file, tokens file path is empty"
+level=info ts=2026-01-03T08:43:25.252589967Z caller=ring.go:273 msg="ring doesn't exist in KV store yet"
+level=info ts=2026-01-03T08:43:25.25262388Z caller=ringmanager.go:201 msg="waiting until scheduler is JOINING in the ring"
+level=info ts=2026-01-03T08:43:25.252651332Z caller=module_service.go:82 msg=initialising module=analytics
+level=info ts=2026-01-03T08:43:25.252657142Z caller=module_service.go:82 msg=initialising module=ingester-querier
+level=info ts=2026-01-03T08:43:25.252734463Z caller=module_service.go:82 msg=initialising module=ingester
+level=info ts=2026-01-03T08:43:25.252752332Z caller=ingester.go:431 msg="recovering from checkpoint"
+level=info ts=2026-01-03T08:43:25.252774005Z caller=module_service.go:82 msg=initialising module=compactor
+level=info ts=2026-01-03T08:43:25.25277931Z caller=module_service.go:82 msg=initialising module=distributor
+level=info ts=2026-01-03T08:43:25.252793517Z caller=recovery.go:40 msg="no checkpoint found, treating as no-op"
+level=info ts=2026-01-03T08:43:25.252830555Z caller=ring.go:273 msg="ring doesn't exist in KV store yet"
+level=info ts=2026-01-03T08:43:25.252833484Z caller=ring.go:273 msg="ring doesn't exist in KV store yet"
+level=info ts=2026-01-03T08:43:25.252836269Z caller=basic_lifecycler.go:297 msg="instance not found in the ring" instance=loki-5658ffcb8b-8nmfq ring=compactor
+level=info ts=2026-01-03T08:43:25.252844275Z caller=basic_lifecycler_delegates.go:63 msg="not loading tokens from file, tokens file path is empty"
+level=info ts=2026-01-03T08:43:25.252866916Z caller=basic_lifecycler.go:297 msg="instance not found in the ring" instance=loki-5658ffcb8b-8nmfq ring=distributor
+level=info ts=2026-01-03T08:43:25.252873164Z caller=ingester.go:447 msg="recovered WAL checkpoint recovery finished" elapsed=130.467µs errors=false
+level=info ts=2026-01-03T08:43:25.252879867Z caller=ingester.go:453 msg="recovering from WAL"
+level=info ts=2026-01-03T08:43:25.252915379Z caller=compactor.go:395 msg="waiting until compactor is JOINING in the ring"
+level=info ts=2026-01-03T08:43:25.253002409Z caller=ingester.go:469 msg="WAL segment recovery finished" elapsed=256.625µs errors=false
+level=info ts=2026-01-03T08:43:25.253023442Z caller=ingester.go:417 msg="closing recoverer"
+level=info ts=2026-01-03T08:43:25.253028109Z caller=ingester.go:425 msg="WAL recovery finished" time=285.694µs
+level=info ts=2026-01-03T08:43:25.253080874Z caller=lifecycler.go:614 msg="not loading tokens from file, tokens file path is empty"
+level=info ts=2026-01-03T08:43:25.253094511Z caller=wal.go:156 msg=started component=wal
+level=info ts=2026-01-03T08:43:25.253125716Z caller=lifecycler.go:643 msg="instance not found in ring, adding with no tokens" ring=ingester
+level=info ts=2026-01-03T08:43:25.253181646Z caller=lifecycler.go:483 msg="auto-joining cluster after timeout" ring=ingester
+level=info ts=2026-01-03T08:43:25.411520459Z caller=compactor.go:399 msg="compactor is JOINING in the ring"
+level=info ts=2026-01-03T08:43:25.411657675Z caller=compactor.go:409 msg="waiting until compactor is ACTIVE in the ring"
+level=info ts=2026-01-03T08:43:25.444662619Z caller=ringmanager.go:205 msg="scheduler is JOINING in the ring"
+level=info ts=2026-01-03T08:43:25.444856684Z caller=ringmanager.go:214 msg="waiting until scheduler is ACTIVE in the ring"
+level=info ts=2026-01-03T08:43:25.559073131Z caller=ringmanager.go:218 msg="scheduler is ACTIVE in the ring"
+level=info ts=2026-01-03T08:43:25.559189868Z caller=module_service.go:82 msg=initialising module=query-scheduler
+level=info ts=2026-01-03T08:43:25.559288165Z caller=module_service.go:82 msg=initialising module=querier
+level=info ts=2026-01-03T08:43:25.559325088Z caller=module_service.go:82 msg=initialising module=query-frontend
+level=info ts=2026-01-03T08:43:25.562183088Z caller=compactor.go:413 msg="compactor is ACTIVE in the ring"
+level=info ts=2026-01-03T08:43:25.5622349Z caller=loki.go:505 msg="Loki started"
+level=info ts=2026-01-03T08:43:28.559767636Z caller=scheduler.go:615 msg="this scheduler is in the ReplicationSet, will now accept requests."
+level=info ts=2026-01-03T08:43:28.559794027Z caller=worker.go:209 msg="adding connection" addr=127.0.0.1:9095
+level=info ts=2026-01-03T08:43:30.563278797Z caller=compactor.go:474 msg="this instance has been chosen to run the compactor, starting compactor"
+level=info ts=2026-01-03T08:43:30.563387201Z caller=compactor.go:503 msg="waiting 10m0s for ring to stay stable and previous compactions to finish before starting compactor"
+level=info ts=2026-01-03T08:43:35.55978943Z caller=frontend_scheduler_worker.go:107 msg="adding connection to scheduler" addr=127.0.0.1:9095
+
+--- Describe Loki Pod ---
+Name:             loki-5658ffcb8b-8nmfq
+Namespace:        infrastructure
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Sat, 03 Jan 2026 09:43:24 +0100
+Labels:           app=loki
+                  pod-template-hash=5658ffcb8b
+Annotations:      <none>
+Status:           Running
+IP:               10.244.1.22
+IPs:
+  IP:           10.244.1.22
+Controlled By:  ReplicaSet/loki-5658ffcb8b
+Containers:
+  loki:
+    Container ID:  docker://12e31c453000202b304e3cf37b1a2262672a73f33c0754aa28894245a74c70bc
+    Image:         grafana/loki:2.9.4
+    Image ID:      docker-pullable://grafana/loki@sha256:f379a20ce9dd815884ed6446aad8819b81a8ba4d36b548ca14be8cecbc6cbca0
+    Port:          3100/TCP
+    Host Port:     0/TCP
+    Args:
+      -config.file=/etc/loki/local-config.yaml
+    State:          Running
+      Started:      Sat, 03 Jan 2026 09:43:25 +0100
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /etc/loki from loki-config (rw)
+      /loki from loki-data (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-2ffjw (ro)
+      /wal from loki-wal (rw)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  loki-config:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      loki-config
+    Optional:  false
+  loki-data:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  loki-wal:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  kube-api-access-2ffjw:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  37s   default-scheduler  Successfully assigned infrastructure/loki-5658ffcb8b-8nmfq to minikube
+  Normal  Pulled     36s   kubelet            spec.containers{loki}: Container image "grafana/loki:2.9.4" already present on machine
+  Normal  Created    36s   kubelet            spec.containers{loki}: Created container: loki
+  Normal  Started    36s   kubelet            spec.containers{loki}: Started container loki

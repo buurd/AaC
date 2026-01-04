@@ -1,0 +1,212 @@
+--- Webshop Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME      ENDPOINTS                           AGE
+webshop   10.244.1.12:8000,10.244.1.14:8000   7h47m
+
+--- PM Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                 ENDPOINTS          AGE
+product-management   10.244.1.16:8001   7h47m
+
+--- Warehouse Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME        ENDPOINTS          AGE
+warehouse   10.244.1.17:8002   7h47m
+
+--- Order Service Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME            ENDPOINTS                           AGE
+order-service   10.244.1.20:8003,10.244.1.21:8003   7h47m
+--- Webshop Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME      ENDPOINTS                           AGE
+webshop   10.244.1.24:8000,10.244.1.26:8000   20h
+
+--- PM Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                 ENDPOINTS          AGE
+product-management   10.244.1.27:8001   20h
+
+--- Warehouse Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME        ENDPOINTS          AGE
+warehouse   10.244.1.30:8002   20h
+
+--- Order Service Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME            ENDPOINTS                           AGE
+order-service   10.244.1.32:8003,10.244.1.33:8003   20h
+--- Webshop Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME      ENDPOINTS   AGE
+webshop               151m
+
+--- PM Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                 ENDPOINTS   AGE
+product-management               151m
+
+--- Warehouse Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME        ENDPOINTS          AGE
+warehouse   10.244.0.96:8002   151m
+
+--- Order Service Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME            ENDPOINTS                            AGE
+order-service   10.244.0.100:8003,10.244.0.98:8003   151m
+
+--- Keycloak Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME       ENDPOINTS          AGE
+keycloak   10.244.0.89:8080   59m
+
+--- Grafana Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME      ENDPOINTS          AGE
+grafana   10.244.0.88:3000   59m
+--- Webshop Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME      ENDPOINTS   AGE
+webshop               151m
+
+--- PM Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                 ENDPOINTS   AGE
+product-management               151m
+
+--- Warehouse Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME        ENDPOINTS          AGE
+warehouse   10.244.0.96:8002   151m
+
+--- Order Service Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME            ENDPOINTS                            AGE
+order-service   10.244.0.100:8003,10.244.0.98:8003   151m
+
+--- Keycloak Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME       ENDPOINTS          AGE
+keycloak   10.244.0.89:8080   59m
+
+--- Grafana Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME      ENDPOINTS          AGE
+grafana   10.244.0.88:3000   59m
+--- Webshop Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME      ENDPOINTS   AGE
+webshop               157m
+
+--- PM Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                 ENDPOINTS   AGE
+product-management               157m
+
+--- Warehouse Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME        ENDPOINTS          AGE
+warehouse   10.244.0.96:8002   157m
+
+--- Order Service Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME            ENDPOINTS                            AGE
+order-service   10.244.0.100:8003,10.244.0.98:8003   157m
+
+--- Keycloak Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME       ENDPOINTS          AGE
+keycloak   10.244.0.89:8080   65m
+
+--- Grafana Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME      ENDPOINTS          AGE
+grafana   10.244.0.88:3000   65m
+--- Webshop Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME      ENDPOINTS   AGE
+webshop               17h
+
+--- PM Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                 ENDPOINTS   AGE
+product-management               17h
+
+--- Warehouse Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME        ENDPOINTS          AGE
+warehouse   10.244.0.96:8002   17h
+
+--- Order Service Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME            ENDPOINTS                            AGE
+order-service   10.244.0.100:8003,10.244.0.98:8003   17h
+
+--- Keycloak Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME       ENDPOINTS          AGE
+keycloak   10.244.0.89:8080   16h
+
+--- Grafana Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME      ENDPOINTS          AGE
+grafana   10.244.0.88:3000   16h
+--- Webshop Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME      ENDPOINTS   AGE
+webshop               18h
+
+--- PM Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                 ENDPOINTS   AGE
+product-management               18h
+
+--- Warehouse Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME        ENDPOINTS          AGE
+warehouse   10.244.0.96:8002   18h
+
+--- Order Service Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME            ENDPOINTS                            AGE
+order-service   10.244.0.100:8003,10.244.0.98:8003   18h
+
+--- Keycloak Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME       ENDPOINTS          AGE
+keycloak   10.244.0.89:8080   16h
+
+--- Grafana Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME      ENDPOINTS          AGE
+grafana   10.244.0.88:3000   16h
+--- Webshop Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME      ENDPOINTS           AGE
+webshop   10.244.0.120:8000   18h
+
+--- PM Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                 ENDPOINTS           AGE
+product-management   10.244.0.121:8001   18h
+
+--- Warehouse Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME        ENDPOINTS          AGE
+warehouse   10.244.0.96:8002   18h
+
+--- Order Service Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME            ENDPOINTS                            AGE
+order-service   10.244.0.100:8003,10.244.0.98:8003   18h
+
+--- Keycloak Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME       ENDPOINTS          AGE
+keycloak   10.244.0.89:8080   16h
+
+--- Grafana Endpoints ---
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME      ENDPOINTS          AGE
+grafana   10.244.0.88:3000   16h

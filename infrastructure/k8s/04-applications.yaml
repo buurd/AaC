@@ -1,0 +1,251 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webshop
+  namespace: webshop
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: webshop
+  template:
+    metadata:
+      labels:
+        app: webshop
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox:1.28
+          command: ['sh', '-c', "until nslookup webshop-db; do echo waiting for webshop-db; sleep 2; done"]
+      containers:
+        - name: webshop
+          image: webshop:latest
+          imagePullPolicy: Never
+          env:
+            - name: DB_URL
+              value: "jdbc:postgresql://webshop-db:5432/webshop"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: password
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 45
+            periodSeconds: 15
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webshop
+  namespace: webshop
+spec:
+  selector:
+    app: webshop
+  ports:
+    - port: 80
+      targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-management
+  namespace: product-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-management
+  template:
+    metadata:
+      labels:
+        app: product-management
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox:1.28
+          command: ['sh', '-c', "until nslookup pm-db; do echo waiting for pm-db; sleep 2; done"]
+      containers:
+        - name: product-management
+          image: product-management:latest
+          imagePullPolicy: Never
+          env:
+            - name: DB_URL
+              value: "jdbc:postgresql://pm-db:5432/product_management"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: password
+          ports:
+            - containerPort: 8001
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8001
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8001
+            initialDelaySeconds: 45
+            periodSeconds: 15
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-management
+  namespace: product-management
+spec:
+  selector:
+    app: product-management
+  ports:
+    - port: 80
+      targetPort: 8001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: warehouse
+  namespace: warehouse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: warehouse
+  template:
+    metadata:
+      labels:
+        app: warehouse
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox:1.28
+          command: ['sh', '-c', "until nslookup warehouse-db; do echo waiting for warehouse-db; sleep 2; done"]
+      containers:
+        - name: warehouse
+          image: warehouse:latest
+          imagePullPolicy: Never
+          env:
+            - name: DB_URL
+              value: "jdbc:postgresql://warehouse-db:5432/warehouse"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: password
+          ports:
+            - containerPort: 8002
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8002
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8002
+            initialDelaySeconds: 45
+            periodSeconds: 15
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: warehouse
+  namespace: warehouse
+spec:
+  selector:
+    app: warehouse
+  ports:
+    - port: 80
+      targetPort: 8002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+  namespace: order-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox:1.28
+          command: ['sh', '-c', "until nslookup order-db; do echo waiting for order-db; sleep 2; done"]
+      containers:
+        - name: order-service
+          image: order-service:latest
+          imagePullPolicy: Never
+          env:
+            - name: DB_URL
+              value: "jdbc:postgresql://order-db:5432/order_service"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: password
+          ports:
+            - containerPort: 8003
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8003
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8003
+            initialDelaySeconds: 45
+            periodSeconds: 15
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+  namespace: order-service
+spec:
+  selector:
+    app: order-service
+  ports:
+    - port: 80
+      targetPort: 8003

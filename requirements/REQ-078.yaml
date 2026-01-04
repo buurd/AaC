@@ -1,0 +1,34 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: kubernetes-deployment-validation
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-078
+      title: Kubernetes Deployment Validation
+      description: The system must be deployable to Kubernetes, and the deployment configuration must include all required services (Webshop, Product Management, Warehouse, Order Service) and their corresponding databases and ingress rules.
+      type: ARCHITECTURE
+      priority: HIGH
+      c4_level: container
+      tracesTo: REQ-001
+      k8s_validation:
+        manifests_path: infrastructure/k8s
+        required_deployments:
+          - webshop
+          - product-management
+          - warehouse
+          - order-service
+          - webshop-db
+          - pm-db
+          - warehouse-db
+          - order-db
+          - keycloak
+          - loki
+          - promtail
+          - grafana
+        required_services:
+          - webshop
+          - product-management
+          - warehouse
+          - order-service

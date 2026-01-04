@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: production-environment-secrets
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-081
+      type: security
+      c4_level: deployment
+      description: "Sensitive configuration (DB passwords, API keys) shall be managed using Kubernetes Secrets and not stored in plain text."
+      priority: critical
+      tracesTo: REQ-078
+      validation_policy: "policies/check_traceability.rego"

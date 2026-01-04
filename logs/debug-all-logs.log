@@ -1,0 +1,107 @@
+--- Webshop Logs ---
+Defaulted container "webshop" out of: webshop, wait-for-db (init)
+Defaulted container "webshop" out of: webshop, wait-for-db (init)
+[main] INFO com.example.webshop.WebshopApplication - Connecting to database at: jdbc:postgresql://webshop-db:5432/webshop
+[main] INFO com.example.webshop.WebshopApplication - Database connection successful.
+[main] INFO com.example.webshop.WebshopApplication - Database schema initialized.
+[main] INFO com.example.webshop.WebshopApplication - Server started on port 8000
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[main] INFO com.example.webshop.WebshopApplication - Connecting to database at: jdbc:postgresql://webshop-db:5432/webshop
+[main] INFO com.example.webshop.WebshopApplication - Database connection successful.
+[main] INFO com.example.webshop.WebshopApplication - Database schema initialized.
+[main] INFO com.example.webshop.WebshopApplication - Server started on port 8000
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+[pool-1-thread-1] INFO com.example.webshop.WebshopApplication - Received request: GET /
+
+--- Product Management Logs ---
+Defaulted container "product-management" out of: product-management, wait-for-db (init)
+Defaulted container "product-management" out of: product-management, wait-for-db (init)
+[main] INFO com.example.productmanagement.ProductManagementApplication - Connecting to database at: jdbc:postgresql://pm-db:5432/product_management
+[main] INFO com.example.productmanagement.ProductManagementApplication - Database connection successful.
+[main] INFO com.example.productmanagement.ProductManagementApplication - Database schema initialized.
+ProductService initialized with Webshop API URL: http://webshop-demo:8000/api/products/sync
+ProductService initialized with Warehouse API URL: http://warehouse-demo:8002/api/products/sync
+[main] INFO com.example.productmanagement.ProductManagementApplication - Product Management Server started on port 8001
+[main] INFO com.example.productmanagement.ProductManagementApplication - Connecting to database at: jdbc:postgresql://pm-db:5432/product_management
+[main] INFO com.example.productmanagement.ProductManagementApplication - Database connection successful.
+[main] INFO com.example.productmanagement.ProductManagementApplication - Database schema initialized.
+ProductService initialized with Webshop API URL: http://webshop-demo:8000/api/products/sync
+ProductService initialized with Warehouse API URL: http://warehouse-demo:8002/api/products/sync
+[main] INFO com.example.productmanagement.ProductManagementApplication - Product Management Server started on port 8001
+
+--- Warehouse Logs ---
+Defaulted container "warehouse" out of: warehouse, wait-for-db (init)
+Defaulted container "warehouse" out of: warehouse, wait-for-db (init)
+[main] INFO com.example.warehouse.WarehouseApplication - Connecting to database at: jdbc:postgresql://warehouse-db:5432/warehouse
+[main] INFO com.example.warehouse.WarehouseApplication - Database connection successful.
+[main] INFO com.example.warehouse.WarehouseApplication - Database schema initialized.
+StockService initialized with Webshop Stock API URL: http://webshop-demo:8000/api/stock/sync
+[main] INFO com.example.warehouse.WarehouseApplication - Warehouse Service started on port 8002
+[main] INFO com.example.warehouse.WarehouseApplication - Connecting to database at: jdbc:postgresql://warehouse-db:5432/warehouse
+[main] INFO com.example.warehouse.WarehouseApplication - Database connection successful.
+[main] INFO com.example.warehouse.WarehouseApplication - Database schema initialized.
+StockService initialized with Webshop Stock API URL: http://webshop-demo:8000/api/stock/sync
+[main] INFO com.example.warehouse.WarehouseApplication - Warehouse Service started on port 8002
+
+--- Order Service Logs ---
+Defaulted container "order-service" out of: order-service, wait-for-db (init)
+Defaulted container "order-service" out of: order-service, wait-for-db (init)
+Defaulted container "order-service" out of: order-service, wait-for-db (init)
+[main] INFO com.example.order.OrderApplication - Connecting to database at: jdbc:postgresql://order-db:5432/order_service
+[main] INFO com.example.order.OrderApplication - Database connection successful.
+[main] INFO com.example.order.OrderApplication - Database schema initialized.
+[main] INFO com.example.order.OrderApplication - Order Service started on port 8003
+[main] INFO com.example.order.OrderApplication - Connecting to database at: jdbc:postgresql://order-db:5432/order_service
+[main] INFO com.example.order.OrderApplication - Database connection successful.
+[main] INFO com.example.order.OrderApplication - Database schema initialized.
+[main] INFO com.example.order.OrderApplication - Order Service started on port 8003
+[main] INFO com.example.order.OrderApplication - Connecting to database at: jdbc:postgresql://order-db:5432/order_service
+[main] INFO com.example.order.OrderApplication - Database connection successful.
+[main] INFO com.example.order.OrderApplication - Database schema initialized.
+[main] INFO com.example.order.OrderApplication - Order Service started on port 8003

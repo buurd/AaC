@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: production-environment-ingress
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-082
+      type: architectural
+      c4_level: deployment
+      description: "External traffic shall be routed via a Kubernetes Ingress Controller with TLS termination."
+      priority: critical
+      tracesTo: REQ-078
+      validation_policy: "policies/check_traceability.rego"

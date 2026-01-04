@@ -9,8 +9,7 @@ CREATE TABLE IF NOT EXISTS products (
     stock INTEGER DEFAULT 0
 );
 
--- Seed Data
--- Matches PM IDs 1-16 and Warehouse Stock levels
+-- Seed Data using ON CONFLICT to avoid duplicates
 INSERT INTO products (pm_id, type, name, description, price, unit, stock) VALUES
 (1, 'T-Shirt', 'Classic T-Shirt - Red S', '100% Cotton, soft and comfortable', 25.00, 'pcs', 5),
 (2, 'T-Shirt', 'Classic T-Shirt - Red M', '100% Cotton, soft and comfortable', 25.00, 'pcs', 8),
@@ -27,4 +26,5 @@ INSERT INTO products (pm_id, type, name, description, price, unit, stock) VALUES
 (13, 'Coffee', 'Artisan Coffee Beans - Dark 1kg', 'Single-origin, ethically sourced coffee beans', 50.00, 'g', 5),
 (14, 'Kitchenware', 'Handcrafted Wooden Bowl - Oak', 'Beautiful and unique wooden bowls for your kitchen', 45.00, 'pcs', 3),
 (15, 'Kitchenware', 'Handcrafted Wooden Bowl - Walnut', 'Beautiful and unique wooden bowls for your kitchen', 55.00, 'pcs', 2),
-(16, 'Office', 'Ergonomic Laptop Stand', 'Adjustable aluminum laptop stand for better posture', 75.00, 'pcs', 10);
+(16, 'Office', 'Ergonomic Laptop Stand', 'Adjustable aluminum laptop stand for better posture', 75.00, 'pcs', 10)
+ON CONFLICT (pm_id) DO NOTHING;

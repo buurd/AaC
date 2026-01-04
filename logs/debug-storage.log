@@ -1,0 +1,562 @@
+--- Checking Webshop DB Content (Inside Pod) ---
+Pod found: webshop-db-74885b88df-6vx6w
+Listing /var/lib/postgresql/data inside the container:
+base/
+global/
+pg_commit_ts/
+pg_dynshmem/
+pg_hba.conf
+pg_ident.conf
+pg_logical/
+pg_multixact/
+pg_notify/
+pg_replslot/
+pg_serial/
+pg_snapshots/
+pg_stat/
+pg_stat_tmp/
+pg_subtrans/
+pg_tblspc/
+pg_twophase/
+PG_VERSION
+pg_wal/
+pg_xact/
+postgresql.auto.conf
+postgresql.conf
+postmaster.opts
+postmaster.pid
+
+--- Checking Persistent Volume (PV) Config ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/webshop-db
+    type: ""
+
+--- Diagnosis ---
+1. If you see files listed above (like 'base/', 'global/', 'pg_wal/') inside the pod,
+   it means the Database is working correctly and storing data inside Minikube.
+
+2. If your local 'production-data/webshop-db' folder is EMPTY, it means the
+   'mount' between your computer and Minikube is broken or not active.
+
+--- How to Fix ---
+The most reliable way to restore the mount is to restart Minikube with the mount flag.
+Run the following commands:
+
+  minikube stop
+  ./run-k8s.sh
+
+If that doesn't work, you might need to delete and recreate the cluster (warning: deletes data):
+  minikube delete
+  ./run-k8s.sh
+--- Checking Webshop DB Content (Inside Pod) ---
+Pod found: webshop-db-74885b88df-6vx6w
+Listing /var/lib/postgresql/data inside the container:
+base/
+global/
+pg_commit_ts/
+pg_dynshmem/
+pg_hba.conf
+pg_ident.conf
+pg_logical/
+pg_multixact/
+pg_notify/
+pg_replslot/
+pg_serial/
+pg_snapshots/
+pg_stat/
+pg_stat_tmp/
+pg_subtrans/
+pg_tblspc/
+pg_twophase/
+PG_VERSION
+pg_wal/
+pg_xact/
+postgresql.auto.conf
+postgresql.conf
+postmaster.opts
+postmaster.pid
+
+--- Checking Persistent Volume (PV) Config ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/webshop-db
+    type: ""
+
+--- Diagnosis ---
+1. If you see files listed above (like 'base/', 'global/', 'pg_wal/') inside the pod,
+   it means the Database is working correctly and storing data inside Minikube.
+
+2. If your local 'production-data/webshop-db' folder is EMPTY, it means the
+   'mount' between your computer and Minikube is broken or not active.
+
+--- How to Fix ---
+The most reliable way to restore the mount is to restart Minikube with the mount flag.
+Run the following commands:
+
+  minikube stop
+  ./run-k8s.sh
+
+If that doesn't work, you might need to delete and recreate the cluster (warning: deletes data):
+  minikube delete
+  ./run-k8s.sh
+--- Checking Webshop DB Content (Inside Pod) ---
+Pod found: webshop-db-74885b88df-j6nmf
+Listing /var/lib/postgresql/data inside the container:
+base/
+global/
+pg_commit_ts/
+pg_dynshmem/
+pg_hba.conf
+pg_ident.conf
+pg_logical/
+pg_multixact/
+pg_notify/
+pg_replslot/
+pg_serial/
+pg_snapshots/
+pg_stat/
+pg_stat_tmp/
+pg_subtrans/
+pg_tblspc/
+pg_twophase/
+PG_VERSION
+pg_wal/
+pg_xact/
+postgresql.auto.conf
+postgresql.conf
+postmaster.opts
+postmaster.pid
+
+--- Checking Persistent Volume (PV) Config ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/webshop-db
+    type: ""
+
+--- Diagnosis ---
+1. If you see files listed above (like 'base/', 'global/', 'pg_wal/') inside the pod,
+   it means the Database is working correctly and storing data inside Minikube.
+
+2. If your local 'production-data/webshop-db' folder is EMPTY, it means the
+   'mount' between your computer and Minikube is broken or not active.
+
+--- How to Fix ---
+The most reliable way to restore the mount is to restart Minikube with the mount flag.
+Run the following commands:
+
+  minikube stop
+  ./run-k8s.sh
+
+If that doesn't work, you might need to delete and recreate the cluster (warning: deletes data):
+  minikube delete
+  ./run-k8s.sh
+--- Checking Webshop DB Content (Inside Pod) ---
+Pod found: webshop-db-74885b88df-d4mtq
+Listing /var/lib/postgresql/data inside the container:
+base/
+global/
+pg_commit_ts/
+pg_dynshmem/
+pg_hba.conf*
+pg_ident.conf*
+pg_logical/
+pg_multixact/
+pg_notify/
+pg_replslot/
+pg_serial/
+pg_snapshots/
+pg_stat/
+pg_stat_tmp/
+pg_subtrans/
+pg_tblspc/
+pg_twophase/
+PG_VERSION*
+pg_wal/
+pg_xact/
+postgresql.auto.conf*
+postgresql.conf*
+postmaster.opts*
+postmaster.pid
+
+--- Checking Persistent Volume (PV) Config for Webshop DB ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/webshop-db
+    type: ""
+
+--- Checking Product Management DB Content (Inside Pod) ---
+Pod found: pm-db-bd78669d4-xjg8v
+Listing /var/lib/postgresql/data inside the container:
+base/
+global/
+pg_commit_ts/
+pg_dynshmem/
+pg_hba.conf*
+pg_ident.conf*
+pg_logical/
+pg_multixact/
+pg_notify/
+pg_replslot/
+pg_serial/
+pg_snapshots/
+pg_stat/
+pg_stat_tmp/
+pg_subtrans/
+pg_tblspc/
+pg_twophase/
+PG_VERSION*
+pg_wal/
+pg_xact/
+postgresql.auto.conf*
+postgresql.conf*
+postmaster.opts*
+postmaster.pid
+
+--- Checking Persistent Volume (PV) Config for Product Management DB ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/pm-db
+    type: ""
+
+--- Checking Warehouse DB Content (Inside Pod) ---
+Pod found: warehouse-db-b9bf94fdb-swhzk
+Listing /var/lib/postgresql/data inside the container:
+base/
+global/
+pg_commit_ts/
+pg_dynshmem/
+pg_hba.conf*
+pg_ident.conf*
+pg_logical/
+pg_multixact/
+pg_notify/
+pg_replslot/
+pg_serial/
+pg_snapshots/
+pg_stat/
+pg_stat_tmp/
+pg_subtrans/
+pg_tblspc/
+pg_twophase/
+PG_VERSION*
+pg_wal/
+pg_xact/
+postgresql.auto.conf*
+postgresql.conf*
+postmaster.opts*
+postmaster.pid
+
+--- Checking Persistent Volume (PV) Config for Warehouse DB ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/warehouse-db
+    type: ""
+
+--- Checking Order Service DB Content (Inside Pod) ---
+Pod found: order-db-575b94d567-qqshw
+Listing /var/lib/postgresql/data inside the container:
+base/
+global/
+pg_commit_ts/
+pg_dynshmem/
+pg_hba.conf*
+pg_ident.conf*
+pg_logical/
+pg_multixact/
+pg_notify/
+pg_replslot/
+pg_serial/
+pg_snapshots/
+pg_stat/
+pg_stat_tmp/
+pg_subtrans/
+pg_tblspc/
+pg_twophase/
+PG_VERSION*
+pg_wal/
+pg_xact/
+postgresql.auto.conf*
+postgresql.conf*
+postmaster.opts*
+postmaster.pid
+
+--- Checking Persistent Volume (PV) Config for Order Service DB ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/order-db
+    type: ""
+
+--- Checking Keycloak DB Content (Inside Pod) ---
+Pod found: keycloak-db-5886fb575c-pxnsh
+Listing /var/lib/postgresql/data inside the container:
+base/
+global/
+pg_commit_ts/
+pg_dynshmem/
+pg_hba.conf*
+pg_ident.conf*
+pg_logical/
+pg_multixact/
+pg_notify/
+pg_replslot/
+pg_serial/
+pg_snapshots/
+pg_stat/
+pg_stat_tmp/
+pg_subtrans/
+pg_tblspc/
+pg_twophase/
+PG_VERSION*
+pg_wal/
+pg_xact/
+postgresql.auto.conf*
+postgresql.conf*
+postmaster.opts*
+postmaster.pid
+
+--- Checking Persistent Volume (PV) Config for Keycloak DB ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/keycloak-db
+    type: ""
+
+--- Checking Loki Content (Inside Pod) ---
+Pod found: loki-6cb4fbf8b9-rcsdt
+Listing /loki inside the container:
+error: Internal error occurred: unable to upgrade connection: container not found ("loki")
+
+--- Checking Persistent Volume (PV) Config for Loki ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/loki
+    type: ""
+
+--- Checking Grafana Content (Inside Pod) ---
+Pod found: grafana-65bb6c7b7c-mtrxr
+Listing /var/lib/grafana inside the container:
+csv/
+grafana.db
+pdf/
+plugins/
+png/
+
+--- Checking Persistent Volume (PV) Config for Grafana ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/grafana
+    type: ""
+
+--- Diagnosis ---
+1. If you see files listed above (like 'base/', 'global/', 'pg_wal/') inside the pods,
+   it means the Databases are working correctly and storing data inside Minikube.
+
+2. If your local 'production-data/*' folders are EMPTY, it means the
+   'mount' between your computer and Minikube is broken or not active.
+
+--- How to Fix ---
+The most reliable way to restore the mount is to restart Minikube with the mount flag.
+Run the following commands:
+
+  minikube stop
+  ./run-k8s.sh
+
+If that doesn't work, you might need to delete and recreate the cluster (warning: deletes data):
+  minikube delete
+  ./run-k8s.sh
+--- Checking Webshop DB Content (Inside Pod) ---
+Pod found: webshop-db-74885b88df-d4mtq
+Listing /var/lib/postgresql/data inside the container:
+base/
+global/
+pg_commit_ts/
+pg_dynshmem/
+pg_hba.conf*
+pg_ident.conf*
+pg_logical/
+pg_multixact/
+pg_notify/
+pg_replslot/
+pg_serial/
+pg_snapshots/
+pg_stat/
+pg_stat_tmp/
+pg_subtrans/
+pg_tblspc/
+pg_twophase/
+PG_VERSION*
+pg_wal/
+pg_xact/
+postgresql.auto.conf*
+postgresql.conf*
+postmaster.opts*
+postmaster.pid
+
+--- Checking Persistent Volume (PV) Config for Webshop DB ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/webshop-db
+    type: ""
+
+--- Checking Product Management DB Content (Inside Pod) ---
+Pod found: pm-db-bd78669d4-xjg8v
+Listing /var/lib/postgresql/data inside the container:
+base/
+global/
+pg_commit_ts/
+pg_dynshmem/
+pg_hba.conf*
+pg_ident.conf*
+pg_logical/
+pg_multixact/
+pg_notify/
+pg_replslot/
+pg_serial/
+pg_snapshots/
+pg_stat/
+pg_stat_tmp/
+pg_subtrans/
+pg_tblspc/
+pg_twophase/
+PG_VERSION*
+pg_wal/
+pg_xact/
+postgresql.auto.conf*
+postgresql.conf*
+postmaster.opts*
+postmaster.pid
+
+--- Checking Persistent Volume (PV) Config for Product Management DB ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/pm-db
+    type: ""
+
+--- Checking Warehouse DB Content (Inside Pod) ---
+Pod found: warehouse-db-b9bf94fdb-swhzk
+Listing /var/lib/postgresql/data inside the container:
+base/
+global/
+pg_commit_ts/
+pg_dynshmem/
+pg_hba.conf*
+pg_ident.conf*
+pg_logical/
+pg_multixact/
+pg_notify/
+pg_replslot/
+pg_serial/
+pg_snapshots/
+pg_stat/
+pg_stat_tmp/
+pg_subtrans/
+pg_tblspc/
+pg_twophase/
+PG_VERSION*
+pg_wal/
+pg_xact/
+postgresql.auto.conf*
+postgresql.conf*
+postmaster.opts*
+postmaster.pid
+
+--- Checking Persistent Volume (PV) Config for Warehouse DB ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/warehouse-db
+    type: ""
+
+--- Checking Order Service DB Content (Inside Pod) ---
+Pod found: order-db-575b94d567-qqshw
+Listing /var/lib/postgresql/data inside the container:
+base/
+global/
+pg_commit_ts/
+pg_dynshmem/
+pg_hba.conf*
+pg_ident.conf*
+pg_logical/
+pg_multixact/
+pg_notify/
+pg_replslot/
+pg_serial/
+pg_snapshots/
+pg_stat/
+pg_stat_tmp/
+pg_subtrans/
+pg_tblspc/
+pg_twophase/
+PG_VERSION*
+pg_wal/
+pg_xact/
+postgresql.auto.conf*
+postgresql.conf*
+postmaster.opts*
+postmaster.pid
+
+--- Checking Persistent Volume (PV) Config for Order Service DB ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/order-db
+    type: ""
+
+--- Checking Keycloak DB Content (Inside Pod) ---
+Pod found: keycloak-db-5886fb575c-pxnsh
+Listing /var/lib/postgresql/data inside the container:
+base/
+global/
+pg_commit_ts/
+pg_dynshmem/
+pg_hba.conf*
+pg_ident.conf*
+pg_logical/
+pg_multixact/
+pg_notify/
+pg_replslot/
+pg_serial/
+pg_snapshots/
+pg_stat/
+pg_stat_tmp/
+pg_subtrans/
+pg_tblspc/
+pg_twophase/
+PG_VERSION*
+pg_wal/
+pg_xact/
+postgresql.auto.conf*
+postgresql.conf*
+postmaster.opts*
+postmaster.pid
+
+--- Checking Persistent Volume (PV) Config for Keycloak DB ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/keycloak-db
+    type: ""
+
+--- Checking Loki Content (Inside Pod) ---
+Pod found: loki-6cb4fbf8b9-rcsdt
+Listing /loki inside the container:
+error: Internal error occurred: unable to upgrade connection: container not found ("loki")
+
+--- Checking Persistent Volume (PV) Config for Loki ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/loki
+    type: ""
+
+--- Checking Grafana Content (Inside Pod) ---
+Pod found: grafana-65bb6c7b7c-mtrxr
+Listing /var/lib/grafana inside the container:
+csv/
+grafana.db
+pdf/
+plugins/
+png/
+
+--- Checking Persistent Volume (PV) Config for Grafana ---
+  hostPath:
+    path: /home/roland/Good Project/production-data/grafana
+    type: ""
+
+--- Diagnosis ---
+1. If you see files listed above (like 'base/', 'global/', 'pg_wal/') inside the pods,
+   it means the Databases are working correctly and storing data inside Minikube.
+
+2. If your local 'production-data/*' folders are EMPTY, it means the
+   'mount' between your computer and Minikube is broken or not active.
+
+--- How to Fix ---
+The most reliable way to restore the mount is to restart Minikube with the mount flag.
+Run the following commands:
+
+  minikube stop
+  ./run-k8s.sh
+
+If that doesn't work, you might need to delete and recreate the cluster (warning: deletes data):
+  minikube delete
+  ./run-k8s.sh

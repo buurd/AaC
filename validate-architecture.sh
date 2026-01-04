@@ -26,7 +26,7 @@ done
 cleanup() {
     echo
     echo "--- Cleaning up temporary files ---"
-    rm -f workspace.json project-files.json requirements.json implementation-input.json code-structure-input.json code-structure-files.json relation-input.json test-content-input.json test-files.json
+    rm -f workspace.json project-files.json requirements.json implementation-input.json code-structure-input.json code-structure-files.json relation-input.json test-content-input.json test-files.json k8s-manifests.json k8s-validation-input.json
     rm -f structurizr/workspace.json
 
     echo "--- Stopping containers ---"
@@ -201,6 +201,18 @@ jq -n '{files: $files, reqs: $reqs}' --slurpfile files test-files.json --slurpfi
 # Relation Validation Input (Model + Requirements)
 jq -n '{model: $model, reqs: $reqs}' --slurpfile model workspace.json --slurpfile reqs requirements.json > relation-input.json
 
+echo "Step 5: Parsing Kubernetes manifests..."
+# Merge all k8s yamls into a single json list. We use jq -s to wrap the stream of objects into an array.
+docker run --rm -v "$(pwd):/workdir" mikefarah/yq eval-all -o=json '.' infrastructure/k8s/*.yaml | jq -s . > k8s-manifests.json
+
+echo "Step 6: Combining inputs for K8s validation..."
+# Note: We use --slurpfile for k8s because it's already a JSON array in the file, but slurpfile wraps it in another array, so we access it as $k8s[0] inside jq if needed, or just pass it.
+# Actually, jq -s . above makes k8s-manifests.json a list of objects.
+# When we use --slurpfile k8s k8s-manifests.json, 'k8s' variable inside jq becomes [[obj1, obj2...]].
+# So we want {k8s: $k8s[0], ...}
+jq -n '{k8s: $k8s[0], reqs: $reqs}' --slurpfile k8s k8s-manifests.json --slurpfile reqs requirements.json > k8s-validation-input.json
+
+
 # --- Static Validations ---
 run_opa_validation "Traceability Validation" "/project/requirements.json" "/project/policies/check_traceability.rego" "data.requirements.traceability.violation"
 run_opa_validation "Relation Validation" "/project/relation-input.json" "/project/policies/check_relation.rego" "data.structurizr.relation.violation"
@@ -211,6 +223,7 @@ run_opa_validation "Code Structure Validation" "/project/code-structure-input.js
 run_opa_validation "Dependency Validation" "/project/code-structure-input.json" "/project/policies/check_dependency.rego" "data.code.dependency.violation"
 run_opa_validation "HTTPS Usage Validation" "/project/test-content-input.json" "/project/policies/check_https_usage.rego" "data.security.https.violation"
 run_opa_validation "Pact Verification Validation" "/project/implementation-input.json" "/project/policies/check_pact_verification.rego" "data.integration.pact.violation"
+run_opa_validation "Kubernetes Deployment Validation" "/project/k8s-validation-input.json" "/project/policies/check_k8s_deployment.rego" "data.k8s.deployment.violation"
 
 # --- Contract Validation (Pact) ---
 echo

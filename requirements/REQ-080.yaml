@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: production-environment-migration
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-080
+      type: architectural
+      c4_level: deployment
+      description: "Database schema changes shall be managed via automated migration tools (e.g., Flyway or Liquibase) executed during the deployment pipeline."
+      priority: critical
+      tracesTo: REQ-079
+      validation_policy: "policies/check_traceability.rego"

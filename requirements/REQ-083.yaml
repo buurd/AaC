@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: production-environment-ha
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-083
+      type: architectural
+      c4_level: deployment
+      description: "Critical services (Webshop, Order Service) shall be deployed with a minimum of 2 replicas for High Availability."
+      priority: high
+      tracesTo: REQ-078
+      validation_policy: "policies/check_traceability.rego"

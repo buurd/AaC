@@ -1,0 +1,104 @@
+--- Starting Connectivity Check ---
+Webshop Pod IP: 10.244.1.37
+Attempting to access Webshop directly via Pod IP...
+*   Trying 10.244.1.37:8000...
+* Established connection to 10.244.1.37 (10.244.1.37 port 8000) from 10.244.1.46 port 47462 
+* using HTTP/1.x
+> GET / HTTP/1.1
+> Host: 10.244.1.37:8000
+> User-Agent: curl/8.17.0
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Date: Sat, 03 Jan 2026 08:59:01 GMT
+< Content-type: text/html; charset=utf-8
+< Content-length: 2031
+< 
+<!DOCTYPE html><html><head><style>body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }.container { max-width: 1200px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }h1 { color: #343A40; }.btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }.btn-primary { background-color: #007BFF; }.btn-secondary { background-color: #6C757D; }.btn-success { background-color: #28A745; }input[type='text'], input[type='password'] { padding: 8px; border: 1px solid #CED4DA; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }label { display: block; font-weight: bold; margin-bottom: 5px; }</style></head><body><div class='container'><div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'><div><button onclick="window.location.href='/'" class='btn btn-primary'>Webshop Home</button><button onclick="window.location.href='/products'" class='btn btn-secondary'>Products</button><button onclick="window.location.href='/cart'" class='btn btn-secondary'>Cart</button><button onclick="window.location.href='/my-orders'" class='btn btn-secondary'>My Orders</button></div><div><button onclick="window.location.href='/login'" class='btn btn-primary'>Login</button><button onclick="window.location.href='https://localhost:8446/realms/webshop-realm/protocol/openid-connect/registrations?client_id=webshop-client&response_type=code&scope=openid&redirect_uri=https%3A%2F%2F10.244.1.37%3A8000%2F'" class='btn btn-success'>Register</button><button onclick="window.location.href='/logout'" class='btn btn-secondary'>Logout</button></div></div><h1>Welcome to the Webshop!</h1><p>Browse our amazing products.</p><button onclick="window.location.href='/products'" class='btn btn-primary'>View Products</button></div></body></html>* Connection #0 to host 10.244.1.37:8000 left intact
+pod "curl-test-pod" deleted from default namespace
+
+--- Checking Service DNS ---
+Server:    10.96.0.10
+Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
+Name:      webshop.webshop.svc.cluster.local
+Address 1: 10.100.131.239 webshop.webshop.svc.cluster.local
+pod "dns-test-pod" deleted from default namespace
+
+--- Checking Access via Service ---
+* Host webshop.webshop.svc.cluster.local:80 was resolved.
+* IPv6: (none)
+* IPv4: 10.100.131.239
+*   Trying 10.100.131.239:80...
+* Established connection to webshop.webshop.svc.cluster.local (10.100.131.239 port 80) from 10.244.1.48 port 58092 
+* using HTTP/1.x
+> GET / HTTP/1.1
+> Host: webshop.webshop.svc.cluster.local
+> User-Agent: curl/8.17.0
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Date: Sat, 03 Jan 2026 08:59:07 GMT
+< Content-type: text/html; charset=utf-8
+< Content-length: 2046
+< 
+<!DOCTYPE html><html><head><style>body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }.container { max-width: 1200px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }h1 { color: #343A40; }.btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }.btn-primary { background-color: #007BFF; }.btn-secondary { background-color: #6C757D; }.btn-success { background-color: #28A745; }input[type='text'], input[type='password'] { padding: 8px; border: 1px solid #CED4DA; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }label { display: block; font-weight: bold; margin-bottom: 5px; }</style></head><body><div class='container'><div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'><div><button onclick="window.location.href='/'" class='btn btn-primary'>Webshop Home</button><button onclick="window.location.href='/products'" class='btn btn-secondary'>Products</button><button onclick="window.location.href='/cart'" class='btn btn-secondary'>Cart</button><button onclick="window.location.href='/my-orders'" class='btn btn-secondary'>My Orders</button></div><div><button onclick="window.location.href='/login'" class='btn btn-primary'>Login</button><button onclick="window.location.href='https://localhost:8446/realms/webshop-realm/protocol/openid-connect/registrations?client_id=webshop-client&response_type=code&scope=openid&redirect_uri=https%3A%2F%2Fwebshop.webshop.svc.cluster.local%2F'" class='btn btn-success'>Register</button><button onclick="window.location.href='/logout'" class='btn btn-secondary'>Logout</button></div></div><h1>Welcome to the Webshop!</h1><p>Browse our amazing products.</p><button onclick="window.location.href='/products'" class='btn btn-primary'>View Products</button></div></body></html>* Connection #0 to host webshop.webshop.svc.cluster.local:80 left intact
+pod "curl-svc-test-pod" deleted from default namespace
+
+--- Checking Grafana Deployment ---
+Error from server (NotFound): deployments.apps "grafana" not found
+Grafana Deployment not found
+--- Starting Connectivity Check ---
+Webshop Pod IP: 10.244.1.37
+Attempting to access Webshop directly via Pod IP...
+*   Trying 10.244.1.37:8000...
+* Established connection to 10.244.1.37 (10.244.1.37 port 8000) from 10.244.1.49 port 58240 
+* using HTTP/1.x
+> GET / HTTP/1.1
+> Host: 10.244.1.37:8000
+> User-Agent: curl/8.17.0
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Date: Sat, 03 Jan 2026 08:59:53 GMT
+< Content-type: text/html; charset=utf-8
+< Content-length: 2031
+< 
+<!DOCTYPE html><html><head><style>body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }.container { max-width: 1200px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }h1 { color: #343A40; }.btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }.btn-primary { background-color: #007BFF; }.btn-secondary { background-color: #6C757D; }.btn-success { background-color: #28A745; }input[type='text'], input[type='password'] { padding: 8px; border: 1px solid #CED4DA; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }label { display: block; font-weight: bold; margin-bottom: 5px; }</style></head><body><div class='container'><div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'><div><button onclick="window.location.href='/'" class='btn btn-primary'>Webshop Home</button><button onclick="window.location.href='/products'" class='btn btn-secondary'>Products</button><button onclick="window.location.href='/cart'" class='btn btn-secondary'>Cart</button><button onclick="window.location.href='/my-orders'" class='btn btn-secondary'>My Orders</button></div><div><button onclick="window.location.href='/login'" class='btn btn-primary'>Login</button><button onclick="window.location.href='https://localhost:8446/realms/webshop-realm/protocol/openid-connect/registrations?client_id=webshop-client&response_type=code&scope=openid&redirect_uri=https%3A%2F%2F10.244.1.37%3A8000%2F'" class='btn btn-success'>Register</button><button onclick="window.location.href='/logout'" class='btn btn-secondary'>Logout</button></div></div><h1>Welcome to the Webshop!</h1><p>Browse our amazing products.</p><button onclick="window.location.href='/products'" class='btn btn-primary'>View Products</button></div></body></html>* Connection #0 to host 10.244.1.37:8000 left intact
+pod "curl-test-pod" deleted from default namespace
+
+--- Checking Service DNS ---
+Server:    10.96.0.10
+Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
+Name:      webshop.webshop.svc.cluster.local
+Address 1: 10.100.131.239 webshop.webshop.svc.cluster.local
+pod "dns-test-pod" deleted from default namespace
+
+--- Checking Access via Service ---
+* Host webshop.webshop.svc.cluster.local:80 was resolved.
+* IPv6: (none)
+* IPv4: 10.100.131.239
+*   Trying 10.100.131.239:80...
+* Established connection to webshop.webshop.svc.cluster.local (10.100.131.239 port 80) from 10.244.1.51 port 51014 
+* using HTTP/1.x
+> GET / HTTP/1.1
+> Host: webshop.webshop.svc.cluster.local
+> User-Agent: curl/8.17.0
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Date: Sat, 03 Jan 2026 08:59:58 GMT
+< Content-type: text/html; charset=utf-8
+< Content-length: 2046
+< 
+<!DOCTYPE html><html><head><style>body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }.container { max-width: 1200px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }h1 { color: #343A40; }.btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }.btn-primary { background-color: #007BFF; }.btn-secondary { background-color: #6C757D; }.btn-success { background-color: #28A745; }input[type='text'], input[type='password'] { padding: 8px; border: 1px solid #CED4DA; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }label { display: block; font-weight: bold; margin-bottom: 5px; }</style></head><body><div class='container'><div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'><div><button onclick="window.location.href='/'" class='btn btn-primary'>Webshop Home</button><button onclick="window.location.href='/products'" class='btn btn-secondary'>Products</button><button onclick="window.location.href='/cart'" class='btn btn-secondary'>Cart</button><button onclick="window.location.href='/my-orders'" class='btn btn-secondary'>My Orders</button></div><div><button onclick="window.location.href='/login'" class='btn btn-primary'>Login</button><button onclick="window.location.href='https://localhost:8446/realms/webshop-realm/protocol/openid-connect/registrations?client_id=webshop-client&response_type=code&scope=openid&redirect_uri=https%3A%2F%2Fwebshop.webshop.svc.cluster.local%2F'" class='btn btn-success'>Register</button><button onclick="window.location.href='/logout'" class='btn btn-secondary'>Logout</button></div></div><h1>Welcome to the Webshop!</h1><p>Browse our amazing products.</p><button onclick="window.location.href='/products'" class='btn btn-primary'>View Products</button></div></body></html>* Connection #0 to host webshop.webshop.svc.cluster.local:80 left intact
+pod "curl-svc-test-pod" deleted from default namespace
+
+--- Checking Grafana Deployment ---
+Error from server (NotFound): deployments.apps "grafana" not found
+Grafana Deployment not found
