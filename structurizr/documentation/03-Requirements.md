@@ -50,16 +50,19 @@ When a Product Manager changes the catalog, updates are propagated.
 *   **Destinations**: Updates are sent to the Webshop (**REQ-024**) and the Warehouse Service (**REQ-033**, **REQ-035**).
 *   **Mechanism**: The Warehouse exposes a sync API to receive these updates (**REQ-032**).
 *   **Flattening**: Variants are synced as individual products with descriptive names (**REQ-072**).
+*   **Payload**: The sync payload includes `id`, `name`, `description`, `price`, `unit`, and `type` (**REQ-088**).
 
 ### Stock Synchronization (Warehouse -> Webshop)
 When inventory changes in the warehouse, the webshop is updated.
 *   **Trigger**: The Warehouse Service sends stock updates when inventory changes (e.g., delivery received) (**REQ-042**).
 *   **Destination**: The Webshop receives these updates to display accurate stock to customers.
+*   **Payload**: The update payload includes `pmId` and `stock` quantity (**REQ-089**).
 
 ### Stock Reservation (Order -> Warehouse)
 When an order is placed, stock must be reserved.
 *   **Trigger**: The Order Service reserves stock when an order is created (**REQ-053**).
 *   **Destination**: The Warehouse Service receives the reservation request (**REQ-054**).
+*   **Payload**: The reservation payload includes `productId` and `quantity` (**REQ-090**).
 
 ### Order Fulfillment (Order -> Warehouse)
 When an order is confirmed, the warehouse is notified.
@@ -76,6 +79,11 @@ The system is built with security as a core concern.
 *   **Gateway**: A Reverse Proxy (Nginx) handles SSL termination and routing (**REQ-044**).
 *   **Identity Management**: Keycloak is used as the centralized IAM provider (**REQ-045**).
 *   **Authentication**: All services delegate authentication to Keycloak and verify JWT tokens for access (**REQ-046**).
+*   **Authorization**: Access is restricted by role:
+    *   **Product Management**: Requires `product-manager` role (**REQ-084**).
+    *   **Warehouse**: Requires `warehouse-staff` role (**REQ-085**).
+    *   **Order Service**: Requires `order-manager` role (**REQ-086**).
+    *   **Webshop Ordering**: Requires `customer` role (**REQ-087**).
 
 ---
 

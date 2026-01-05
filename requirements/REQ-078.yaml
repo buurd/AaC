@@ -12,6 +12,7 @@ spec:
       priority: HIGH
       c4_level: container
       tracesTo: REQ-001
+      rationale: "See ADR-0001: Use Kubernetes for Deployment"
       k8s_validation:
         manifests_path: infrastructure/k8s
         required_deployments:

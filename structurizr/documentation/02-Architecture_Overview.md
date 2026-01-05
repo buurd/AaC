@@ -113,6 +113,7 @@ We have implemented a robust security architecture:
     *   **PM System**: Requires `product-manager` role.
     *   **Warehouse**: Requires `warehouse-staff` role.
     *   **Order Service**: Requires `order-manager` role.
+    *   **Webshop Ordering**: Requires `customer` role.
 *   **Service-to-Service Security**: Internal synchronization calls use **Client Credentials Flow** to obtain service account tokens, ensuring secure M2M communication.
 
 ---

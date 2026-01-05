@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: security-role-customer
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-087
+      type: security
+      c4_level: component
+      description: "The Webshop shall require the 'customer' role for placing orders."
+      priority: high
+      tracesTo: "REQ-045"
+      validation_policy: "policies/check_code_structure.rego"
+      code_validation:
+        file_path: "applications/webshop/src/main/java/com/example/webshop/OrderController.java"
+        contains: "customer"

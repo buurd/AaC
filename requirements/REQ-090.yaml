@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: contract-stock-reservation
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-090
+      type: functional
+      c4_level: component
+      description: "The Stock Reservation payload shall include productId and quantity."
+      priority: high
+      tracesTo: "REQ-053"
+      validation_policy: "policies/check_code_structure.rego"
+      code_validation:
+        file_path: "applications/warehouse/src/main/java/com/example/warehouse/StockReservationController.java"
+        contains: "quantity"

@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: security-role-order
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-086
+      type: security
+      c4_level: component
+      description: "The Order Service shall restrict access to users with the 'order-manager' role."
+      priority: high
+      tracesTo: "REQ-045"
+      validation_policy: "policies/check_code_structure.rego"
+      code_validation:
+        file_path: "applications/orderService/src/main/java/com/example/order/OrderController.java"
+        contains: "order-manager"

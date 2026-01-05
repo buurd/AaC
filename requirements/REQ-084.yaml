@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: security-role-pm
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-084
+      type: security
+      c4_level: component
+      description: "The Product Management System shall restrict access to users with the 'product-manager' role."
+      priority: high
+      tracesTo: "REQ-045"
+      validation_policy: "policies/check_code_structure.rego"
+      code_validation:
+        file_path: "applications/productManagementSystem/src/main/java/com/example/productmanagement/ProductController.java"
+        contains: "product-manager"

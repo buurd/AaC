@@ -10,5 +10,6 @@ spec:
       c4_level: context
       description: "All inter-system integrations shall be verified using Pact contract tests."
       priority: high
+      rationale: "See ADR-0007: Use Pact for Contract Testing"
       functional_validation:
         test_file: "pacts/"
