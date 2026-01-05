@@ -93,7 +93,7 @@ We define our requirements as code (YAML), allowing us to trace them from high-l
 *   **Security**: Mandating HTTPS, Reverse Proxy, and IAM (Keycloak).
 *   **Observability**: Mandating log aggregation and monitoring (Loki, Promtail, Grafana).
 *   **Deployment**: Mandating Kubernetes deployment configuration (`REQ-078`).
-*   **Design**: Enforcing a consistent UI via `DESIGN_GUIDELINES.md`.
+*   **Design**: Enforcing a consistent UI via `06-Design_Guidelines.md`.
 
 ---
 

@@ -93,11 +93,12 @@ To run the full suite of OPA policies, contract tests, and E2E tests against the
 
 For deep dives into specific areas, please refer to the documentation folder:
 
-*   **[Architecture Summary](structurizr/documentation/ARCHITECTURE_SUMMARY.md)**: Detailed breakdown of containers, components, and security.
-*   **[Requirements Summary](structurizr/documentation/REQUIREMENTS_SUMMARY.md)**: Narrative view of all system requirements (User Journeys, Operations, etc.).
-*   **[Validation Policies](structurizr/documentation/POLICIES.md)**: Explanation of the Rego rules used to enforce the architecture.
-*   **[Agent Context](structurizr/documentation/AGENTS.MD)**: Technical summary for AI agents assisting with development.
-*   **[Design Guidelines](structurizr/documentation/DESIGN_GUIDELINES.md)**: UI/UX standards.
+*   **[Architecture Summary](structurizr/documentation/02-Architecture_Overview.md)**: Detailed breakdown of containers, components, and security.
+*   **[Requirements Summary](structurizr/documentation/03-Requirements.md)**: Narrative view of all system requirements (User Journeys, Operations, etc.).
+*   **[Validation Policies](structurizr/documentation/04-Policies.md)**: Explanation of the Rego rules used to enforce the architecture.
+*   **[AI Instructions](structurizr/documentation/AGENTS.MD)**: Instructions and rules for AI agents.
+*   **[Project Context](structurizr/documentation/01-Project_Context.md)**: High-level project summary.
+*   **[Design Guidelines](structurizr/documentation/06-Design_Guidelines.md)**: UI/UX standards.
 
 ## 🔧 Debugging (K8s Mode)
 
