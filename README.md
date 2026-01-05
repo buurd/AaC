@@ -42,7 +42,7 @@ The system consists of four main microservices deployed on **Kubernetes (Minikub
 
 Infrastructure includes **PostgreSQL** (one per service), **Keycloak** (IAM), **Nginx** (Ingress/Reverse Proxy), and a full Observability stack (**Loki, Promtail, Grafana**).
 
-![System Landscape](documentation/diagrams/structurizr-SystemLandscape.png)
+![System Landscape](structurizr/documentation/diagrams/structurizr-SystemLandscape.png)
 
 ## 🚀 Runtime Modes
 
@@ -93,11 +93,11 @@ To run the full suite of OPA policies, contract tests, and E2E tests against the
 
 For deep dives into specific areas, please refer to the documentation folder:
 
-*   **[Architecture Summary](documentation/ARCHITECTURE_SUMMARY.md)**: Detailed breakdown of containers, components, and security.
-*   **[Requirements Summary](documentation/REQUIREMENTS_SUMMARY.md)**: Narrative view of all system requirements (User Journeys, Operations, etc.).
-*   **[Validation Policies](documentation/POLICIES.md)**: Explanation of the Rego rules used to enforce the architecture.
-*   **[Agent Context](documentation/AGENTS.MD)**: Technical summary for AI agents assisting with development.
-*   **[Design Guidelines](documentation/DESIGN_GUIDELINES.md)**: UI/UX standards.
+*   **[Architecture Summary](structurizr/documentation/ARCHITECTURE_SUMMARY.md)**: Detailed breakdown of containers, components, and security.
+*   **[Requirements Summary](structurizr/documentation/REQUIREMENTS_SUMMARY.md)**: Narrative view of all system requirements (User Journeys, Operations, etc.).
+*   **[Validation Policies](structurizr/documentation/POLICIES.md)**: Explanation of the Rego rules used to enforce the architecture.
+*   **[Agent Context](structurizr/documentation/AGENTS.MD)**: Technical summary for AI agents assisting with development.
+*   **[Design Guidelines](structurizr/documentation/DESIGN_GUIDELINES.md)**: UI/UX standards.
 
 ## 🔧 Debugging (K8s Mode)
 

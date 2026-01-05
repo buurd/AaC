@@ -1,4 +1,7 @@
 workspace "My System" "My System Description" {
+    !adrs documentation/adr
+    !docs documentation
+
     model {
         customer = person "Customer" "A customer of the webshop." {
             tags "Person" "Logical"

@@ -12,6 +12,3 @@ production-data/
 *.pem
 infrastructure/nginx/certs/
 
-# Ignore logs
-logs/
-*.log
