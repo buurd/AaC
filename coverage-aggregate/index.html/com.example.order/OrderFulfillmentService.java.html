@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderFulfillmentService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Good Project Aggregated Coverage</a> &gt; <a href="index.source.html" class="el_package">com.example.order</a> &gt; <span class="el_source">OrderFulfillmentService.java</span></div><h1>OrderFulfillmentService.java</h1><pre class="source lang-java linenums">package com.example.order;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
+
+public class OrderFulfillmentService {
+
+    private final HttpClient httpClient;
+    private final String warehouseFulfillmentUrl;
+    private final TokenService tokenService;
+
+    public OrderFulfillmentService() {
+<span class="nc" id="L17">        this(</span>
+<span class="nc" id="L18">            System.getenv().getOrDefault(&quot;WAREHOUSE_FULFILLMENT_URL&quot;, &quot;http://warehouse-demo:8002/api/fulfillment/order&quot;),</span>
+            new KeycloakTokenService(
+<span class="nc" id="L20">                System.getenv().getOrDefault(&quot;TOKEN_URL&quot;, &quot;http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token&quot;),</span>
+<span class="nc" id="L21">                System.getenv().getOrDefault(&quot;CLIENT_ID&quot;, &quot;order-client&quot;),</span>
+<span class="nc" id="L22">                System.getenv().getOrDefault(&quot;CLIENT_SECRET&quot;, &quot;order-secret&quot;)</span>
+            )
+        );
+<span class="nc" id="L25">    }</span>
+
+<span class="fc" id="L27">    public OrderFulfillmentService(String warehouseFulfillmentUrl, TokenService tokenService) {</span>
+<span class="fc" id="L28">        this.httpClient = HttpClient.newBuilder()</span>
+<span class="fc" id="L29">                .connectTimeout(Duration.ofSeconds(5))</span>
+<span class="fc" id="L30">                .build();</span>
+<span class="fc" id="L31">        this.warehouseFulfillmentUrl = warehouseFulfillmentUrl;</span>
+<span class="fc" id="L32">        this.tokenService = tokenService;</span>
+<span class="fc" id="L33">    }</span>
+
+    public CompletableFuture&lt;Boolean&gt; notifyOrderConfirmed(int orderId) {
+<span class="fc" id="L36">        System.out.println(&quot;OrderFulfillmentService: Notifying fulfillment for order &quot; + orderId + &quot; at &quot; + warehouseFulfillmentUrl);</span>
+<span class="fc" id="L37">        return tokenService.getAccessToken().thenCompose(token -&gt; {</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">            System.out.println(&quot;OrderFulfillmentService: Got token (length: &quot; + (token != null ? token.length() : 0) + &quot;)&quot;);</span>
+<span class="fc" id="L39">            String json = &quot;{\&quot;orderId\&quot;:&quot; + orderId + &quot;}&quot;;</span>
+            
+<span class="fc" id="L41">            HttpRequest request = HttpRequest.newBuilder()</span>
+<span class="fc" id="L42">                    .uri(URI.create(warehouseFulfillmentUrl))</span>
+<span class="fc" id="L43">                    .header(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
+<span class="fc" id="L44">                    .header(&quot;Authorization&quot;, &quot;Bearer &quot; + token)</span>
+<span class="fc" id="L45">                    .POST(HttpRequest.BodyPublishers.ofString(json))</span>
+<span class="fc" id="L46">                    .build();</span>
+
+<span class="fc" id="L48">            return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())</span>
+<span class="fc" id="L49">                    .thenApply(response -&gt; {</span>
+<span class="fc" id="L50">                        System.out.println(&quot;OrderFulfillmentService: Response status: &quot; + response.statusCode());</span>
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">                        if (response.statusCode() != 200) {</span>
+<span class="nc" id="L52">                            System.out.println(&quot;OrderFulfillmentService: Response body: &quot; + response.body());</span>
+<span class="nc" id="L53">                            return false;</span>
+                        }
+<span class="fc" id="L55">                        return true;</span>
+                    });
+        });
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

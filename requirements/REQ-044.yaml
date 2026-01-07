@@ -11,7 +11,7 @@ spec:
       description: "A Reverse Proxy (Nginx) shall be used for SSL termination and routing."
       priority: high
       tracesTo: "REQ-043"
-      rationale: "See ADR-0005: Use Nginx as Reverse Proxy/Ingress"
+      rationale: "See ADR-0006: Use Nginx as Reverse Proxy/Ingress"
       validation_policy: "policies/check_containers.rego"
       model_validation:
         parent: "API Gateway / Reverse Proxy"

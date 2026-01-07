@@ -7,6 +7,9 @@ public class Order {
     private int id;
     private String customerName;
     private String status;
+    private int pointsToRedeem;
+    private int pointsEarned;
+    private double totalAmount;
     private List<OrderItem> items = new ArrayList<>();
 
     public Order() {}
@@ -25,6 +28,15 @@ public class Order {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public int getPointsToRedeem() { return pointsToRedeem; }
+    public void setPointsToRedeem(int pointsToRedeem) { this.pointsToRedeem = pointsToRedeem; }
+
+    public int getPointsEarned() { return pointsEarned; }
+    public void setPointsEarned(int pointsEarned) { this.pointsEarned = pointsEarned; }
+
+    public double getTotalAmount() { return totalAmount; }
+    public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
 
     public List<OrderItem> getItems() { return items; }
     public void setItems(List<OrderItem> items) { this.items = items; }

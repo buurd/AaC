@@ -66,6 +66,7 @@ build_artifacts "Webshop" "applications/webshop"
 build_artifacts "Product Management System" "applications/productManagementSystem"
 build_artifacts "Warehouse Service" "applications/warehouse"
 build_artifacts "Order Service" "applications/orderService"
+build_artifacts "Loyalty Service" "applications/loyaltyService"
 
 # 2. Switch to Minikube Docker Environment
 echo "--- Switching to Minikube Docker Environment ---"
@@ -87,11 +88,15 @@ docker build -t warehouse:latest applications/warehouse
 echo "Building Image: order-service"
 docker build -t order-service:latest applications/orderService
 
+echo "Building Image: loyalty-service"
+docker build -t loyalty-service:latest applications/loyaltyService
+
 # Create production data directories
 mkdir -p "production-data/webshop-db"
 mkdir -p "production-data/pm-db"
 mkdir -p "production-data/warehouse-db"
 mkdir -p "production-data/order-db"
+mkdir -p "production-data/loyalty-db"
 mkdir -p "production-data/loki"
 mkdir -p "production-data/grafana"
 mkdir -p "production-data/keycloak-db"
@@ -114,6 +119,8 @@ kubectl apply -f infrastructure/k8s/04-applications.yaml
 kubectl apply -f infrastructure/k8s/05-ingress.yaml
 kubectl apply -f infrastructure/k8s/06-observability.yaml
 kubectl apply -f infrastructure/k8s/08-keycloak.yaml
+kubectl apply -f infrastructure/k8s/09-loyalty-db.yaml
+kubectl apply -f infrastructure/k8s/10-loyalty-app.yaml
 
 # Force delete pods to ensure they are recreated with the new image
 echo "Restarting application pods..."
@@ -122,6 +129,7 @@ kubectl delete pods --all -n webshop
 kubectl delete pods --all -n product-management
 kubectl delete pods --all -n warehouse
 kubectl delete pods --all -n order-service
+kubectl delete pods --all -n loyalty-service
 
 echo "Kubernetes resources applied."
 echo "Logs are being written to logs/run-k8s.log"
@@ -134,5 +142,6 @@ echo "   Webshop:            http://$MINIKUBE_IP/webshop"
 echo "   Product Management: http://$MINIKUBE_IP/pm"
 echo "   Warehouse:          http://$MINIKUBE_IP/warehouse"
 echo "   Order Service:      http://$MINIKUBE_IP/orders"
+echo "   Loyalty Service:    http://$MINIKUBE_IP/loyalty (Internal)"
 echo "   Grafana:            http://$MINIKUBE_IP/grafana"
 echo "   Keycloak:           http://$MINIKUBE_IP/auth"

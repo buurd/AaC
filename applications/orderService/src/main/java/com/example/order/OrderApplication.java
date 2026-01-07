@@ -80,6 +80,7 @@ public class OrderApplication {
         StockReservationService stockService = new StockReservationService();
         OrderFulfillmentService fulfillmentService = new OrderFulfillmentService();
         CreditService creditService = new CreditService(invoiceRepository);
+        LoyaltyIntegrationService loyaltyService = new LoyaltyIntegrationService();
         
         SecurityFilter managerFilter = new SecurityFilter(jwksUrl, issuer, "order-manager");
         SecurityFilter historyFilter = new SecurityFilter(jwksUrl, issuer, "order-history");
@@ -152,7 +153,7 @@ public class OrderApplication {
         });
         
         // Mount UI context (protected by order-manager)
-        HttpContext ordersContext = server.createContext("/orders", new OrderController(repository, stockService, fulfillmentService, creditService, invoiceRepository));
+        HttpContext ordersContext = server.createContext("/orders", new OrderController(repository, stockService, fulfillmentService, creditService, invoiceRepository, loyaltyService));
         ordersContext.getFilters().add(managerFilter);
         
         // Mount Invoices context (protected by order-manager)
@@ -160,7 +161,7 @@ public class OrderApplication {
         invoicesContext.getFilters().add(managerFilter);
         
         // Mount API context (protected by order-history)
-        HttpContext apiContext = server.createContext("/api/orders", new OrderController(repository, stockService, fulfillmentService, creditService, invoiceRepository));
+        HttpContext apiContext = server.createContext("/api/orders", new OrderController(repository, stockService, fulfillmentService, creditService, invoiceRepository, loyaltyService));
         apiContext.getFilters().add(historyFilter);
         
         server.setExecutor(Executors.newCachedThreadPool());

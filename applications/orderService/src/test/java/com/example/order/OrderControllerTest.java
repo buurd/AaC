@@ -1,5 +1,6 @@
 package com.example.order;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -14,6 +15,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 class OrderControllerTest {
@@ -37,6 +39,7 @@ class OrderControllerTest {
         when(mockExchange.getRequestURI()).thenReturn(java.net.URI.create("/api/orders"));
         when(mockExchange.getRequestBody()).thenReturn(requestBody);
         when(mockExchange.getResponseBody()).thenReturn(new ByteArrayOutputStream());
+        when(mockExchange.getResponseHeaders()).thenReturn(new Headers());
         
         when(mockRepo.createOrder(any(Order.class))).thenReturn(101);
         when(mockStockService.reserveStock(anyInt(), anyInt())).thenReturn(CompletableFuture.completedFuture(true));

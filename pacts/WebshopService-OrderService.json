@@ -1,0 +1,76 @@
+{
+  "consumer": {
+    "name": "WebshopService"
+  },
+  "interactions": [
+    {
+      "comments": {
+        "text": [
+
+        ]
+      },
+      "description": "A request to create an order",
+      "key": "fdf36a6a",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "Order Service is up"
+        }
+      ],
+      "request": {
+        "body": {
+          "content": {
+            "customerName": "John Doe",
+            "items": [
+              {
+                "productId": 1,
+                "quantity": 2
+              }
+            ]
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Authorization": [
+            "Bearer dummy-token"
+          ],
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "method": "POST",
+        "path": "/api/orders"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "orderId": 123,
+            "status": "created"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "status": 201
+      },
+      "transport": "https",
+      "type": "Synchronous/HTTP"
+    }
+  ],
+  "metadata": {
+    "pact-jvm": {
+      "version": "4.6.5"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "OrderService"
+  }
+}

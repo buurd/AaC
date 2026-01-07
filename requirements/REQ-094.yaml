@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: loyalty-view-balance
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-094
+      type: functional
+      c4_level: component
+      description: "The Loyalty Service shall expose an API to retrieve the current point balance for a customer."
+      priority: high
+      tracesTo: "REQ-091"
+      validation_policy: "policies/check_code_structure.rego"
+      code_validation:
+        file_path: "applications/loyaltyService/src/main/java/com/example/loyalty/LoyaltyController.java"
+        contains: "getBalance"

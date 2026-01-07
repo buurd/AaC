@@ -7,8 +7,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -20,9 +25,11 @@ public class ProductController implements HttpHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
     private final ProductRepository repository;
+    private final HttpClient httpClient;
 
     public ProductController(ProductRepository repository) {
         this.repository = repository;
+        this.httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build();
     }
 
     private static final String CSS = 
@@ -38,7 +45,8 @@ public class ProductController implements HttpHandler {
         ".btn-success { background-color: #28A745; }" +
         ".btn-secondary { background-color: #6C757D; }" +
         ".product-card { border: 1px solid #DEE2E6; padding: 15px; margin-bottom: 15px; border-radius: 4px; }" +
-        ".variant-selector { margin-bottom: 10px; }";
+        ".variant-selector { margin-bottom: 10px; }" +
+        ".campaign-info { font-size: 0.9em; color: #28A745; margin-top: 5px; font-style: italic; }";
 
     private static final String JS = 
         "<script>" +
@@ -54,7 +62,7 @@ public class ProductController implements HttpHandler {
         "    }" +
         "  } else {" +
         "    if (stock > 0) {" +
-        "      cart.push({id: id, name: name, price: price, quantity: 1, stock: stock});" +
+        "      cart.push({id: id, name: name, price: price, quantity: 1});" +
         "      alert('Added ' + name + ' to cart!');" +
         "    } else {" +
         "      alert('Out of stock!');" +
@@ -110,6 +118,7 @@ public class ProductController implements HttpHandler {
         logger.info("Received request: {} {}", exchange.getRequestMethod(), path);
         try {
             List<Product> products = repository.findAll();
+            String campaigns = fetchCampaigns();
             
             // Group products by base name (assuming format "GroupName - Attributes")
             Map<String, List<Product>> groupedProducts = new HashMap<>();
@@ -135,6 +144,9 @@ public class ProductController implements HttpHandler {
                 html.append("<div class='product-card'>");
                 html.append("<h2>").append(groupName).append("</h2>");
                 html.append("<p>").append(firstVariant.getDescription()).append("</p>");
+                if (!campaigns.isEmpty()) {
+                    html.append("<p class='campaign-info'>Possible campaigns: ").append(campaigns).append("</p>");
+                }
                 
                 // Extract all unique attributes
                 Map<String, List<String>> attributesMap = new HashMap<>();
@@ -165,10 +177,6 @@ public class ProductController implements HttpHandler {
                 }
 
                 // Initial Display (First Variant)
-                // We need to find the variant that matches the initial dropdown selections (usually first values)
-                // For simplicity, let's just pick the first variant in the list and set dropdowns to match if possible, 
-                // or just default to the first variant's data.
-                
                 String priceStr = String.format(Locale.US, "%.2f", firstVariant.getPrice());
                 
                 html.append("<div id='product-display-").append(groupIdCounter).append("'>");
@@ -211,9 +219,6 @@ public class ProductController implements HttpHandler {
                 html.append("]");
                 html.append("</script>");
                 
-                // Trigger update to ensure button state matches initial dropdowns (if we were setting them)
-                // For now, the initial state is hardcoded to firstVariant.
-                
                 html.append("</div>");
             }
             
@@ -237,46 +242,24 @@ public class ProductController implements HttpHandler {
         }
     }
 
-    // Helper to parse attributes from name "Name - Attr1 Value1 Attr2 Value2"
-    // This is a heuristic since we don't have the structured attributes in Webshop DB
-    // Assuming format: "Name - Key1 Value1 Key2 Value2" where Key is Color, Size etc.
-    // Actually, the format from PM is "Name - Value1 Value2" (e.g. "T-Shirt - Red M")
-    // Wait, PM sends "Name - Value1 Value2". It does NOT send keys in the name.
-    // Ah, the PM Service code: displayName = displayName + " - " + variantSuffix;
-    // variantSuffix = attrs.values().stream().collect(Collectors.joining(" "));
-    // So "T-Shirt - Red M".
-    // We don't know which is Color and which is Size without the keys.
-    // This makes dynamic dropdowns hard if we don't know the keys.
-    
-    // However, the user request said: "change from yellow to green... or from fresh to dried"
-    // "two dropdowns that allow the user to select variant"
-    
-    // Since the Webshop DB only has the flattened name, we have to infer or change the sync.
-    // Changing sync is hard (requires DB schema change in Webshop).
-    
-    // Alternative: We can try to parse "Red M" if we assume a fixed order or known values.
-    // But "Red" and "M" are just values.
-    
-    // Let's look at the seed data: "Classic T-Shirt - Red S"
-    // If we split by " - ", we get "Classic T-Shirt" and "Red S".
-    // "Red S" are the values.
-    // If we have multiple variants:
-    // Red S, Red M, Blue S, Blue M.
-    // We can deduce there are two "dimensions" of variation.
-    // Dimension 1 values: Red, Blue.
-    // Dimension 2 values: S, M.
-    
-    // We can call them "Option 1", "Option 2" if we don't know "Color", "Size".
-    // Or we can try to be smart.
-    
-    // Let's implement a generic "Option N" approach for now, or try to infer if possible.
-    // Actually, if we look at all variants for a group, we can see the pattern.
-    // Variant 1: [Red, S]
-    // Variant 2: [Red, M]
-    // Variant 3: [Blue, S]
-    
-    // We can expose these as Dropdown 1 (Red, Blue) and Dropdown 2 (S, M).
-    
+    private String fetchCampaigns() {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://loyalty-service:8084/api/loyalty/rules"))
+                    .GET()
+                    .build();
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                String json = response.body();
+                // Simple parsing: remove [" and "] and replace "," with ", "
+                return json.replace("[\"", "").replace("\"]", "").replace("\",\"", ", ");
+            }
+        } catch (Exception e) {
+            logger.warn("Failed to fetch campaigns", e);
+        }
+        return "";
+    }
+
     private Map<String, String> parseAttributesFromName(String fullName) {
         Map<String, String> attributes = new HashMap<>();
         String[] parts = fullName.split(" - ");

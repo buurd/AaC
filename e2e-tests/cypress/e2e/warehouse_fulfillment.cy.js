@@ -31,6 +31,8 @@ describe('Warehouse Order Fulfillment', () => {
     // 3. Action: Confirm Order (Manual Step)
     cy.clearCookies();
     cy.loginToOrderService();
+    // Wait for the table to load
+    cy.get('table', { timeout: 10000 }).should('be.visible');
     cy.contains('tr', 'PENDING_CONFIRMATION', { timeout: 10000 }).within(() => {
         cy.contains('button', 'Confirm').click();
     });

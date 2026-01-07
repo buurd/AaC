@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.concurrent.Executors;
 
 @Provider("WarehouseService")
-@PactFolder("../../pacts")
+@PactFolder("../pacts")
 @Tag("pact-provider")
 public class WarehousePactProviderTest {
 

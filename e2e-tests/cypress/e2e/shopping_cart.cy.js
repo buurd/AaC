@@ -1,6 +1,5 @@
 describe('Shopping Cart', () => {
   const webshopUrl = 'https://reverse-proxy:8443';
-  // Updated product name to match the new seed data (Variant 1)
   const productName = "Classic T-Shirt"; 
   const variantName = "Classic T-Shirt - Red S";
 
@@ -18,10 +17,10 @@ describe('Shopping Cart', () => {
     cy.contains('h1', 'Webshop Products');
 
     // 2. Add product to cart
-    // The UI now groups variants under the base name.
-    // We need to find the card for "Classic T-Shirt" and click "Add to Cart".
-    // The default selection is usually the first variant.
     cy.contains('.product-card', productName).within(() => {
+      // Select Red S
+      cy.get('select').eq(0).select('Red');
+      cy.get('select').eq(1).select('S');
       cy.contains('button', 'Add to Cart').click();
     });
 
@@ -31,7 +30,6 @@ describe('Shopping Cart', () => {
     cy.contains('h1', 'Shopping Cart');
 
     // 4. Verify product is in cart
-    // The cart should display the full variant name
     cy.contains('td', variantName).should('be.visible');
     cy.contains('td', '1').should('be.visible'); // Quantity
 
@@ -48,31 +46,40 @@ describe('Shopping Cart', () => {
     // 1. Visit products page
     cy.visit(webshopUrl + '/products');
     
-    // 2. Add product to cart until stock is depleted
-    // The sample product (Red S) has stock=5
-    for (let i = 0; i < 5; i++) {
+    // 2. Get stock from UI
+    cy.contains('.product-card', productName).within(() => {
+      cy.get('select').eq(0).select('Red');
+      cy.get('select').eq(1).select('S');
+      cy.get('div[id^="product-display"]').invoke('text').as('stockText');
+    });
+
+    cy.get('@stockText').then((text) => {
+      const stock = parseInt(text.match(/Stock: (\d+)/)[1]);
+      
+      // 3. Add product to cart until stock is depleted
+      for (let i = 0; i < stock; i++) {
+        cy.contains('.product-card', productName).within(() => {
+            cy.contains('button', 'Add to Cart').click();
+        });
+      }
+
+      // 4. Verify cart quantity
+      cy.contains('button', 'Cart').click();
+      cy.contains('tr', variantName).within(() => {
+        cy.contains('td', stock);
+      });
+
+      // 5. Go back and try to add one more
+      cy.contains('button', 'Back to Products').click();
       cy.contains('.product-card', productName).within(() => {
         cy.contains('button', 'Add to Cart').click();
       });
-    }
 
-    // 3. Verify cart quantity
-    cy.contains('button', 'Cart').click();
-    cy.contains('tr', variantName).within(() => {
-      cy.contains('td', '5'); // Quantity should be 5
-    });
-
-    // 4. Go back and try to add one more
-    cy.contains('button', 'Back to Products').click();
-    cy.contains('.product-card', productName).within(() => {
-      cy.contains('button', 'Add to Cart').click();
-    });
-    // We can't easily test the alert, but we can check the cart quantity hasn't changed
-
-    // 5. Verify cart quantity is still 5
-    cy.contains('button', 'Cart').click();
-    cy.contains('tr', variantName).within(() => {
-      cy.contains('td', '5');
+      // 6. Verify cart quantity is still the same
+      cy.contains('button', 'Cart').click();
+      cy.contains('tr', variantName).within(() => {
+        cy.contains('td', stock);
+      });
     });
   });
 });

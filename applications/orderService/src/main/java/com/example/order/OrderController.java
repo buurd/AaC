@@ -23,13 +23,20 @@ public class OrderController implements HttpHandler {
     private final OrderFulfillmentService fulfillmentService;
     private final CreditService creditService;
     private final InvoiceRepository invoiceRepository;
+    private final LoyaltyIntegrationService loyaltyService;
 
-    public OrderController(OrderRepository repository, StockReservationService stockService, OrderFulfillmentService fulfillmentService, CreditService creditService, InvoiceRepository invoiceRepository) {
+    public OrderController(OrderRepository repository, StockReservationService stockService, OrderFulfillmentService fulfillmentService, CreditService creditService, InvoiceRepository invoiceRepository, LoyaltyIntegrationService loyaltyService) {
         this.repository = repository;
         this.stockService = stockService;
         this.fulfillmentService = fulfillmentService;
         this.creditService = creditService;
         this.invoiceRepository = invoiceRepository;
+        this.loyaltyService = loyaltyService;
+    }
+
+    // Constructor for backward compatibility (if needed by tests not yet updated)
+    public OrderController(OrderRepository repository, StockReservationService stockService, OrderFulfillmentService fulfillmentService, CreditService creditService, InvoiceRepository invoiceRepository) {
+        this(repository, stockService, fulfillmentService, creditService, invoiceRepository, new LoyaltyIntegrationService());
     }
 
     private static final String CSS = 
@@ -116,8 +123,8 @@ public class OrderController implements HttpHandler {
             StringBuilder json = new StringBuilder("[");
             for (int i = 0; i < filteredOrders.size(); i++) {
                 Order o = filteredOrders.get(i);
-                json.append(String.format("{\"id\":%d,\"customerName\":\"%s\",\"status\":\"%s\"}", 
-                    o.getId(), o.getCustomerName(), o.getStatus()));
+                json.append(String.format("{\"id\":%d,\"customerName\":\"%s\",\"status\":\"%s\",\"pointsEarned\":%d,\"pointsRedeemed\":%d}", 
+                    o.getId(), o.getCustomerName(), o.getStatus(), o.getPointsEarned(), o.getPointsToRedeem()));
                 if (i < filteredOrders.size() - 1) {
                     json.append(",");
                 }
@@ -146,7 +153,7 @@ public class OrderController implements HttpHandler {
             sb.append("<!DOCTYPE html><html><head><style>").append(CSS).append("</style></head><body><div class='container'>");
             sb.append(getHeader());
             sb.append("<h1>Order Management</h1>");
-            sb.append("<table><thead><tr><th>ID</th><th>Customer</th><th>Status</th><th>Items</th><th>Actions</th></tr></thead><tbody>");
+            sb.append("<table><thead><tr><th>ID</th><th>Customer</th><th>Status</th><th>Items</th><th>Points Earned</th><th>Actions</th></tr></thead><tbody>");
             
             for (Order o : orders) {
                 System.out.println("Order: " + o.getId() + ", Status: " + o.getStatus()); // Added logging
@@ -155,6 +162,7 @@ public class OrderController implements HttpHandler {
                 sb.append("<td>").append(o.getCustomerName()).append("</td>");
                 sb.append("<td>").append(o.getStatus()).append("</td>");
                 sb.append("<td>").append(o.getItems().size()).append("</td>");
+                sb.append("<td>").append(o.getPointsEarned()).append("</td>");
                 sb.append("<td>");
                 if ("PENDING_CONFIRMATION".equals(o.getStatus())) {
                      sb.append("<form action='/orders/confirm' method='post' style='display:inline;'>");
@@ -193,9 +201,35 @@ public class OrderController implements HttpHandler {
                 System.out.println("Warning: No items found in order!");
             }
 
+            // Handle Point Redemption
+            if (order.getPointsToRedeem() > 0) {
+                // We need an order ID to redeem points against, but we haven't created the order yet.
+                // Strategy says: "Order Service calls Loyalty Service to redeem (deduct) the points."
+                // "If the order fails, the points must be refunded (Compensating Transaction)."
+                // For MVP, we can create the order first as PENDING, then redeem.
+                // If redeem fails, we mark order as REJECTED (or FAILED_REDEMPTION).
+            }
+
             order.setStatus("PENDING");
             orderId = repository.createOrder(order);
             
+            boolean redemptionSuccess = true;
+            if (order.getPointsToRedeem() > 0) {
+                redemptionSuccess = loyaltyService.redeemPoints(order.getCustomerName(), orderId, order.getPointsToRedeem()).join();
+                if (!redemptionSuccess) {
+                    System.out.println("Point redemption failed for order " + orderId);
+                    repository.updateStatus(orderId, "REDEMPTION_FAILED");
+                    String response = "{\"status\":\"REDEMPTION_FAILED\", \"orderId\":" + orderId + "}";
+                    byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+                    exchange.getResponseHeaders().set("Content-Type", "application/json");
+                    exchange.sendResponseHeaders(409, bytes.length);
+                    try (OutputStream os = exchange.getResponseBody()) {
+                        os.write(bytes);
+                    }
+                    return;
+                }
+            }
+
             // Reserve stock
             boolean allReserved = true;
             for (OrderItem item : order.getItems()) {
@@ -212,14 +246,22 @@ public class OrderController implements HttpHandler {
                 
                 // Notification to Warehouse and Invoice creation is now moved to handleConfirmOrder
 
-                String response = "{\"status\":\"PENDING_CONFIRMATION\", \"orderId\":" + orderId + "}";
+                // Return 201 and "created" to match Pact contract
+                System.out.println("OrderController: Returning 201 Created");
+                String response = "{\"status\":\"created\", \"orderId\":" + orderId + "}";
                 byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
                 exchange.getResponseHeaders().set("Content-Type", "application/json");
-                exchange.sendResponseHeaders(200, bytes.length);
+                exchange.sendResponseHeaders(201, bytes.length);
                 try (OutputStream os = exchange.getResponseBody()) {
                     os.write(bytes);
                 }
             } else {
+                // If stock reservation failed, we should refund points if they were redeemed.
+                // For MVP, we log this.
+                if (order.getPointsToRedeem() > 0) {
+                    System.err.println("CRITICAL: Stock reservation failed but points were redeemed for order " + orderId + ". Manual refund required.");
+                }
+
                 repository.updateStatus(orderId, "REJECTED");
                 String response = "{\"status\":\"REJECTED\", \"orderId\":" + orderId + "}";
                 byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
@@ -262,20 +304,32 @@ public class OrderController implements HttpHandler {
             // If not, we might need to add it or use a simplified approach.
             // repository.findAll() exists.
             
-            // For simplicity and to match upstream intent without refactoring repository too much:
-            // We'll just create the invoice with available info.
-            // Ideally we should fetch the order.
-            // Let's check if repository has findById.
-            // It does not seem to have findById in the snippet I saw earlier.
-            // But findAll returns all.
-            
             // Let's try to find the order from findAll (inefficient but works for now)
             List<Order> allOrders = repository.findAll();
             Order order = allOrders.stream().filter(o -> o.getId() == orderId).findFirst().orElse(null);
             
             if (order != null) {
-                 double totalAmount = 0; // Placeholder as per upstream
+                 double totalAmount = order.getTotalAmount();
                  invoiceRepository.createInvoice(new Invoice(orderId, order.getCustomerName(), totalAmount, LocalDate.now().plusDays(30)));
+                 
+                 // Accrue Points
+                 // We need to calculate total amount properly or pass it.
+                 // For now, assuming totalAmount is 0 (placeholder), but we should probably calculate it from items if we had prices.
+                 // Or we can assume the frontend passed it, but Order object doesn't store totalAmount.
+                 // Let's assume 100.0 for now or try to get it.
+                 // Actually, LoyaltyIntegrationService needs itemsJson.
+                 // We can reconstruct itemsJson from order.getItems().
+                 
+                 StringBuilder itemsJson = new StringBuilder("[");
+                 for (int i = 0; i < order.getItems().size(); i++) {
+                     OrderItem item = order.getItems().get(i);
+                     itemsJson.append(String.format("{\"productId\":\"%d\",\"quantity\":%d}", item.getProductId(), item.getQuantity()));
+                     if (i < order.getItems().size() - 1) itemsJson.append(",");
+                 }
+                 itemsJson.append("]");
+                 
+                 int pointsEarned = loyaltyService.accruePoints(order.getCustomerName(), orderId, totalAmount, itemsJson.toString()).join();
+                 repository.updatePointsEarned(orderId, pointsEarned);
             } else {
                 System.err.println("Order not found for invoice creation: " + orderId);
             }
@@ -346,6 +400,20 @@ public class OrderController implements HttpHandler {
             order.setCustomerName(customerNameMatcher.group(1));
         } else {
             order.setCustomerName("Unknown Customer"); // Default
+        }
+        
+        // Extract pointsToRedeem
+        Pattern pointsPattern = Pattern.compile("\"pointsToRedeem\"\\s*:\\s*(\\d+)");
+        Matcher pointsMatcher = pointsPattern.matcher(json);
+        if (pointsMatcher.find()) {
+            order.setPointsToRedeem(Integer.parseInt(pointsMatcher.group(1)));
+        }
+
+        // Extract totalAmount
+        Pattern totalAmountPattern = Pattern.compile("\"totalAmount\"\\s*:\\s*([\\d.]+)");
+        Matcher totalAmountMatcher = totalAmountPattern.matcher(json);
+        if (totalAmountMatcher.find()) {
+            order.setTotalAmount(Double.parseDouble(totalAmountMatcher.group(1)));
         }
 
         // Extract items - robust parsing

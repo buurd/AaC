@@ -1,4 +1,4 @@
-# 6. Flattening Strategy for Product Variations
+# 8. Flattening Strategy for Product Variations
 
 Date: 2024-08-10
 

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ShoppingCartController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Good Project Aggregated Coverage</a> &gt; <a href="index.source.html" class="el_package">com.example.webshop</a> &gt; <span class="el_source">ShoppingCartController.java</span></div><h1>ShoppingCartController.java</h1><pre class="source lang-java linenums">package com.example.webshop;
+
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpExchange;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+
+<span class="nc" id="L10">public class ShoppingCartController implements HttpHandler {</span>
+
+    private static final String CSS = 
+        &quot;body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }&quot; +
+        &quot;.container { max-width: 1200px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }&quot; +
+        &quot;h1 { color: #343A40; }&quot; +
+        &quot;table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }&quot; +
+        &quot;th { background-color: #007BFF; color: #FFFFFF; padding: 12px; text-align: left; }&quot; +
+        &quot;td { padding: 12px; border-bottom: 1px solid #DEE2E6; }&quot; +
+        &quot;.btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }&quot; +
+        &quot;.btn-danger { background-color: #DC3545; }&quot; +
+        &quot;.btn-secondary { background-color: #6C757D; }&quot; +
+        &quot;.btn-success { background-color: #28A745; }&quot; +
+        &quot;.btn-primary { background-color: #007BFF; }&quot;;
+
+    private static final String JS = 
+        &quot;&lt;script&gt;&quot; +
+        &quot;function getCookie(name) {&quot; +
+        &quot;  const value = `; ${document.cookie}`;&quot; +
+        &quot;  const parts = value.split(`; ${name}=`);&quot; +
+        &quot;  if (parts.length === 2) return parts.pop().split(';').shift();&quot; +
+        &quot;}&quot; +
+        &quot;function renderCart() {&quot; +
+        &quot;  let cart = JSON.parse(localStorage.getItem('cart')) || [];&quot; +
+        &quot;  let tbody = document.getElementById('cart-body');&quot; +
+        &quot;  tbody.innerHTML = '';&quot; +
+        &quot;  if (cart.length === 0) {&quot; +
+        &quot;    tbody.innerHTML = '&lt;tr&gt;&lt;td colspan=4&gt;Your cart is empty.&lt;/td&gt;&lt;/tr&gt;';&quot; +
+        &quot;    document.getElementById('checkout-btn').style.display = 'none';&quot; +
+        &quot;    return;&quot; +
+        &quot;  }&quot; +
+        &quot;  cart.forEach(item =&gt; {&quot; +
+        &quot;    let row = `&lt;tr&gt;&lt;td&gt;${item.name}&lt;/td&gt;&lt;td&gt;${item.quantity}&lt;/td&gt;&lt;td&gt;${(item.price * item.quantity).toFixed(2)}&lt;/td&gt;&quot; +
+        &quot;    &lt;td&gt;&lt;button onclick='removeFromCart(${item.id})' class='btn btn-danger'&gt;Remove&lt;/button&gt;&lt;/td&gt;&lt;/tr&gt;`;&quot; +
+        &quot;    tbody.innerHTML += row;&quot; +
+        &quot;  });&quot; +
+        &quot;}&quot; +
+        &quot;function removeFromCart(id) {&quot; +
+        &quot;  let cart = JSON.parse(localStorage.getItem('cart')) || [];&quot; +
+        &quot;  cart = cart.filter(i =&gt; i.id !== id);&quot; +
+        &quot;  localStorage.setItem('cart', JSON.stringify(cart));&quot; +
+        &quot;  renderCart();&quot; +
+        &quot;}&quot; +
+        &quot;function checkout() {&quot; +
+        &quot;  let cart = JSON.parse(localStorage.getItem('cart')) || [];&quot; +
+        &quot;  if (cart.length === 0) { alert('Cart is empty!'); return; }&quot; +
+        &quot;  const token = getCookie('webshop_auth_token');&quot; +
+        &quot;  if (!token) {&quot; +
+        &quot;    alert('You must be logged in to place an order.');&quot; +
+        &quot;    window.location.href = '/login';&quot; + // Assuming a login page or redirect to Keycloak
+        &quot;    return;&quot; +
+        &quot;  }&quot; +
+        &quot;  const order = {&quot; +
+        &quot;    customerName: 'John Doe',&quot; + // Ideally, this should come from the token claims
+        &quot;    items: cart.map(i =&gt; ({ productId: i.id, quantity: i.quantity }))&quot; +
+        &quot;  };&quot; +
+        &quot;  fetch('/api/orders', {&quot; +
+        &quot;    method: 'POST',&quot; +
+        &quot;    headers: { &quot; +
+        &quot;      'Content-Type': 'application/json',&quot; +
+        &quot;      'Authorization': 'Bearer ' + token&quot; +
+        &quot;    },&quot; +
+        &quot;    body: JSON.stringify(order)&quot; +
+        &quot;  }).then(res =&gt; {&quot; +
+        &quot;    if (res.ok) {&quot; +
+        &quot;      alert('Order placed successfully!');&quot; +
+        &quot;      localStorage.removeItem('cart');&quot; +
+        &quot;      window.location.href = '/products';&quot; +
+        &quot;    } else {&quot; +
+        &quot;      alert('Failed to place order. Insufficient stock?');&quot; +
+        &quot;    }&quot; +
+        &quot;  });&quot; +
+        &quot;}&quot; +
+        &quot;window.onload = renderCart;&quot; +
+        &quot;&lt;/script&gt;&quot;;
+
+    private String getHeader() {
+<span class="nc" id="L87">        return &quot;&lt;div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'&gt;&quot; +</span>
+               &quot;&lt;div&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/'\&quot; class='btn btn-primary'&gt;Webshop Home&lt;/button&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/products'\&quot; class='btn btn-secondary'&gt;Products&lt;/button&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/cart'\&quot; class='btn btn-secondary'&gt;Cart&lt;/button&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/my-orders'\&quot; class='btn btn-secondary'&gt;My Orders&lt;/button&gt;&quot; +
+               &quot;&lt;/div&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/logout'\&quot; class='btn btn-secondary'&gt;Logout&lt;/button&gt;&quot; +
+               &quot;&lt;/div&gt;&quot;;
+    }
+
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+<span class="nc" id="L100">        StringBuilder html = new StringBuilder();</span>
+<span class="nc" id="L101">        html.append(&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;style&gt;&quot;).append(CSS).append(&quot;&lt;/style&gt;&quot;);</span>
+<span class="nc" id="L102">        html.append(JS).append(&quot;&lt;/head&gt;&lt;body&gt;&quot;);</span>
+<span class="nc" id="L103">        html.append(&quot;&lt;div class='container'&gt;&quot;);</span>
+<span class="nc" id="L104">        html.append(getHeader());</span>
+<span class="nc" id="L105">        html.append(&quot;&lt;h1&gt;Shopping Cart&lt;/h1&gt;&quot;);</span>
+<span class="nc" id="L106">        html.append(&quot;&lt;table&gt;&quot;);</span>
+<span class="nc" id="L107">        html.append(&quot;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Product&lt;/th&gt;&lt;th&gt;Quantity&lt;/th&gt;&lt;th&gt;Price&lt;/th&gt;&lt;th&gt;Action&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&quot;);</span>
+<span class="nc" id="L108">        html.append(&quot;&lt;tbody id='cart-body'&gt;&lt;/tbody&gt;&quot;);</span>
+<span class="nc" id="L109">        html.append(&quot;&lt;/table&gt;&quot;);</span>
+<span class="nc" id="L110">        html.append(&quot;&lt;button id='checkout-btn' onclick='checkout()' class='btn btn-success'&gt;Checkout&lt;/button&gt; &quot;);</span>
+<span class="nc" id="L111">        html.append(&quot;&lt;button onclick=\&quot;window.location.href='/products'\&quot; class='btn btn-secondary'&gt;Back to Products&lt;/button&gt;&quot;);</span>
+<span class="nc" id="L112">        html.append(&quot;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;&quot;);</span>
+        
+<span class="nc" id="L114">        String response = html.toString();</span>
+<span class="nc" id="L115">        byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
+        
+<span class="nc" id="L117">        exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html; charset=utf-8&quot;);</span>
+<span class="nc" id="L118">        exchange.sendResponseHeaders(200, bytes.length);</span>
+<span class="nc" id="L119">        try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="nc" id="L120">            os.write(bytes);</span>
+        }
+<span class="nc" id="L122">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

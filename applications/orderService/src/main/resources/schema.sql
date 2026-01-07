@@ -2,6 +2,9 @@ CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
     customer_name VARCHAR(255),
     status VARCHAR(50), -- PENDING, CONFIRMED, REJECTED
+    total_amount DECIMAL(10, 2) DEFAULT 0.00,
+    points_redeemed INT DEFAULT 0,
+    points_earned INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

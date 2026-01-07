@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WebshopApplication.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Good Project Aggregated Coverage</a> &gt; <a href="index.source.html" class="el_package">com.example.webshop</a> &gt; <span class="el_source">WebshopApplication.java</span></div><h1>WebshopApplication.java</h1><pre class="source lang-java linenums">package com.example.webshop;
+
+import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpContext;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.concurrent.Executors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.util.Map;
+import java.util.HashMap;
+import java.net.URLDecoder;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpExchange;
+import java.net.URLEncoder;
+
+<span class="nc" id="L29">public class WebshopApplication {</span>
+
+<span class="nc" id="L31">    private static final Logger logger = LoggerFactory.getLogger(WebshopApplication.class);</span>
+
+    private static final String CSS = 
+        &quot;body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }&quot; +
+        &quot;.container { max-width: 1200px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }&quot; +
+        &quot;h1 { color: #343A40; }&quot; +
+        &quot;.btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }&quot; +
+        &quot;.btn-primary { background-color: #007BFF; }&quot; +
+        &quot;.btn-secondary { background-color: #6C757D; }&quot; +
+        &quot;.btn-success { background-color: #28A745; }&quot; +
+        &quot;input[type='text'], input[type='password'] { padding: 8px; border: 1px solid #CED4DA; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }&quot; +
+        &quot;label { display: block; font-weight: bold; margin-bottom: 5px; }&quot;;
+
+    public static void main(String[] args) throws IOException, SQLException {
+        // --- Database Setup ---
+<span class="nc" id="L46">        String dbUrl = System.getenv().getOrDefault(&quot;DB_URL&quot;, &quot;jdbc:postgresql://localhost:5432/postgres&quot;);</span>
+<span class="nc" id="L47">        String dbUser = System.getenv().getOrDefault(&quot;DB_USER&quot;, &quot;postgres&quot;);</span>
+<span class="nc" id="L48">        String dbPassword = System.getenv().getOrDefault(&quot;DB_PASSWORD&quot;, &quot;postgres&quot;);</span>
+
+        // Security Setup
+<span class="nc" id="L51">        String jwksUrl = System.getenv().getOrDefault(&quot;JWKS_URL&quot;, &quot;http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs&quot;);</span>
+<span class="nc" id="L52">        String issuer = System.getenv().getOrDefault(&quot;ISSUER_URL&quot;, &quot;https://localhost:8446/realms/webshop-realm&quot;);</span>
+        // KEYCLOAK_URL is now derived dynamically if possible, or falls back to env
+<span class="nc" id="L54">        String defaultKeycloakUrl = System.getenv().getOrDefault(&quot;KEYCLOAK_URL&quot;, &quot;https://localhost:8446&quot;);</span>
+<span class="nc" id="L55">        String tokenUrl = System.getenv().getOrDefault(&quot;TOKEN_URL&quot;, &quot;http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token&quot;);</span>
+
+<span class="nc" id="L57">        logger.info(&quot;Connecting to database at: {}&quot;, dbUrl);</span>
+<span class="nc" id="L58">        Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);</span>
+<span class="nc" id="L59">        logger.info(&quot;Database connection successful.&quot;);</span>
+
+        // Initialize schema
+<span class="nc" id="L62">        try (InputStream is = WebshopApplication.class.getResourceAsStream(&quot;/schema.sql&quot;)) {</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">            if (is == null) {</span>
+<span class="nc" id="L64">                throw new IOException(&quot;Cannot find schema.sql in resources.&quot;);</span>
+            }
+<span class="nc" id="L66">            String schemaSql = new String(is.readAllBytes(), StandardCharsets.UTF_8);</span>
+<span class="nc" id="L67">            try (Statement stmt = connection.createStatement()) {</span>
+<span class="nc" id="L68">                stmt.execute(schemaSql);</span>
+<span class="nc" id="L69">                logger.info(&quot;Database schema initialized.&quot;);</span>
+            }
+        }
+
+        // Create repository
+<span class="nc" id="L74">        ProductRepository productRepository = new ProductRepository(connection);</span>
+        
+        // Create services
+<span class="nc" id="L77">        OrderService orderService = new OrderService();</span>
+
+        // Security Filters
+<span class="nc" id="L80">        SecurityFilter productSyncFilter = new SecurityFilter(jwksUrl, issuer, &quot;product-sync&quot;);</span>
+<span class="nc" id="L81">        SecurityFilter stockSyncFilter = new SecurityFilter(jwksUrl, issuer, &quot;stock-sync&quot;);</span>
+
+        // --- HTTP Server Setup ---
+<span class="nc" id="L84">        int port = 8000;</span>
+<span class="nc" id="L85">        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);</span>
+        
+<span class="nc" id="L87">        server.createContext(&quot;/&quot;, (exchange) -&gt; {</span>
+<span class="nc" id="L88">            String path = exchange.getRequestURI().getPath();</span>
+<span class="nc" id="L89">            logger.info(&quot;Received request: {} {}&quot;, exchange.getRequestMethod(), path);</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            if (&quot;/&quot;.equals(path)) {</span>
+<span class="nc" id="L91">                String host = exchange.getRequestHeaders().getFirst(&quot;Host&quot;);</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">                if (host == null) host = &quot;localhost:8443&quot;; // Fallback</span>
+                // Assuming HTTPS via proxy
+<span class="nc" id="L94">                String baseUrl = &quot;https://&quot; + host;</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">                if (baseUrl.endsWith(&quot;/&quot;)) baseUrl = baseUrl.substring(0, baseUrl.length() - 1);</span>
+                
+                // Derive Keycloak URL from Host if possible (replace 8443 with 8446)
+<span class="nc" id="L98">                String currentKeycloakUrl = defaultKeycloakUrl;</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">                if (host.contains(&quot;:8443&quot;)) {</span>
+<span class="nc" id="L100">                    currentKeycloakUrl = &quot;https://&quot; + host.replace(&quot;:8443&quot;, &quot;:8446&quot;);</span>
+                }
+
+<span class="nc" id="L103">                String logoutUrl = &quot;/logout&quot;;</span>
+<span class="nc" id="L104">                String encodedRedirectUri = URLEncoder.encode(baseUrl + &quot;/&quot;, StandardCharsets.UTF_8);</span>
+<span class="nc" id="L105">                String registerUrl = currentKeycloakUrl + &quot;/realms/webshop-realm/protocol/openid-connect/registrations?client_id=webshop-client&amp;response_type=code&amp;scope=openid&amp;redirect_uri=&quot; + encodedRedirectUri;</span>
+                
+<span class="nc" id="L107">                String header = &quot;&lt;div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'&gt;&quot; +</span>
+                                &quot;&lt;div&gt;&quot; +
+                                &quot;&lt;button onclick=\&quot;window.location.href='/'\&quot; class='btn btn-primary'&gt;Webshop Home&lt;/button&gt;&quot; +
+                                &quot;&lt;button onclick=\&quot;window.location.href='/products'\&quot; class='btn btn-secondary'&gt;Products&lt;/button&gt;&quot; +
+                                &quot;&lt;button onclick=\&quot;window.location.href='/cart'\&quot; class='btn btn-secondary'&gt;Cart&lt;/button&gt;&quot; +
+                                &quot;&lt;button onclick=\&quot;window.location.href='/my-orders'\&quot; class='btn btn-secondary'&gt;My Orders&lt;/button&gt;&quot; +
+                                &quot;&lt;/div&gt;&quot; +
+                                &quot;&lt;div&gt;&quot; +
+                                &quot;&lt;button onclick=\&quot;window.location.href='/login'\&quot; class='btn btn-primary'&gt;Login&lt;/button&gt;&quot; +
+                                &quot;&lt;button onclick=\&quot;window.location.href='&quot; + registerUrl + &quot;'\&quot; class='btn btn-success'&gt;Register&lt;/button&gt;&quot; +
+                                &quot;&lt;button onclick=\&quot;window.location.href='&quot; + logoutUrl + &quot;'\&quot; class='btn btn-secondary'&gt;Logout&lt;/button&gt;&quot; +
+                                &quot;&lt;/div&gt;&quot; +
+                                &quot;&lt;/div&gt;&quot;;
+
+<span class="nc" id="L121">                String html = &quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;style&gt;&quot; + CSS + &quot;&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div class='container'&gt;&quot; +</span>
+                              header +
+                              &quot;&lt;h1&gt;Welcome to the Webshop!&lt;/h1&gt;&quot; +
+                              &quot;&lt;p&gt;Browse our amazing products.&lt;/p&gt;&quot; +
+                              &quot;&lt;button onclick=\&quot;window.location.href='/products'\&quot; class='btn btn-primary'&gt;View Products&lt;/button&gt;&quot; +
+                              &quot;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;&quot;;
+<span class="nc" id="L127">                byte[] bytes = html.getBytes(StandardCharsets.UTF_8);</span>
+<span class="nc" id="L128">                exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html; charset=utf-8&quot;);</span>
+<span class="nc" id="L129">                exchange.sendResponseHeaders(200, bytes.length);</span>
+<span class="nc" id="L130">                try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="nc" id="L131">                    os.write(bytes);</span>
+                }
+<span class="nc" id="L133">            } else {</span>
+<span class="nc" id="L134">                String response = &quot;404 Not Found&quot;;</span>
+<span class="nc" id="L135">                exchange.sendResponseHeaders(404, response.length());</span>
+<span class="nc" id="L136">                try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="nc" id="L137">                    os.write(response.getBytes());</span>
+                }
+            }
+<span class="nc" id="L140">            exchange.close();</span>
+<span class="nc" id="L141">        });</span>
+        
+<span class="nc" id="L143">        server.createContext(&quot;/login&quot;, new LoginHandler(tokenUrl));</span>
+        
+<span class="nc" id="L145">        server.createContext(&quot;/logout&quot;, (exchange) -&gt; {</span>
+<span class="nc" id="L146">            String path = exchange.getRequestURI().getPath();</span>
+<span class="nc" id="L147">            logger.info(&quot;Received request: {} {}&quot;, exchange.getRequestMethod(), path);</span>
+            
+<span class="nc" id="L149">            String host = exchange.getRequestHeaders().getFirst(&quot;Host&quot;);</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">            if (host == null) host = &quot;localhost:8443&quot;;</span>
+<span class="nc" id="L151">            String baseUrl = &quot;https://&quot; + host;</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">            if (baseUrl.endsWith(&quot;/&quot;)) baseUrl = baseUrl.substring(0, baseUrl.length() - 1);</span>
+
+            // Derive Keycloak URL from Host if possible (replace 8443 with 8446)
+<span class="nc" id="L155">            String currentKeycloakUrl = defaultKeycloakUrl;</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">            if (host.contains(&quot;:8443&quot;)) {</span>
+<span class="nc" id="L157">                currentKeycloakUrl = &quot;https://&quot; + host.replace(&quot;:8443&quot;, &quot;:8446&quot;);</span>
+            }
+
+            // Ensure redirect_uri is URL encoded
+<span class="nc" id="L161">            String encodedRedirectUri = URLEncoder.encode(baseUrl + &quot;/&quot;, StandardCharsets.UTF_8);</span>
+            // Use post_logout_redirect_uri instead of redirect_uri for OIDC logout
+<span class="nc" id="L163">            String keycloakLogoutUrl = currentKeycloakUrl + &quot;/realms/webshop-realm/protocol/openid-connect/logout?post_logout_redirect_uri=&quot; + encodedRedirectUri + &quot;&amp;client_id=webshop-client&quot;;</span>
+
+            // Clear cookie
+<span class="nc" id="L166">            exchange.getResponseHeaders().add(&quot;Set-Cookie&quot;, &quot;webshop_auth_token=; Path=/; Max-Age=0&quot;);</span>
+            
+            // Redirect
+<span class="nc" id="L169">            exchange.getResponseHeaders().set(&quot;Location&quot;, keycloakLogoutUrl);</span>
+<span class="nc" id="L170">            exchange.sendResponseHeaders(302, -1);</span>
+<span class="nc" id="L171">            exchange.close();</span>
+<span class="nc" id="L172">        });</span>
+        
+<span class="nc" id="L174">        server.createContext(&quot;/products&quot;, new ProductController(productRepository));</span>
+<span class="nc" id="L175">        server.createContext(&quot;/cart&quot;, new ShoppingCartController());</span>
+<span class="nc" id="L176">        server.createContext(&quot;/my-orders&quot;, new OrderHistoryController(orderService));</span>
+<span class="nc" id="L177">        server.createContext(&quot;/api/orders&quot;, new OrderController(orderService));</span>
+        
+<span class="nc" id="L179">        HttpContext productSyncContext = server.createContext(&quot;/api/products/sync&quot;, new ProductSyncController(productRepository));</span>
+<span class="nc" id="L180">        productSyncContext.getFilters().add(productSyncFilter);</span>
+        
+<span class="nc" id="L182">        HttpContext stockSyncContext = server.createContext(&quot;/api/stock/sync&quot;, new StockSyncController(productRepository));</span>
+<span class="nc" id="L183">        stockSyncContext.getFilters().add(stockSyncFilter);</span>
+        
+        // Use a thread pool to handle multiple requests concurrently
+<span class="nc" id="L186">        server.setExecutor(Executors.newCachedThreadPool());</span>
+<span class="nc" id="L187">        server.start();</span>
+<span class="nc" id="L188">        logger.info(&quot;Server started on port {}&quot;, port);</span>
+<span class="nc" id="L189">    }</span>
+
+    static class LoginHandler implements HttpHandler {
+        private final String tokenUrl;
+        private final HttpClient httpClient;
+
+<span class="nc" id="L195">        public LoginHandler(String tokenUrl) {</span>
+<span class="nc" id="L196">            this.tokenUrl = tokenUrl;</span>
+<span class="nc" id="L197">            this.httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();</span>
+<span class="nc" id="L198">        }</span>
+
+        @Override
+        public void handle(HttpExchange t) throws IOException {
+<span class="nc" id="L202">            logger.info(&quot;Received request: {} {}&quot;, t.getRequestMethod(), t.getRequestURI().getPath());</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">            if (&quot;POST&quot;.equalsIgnoreCase(t.getRequestMethod())) {</span>
+<span class="nc" id="L204">                InputStream is = t.getRequestBody();</span>
+<span class="nc" id="L205">                String formData = new String(is.readAllBytes(), StandardCharsets.UTF_8);</span>
+<span class="nc" id="L206">                Map&lt;String, String&gt; params = parseFormData(formData);</span>
+                
+<span class="nc" id="L208">                String username = params.get(&quot;username&quot;);</span>
+<span class="nc" id="L209">                String password = params.get(&quot;password&quot;);</span>
+                
+<span class="nc" id="L211">                String requestBody = &quot;client_id=webshop-client&amp;grant_type=password&amp;username=&quot; + username + &quot;&amp;password=&quot; + password;</span>
+                
+<span class="nc" id="L213">                HttpRequest request = HttpRequest.newBuilder()</span>
+<span class="nc" id="L214">                        .uri(URI.create(tokenUrl))</span>
+<span class="nc" id="L215">                        .header(&quot;Content-Type&quot;, &quot;application/x-www-form-urlencoded&quot;)</span>
+<span class="nc" id="L216">                        .POST(HttpRequest.BodyPublishers.ofString(requestBody))</span>
+<span class="nc" id="L217">                        .build();</span>
+                
+                try {
+<span class="nc" id="L220">                    HttpResponse&lt;String&gt; response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">                    if (response.statusCode() == 200) {</span>
+<span class="nc" id="L222">                        String json = response.body();</span>
+<span class="nc" id="L223">                        String accessToken = extractToken(json);</span>
+                        // Removed HttpOnly to allow JS access
+<span class="nc" id="L225">                        t.getResponseHeaders().add(&quot;Set-Cookie&quot;, &quot;webshop_auth_token=&quot; + accessToken + &quot;; Path=/&quot;);</span>
+<span class="nc" id="L226">                        redirect(t, &quot;/products&quot;);</span>
+<span class="nc" id="L227">                    } else {</span>
+<span class="nc" id="L228">                        logger.warn(&quot;Login failed for user: {}&quot;, username);</span>
+<span class="nc" id="L229">                        sendResponse(t, 401, &quot;&lt;h1&gt;Login Failed&lt;/h1&gt;&lt;p&gt;Invalid credentials&lt;/p&gt;&lt;a href='/login'&gt;Try Again&lt;/a&gt;&quot;);</span>
+                    }
+<span class="nc" id="L231">                } catch (InterruptedException e) {</span>
+<span class="nc" id="L232">                    logger.error(&quot;Error during login&quot;, e);</span>
+<span class="nc" id="L233">                    sendResponse(t, 500, &quot;&lt;h1&gt;Error&lt;/h1&gt;&lt;p&gt;&quot; + e.getMessage() + &quot;&lt;/p&gt;&quot;);</span>
+<span class="nc" id="L234">                }</span>
+<span class="nc" id="L235">            } else {</span>
+<span class="nc" id="L236">                String body = &quot;&lt;h1&gt;Login&lt;/h1&gt;&quot; +</span>
+                              &quot;&lt;form action='/login' method='post'&gt;&quot; +
+                              &quot;&lt;label&gt;Username&lt;/label&gt;&lt;input type='text' name='username'&gt;&quot; +
+                              &quot;&lt;label&gt;Password&lt;/label&gt;&lt;input type='password' name='password'&gt;&quot; +
+                              &quot;&lt;button type='submit' class='btn btn-primary'&gt;Login&lt;/button&gt;&quot; +
+                              &quot;&lt;/form&gt;&quot;;
+<span class="nc" id="L242">                sendResponse(t, 200, body);</span>
+            }
+<span class="nc" id="L244">        }</span>
+
+        private String extractToken(String json) {
+<span class="nc" id="L247">            int start = json.indexOf(&quot;\&quot;access_token\&quot;:\&quot;&quot;);</span>
+<span class="nc bnc" id="L248" title="All 2 branches missed.">            if (start == -1) return null;</span>
+<span class="nc" id="L249">            start += 16;</span>
+<span class="nc" id="L250">            int end = json.indexOf(&quot;\&quot;&quot;, start);</span>
+<span class="nc" id="L251">            return json.substring(start, end);</span>
+        }
+    }
+
+    private static void sendResponse(HttpExchange t, int status, String body) throws IOException {
+<span class="nc" id="L256">        byte[] bytes = body.getBytes(StandardCharsets.UTF_8);</span>
+<span class="nc" id="L257">        t.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html; charset=utf-8&quot;);</span>
+<span class="nc" id="L258">        t.sendResponseHeaders(status, bytes.length);</span>
+<span class="nc" id="L259">        try (OutputStream os = t.getResponseBody()) {</span>
+<span class="nc" id="L260">            os.write(bytes);</span>
+        }
+<span class="nc" id="L262">    }</span>
+
+    private static void redirect(HttpExchange t, String location) throws IOException {
+<span class="nc" id="L265">        t.getResponseHeaders().set(&quot;Location&quot;, location);</span>
+<span class="nc" id="L266">        t.sendResponseHeaders(302, -1);</span>
+<span class="nc" id="L267">    }</span>
+
+    private static Map&lt;String, String&gt; parseFormData(String formData) {
+<span class="nc" id="L270">        Map&lt;String, String&gt; map = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L271">        String[] pairs = formData.split(&quot;&amp;&quot;);</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">        for (String pair : pairs) {</span>
+<span class="nc" id="L273">            String[] keyValue = pair.split(&quot;=&quot;);</span>
+<span class="nc bnc" id="L274" title="All 2 branches missed.">            if (keyValue.length &gt; 0) {</span>
+<span class="nc" id="L275">                String key = URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">                String value = keyValue.length &gt; 1 ? URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8) : &quot;&quot;;</span>
+<span class="nc" id="L277">                map.put(key, value);</span>
+            }
+        }
+<span class="nc" id="L280">        return map;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

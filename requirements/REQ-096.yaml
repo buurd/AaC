@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: security-role-loyalty-admin
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-096
+      type: security
+      c4_level: component
+      description: "The Loyalty Admin Dashboard shall restrict access to users with the 'loyalty-admin' role."
+      priority: high
+      tracesTo: "REQ-045"
+      validation_policy: "policies/check_code_structure.rego"
+      code_validation:
+        file_path: "applications/loyaltyService/src/main/java/com/example/loyalty/LoyaltyController.java"
+        contains: "loyalty-admin"

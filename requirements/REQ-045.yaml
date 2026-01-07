@@ -11,7 +11,7 @@ spec:
       description: "The system shall use Keycloak as the centralized Identity and Access Management (IAM) provider."
       priority: high
       tracesTo: "REQ-043"
-      rationale: "See ADR-0004: Use Keycloak for Identity and Access Management"
+      rationale: "See ADR-0005: Use Keycloak for Identity and Access Management"
       runtime_validation:
         url: "https://localhost:8446/"
         expected_status: 200

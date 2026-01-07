@@ -164,6 +164,7 @@ public class WebshopApplication {
 
             // Clear cookie
             exchange.getResponseHeaders().add("Set-Cookie", "webshop_auth_token=; Path=/; Max-Age=0");
+            exchange.getResponseHeaders().add("Set-Cookie", "webshop_username=; Path=/; Max-Age=0");
             
             // Redirect
             exchange.getResponseHeaders().set("Location", keycloakLogoutUrl);
@@ -223,6 +224,7 @@ public class WebshopApplication {
                         String accessToken = extractToken(json);
                         // Removed HttpOnly to allow JS access
                         t.getResponseHeaders().add("Set-Cookie", "webshop_auth_token=" + accessToken + "; Path=/");
+                        t.getResponseHeaders().add("Set-Cookie", "webshop_username=" + username + "; Path=/");
                         redirect(t, "/products");
                     } else {
                         logger.warn("Login failed for user: {}", username);

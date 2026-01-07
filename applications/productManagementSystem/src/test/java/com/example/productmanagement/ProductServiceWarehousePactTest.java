@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(PactConsumerTestExt.class)
 @ExtendWith(MockitoExtension.class)
 @PactTestFor(providerName = "WarehouseService")
-@PactDirectory("../../pacts")
+@PactDirectory("../pacts")
 @Tag("pact-consumer")
 public class ProductServiceWarehousePactTest {
 

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Good Project Aggregated Coverage</a> &gt; <a href="index.source.html" class="el_package">com.example.webshop</a> &gt; <span class="el_source">ProductController.java</span></div><h1>ProductController.java</h1><pre class="source lang-java linenums">package com.example.webshop;
+
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpExchange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
+public class ProductController implements HttpHandler {
+
+<span class="nc" id="L21">    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);</span>
+    private final ProductRepository repository;
+
+<span class="nc" id="L24">    public ProductController(ProductRepository repository) {</span>
+<span class="nc" id="L25">        this.repository = repository;</span>
+<span class="nc" id="L26">    }</span>
+
+    private static final String CSS = 
+        &quot;body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }&quot; +
+        &quot;.container { max-width: 1200px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }&quot; +
+        &quot;h1 { color: #343A40; }&quot; +
+        &quot;table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }&quot; +
+        &quot;th { background-color: #007BFF; color: #FFFFFF; padding: 12px; text-align: left; }&quot; +
+        &quot;td { padding: 12px; border-bottom: 1px solid #DEE2E6; }&quot; +
+        &quot;tr:nth-child(even) { background-color: #F2F2F2; }&quot; +
+        &quot;.btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }&quot; +
+        &quot;.btn-primary { background-color: #007BFF; }&quot; +
+        &quot;.btn-success { background-color: #28A745; }&quot; +
+        &quot;.btn-secondary { background-color: #6C757D; }&quot; +
+        &quot;.product-card { border: 1px solid #DEE2E6; padding: 15px; margin-bottom: 15px; border-radius: 4px; }&quot; +
+        &quot;.variant-selector { margin-bottom: 10px; }&quot;;
+
+    private static final String JS = 
+        &quot;&lt;script&gt;&quot; +
+        &quot;function addToCart(id, name, price, stock) {&quot; +
+        &quot;  let cart = JSON.parse(localStorage.getItem('cart')) || [];&quot; +
+        &quot;  let item = cart.find(i =&gt; i.id === id);&quot; +
+        &quot;  if (item) {&quot; +
+        &quot;    if (item.quantity &lt; stock) {&quot; +
+        &quot;      item.quantity++;&quot; +
+        &quot;      alert('Added ' + name + ' to cart!');&quot; +
+        &quot;    } else {&quot; +
+        &quot;      alert('Cannot add more. Out of stock!');&quot; +
+        &quot;    }&quot; +
+        &quot;  } else {&quot; +
+        &quot;    if (stock &gt; 0) {&quot; +
+        &quot;      cart.push({id: id, name: name, price: price, quantity: 1, stock: stock});&quot; +
+        &quot;      alert('Added ' + name + ' to cart!');&quot; +
+        &quot;    } else {&quot; +
+        &quot;      alert('Out of stock!');&quot; +
+        &quot;    }&quot; +
+        &quot;  }&quot; +
+        &quot;  localStorage.setItem('cart', JSON.stringify(cart));&quot; +
+        &quot;}&quot; +
+        &quot;function updateVariant(groupId) {&quot; +
+        &quot;  const selectors = document.querySelectorAll('.variant-selector-' + groupId);&quot; +
+        &quot;  const selectedAttributes = {};&quot; +
+        &quot;  selectors.forEach(sel =&gt; selectedAttributes[sel.dataset.attribute] = sel.value);&quot; +
+        &quot;  &quot; +
+        &quot;  const variants = JSON.parse(document.getElementById('variants-' + groupId).textContent);&quot; +
+        &quot;  const match = variants.find(v =&gt; {&quot; +
+        &quot;    const attrs = v.attributes;&quot; +
+        &quot;    for (const key in selectedAttributes) {&quot; +
+        &quot;      if (attrs[key] !== selectedAttributes[key]) return false;&quot; +
+        &quot;    }&quot; +
+        &quot;    return true;&quot; +
+        &quot;  });&quot; +
+        &quot;  &quot; +
+        &quot;  const display = document.getElementById('product-display-' + groupId);&quot; +
+        &quot;  const addToCartBtn = document.getElementById('add-to-cart-' + groupId);&quot; +
+        &quot;  &quot; +
+        &quot;  if (match) {&quot; +
+        &quot;    display.innerHTML = 'Price: ' + match.price.toFixed(2) + ' ' + match.unit + '&lt;br&gt;Stock: ' + match.stock;&quot; +
+        &quot;    addToCartBtn.disabled = match.stock &lt;= 0;&quot; +
+        &quot;    addToCartBtn.onclick = function() { addToCart(match.id, match.name, match.price, match.stock); };&quot; +
+        &quot;    addToCartBtn.textContent = match.stock &gt; 0 ? 'Add to Cart' : 'Out of Stock';&quot; +
+        &quot;  } else {&quot; +
+        &quot;    display.innerHTML = 'Variant not available';&quot; +
+        &quot;    addToCartBtn.disabled = true;&quot; +
+        &quot;    addToCartBtn.textContent = 'Unavailable';&quot; +
+        &quot;  }&quot; +
+        &quot;}&quot; +
+        &quot;&lt;/script&gt;&quot;;
+
+    private String getHeader() {
+<span class="nc" id="L96">        return &quot;&lt;div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'&gt;&quot; +</span>
+               &quot;&lt;div&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/'\&quot; class='btn btn-primary'&gt;Webshop Home&lt;/button&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/products'\&quot; class='btn btn-secondary'&gt;Products&lt;/button&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/cart'\&quot; class='btn btn-secondary'&gt;Cart&lt;/button&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/my-orders'\&quot; class='btn btn-secondary'&gt;My Orders&lt;/button&gt;&quot; +
+               &quot;&lt;/div&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/logout'\&quot; class='btn btn-secondary'&gt;Logout&lt;/button&gt;&quot; +
+               &quot;&lt;/div&gt;&quot;;
+    }
+
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+<span class="nc" id="L109">        String path = exchange.getRequestURI().getPath();</span>
+<span class="nc" id="L110">        logger.info(&quot;Received request: {} {}&quot;, exchange.getRequestMethod(), path);</span>
+        try {
+<span class="nc" id="L112">            List&lt;Product&gt; products = repository.findAll();</span>
+            
+            // Group products by base name (assuming format &quot;GroupName - Attributes&quot;)
+<span class="nc" id="L115">            Map&lt;String, List&lt;Product&gt;&gt; groupedProducts = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">            for (Product p : products) {</span>
+<span class="nc" id="L117">                String baseName = p.getName().split(&quot; - &quot;)[0];</span>
+<span class="nc" id="L118">                groupedProducts.computeIfAbsent(baseName, k -&gt; new ArrayList&lt;&gt;()).add(p);</span>
+<span class="nc" id="L119">            }</span>
+
+<span class="nc" id="L121">            StringBuilder html = new StringBuilder();</span>
+<span class="nc" id="L122">            html.append(&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;style&gt;&quot;).append(CSS).append(&quot;&lt;/style&gt;&quot;);</span>
+<span class="nc" id="L123">            html.append(JS).append(&quot;&lt;/head&gt;&lt;body&gt;&quot;);</span>
+<span class="nc" id="L124">            html.append(&quot;&lt;div class='container'&gt;&quot;);</span>
+<span class="nc" id="L125">            html.append(getHeader());</span>
+<span class="nc" id="L126">            html.append(&quot;&lt;h1&gt;Webshop Products&lt;/h1&gt;&quot;);</span>
+            
+<span class="nc" id="L128">            int groupIdCounter = 0;</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">            for (Map.Entry&lt;String, List&lt;Product&gt;&gt; entry : groupedProducts.entrySet()) {</span>
+<span class="nc" id="L130">                String groupName = entry.getKey();</span>
+<span class="nc" id="L131">                List&lt;Product&gt; variants = entry.getValue();</span>
+<span class="nc" id="L132">                Product firstVariant = variants.get(0); // Use first variant for description</span>
+<span class="nc" id="L133">                groupIdCounter++;</span>
+                
+<span class="nc" id="L135">                html.append(&quot;&lt;div class='product-card'&gt;&quot;);</span>
+<span class="nc" id="L136">                html.append(&quot;&lt;h2&gt;&quot;).append(groupName).append(&quot;&lt;/h2&gt;&quot;);</span>
+<span class="nc" id="L137">                html.append(&quot;&lt;p&gt;&quot;).append(firstVariant.getDescription()).append(&quot;&lt;/p&gt;&quot;);</span>
+                
+                // Extract all unique attributes
+<span class="nc" id="L140">                Map&lt;String, List&lt;String&gt;&gt; attributesMap = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">                for (Product v : variants) {</span>
+<span class="nc" id="L142">                    Map&lt;String, String&gt; attrs = parseAttributesFromName(v.getName());</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">                    for (Map.Entry&lt;String, String&gt; attr : attrs.entrySet()) {</span>
+<span class="nc" id="L144">                        attributesMap.computeIfAbsent(attr.getKey(), k -&gt; new ArrayList&lt;&gt;()).add(attr.getValue());</span>
+<span class="nc" id="L145">                    }</span>
+<span class="nc" id="L146">                }</span>
+                
+                // Deduplicate attribute values
+<span class="nc bnc" id="L149" title="All 2 branches missed.">                for (Map.Entry&lt;String, List&lt;String&gt;&gt; attrEntry : attributesMap.entrySet()) {</span>
+<span class="nc" id="L150">                    attrEntry.setValue(attrEntry.getValue().stream().distinct().sorted().collect(Collectors.toList()));</span>
+<span class="nc" id="L151">                }</span>
+
+                // Render Dropdowns
+<span class="nc bnc" id="L154" title="All 2 branches missed.">                if (!attributesMap.isEmpty()) {</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">                    for (Map.Entry&lt;String, List&lt;String&gt;&gt; attr : attributesMap.entrySet()) {</span>
+<span class="nc" id="L156">                        html.append(&quot;&lt;div class='variant-selector'&gt;&quot;);</span>
+<span class="nc" id="L157">                        html.append(&quot;&lt;label&gt;&quot;).append(attr.getKey()).append(&quot;: &lt;/label&gt;&quot;);</span>
+<span class="nc" id="L158">                        html.append(&quot;&lt;select class='variant-selector-&quot;).append(groupIdCounter).append(&quot;' data-attribute='&quot;).append(attr.getKey()).append(&quot;' onchange='updateVariant(&quot;).append(groupIdCounter).append(&quot;)'&gt;&quot;);</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">                        for (String val : attr.getValue()) {</span>
+<span class="nc" id="L160">                            html.append(&quot;&lt;option value='&quot;).append(val).append(&quot;'&gt;&quot;).append(val).append(&quot;&lt;/option&gt;&quot;);</span>
+<span class="nc" id="L161">                        }</span>
+<span class="nc" id="L162">                        html.append(&quot;&lt;/select&gt;&quot;);</span>
+<span class="nc" id="L163">                        html.append(&quot;&lt;/div&gt;&quot;);</span>
+<span class="nc" id="L164">                    }</span>
+                }
+
+                // Initial Display (First Variant)
+                // We need to find the variant that matches the initial dropdown selections (usually first values)
+                // For simplicity, let's just pick the first variant in the list and set dropdowns to match if possible, 
+                // or just default to the first variant's data.
+                
+<span class="nc" id="L172">                String priceStr = String.format(Locale.US, &quot;%.2f&quot;, firstVariant.getPrice());</span>
+                
+<span class="nc" id="L174">                html.append(&quot;&lt;div id='product-display-&quot;).append(groupIdCounter).append(&quot;'&gt;&quot;);</span>
+<span class="nc" id="L175">                html.append(&quot;Price: &quot;).append(priceStr).append(&quot; &quot;).append(firstVariant.getUnit()).append(&quot;&lt;br&gt;&quot;);</span>
+<span class="nc" id="L176">                html.append(&quot;Stock: &quot;).append(firstVariant.getStock());</span>
+<span class="nc" id="L177">                html.append(&quot;&lt;/div&gt;&quot;);</span>
+
+                // Add to Cart Button
+<span class="nc bnc" id="L180" title="All 2 branches missed.">                Integer productId = firstVariant.getPmId() != null ? firstVariant.getPmId() : firstVariant.getId();</span>
+<span class="nc" id="L181">                html.append(&quot;&lt;button id='add-to-cart-&quot;).append(groupIdCounter).append(&quot;' onclick=\&quot;addToCart(&quot;)</span>
+<span class="nc" id="L182">                    .append(productId).append(&quot;, '&quot;)</span>
+<span class="nc" id="L183">                    .append(firstVariant.getName().replace(&quot;'&quot;, &quot;\\'&quot;)).append(&quot;', &quot;)</span>
+<span class="nc" id="L184">                    .append(firstVariant.getPrice()).append(&quot;, &quot;)</span>
+<span class="nc" id="L185">                    .append(firstVariant.getStock()).append(&quot;)\&quot; class='btn btn-success'&gt;Add to Cart&lt;/button&gt;&quot;);</span>
+
+                // Hidden JSON data for variants
+<span class="nc" id="L188">                html.append(&quot;&lt;script id='variants-&quot;).append(groupIdCounter).append(&quot;' type='application/json'&gt;&quot;);</span>
+<span class="nc" id="L189">                html.append(&quot;[&quot;);</span>
+<span class="nc bnc" id="L190" title="All 2 branches missed.">                for (int i = 0; i &lt; variants.size(); i++) {</span>
+<span class="nc" id="L191">                    Product v = variants.get(i);</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">                    Integer vId = v.getPmId() != null ? v.getPmId() : v.getId();</span>
+<span class="nc" id="L193">                    Map&lt;String, String&gt; attrs = parseAttributesFromName(v.getName());</span>
+<span class="nc" id="L194">                    html.append(&quot;{&quot;);</span>
+<span class="nc" id="L195">                    html.append(&quot;\&quot;id\&quot;:&quot;).append(vId).append(&quot;,&quot;);</span>
+<span class="nc" id="L196">                    html.append(&quot;\&quot;name\&quot;:\&quot;&quot;).append(v.getName().replace(&quot;\&quot;&quot;, &quot;\\\&quot;&quot;)).append(&quot;\&quot;,&quot;);</span>
+<span class="nc" id="L197">                    html.append(&quot;\&quot;price\&quot;:&quot;).append(v.getPrice()).append(&quot;,&quot;);</span>
+<span class="nc" id="L198">                    html.append(&quot;\&quot;unit\&quot;:\&quot;&quot;).append(v.getUnit()).append(&quot;\&quot;,&quot;);</span>
+<span class="nc" id="L199">                    html.append(&quot;\&quot;stock\&quot;:&quot;).append(v.getStock()).append(&quot;,&quot;);</span>
+<span class="nc" id="L200">                    html.append(&quot;\&quot;attributes\&quot;:{&quot;);</span>
+<span class="nc" id="L201">                    int k = 0;</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">                    for (Map.Entry&lt;String, String&gt; attr : attrs.entrySet()) {</span>
+<span class="nc" id="L203">                        html.append(&quot;\&quot;&quot;).append(attr.getKey()).append(&quot;\&quot;:\&quot;&quot;).append(attr.getValue()).append(&quot;\&quot;&quot;);</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">                        if (k &lt; attrs.size() - 1) html.append(&quot;,&quot;);</span>
+<span class="nc" id="L205">                        k++;</span>
+<span class="nc" id="L206">                    }</span>
+<span class="nc" id="L207">                    html.append(&quot;}&quot;);</span>
+<span class="nc" id="L208">                    html.append(&quot;}&quot;);</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">                    if (i &lt; variants.size() - 1) html.append(&quot;,&quot;);</span>
+                }
+<span class="nc" id="L211">                html.append(&quot;]&quot;);</span>
+<span class="nc" id="L212">                html.append(&quot;&lt;/script&gt;&quot;);</span>
+                
+                // Trigger update to ensure button state matches initial dropdowns (if we were setting them)
+                // For now, the initial state is hardcoded to firstVariant.
+                
+<span class="nc" id="L217">                html.append(&quot;&lt;/div&gt;&quot;);</span>
+<span class="nc" id="L218">            }</span>
+            
+<span class="nc" id="L220">            html.append(&quot;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;&quot;);</span>
+            
+<span class="nc" id="L222">            String response = html.toString();</span>
+<span class="nc" id="L223">            byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
+            
+<span class="nc" id="L225">            exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html; charset=utf-8&quot;);</span>
+<span class="nc" id="L226">            exchange.sendResponseHeaders(200, bytes.length);</span>
+<span class="nc" id="L227">            try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="nc" id="L228">                os.write(bytes);</span>
+            }
+<span class="nc" id="L230">        } catch (SQLException e) {</span>
+<span class="nc" id="L231">            logger.error(&quot;Error handling request&quot;, e);</span>
+<span class="nc" id="L232">            String errorResponse = &quot;Internal Server Error&quot;;</span>
+<span class="nc" id="L233">            exchange.sendResponseHeaders(500, errorResponse.getBytes().length);</span>
+<span class="nc" id="L234">            try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="nc" id="L235">                os.write(errorResponse.getBytes());</span>
+            }
+<span class="nc" id="L237">        }</span>
+<span class="nc" id="L238">    }</span>
+
+    // Helper to parse attributes from name &quot;Name - Attr1 Value1 Attr2 Value2&quot;
+    // This is a heuristic since we don't have the structured attributes in Webshop DB
+    // Assuming format: &quot;Name - Key1 Value1 Key2 Value2&quot; where Key is Color, Size etc.
+    // Actually, the format from PM is &quot;Name - Value1 Value2&quot; (e.g. &quot;T-Shirt - Red M&quot;)
+    // Wait, PM sends &quot;Name - Value1 Value2&quot;. It does NOT send keys in the name.
+    // Ah, the PM Service code: displayName = displayName + &quot; - &quot; + variantSuffix;
+    // variantSuffix = attrs.values().stream().collect(Collectors.joining(&quot; &quot;));
+    // So &quot;T-Shirt - Red M&quot;.
+    // We don't know which is Color and which is Size without the keys.
+    // This makes dynamic dropdowns hard if we don't know the keys.
+    
+    // However, the user request said: &quot;change from yellow to green... or from fresh to dried&quot;
+    // &quot;two dropdowns that allow the user to select variant&quot;
+    
+    // Since the Webshop DB only has the flattened name, we have to infer or change the sync.
+    // Changing sync is hard (requires DB schema change in Webshop).
+    
+    // Alternative: We can try to parse &quot;Red M&quot; if we assume a fixed order or known values.
+    // But &quot;Red&quot; and &quot;M&quot; are just values.
+    
+    // Let's look at the seed data: &quot;Classic T-Shirt - Red S&quot;
+    // If we split by &quot; - &quot;, we get &quot;Classic T-Shirt&quot; and &quot;Red S&quot;.
+    // &quot;Red S&quot; are the values.
+    // If we have multiple variants:
+    // Red S, Red M, Blue S, Blue M.
+    // We can deduce there are two &quot;dimensions&quot; of variation.
+    // Dimension 1 values: Red, Blue.
+    // Dimension 2 values: S, M.
+    
+    // We can call them &quot;Option 1&quot;, &quot;Option 2&quot; if we don't know &quot;Color&quot;, &quot;Size&quot;.
+    // Or we can try to be smart.
+    
+    // Let's implement a generic &quot;Option N&quot; approach for now, or try to infer if possible.
+    // Actually, if we look at all variants for a group, we can see the pattern.
+    // Variant 1: [Red, S]
+    // Variant 2: [Red, M]
+    // Variant 3: [Blue, S]
+    
+    // We can expose these as Dropdown 1 (Red, Blue) and Dropdown 2 (S, M).
+    
+    private Map&lt;String, String&gt; parseAttributesFromName(String fullName) {
+<span class="nc" id="L281">        Map&lt;String, String&gt; attributes = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L282">        String[] parts = fullName.split(&quot; - &quot;);</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">        if (parts.length &gt; 1) {</span>
+<span class="nc" id="L284">            String suffix = parts[1];</span>
+<span class="nc" id="L285">            String[] values = suffix.split(&quot; &quot;);</span>
+<span class="nc bnc" id="L286" title="All 2 branches missed.">            for (int i = 0; i &lt; values.length; i++) {</span>
+<span class="nc" id="L287">                attributes.put(&quot;Option &quot; + (i + 1), values[i]);</span>
+            }
+        }
+<span class="nc" id="L290">        return attributes;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

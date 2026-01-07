@@ -11,7 +11,7 @@ spec:
       description: "The Product Management System shall sync variants as individual products to downstream systems."
       priority: high
       tracesTo: "REQ-012"
-      rationale: "See ADR-0006: Flattening Strategy for Product Variations"
+      rationale: "See ADR-0008: Flattening Strategy for Product Variations"
       validation_policy: "policies/check_code_structure.rego"
       code_validation:
         file_path: "applications/productManagementSystem/src/main/java/com/example/productmanagement/ProductService.java"

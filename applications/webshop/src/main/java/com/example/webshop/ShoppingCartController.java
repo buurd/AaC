@@ -20,7 +20,8 @@ public class ShoppingCartController implements HttpHandler {
         ".btn-danger { background-color: #DC3545; }" +
         ".btn-secondary { background-color: #6C757D; }" +
         ".btn-success { background-color: #28A745; }" +
-        ".btn-primary { background-color: #007BFF; }";
+        ".btn-primary { background-color: #007BFF; }" +
+        ".loyalty-section { background-color: #E9ECEF; padding: 15px; border-radius: 4px; margin-bottom: 20px; }";
 
     private static final String JS = 
         "<script>" +
@@ -33,16 +34,52 @@ public class ShoppingCartController implements HttpHandler {
         "  let cart = JSON.parse(localStorage.getItem('cart')) || [];" +
         "  let tbody = document.getElementById('cart-body');" +
         "  tbody.innerHTML = '';" +
+        "  let total = 0;" +
         "  if (cart.length === 0) {" +
         "    tbody.innerHTML = '<tr><td colspan=4>Your cart is empty.</td></tr>';" +
         "    document.getElementById('checkout-btn').style.display = 'none';" +
+        "    document.getElementById('potential-loyalty').innerText = '0';" +
+        "    fetchLoyaltyBalance();" +
         "    return;" +
         "  }" +
         "  cart.forEach(item => {" +
-        "    let row = `<tr><td>${item.name}</td><td>${item.quantity}</td><td>${(item.price * item.quantity).toFixed(2)}</td>" +
+        "    let itemTotal = item.price * item.quantity;" +
+        "    total += itemTotal;" +
+        "    let row = `<tr><td>${item.name}</td><td>${item.quantity}</td><td>${itemTotal.toFixed(2)}</td>" +
         "    <td><button onclick='removeFromCart(${item.id})' class='btn btn-danger'>Remove</button></td></tr>`;" +
         "    tbody.innerHTML += row;" +
         "  });" +
+        "  document.getElementById('cart-total').innerText = total.toFixed(2);" +
+        "  calculatePotentialPoints(cart, total);" +
+        "  fetchLoyaltyBalance();" +
+        "}" +
+        "function calculatePotentialPoints(cart, total) {" +
+        "  const order = {" +
+        "    totalAmount: total," +
+        "    items: cart.map(i => ({ productId: i.id, quantity: i.quantity }))" +
+        "  };" +
+        "  fetch('/api/loyalty/calculate', {" +
+        "    method: 'POST'," +
+        "    headers: { 'Content-Type': 'application/json' }," +
+        "    body: JSON.stringify(order)" +
+        "  }).then(res => res.json())" +
+        "  .then(data => {" +
+        "    document.getElementById('potential-loyalty').innerText = data.points;" +
+        "  }).catch(err => console.error('Failed to calculate points', err));" +
+        "}" +
+        "function fetchLoyaltyBalance() {" +
+        "  const token = getCookie('webshop_auth_token');" +
+        "  const username = getCookie('webshop_username');" +
+        "  if (!token || !username) return;" +
+        "  fetch('/api/loyalty/balance/' + username, {" +
+        "    headers: { 'Authorization': 'Bearer ' + token }" +
+        "  }).then(res => res.json())" +
+        "  .then(data => {" +
+        "    document.getElementById('loyalty-points').innerText = data.points;" +
+        "    document.getElementById('loyalty-value').innerText = data.value.toFixed(2);" +
+        "    document.getElementById('max-points').value = data.points;" +
+        "    document.getElementById('loyalty-section').style.display = 'block';" +
+        "  }).catch(err => console.error('Failed to fetch loyalty balance', err));" +
         "}" +
         "function removeFromCart(id) {" +
         "  let cart = JSON.parse(localStorage.getItem('cart')) || [];" +
@@ -54,13 +91,24 @@ public class ShoppingCartController implements HttpHandler {
         "  let cart = JSON.parse(localStorage.getItem('cart')) || [];" +
         "  if (cart.length === 0) { alert('Cart is empty!'); return; }" +
         "  const token = getCookie('webshop_auth_token');" +
+        "  const username = getCookie('webshop_username');" +
         "  if (!token) {" +
         "    alert('You must be logged in to place an order.');" +
-        "    window.location.href = '/login';" + // Assuming a login page or redirect to Keycloak
+        "    window.location.href = '/login';" + 
         "    return;" +
         "  }" +
+        "  let pointsToRedeem = 0;" +
+        "  if (document.getElementById('use-points').checked) {" +
+        "      pointsToRedeem = parseInt(document.getElementById('points-input').value) || 0;" +
+        "  }" +
+        "  let total = 0;" +
+        "  cart.forEach(item => {" +
+        "    total += item.price * item.quantity;" +
+        "  });" +
         "  const order = {" +
-        "    customerName: 'John Doe'," + // Ideally, this should come from the token claims
+        "    customerName: username," + 
+        "    pointsToRedeem: pointsToRedeem," +
+        "    totalAmount: total," +
         "    items: cart.map(i => ({ productId: i.id, quantity: i.quantity }))" +
         "  };" +
         "  fetch('/api/orders', {" +
@@ -76,7 +124,7 @@ public class ShoppingCartController implements HttpHandler {
         "      localStorage.removeItem('cart');" +
         "      window.location.href = '/products';" +
         "    } else {" +
-        "      alert('Failed to place order. Insufficient stock?');" +
+        "      alert('Failed to place order. Insufficient stock or points?');" +
         "    }" +
         "  });" +
         "}" +
@@ -107,6 +155,17 @@ public class ShoppingCartController implements HttpHandler {
         html.append("<thead><tr><th>Product</th><th>Quantity</th><th>Price</th><th>Action</th></tr></thead>");
         html.append("<tbody id='cart-body'></tbody>");
         html.append("</table>");
+        html.append("<h3>Total: <span id='cart-total'>0.00</span> EUR</h3>");
+        html.append("<h4>Potential Loyalty Points: <span id='potential-loyalty'>0</span></h4>");
+        
+        html.append("<div id='loyalty-section' class='loyalty-section' style='display:none;'>");
+        html.append("<h4>Loyalty Program</h4>");
+        html.append("<p>You have <strong id='loyalty-points'>0</strong> points (Value: <strong id='loyalty-value'>0.00</strong> EUR).</p>");
+        html.append("<label><input type='checkbox' id='use-points'> Pay with Points</label>");
+        html.append("<input type='number' id='points-input' placeholder='Points to redeem' min='0'>");
+        html.append("<input type='hidden' id='max-points'>");
+        html.append("</div>");
+
         html.append("<button id='checkout-btn' onclick='checkout()' class='btn btn-success'>Checkout</button> ");
         html.append("<button onclick=\"window.location.href='/products'\" class='btn btn-secondary'>Back to Products</button>");
         html.append("</div></body></html>");

@@ -146,8 +146,33 @@ workspace "My System" "My System Description" {
                 creditService = component "CreditService" "Handles credit checks and overdue invoices." {
                     tags "Component" "Service"
                 }
+                loyaltyIntegrationService = component "LoyaltyIntegrationService" "Handles interaction with Loyalty Service." {
+                    tags "Component" "Service"
+                }
             }
             orderDatabase = container "Order Database" "The database." {
+                tags "Container" "Database" "Logical"
+            }
+        }
+
+        loyaltyService = softwareSystem "Loyalty Service" "Manages customer bonus points and rules." {
+            tags "Software System" "Logical"
+            loyaltyWebServer = container "Loyalty WebServer" "The web server." {
+                tags "Container" "Web Server" "Logical"
+                loyaltyController = component "LoyaltyController" "Handles loyalty API requests." {
+                    tags "Component"
+                }
+                pointService = component "PointService" "Handles point accrual and redemption logic." {
+                    tags "Component" "Service"
+                }
+                bonusRuleEngine = component "BonusRuleEngine" "Calculates bonus points based on rules." {
+                    tags "Component" "Service"
+                }
+                loyaltyRepository = component "LoyaltyRepository" "Handles data access for loyalty points." {
+                    tags "Component" "Repository"
+                }
+            }
+            loyaltyDatabase = container "Loyalty Database" "The database." {
                 tags "Container" "Database" "Logical"
             }
         }
@@ -198,6 +223,15 @@ workspace "My System" "My System Description" {
                     }
                     deploymentNode "Order DB Pod" {
                         containerInstance orderDatabase
+                    }
+                }
+
+                deploymentNode "Loyalty Namespace" {
+                    deploymentNode "Loyalty Deployment" {
+                        containerInstance loyaltyWebServer
+                    }
+                    deploymentNode "Loyalty DB Pod" {
+                        containerInstance loyaltyDatabase
                     }
                 }
 
@@ -252,6 +286,17 @@ workspace "My System" "My System Description" {
             tags "Logical"
         }
 
+        // Loyalty Relationships
+        orderService -> loyaltyService "Accrues points in" {
+            tags "Logical"
+        }
+        webshop -> loyaltyService "Gets balance from" {
+            tags "Logical"
+        }
+        customer -> loyaltyService "Has points in" {
+            tags "Logical"
+        }
+
         // --- Infrastructure Relationships (Physical/Routing View) ---
         // Point to the Container (Nginx) instead of the System (Gateway)
         customer -> reverseProxy "Uses (HTTPS)" {
@@ -286,6 +331,9 @@ workspace "My System" "My System Description" {
         reverseProxy -> keycloakContainer "Routes to (HTTP)" {
             tags "Infrastructure"
         }
+        reverseProxy -> loyaltyWebServer "Routes to (HTTP)" {
+            tags "Infrastructure"
+        }
 
         // Observability
         promtail -> webServer "Reads logs from" {
@@ -304,6 +352,9 @@ workspace "My System" "My System Description" {
             tags "Infrastructure"
         }
         promtail -> keycloakContainer "Reads logs from" {
+            tags "Infrastructure"
+        }
+        promtail -> loyaltyWebServer "Reads logs from" {
             tags "Infrastructure"
         }
         promtail -> loki "Pushes logs to" {
@@ -344,6 +395,9 @@ workspace "My System" "My System Description" {
         orderWebServer -> keycloakContainer "Verifies tokens with" {
             tags "Security"
         }
+        loyaltyWebServer -> keycloakContainer "Verifies tokens with" {
+            tags "Security"
+        }
 
         // Internal System-to-System via Gateway (Infrastructure View)
         pmWebServer -> reverseProxy "Sends product updates to (HTTPS)" {
@@ -361,6 +415,12 @@ workspace "My System" "My System Description" {
         orderWebServer -> reverseProxy "Notifies of confirmed order (HTTPS)" {
             tags "Infrastructure" "Implementation"
         }
+        orderWebServer -> reverseProxy "Accrues points in (HTTPS)" {
+            tags "Infrastructure" "Implementation"
+        }
+        webServer -> reverseProxy "Gets balance from (HTTPS)" {
+            tags "Infrastructure" "Implementation"
+        }
 
         // Database Access (Direct - Logical & Infra)
         webServer -> database "Reads from and writes to" {
@@ -373,6 +433,9 @@ workspace "My System" "My System Description" {
             tags "Implementation" "Logical"
         }
         orderWebServer -> orderDatabase "Reads from and writes to" {
+            tags "Implementation" "Logical"
+        }
+        loyaltyWebServer -> loyaltyDatabase "Reads from and writes to" {
             tags "Implementation" "Logical"
         }
 
@@ -394,6 +457,12 @@ workspace "My System" "My System Description" {
             tags "Implementation" "Direct"
         }
         orderWebServer -> warehouseWebServer "Notifies of confirmed order (HTTP)" {
+            tags "Implementation" "Direct"
+        }
+        orderWebServer -> loyaltyWebServer "Accrues points in (HTTP)" {
+            tags "Implementation" "Direct"
+        }
+        webServer -> loyaltyWebServer "Gets balance from (HTTP)" {
             tags "Implementation" "Direct"
         }
 
@@ -455,6 +524,7 @@ workspace "My System" "My System Description" {
         productSyncController -> productRepository "Uses"
         stockSyncController -> productRepository "Uses"
         productRepository -> database "Reads from and writes to"
+        shoppingCartController -> loyaltyController "Gets balance from"
 
         // Component-level relationships for productManagementSystem
         pmProductController -> pmProductService "Uses"
@@ -478,11 +548,20 @@ workspace "My System" "My System Description" {
         orderController -> stockReservationService "Uses"
         orderController -> orderFulfillmentService "Uses"
         orderController -> creditService "Uses"
+        orderController -> loyaltyIntegrationService "Accrues points via"
         stockReservationService -> warehouseDeliveryController "Reserves stock via"
         orderFulfillmentService -> warehouseOrderFulfillmentController "Notifies of confirmed order"
+        loyaltyIntegrationService -> loyaltyController "Calls API"
         orderRepository -> orderDatabase "Reads from and writes to"
         invoiceRepository -> orderDatabase "Reads from and writes to"
         creditService -> invoiceRepository "Uses"
+
+        // Component-level relationships for loyaltyService
+        loyaltyController -> pointService "Uses"
+        loyaltyController -> bonusRuleEngine "Uses"
+        pointService -> loyaltyRepository "Uses"
+        pointService -> bonusRuleEngine "Uses"
+        loyaltyRepository -> loyaltyDatabase "Reads from and writes to"
     }
 
     views {
@@ -625,6 +704,20 @@ workspace "My System" "My System Description" {
         }
 
         component orderWebServer "Order_Components" "Order Service - Components" {
+            include *
+            autolayout tb
+        }
+
+        container loyaltyService "Loyalty_Containers" "Loyalty Service - Containers" {
+            include *
+            exclude "element.tag==Infrastructure"
+            exclude "relationship.tag==Infrastructure"
+            exclude "relationship.tag==Security"
+            exclude "relationship.tag==Interaction"
+            autolayout tb
+        }
+
+        component loyaltyWebServer "Loyalty_Components" "Loyalty Service - Components" {
             include *
             autolayout tb
         }

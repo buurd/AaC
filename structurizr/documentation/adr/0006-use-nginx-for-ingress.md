@@ -1,4 +1,4 @@
-# 5. Use Nginx as Reverse Proxy/Ingress
+# 6. Use Nginx as Reverse Proxy/Ingress
 
 Date: 2024-06-20
 

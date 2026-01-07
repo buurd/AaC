@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(PactConsumerTestExt.class)
 @ExtendWith(MockitoExtension.class)
 @PactTestFor(providerName = "WebshopService")
-@PactDirectory("../../pacts")
+@PactDirectory("../pacts")
 @Tag("pact-consumer")
 public class StockServicePactTest {
 

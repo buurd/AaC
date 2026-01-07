@@ -17,13 +17,13 @@ import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(PactConsumerTestExt.class)
 @ExtendWith(MockitoExtension.class)
 @PactTestFor(providerName = "OrderService")
-@PactDirectory("../../pacts")
+@PactDirectory("../pacts")
 @Tag("pact-consumer")
 public class OrderServicePactTest {
 
@@ -34,11 +34,21 @@ public class OrderServicePactTest {
     public V4Pact createPact(PactBuilder builder) {
         return builder
             .usingLegacyDsl()
+            .given("Order Service is up")
+            .uponReceiving("A request to create an order")
+                .path("/api/orders")
+                .method("POST")
+                .headers("Content-Type", "application/json", "Authorization", "Bearer dummy-token")
+                .body("{\"customerName\":\"John Doe\",\"items\":[{\"productId\":1,\"quantity\":2}]}")
+            .willRespondWith()
+                .status(201)
+                .headers(java.util.Map.of("Content-Type", "application/json"))
+                .body("{\"status\":\"created\",\"orderId\":123}")
             .given("Orders exist for customer")
             .uponReceiving("A request to get orders for a customer")
                 .path("/api/orders")
-                .query("customer=John Doe") // Expect decoded value
                 .method("GET")
+                .query("customer=John Doe")
                 .headers("Authorization", "Bearer dummy-token")
             .willRespondWith()
                 .status(200)
@@ -49,7 +59,7 @@ public class OrderServicePactTest {
 
     @Test
     @PactTestFor(pactMethod = "createPact")
-    void testGetOrders(MockServer mockServer) throws IOException, ExecutionException, InterruptedException {
+    void testOrderInteractions(MockServer mockServer) throws IOException, ExecutionException, InterruptedException {
         // Setup Mocks
         when(tokenService.getAccessToken()).thenReturn(CompletableFuture.completedFuture("dummy-token"));
 
@@ -57,9 +67,18 @@ public class OrderServicePactTest {
         String mockUrl = mockServer.getUrl() + "/api/orders";
         OrderService service = new OrderService(mockUrl, tokenService);
 
-        // Execute
-        String result = service.getOrdersForCustomer("John Doe").get();
+        // Test Create Order
+        String orderJson = "{\"customerName\":\"John Doe\",\"items\":[{\"productId\":1,\"quantity\":2}]}";
+        service.createOrder(orderJson).get();
         
-        assertTrue(result.contains("John Doe"));
+        // Test Get Orders
+        // Note: OrderService.getOrdersForCustomer appends query param, so we pass base URL to service
+        // But wait, OrderService constructor takes full URL?
+        // In OrderService.java: String url = orderServiceUrl + "?customer=" + ...
+        // So if mockUrl is .../api/orders, it becomes .../api/orders?customer=...
+        // This matches the Pact path.
+        
+        String response = service.getOrdersForCustomer("John Doe").get();
+        assertEquals("[{\"id\":1,\"customerName\":\"John Doe\",\"status\":\"CONFIRMED\"}]", response);
     }
 }

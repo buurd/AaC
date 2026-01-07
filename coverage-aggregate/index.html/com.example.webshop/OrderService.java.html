@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Good Project Aggregated Coverage</a> &gt; <a href="index.source.html" class="el_package">com.example.webshop</a> &gt; <span class="el_source">OrderService.java</span></div><h1>OrderService.java</h1><pre class="source lang-java linenums">package com.example.webshop;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
+
+public class OrderService {
+
+    private final HttpClient httpClient;
+    private final String orderServiceUrl;
+    private final TokenService tokenService;
+
+    public OrderService() {
+<span class="nc" id="L17">        this(</span>
+<span class="nc" id="L18">            System.getenv().getOrDefault(&quot;ORDER_SERVICE_URL&quot;, &quot;http://order-service:8003/api/orders&quot;),</span>
+            new KeycloakTokenService(
+<span class="nc" id="L20">                System.getenv().getOrDefault(&quot;TOKEN_URL&quot;, &quot;http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token&quot;),</span>
+<span class="nc" id="L21">                System.getenv().getOrDefault(&quot;BACKEND_CLIENT_ID&quot;, &quot;webshop-backend-client&quot;),</span>
+<span class="nc" id="L22">                System.getenv().getOrDefault(&quot;BACKEND_CLIENT_SECRET&quot;, &quot;webshop-backend-secret&quot;)</span>
+            )
+        );
+<span class="nc" id="L25">    }</span>
+
+<span class="fc" id="L27">    public OrderService(String orderServiceUrl, TokenService tokenService) {</span>
+<span class="fc" id="L28">        this.httpClient = HttpClient.newBuilder()</span>
+<span class="fc" id="L29">                .connectTimeout(Duration.ofSeconds(5))</span>
+<span class="fc" id="L30">                .build();</span>
+<span class="fc" id="L31">        this.orderServiceUrl = orderServiceUrl;</span>
+<span class="fc" id="L32">        this.tokenService = tokenService;</span>
+<span class="fc" id="L33">    }</span>
+
+    public CompletableFuture&lt;String&gt; getOrdersForCustomer(String customerName) {
+<span class="nc" id="L36">        return tokenService.getAccessToken().thenCompose(token -&gt; {</span>
+<span class="nc" id="L37">            String url = orderServiceUrl + &quot;?customer=&quot; + customerName.replace(&quot; &quot;, &quot;%20&quot;);</span>
+            
+<span class="nc" id="L39">            HttpRequest request = HttpRequest.newBuilder()</span>
+<span class="nc" id="L40">                    .uri(URI.create(url))</span>
+<span class="nc" id="L41">                    .header(&quot;Authorization&quot;, &quot;Bearer &quot; + token)</span>
+<span class="nc" id="L42">                    .GET()</span>
+<span class="nc" id="L43">                    .build();</span>
+
+<span class="nc" id="L45">            return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())</span>
+<span class="nc" id="L46">                    .thenApply(HttpResponse::body);</span>
+        });
+    }
+
+    public CompletableFuture&lt;HttpResponse&lt;String&gt;&gt; createOrder(String orderJson) {
+<span class="fc" id="L51">        return tokenService.getAccessToken().thenCompose(token -&gt; {</span>
+<span class="fc" id="L52">            HttpRequest request = HttpRequest.newBuilder()</span>
+<span class="fc" id="L53">                    .uri(URI.create(orderServiceUrl))</span>
+<span class="fc" id="L54">                    .header(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
+<span class="fc" id="L55">                    .header(&quot;Authorization&quot;, &quot;Bearer &quot; + token)</span>
+<span class="fc" id="L56">                    .POST(HttpRequest.BodyPublishers.ofString(orderJson))</span>
+<span class="fc" id="L57">                    .build();</span>
+
+<span class="fc" id="L59">            return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());</span>
+        });
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

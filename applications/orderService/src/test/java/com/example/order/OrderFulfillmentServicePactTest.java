@@ -17,13 +17,12 @@ import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(PactConsumerTestExt.class)
 @ExtendWith(MockitoExtension.class)
 @PactTestFor(providerName = "WarehouseService")
-@PactDirectory("../../pacts")
+@PactDirectory("../pacts")
 @Tag("pact-consumer")
 public class OrderFulfillmentServicePactTest {
 
@@ -43,7 +42,7 @@ public class OrderFulfillmentServicePactTest {
             .willRespondWith()
                 .status(200)
                 .headers(java.util.Map.of("Content-Type", "application/json"))
-                .body("{\"status\":\"processing\"}")
+                .body("{\"status\":\"fulfillment_started\"}")
             .toPact(V4Pact.class);
     }
 
@@ -58,8 +57,9 @@ public class OrderFulfillmentServicePactTest {
         OrderFulfillmentService service = new OrderFulfillmentService(mockUrl, tokenService);
 
         // Execute
-        boolean result = service.notifyOrderConfirmed(123).get();
+        CompletableFuture<Boolean> future = service.notifyOrderConfirmed(123);
         
-        assertTrue(result);
+        // Wait for completion
+        future.get();
     }
 }

@@ -29,7 +29,7 @@ public class OrderFulfillmentController implements HttpHandler {
                 
                 repository.createFulfillmentOrder(orderId);
 
-                String response = "{\"status\":\"processing\"}";
+                String response = "{\"status\":\"fulfillment_started\"}";
                 exchange.getResponseHeaders().set("Content-Type", "application/json");
                 exchange.sendResponseHeaders(200, response.length());
                 try (OutputStream os = exchange.getResponseBody()) {

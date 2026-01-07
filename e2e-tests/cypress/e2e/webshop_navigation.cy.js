@@ -1,11 +1,16 @@
 describe('Webshop Navigation', () => {
   const webshopUrl = 'https://reverse-proxy:8443';
+  const username = 'nav_user_' + Date.now();
+  const password = 'password123';
 
-  beforeEach(() => {
-    cy.loginToWebshop();
+  before(() => {
+      cy.registerAndLoginToWebshop(username, password);
   });
 
   it('should have consistent navigation header on all pages', () => {
+    // Ensure logged in
+    cy.loginToWebshop(username, password);
+
     // 1. Check Dashboard (Root)
     cy.visit(webshopUrl);
     cy.contains('button', 'Webshop Home').should('be.visible');
@@ -35,6 +40,7 @@ describe('Webshop Navigation', () => {
   });
 
   it('should logout correctly from header', () => {
+    cy.loginToWebshop(username, password);
     cy.visit(webshopUrl + '/products');
     cy.contains('button', 'Logout').click();
     // Should be redirected to Keycloak logout and then back to app root (or login page depending on flow)

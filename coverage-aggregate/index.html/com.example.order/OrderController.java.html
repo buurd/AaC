@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Good Project Aggregated Coverage</a> &gt; <a href="index.source.html" class="el_package">com.example.order</a> &gt; <span class="el_source">OrderController.java</span></div><h1>OrderController.java</h1><pre class="source lang-java linenums">package com.example.order;
+
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpExchange;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class OrderController implements HttpHandler {
+
+    private final OrderRepository repository;
+    private final StockReservationService stockService;
+    private final OrderFulfillmentService fulfillmentService;
+    private final CreditService creditService;
+    private final InvoiceRepository invoiceRepository;
+
+<span class="fc" id="L27">    public OrderController(OrderRepository repository, StockReservationService stockService, OrderFulfillmentService fulfillmentService, CreditService creditService, InvoiceRepository invoiceRepository) {</span>
+<span class="fc" id="L28">        this.repository = repository;</span>
+<span class="fc" id="L29">        this.stockService = stockService;</span>
+<span class="fc" id="L30">        this.fulfillmentService = fulfillmentService;</span>
+<span class="fc" id="L31">        this.creditService = creditService;</span>
+<span class="fc" id="L32">        this.invoiceRepository = invoiceRepository;</span>
+<span class="fc" id="L33">    }</span>
+
+    private static final String CSS = 
+        &quot;body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }&quot; +
+        &quot;.container { max-width: 1200px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }&quot; +
+        &quot;h1 { color: #343A40; }&quot; +
+        &quot;table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }&quot; +
+        &quot;th { background-color: #007BFF; color: #FFFFFF; padding: 12px; text-align: left; }&quot; +
+        &quot;td { padding: 12px; border-bottom: 1px solid #DEE2E6; }&quot; +
+        &quot;tr:nth-child(even) { background-color: #F2F2F2; }&quot; +
+        &quot;.btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }&quot; +
+        &quot;.btn-secondary { background-color: #6C757D; }&quot; +
+        &quot;.btn-success { background-color: #28A745; }&quot; +
+        &quot;.btn-primary { background-color: #007BFF; }&quot;;
+
+    private String getHeader() {
+<span class="nc" id="L49">        return &quot;&lt;div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'&gt;&quot; +</span>
+               &quot;&lt;button onclick=\&quot;window.location.href='/'\&quot; class='btn btn-primary'&gt;Order Dashboard&lt;/button&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/logout'\&quot; class='btn btn-secondary'&gt;Logout&lt;/button&gt;&quot; +
+               &quot;&lt;/div&gt;&quot;;
+    }
+
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+<span class="fc" id="L57">        String method = exchange.getRequestMethod();</span>
+<span class="fc" id="L58">        String path = exchange.getRequestURI().getPath();</span>
+
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        if (&quot;/orders&quot;.equals(path)) {</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">            if (&quot;GET&quot;.equalsIgnoreCase(method)) {</span>
+<span class="nc" id="L62">                handleListOrders(exchange);</span>
+            } else {
+<span class="nc" id="L64">                exchange.sendResponseHeaders(405, -1);</span>
+            }
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">        } else if (&quot;/orders/confirm&quot;.equals(path)) {</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">            if (&quot;POST&quot;.equalsIgnoreCase(method)) {</span>
+<span class="nc" id="L68">                handleConfirmOrder(exchange);</span>
+            } else {
+<span class="nc" id="L70">                exchange.sendResponseHeaders(405, -1);</span>
+            }
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">        } else if (&quot;/api/orders&quot;.equals(path)) {</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">            if (&quot;GET&quot;.equalsIgnoreCase(method)) {</span>
+<span class="fc" id="L74">                handleApiListOrders(exchange);</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">            } else if (&quot;POST&quot;.equalsIgnoreCase(method)) {</span>
+<span class="fc" id="L76">                handleCreateOrder(exchange);</span>
+            } else {
+<span class="nc" id="L78">                exchange.sendResponseHeaders(405, -1);</span>
+            }
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        } else if (&quot;/api/orders/status&quot;.equals(path)) {</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">            if (&quot;POST&quot;.equalsIgnoreCase(method)) {</span>
+<span class="nc" id="L82">                handleUpdateStatus(exchange);</span>
+            } else {
+<span class="nc" id="L84">                exchange.sendResponseHeaders(405, -1);</span>
+            }
+        } else {
+<span class="nc" id="L87">            exchange.sendResponseHeaders(404, -1);</span>
+        }
+<span class="fc" id="L89">    }</span>
+
+    private void handleApiListOrders(HttpExchange exchange) throws IOException {
+<span class="fc" id="L92">        String query = exchange.getRequestURI().getQuery();</span>
+<span class="fc" id="L93">        String customerName = null;</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (query != null) {</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">            for (String param : query.split(&quot;&amp;&quot;)) {</span>
+<span class="fc" id="L96">                String[] pair = param.split(&quot;=&quot;);</span>
+<span class="pc bpc" id="L97" title="2 of 4 branches missed.">                if (pair.length == 2 &amp;&amp; &quot;customer&quot;.equals(pair[0])) {</span>
+<span class="fc" id="L98">                    customerName = java.net.URLDecoder.decode(pair[1], StandardCharsets.UTF_8);</span>
+                }
+            }
+        }
+
+        try {
+<span class="fc" id="L104">            List&lt;Order&gt; orders = repository.findAll(); // Should filter by customer in DB, but filtering in memory for now</span>
+<span class="fc" id="L105">            List&lt;Order&gt; filteredOrders = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">            if (customerName != null) {</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">                for (Order o : orders) {</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">                    if (customerName.equals(o.getCustomerName())) {</span>
+<span class="fc" id="L109">                        filteredOrders.add(o);</span>
+                    }
+<span class="fc" id="L111">                }</span>
+            } else {
+<span class="nc" id="L113">                filteredOrders = orders;</span>
+            }
+
+<span class="fc" id="L116">            StringBuilder json = new StringBuilder(&quot;[&quot;);</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">            for (int i = 0; i &lt; filteredOrders.size(); i++) {</span>
+<span class="fc" id="L118">                Order o = filteredOrders.get(i);</span>
+<span class="fc" id="L119">                json.append(String.format(&quot;{\&quot;id\&quot;:%d,\&quot;customerName\&quot;:\&quot;%s\&quot;,\&quot;status\&quot;:\&quot;%s\&quot;}&quot;, </span>
+<span class="fc" id="L120">                    o.getId(), o.getCustomerName(), o.getStatus()));</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">                if (i &lt; filteredOrders.size() - 1) {</span>
+<span class="nc" id="L122">                    json.append(&quot;,&quot;);</span>
+                }
+            }
+<span class="fc" id="L125">            json.append(&quot;]&quot;);</span>
+
+<span class="fc" id="L127">            String response = json.toString();</span>
+<span class="fc" id="L128">            byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L129">            exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;application/json&quot;);</span>
+<span class="fc" id="L130">            exchange.sendResponseHeaders(200, bytes.length);</span>
+<span class="fc" id="L131">            try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="fc" id="L132">                os.write(bytes);</span>
+            }
+<span class="nc" id="L134">        } catch (SQLException e) {</span>
+<span class="nc" id="L135">            e.printStackTrace();</span>
+<span class="nc" id="L136">            exchange.sendResponseHeaders(500, -1);</span>
+<span class="fc" id="L137">        }</span>
+<span class="fc" id="L138">    }</span>
+
+    private void handleListOrders(HttpExchange exchange) throws IOException {
+        try {
+<span class="nc" id="L142">            List&lt;Order&gt; orders = repository.findAll();</span>
+<span class="nc" id="L143">            System.out.println(&quot;Listing &quot; + orders.size() + &quot; orders.&quot;); // Added logging</span>
+            
+<span class="nc" id="L145">            StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L146">            sb.append(&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;style&gt;&quot;).append(CSS).append(&quot;&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div class='container'&gt;&quot;);</span>
+<span class="nc" id="L147">            sb.append(getHeader());</span>
+<span class="nc" id="L148">            sb.append(&quot;&lt;h1&gt;Order Management&lt;/h1&gt;&quot;);</span>
+<span class="nc" id="L149">            sb.append(&quot;&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;ID&lt;/th&gt;&lt;th&gt;Customer&lt;/th&gt;&lt;th&gt;Status&lt;/th&gt;&lt;th&gt;Items&lt;/th&gt;&lt;th&gt;Actions&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&quot;);</span>
+            
+<span class="nc bnc" id="L151" title="All 2 branches missed.">            for (Order o : orders) {</span>
+<span class="nc" id="L152">                System.out.println(&quot;Order: &quot; + o.getId() + &quot;, Status: &quot; + o.getStatus()); // Added logging</span>
+<span class="nc" id="L153">                sb.append(&quot;&lt;tr&gt;&quot;);</span>
+<span class="nc" id="L154">                sb.append(&quot;&lt;td&gt;&quot;).append(o.getId()).append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="nc" id="L155">                sb.append(&quot;&lt;td&gt;&quot;).append(o.getCustomerName()).append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="nc" id="L156">                sb.append(&quot;&lt;td&gt;&quot;).append(o.getStatus()).append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="nc" id="L157">                sb.append(&quot;&lt;td&gt;&quot;).append(o.getItems().size()).append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="nc" id="L158">                sb.append(&quot;&lt;td&gt;&quot;);</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">                if (&quot;PENDING_CONFIRMATION&quot;.equals(o.getStatus())) {</span>
+<span class="nc" id="L160">                     sb.append(&quot;&lt;form action='/orders/confirm' method='post' style='display:inline;'&gt;&quot;);</span>
+<span class="nc" id="L161">                     sb.append(&quot;&lt;input type='hidden' name='id' value='&quot;).append(o.getId()).append(&quot;'&gt;&quot;);</span>
+<span class="nc" id="L162">                     sb.append(&quot;&lt;button type='submit' class='btn btn-success'&gt;Confirm&lt;/button&gt;&quot;);</span>
+<span class="nc" id="L163">                     sb.append(&quot;&lt;/form&gt;&quot;);</span>
+                }
+<span class="nc" id="L165">                sb.append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="nc" id="L166">                sb.append(&quot;&lt;/tr&gt;&quot;);</span>
+<span class="nc" id="L167">            }</span>
+<span class="nc" id="L168">            sb.append(&quot;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;&quot;);</span>
+            
+<span class="nc" id="L170">            String response = sb.toString();</span>
+<span class="nc" id="L171">            byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
+<span class="nc" id="L172">            exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html; charset=utf-8&quot;);</span>
+<span class="nc" id="L173">            exchange.sendResponseHeaders(200, bytes.length);</span>
+<span class="nc" id="L174">            try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="nc" id="L175">                os.write(bytes);</span>
+            }
+<span class="nc" id="L177">        } catch (SQLException e) {</span>
+<span class="nc" id="L178">            e.printStackTrace();</span>
+<span class="nc" id="L179">            exchange.sendResponseHeaders(500, -1);</span>
+<span class="nc" id="L180">        }</span>
+<span class="nc" id="L181">    }</span>
+
+    private void handleCreateOrder(HttpExchange exchange) throws IOException {
+<span class="fc" id="L184">        int orderId = -1;</span>
+        try {
+<span class="fc" id="L186">            InputStream is = exchange.getRequestBody();</span>
+<span class="fc" id="L187">            String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);</span>
+<span class="fc" id="L188">            System.out.println(&quot;Received Order: &quot; + json);</span>
+            
+<span class="fc" id="L190">            Order order = parseOrder(json);</span>
+            
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">            if (order.getItems().isEmpty()) {</span>
+<span class="nc" id="L193">                System.out.println(&quot;Warning: No items found in order!&quot;);</span>
+            }
+
+<span class="fc" id="L196">            order.setStatus(&quot;PENDING&quot;);</span>
+<span class="fc" id="L197">            orderId = repository.createOrder(order);</span>
+            
+            // Reserve stock
+<span class="fc" id="L200">            boolean allReserved = true;</span>
+<span class="fc bfc" id="L201" title="All 2 branches covered.">            for (OrderItem item : order.getItems()) {</span>
+<span class="fc" id="L202">                boolean reserved = stockService.reserveStock(item.getProductId(), item.getQuantity()).join();</span>
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">                if (!reserved) {</span>
+<span class="nc" id="L204">                    allReserved = false;</span>
+<span class="nc" id="L205">                    break;</span>
+                }
+<span class="fc" id="L207">            }</span>
+            
+<span class="pc bpc" id="L209" title="1 of 2 branches missed.">            if (allReserved) {</span>
+                // Changed from CONFIRMED to PENDING_CONFIRMATION to allow manual confirmation
+<span class="fc" id="L211">                repository.updateStatus(orderId, &quot;PENDING_CONFIRMATION&quot;);</span>
+                
+                // Notification to Warehouse and Invoice creation is now moved to handleConfirmOrder
+
+                // Return 201 and &quot;created&quot; to match Pact contract
+<span class="fc" id="L216">                System.out.println(&quot;OrderController: Returning 201 Created&quot;);</span>
+<span class="fc" id="L217">                String response = &quot;{\&quot;status\&quot;:\&quot;created\&quot;, \&quot;orderId\&quot;:&quot; + orderId + &quot;}&quot;;</span>
+<span class="fc" id="L218">                byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L219">                exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;application/json&quot;);</span>
+<span class="fc" id="L220">                exchange.sendResponseHeaders(201, bytes.length);</span>
+<span class="fc" id="L221">                try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="fc" id="L222">                    os.write(bytes);</span>
+                }
+<span class="fc" id="L224">            } else {</span>
+<span class="nc" id="L225">                repository.updateStatus(orderId, &quot;REJECTED&quot;);</span>
+<span class="nc" id="L226">                String response = &quot;{\&quot;status\&quot;:\&quot;REJECTED\&quot;, \&quot;orderId\&quot;:&quot; + orderId + &quot;}&quot;;</span>
+<span class="nc" id="L227">                byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
+<span class="nc" id="L228">                exchange.sendResponseHeaders(409, bytes.length); // Conflict</span>
+<span class="nc" id="L229">                try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="nc" id="L230">                    os.write(bytes);</span>
+                }
+            }
+            
+<span class="nc" id="L234">        } catch (Exception e) {</span>
+<span class="nc" id="L235">            e.printStackTrace();</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">            if (orderId != -1) {</span>
+                try {
+<span class="nc" id="L238">                    repository.updateStatus(orderId, &quot;ERROR&quot;);</span>
+<span class="nc" id="L239">                } catch (SQLException ex) {</span>
+<span class="nc" id="L240">                    e.addSuppressed(ex);</span>
+<span class="nc" id="L241">                }</span>
+            }
+<span class="nc" id="L243">            exchange.sendResponseHeaders(500, -1);</span>
+<span class="fc" id="L244">        }</span>
+<span class="fc" id="L245">    }</span>
+
+    private void handleConfirmOrder(HttpExchange exchange) throws IOException {
+        try {
+<span class="nc" id="L249">            InputStream is = exchange.getRequestBody();</span>
+<span class="nc" id="L250">            String formData = new String(is.readAllBytes(), StandardCharsets.UTF_8);</span>
+<span class="nc" id="L251">            Map&lt;String, String&gt; params = parseFormData(formData);</span>
+            
+<span class="nc" id="L253">            int orderId = Integer.parseInt(params.get(&quot;id&quot;));</span>
+            
+<span class="nc" id="L255">            repository.updateStatus(orderId, &quot;CONFIRMED&quot;);</span>
+            
+            // Create Invoice (Moved from handleCreateOrder)
+            // We need to fetch the order details to get customer name and calculate amount
+            // For now, I'll assume we can get it or just use placeholders as per upstream logic
+            // Upstream logic: invoiceRepository.createInvoice(new Invoice(orderId, order.getCustomerName(), totalAmount, LocalDate.now().plusDays(30)));
+            // But we don't have 'order' object here.
+            // Let's fetch it.
+            // Assuming repository has findById.
+            // If not, we might need to add it or use a simplified approach.
+            // repository.findAll() exists.
+            
+            // For simplicity and to match upstream intent without refactoring repository too much:
+            // We'll just create the invoice with available info.
+            // Ideally we should fetch the order.
+            // Let's check if repository has findById.
+            // It does not seem to have findById in the snippet I saw earlier.
+            // But findAll returns all.
+            
+            // Let's try to find the order from findAll (inefficient but works for now)
+<span class="nc" id="L275">            List&lt;Order&gt; allOrders = repository.findAll();</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">            Order order = allOrders.stream().filter(o -&gt; o.getId() == orderId).findFirst().orElse(null);</span>
+            
+<span class="nc bnc" id="L278" title="All 2 branches missed.">            if (order != null) {</span>
+<span class="nc" id="L279">                 double totalAmount = 0; // Placeholder as per upstream</span>
+<span class="nc" id="L280">                 invoiceRepository.createInvoice(new Invoice(orderId, order.getCustomerName(), totalAmount, LocalDate.now().plusDays(30)));</span>
+<span class="nc" id="L281">            } else {</span>
+<span class="nc" id="L282">                System.err.println(&quot;Order not found for invoice creation: &quot; + orderId);</span>
+            }
+            
+            // Notify Warehouse for fulfillment
+<span class="nc" id="L286">            boolean notified = fulfillmentService.notifyOrderConfirmed(orderId).join();</span>
+<span class="nc bnc" id="L287" title="All 2 branches missed.">            if (!notified) {</span>
+<span class="nc" id="L288">                System.err.println(&quot;Failed to notify warehouse for order &quot; + orderId);</span>
+<span class="nc" id="L289">                repository.updateStatus(orderId, &quot;CONFIRMATION_FAILED&quot;);</span>
+<span class="nc" id="L290">                throw new IOException(&quot;Failed to notify warehouse for fulfillment&quot;);</span>
+            }
+
+<span class="nc" id="L293">            exchange.getResponseHeaders().set(&quot;Location&quot;, &quot;/orders&quot;);</span>
+<span class="nc" id="L294">            exchange.sendResponseHeaders(302, -1);</span>
+<span class="nc" id="L295">        } catch (Exception e) {</span>
+<span class="nc" id="L296">            e.printStackTrace();</span>
+<span class="nc" id="L297">            exchange.sendResponseHeaders(500, -1);</span>
+<span class="nc" id="L298">        }</span>
+<span class="nc" id="L299">    }</span>
+
+    private void handleUpdateStatus(HttpExchange exchange) throws IOException {
+        try {
+<span class="nc" id="L303">            InputStream is = exchange.getRequestBody();</span>
+<span class="nc" id="L304">            String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);</span>
+<span class="nc" id="L305">            System.out.println(&quot;Update Status Request: &quot; + json);</span>
+            
+<span class="nc" id="L307">            int orderId = -1;</span>
+<span class="nc" id="L308">            String status = null;</span>
+            
+            // Simple JSON parsing
+<span class="nc" id="L311">            Pattern pId = Pattern.compile(&quot;\&quot;orderId\&quot;\\s*:\\s*(\\d+)&quot;);</span>
+<span class="nc" id="L312">            Matcher mId = pId.matcher(json);</span>
+<span class="nc bnc" id="L313" title="All 2 branches missed.">            if (mId.find()) {</span>
+<span class="nc" id="L314">                orderId = Integer.parseInt(mId.group(1));</span>
+            }
+            
+<span class="nc" id="L317">            Pattern pStatus = Pattern.compile(&quot;\&quot;status\&quot;\\s*:\\s*\&quot;([^\&quot;]+)\&quot;&quot;);</span>
+<span class="nc" id="L318">            Matcher mStatus = pStatus.matcher(json);</span>
+<span class="nc bnc" id="L319" title="All 2 branches missed.">            if (mStatus.find()) {</span>
+<span class="nc" id="L320">                status = mStatus.group(1);</span>
+            }
+            
+<span class="nc bnc" id="L323" title="All 4 branches missed.">            if (orderId != -1 &amp;&amp; status != null) {</span>
+<span class="nc" id="L324">                repository.updateStatus(orderId, status);</span>
+<span class="nc" id="L325">                String response = &quot;{\&quot;status\&quot;:\&quot;updated\&quot;}&quot;;</span>
+<span class="nc" id="L326">                byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
+<span class="nc" id="L327">                exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;application/json&quot;);</span>
+<span class="nc" id="L328">                exchange.sendResponseHeaders(200, bytes.length);</span>
+<span class="nc" id="L329">                try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="nc" id="L330">                    os.write(bytes);</span>
+                }
+<span class="nc" id="L332">            } else {</span>
+<span class="nc" id="L333">                exchange.sendResponseHeaders(400, -1);</span>
+            }
+<span class="nc" id="L335">        } catch (Exception e) {</span>
+<span class="nc" id="L336">            e.printStackTrace();</span>
+<span class="nc" id="L337">            exchange.sendResponseHeaders(500, -1);</span>
+<span class="nc" id="L338">        }</span>
+<span class="nc" id="L339">    }</span>
+
+    private Order parseOrder(String json) {
+<span class="fc" id="L342">        Order order = new Order();</span>
+        
+        // Extract customerName
+<span class="fc" id="L345">        Pattern customerNamePattern = Pattern.compile(&quot;\&quot;customerName\&quot;\\s*:\\s*\&quot;([^\&quot;]+)\&quot;&quot;);</span>
+<span class="fc" id="L346">        Matcher customerNameMatcher = customerNamePattern.matcher(json);</span>
+<span class="pc bpc" id="L347" title="1 of 2 branches missed.">        if (customerNameMatcher.find()) {</span>
+<span class="fc" id="L348">            order.setCustomerName(customerNameMatcher.group(1));</span>
+        } else {
+<span class="nc" id="L350">            order.setCustomerName(&quot;Unknown Customer&quot;); // Default</span>
+        }
+
+        // Extract items - robust parsing
+        // Split by &quot;}&quot; to separate objects roughly
+<span class="fc" id="L355">        String[] parts = json.split(&quot;\\}&quot;);</span>
+<span class="fc bfc" id="L356" title="All 2 branches covered.">        for (String part : parts) {</span>
+<span class="pc bpc" id="L357" title="1 of 4 branches missed.">            if (part.contains(&quot;productId&quot;) &amp;&amp; part.contains(&quot;quantity&quot;)) {</span>
+<span class="fc" id="L358">                int productId = -1;</span>
+<span class="fc" id="L359">                int quantity = -1;</span>
+                
+<span class="fc" id="L361">                Pattern pId = Pattern.compile(&quot;\&quot;productId\&quot;\\s*:\\s*(\\d+)&quot;);</span>
+<span class="fc" id="L362">                Matcher mId = pId.matcher(part);</span>
+<span class="pc bpc" id="L363" title="1 of 2 branches missed.">                if (mId.find()) {</span>
+<span class="fc" id="L364">                    productId = Integer.parseInt(mId.group(1));</span>
+                }
+                
+<span class="fc" id="L367">                Pattern pQty = Pattern.compile(&quot;\&quot;quantity\&quot;\\s*:\\s*(\\d+)&quot;);</span>
+<span class="fc" id="L368">                Matcher mQty = pQty.matcher(part);</span>
+<span class="pc bpc" id="L369" title="1 of 2 branches missed.">                if (mQty.find()) {</span>
+<span class="fc" id="L370">                    quantity = Integer.parseInt(mQty.group(1));</span>
+                }
+                
+<span class="pc bpc" id="L373" title="2 of 4 branches missed.">                if (productId != -1 &amp;&amp; quantity != -1) {</span>
+<span class="fc" id="L374">                    order.addItem(new OrderItem(productId, quantity));</span>
+                }
+            }
+        }
+
+<span class="fc" id="L379">        return order;</span>
+    }
+
+    private void sendError(HttpExchange exchange, int code, String message) throws IOException {
+<span class="nc" id="L383">        byte[] bytes = message.getBytes(StandardCharsets.UTF_8);</span>
+<span class="nc" id="L384">        exchange.sendResponseHeaders(code, bytes.length);</span>
+<span class="nc" id="L385">        try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="nc" id="L386">            os.write(bytes);</span>
+        }
+<span class="nc" id="L388">    }</span>
+
+    private Map&lt;String, String&gt; parseFormData(String formData) {
+<span class="nc" id="L391">        Map&lt;String, String&gt; map = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L392">        String[] pairs = formData.split(&quot;&amp;&quot;);</span>
+<span class="nc bnc" id="L393" title="All 2 branches missed.">        for (String pair : pairs) {</span>
+<span class="nc" id="L394">            String[] keyValue = pair.split(&quot;=&quot;);</span>
+<span class="nc bnc" id="L395" title="All 2 branches missed.">            if (keyValue.length &gt; 0) {</span>
+<span class="nc" id="L396">                String key = java.net.URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);</span>
+<span class="nc bnc" id="L397" title="All 2 branches missed.">                String value = keyValue.length &gt; 1 ? java.net.URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8) : &quot;&quot;;</span>
+<span class="nc" id="L398">                map.put(key, value);</span>
+            }
+        }
+<span class="nc" id="L401">        return map;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

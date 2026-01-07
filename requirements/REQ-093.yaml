@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: loyalty-dynamic-rules
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-093
+      type: functional
+      c4_level: component
+      description: "The Loyalty Service shall support dynamic bonus rules (e.g., 2x points in January) via a flexible rule engine."
+      priority: medium
+      tracesTo: "REQ-091"
+      validation_policy: "policies/check_code_structure.rego"
+      code_validation:
+        file_path: "applications/loyaltyService/src/main/java/com/example/loyalty/BonusRuleEngine.java"
+        contains: "evaluate"

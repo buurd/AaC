@@ -1,0 +1,62 @@
+{
+  "consumer": {
+    "name": "Webshop"
+  },
+  "interactions": [
+    {
+      "comments": {
+        "text": [
+
+        ]
+      },
+      "description": "A request to get loyalty balance",
+      "key": "4ba705a5",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "Loyalty Service is up"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Authorization": [
+            "Bearer dummy-token"
+          ]
+        },
+        "method": "GET",
+        "path": "/api/loyalty/balance/user2"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "currency": "EUR",
+            "customerId": "user2",
+            "points": 100,
+            "value": 10.00
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "status": 200
+      },
+      "transport": "https",
+      "type": "Synchronous/HTTP"
+    }
+  ],
+  "metadata": {
+    "pact-jvm": {
+      "version": "4.6.5"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "LoyaltyService"
+  }
+}

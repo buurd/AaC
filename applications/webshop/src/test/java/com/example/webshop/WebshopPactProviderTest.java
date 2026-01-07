@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.concurrent.Executors;
 
 @Provider("WebshopService")
-@PactFolder("../../pacts") // Point to the shared pacts directory
+@PactFolder("../pacts") // Point to the shared pacts directory
 @Tag("pact-provider")
 public class WebshopPactProviderTest {
 
@@ -34,20 +34,16 @@ public class WebshopPactProviderTest {
             public void upsert(Product p) throws SQLException {
                 System.out.println("Mock Repository: Upserted product " + p.getName());
             }
-            
             @Override
             public void updateStock(int pmId, int stock) throws SQLException {
-                System.out.println("Mock Repository: Updated stock for product " + pmId + " to " + stock);
+                System.out.println("Mock Repository: Updated stock for PM ID " + pmId + " to " + stock);
             }
         };
 
         // Start Server
         server = HttpServer.create(new InetSocketAddress(8080), 0);
-        
-        // Mount controllers directly
         server.createContext("/api/products/sync", new ProductSyncController(mockRepo));
         server.createContext("/api/stock/sync", new StockSyncController(mockRepo));
-
         server.setExecutor(Executors.newCachedThreadPool());
         server.start();
         System.out.println("Test Server started on port 8080");
@@ -73,6 +69,5 @@ public class WebshopPactProviderTest {
 
     @State("Webshop is up")
     public void toWebshopIsUpState() {
-        // Prepare service state if needed
     }
 }

@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: loyalty-service-context
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-091
+      type: architectural
+      c4_level: context
+      description: "A Loyalty Service shall be implemented to manage customer bonus points and rules."
+      priority: high
+      rationale: "See ADR-0009: Introduce Loyalty Service"
+      validation_policy: "policies/check_containers.rego"
+      model_validation:
+        parent: "Loyalty Service"
+        container: "Loyalty WebServer"

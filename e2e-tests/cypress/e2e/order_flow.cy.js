@@ -1,6 +1,8 @@
 describe('Order Flow', () => {
   const productName = 'Order Test Product';
   const webshopUrl = 'https://reverse-proxy:8443';
+  const username = 'order_user_' + Date.now();
+  const password = 'password123';
 
   // Helper to verify stock in Webshop
   const verifyStock = (expectedStock, attempts = 0) => {
@@ -40,7 +42,7 @@ describe('Order Flow', () => {
 
     // 3. Action: Login and Place Order
     cy.clearCookies();
-    cy.loginToWebshop();
+    cy.registerAndLoginToWebshop(username, password);
     cy.addProductToCart(productName);
     cy.checkoutCart();
     
@@ -62,9 +64,12 @@ describe('Order Flow', () => {
 
     // 6. Verify: Order History in Webshop
     cy.clearCookies();
-    cy.loginToWebshop();
+    cy.loginToWebshop(username, password);
     cy.visit(webshopUrl + '/my-orders');
     cy.contains('h1', 'My Orders');
-    cy.contains('td', 'CONFIRMED').should('be.visible');
+    // Add a wait and reload to ensure the page is updated
+    cy.wait(1000);
+    cy.reload();
+    cy.contains('td', 'CONFIRMED', { timeout: 4000 }).should('be.visible');
   });
 });

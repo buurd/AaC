@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: loyalty-db-pvc
+  namespace: loyalty-service
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loyalty-db
+  namespace: loyalty-service
+spec:
+  selector:
+    matchLabels:
+      app: loyalty-db
+  template:
+    metadata:
+      labels:
+        app: loyalty-db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          env:
+            - name: POSTGRES_DB
+              value: loyalty_db
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: loyalty-db-storage
+      volumes:
+        - name: loyalty-db-storage
+          persistentVolumeClaim:
+            claimName: loyalty-db-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loyalty-db
+  namespace: loyalty-service
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: loyalty-db

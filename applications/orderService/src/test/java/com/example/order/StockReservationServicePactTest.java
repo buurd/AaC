@@ -17,13 +17,12 @@ import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(PactConsumerTestExt.class)
 @ExtendWith(MockitoExtension.class)
 @PactTestFor(providerName = "WarehouseService")
-@PactDirectory("../../pacts")
+@PactDirectory("../pacts")
 @Tag("pact-consumer")
 public class StockReservationServicePactTest {
 
@@ -39,7 +38,7 @@ public class StockReservationServicePactTest {
                 .path("/api/stock/reserve")
                 .method("POST")
                 .headers("Content-Type", "application/json", "Authorization", "Bearer dummy-token")
-                .body("{\"productId\":1,\"quantity\":5}")
+                .body("{\"productId\":1,\"quantity\":2}")
             .willRespondWith()
                 .status(200)
                 .headers(java.util.Map.of("Content-Type", "application/json"))
@@ -58,8 +57,9 @@ public class StockReservationServicePactTest {
         StockReservationService service = new StockReservationService(mockUrl, tokenService);
 
         // Execute
-        boolean result = service.reserveStock(1, 5).get();
+        CompletableFuture<Boolean> future = service.reserveStock(1, 2);
         
-        assertTrue(result);
+        // Assert
+        assert(future.get());
     }
 }

@@ -44,10 +44,13 @@ public class OrderHistoryController implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        // In a real app, we'd get the customer name from the session/token.
-        // For this demo, we'll hardcode or take from query param for testing.
-        // Let's assume "John Doe" for simplicity or parse from a cookie if we had one.
-        String customerName = "John Doe"; 
+        String customerName = getCookie(exchange, "webshop_username");
+        if (customerName == null) {
+            // Redirect to login if no user cookie
+            exchange.getResponseHeaders().set("Location", "/login");
+            exchange.sendResponseHeaders(302, -1);
+            return;
+        }
 
         try {
             String json = orderService.getOrdersForCustomer(customerName).get();
@@ -59,16 +62,18 @@ public class OrderHistoryController implements HttpHandler {
             html.append("<h1>My Orders</h1>");
             html.append("<button onclick=\"window.location.href='/products'\" class='btn btn-secondary'>Back to Shop</button>");
             
-            html.append("<table><thead><tr><th>Order ID</th><th>Status</th></tr></thead><tbody>");
+            html.append("<table><thead><tr><th>Order ID</th><th>Status</th><th>Points Earned</th><th>Points Redeemed</th></tr></thead><tbody>");
             
             // Simple JSON parsing
-            Pattern p = Pattern.compile("\\{\"id\":(\\d+),\"customerName\":\"[^\"]+\",\"status\":\"([^\"]+)\"\\}");
+            Pattern p = Pattern.compile("\\{\"id\":(\\d+),\"customerName\":\"[^\"]+\",\"status\":\"([^\"]+)\",\"pointsEarned\":(\\d+),\"pointsRedeemed\":(\\d+)\\}");
             Matcher m = p.matcher(json);
             
             while (m.find()) {
                 html.append("<tr>");
                 html.append("<td>").append(m.group(1)).append("</td>");
                 html.append("<td>").append(m.group(2)).append("</td>");
+                html.append("<td>").append(m.group(3)).append("</td>");
+                html.append("<td>").append(m.group(4)).append("</td>");
                 html.append("</tr>");
             }
             
@@ -91,5 +96,19 @@ public class OrderHistoryController implements HttpHandler {
                 os.write(error.getBytes());
             }
         }
+    }
+
+    private String getCookie(HttpExchange exchange, String name) {
+        String cookieHeader = exchange.getRequestHeaders().getFirst("Cookie");
+        if (cookieHeader != null) {
+            String[] cookies = cookieHeader.split(";");
+            for (String cookie : cookies) {
+                String[] parts = cookie.trim().split("=");
+                if (parts.length == 2 && parts[0].equals(name)) {
+                    return parts[1];
+                }
+            }
+        }
+        return null;
     }
 }

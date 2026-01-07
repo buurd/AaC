@@ -39,7 +39,7 @@
       "response": {
         "body": {
           "content": {
-            "status": "processing"
+            "status": "fulfillment_started"
           },
           "contentType": "application/json",
           "encoded": false
@@ -72,7 +72,7 @@
         "body": {
           "content": {
             "productId": 1,
-            "quantity": 5
+            "quantity": 2
           },
           "contentType": "application/json",
           "encoded": false

@@ -8,10 +8,8 @@ START_TIME=$(date +%s)
 exec > >(tee logs/validate-architecture.log) 2>&1
 
 # --- Pre-Cleanup ---
-# Remove any leftover containers from previous runs or run-webshop.sh to avoid conflicts
 echo "--- Checking for leftover containers ---"
-# List of container names used in this script and run-webshop.sh
-CONTAINERS="webshop-demo pm-demo warehouse-demo order-service keycloak reverse-proxy db_webshop db_pm db_warehouse db_order db-webshop db-pm db-warehouse db-order loki promtail grafana"
+CONTAINERS="webshop-demo pm-demo warehouse-demo order-service loyalty-service keycloak reverse-proxy db_webshop db_pm db_warehouse db_order db_loyalty db-webshop db-pm db-warehouse db-order db-loyalty loki promtail grafana"
 
 for container in $CONTAINERS; do
     if docker ps -a --format '{{.Names}}' | grep -q "^${container}$"; then
@@ -22,7 +20,6 @@ for container in $CONTAINERS; do
 done
 
 # --- Cleanup ---
-# This function will be called on script exit to ensure temporary files are removed.
 cleanup() {
     echo
     echo "--- Cleaning up temporary files ---"
@@ -30,22 +27,21 @@ cleanup() {
     rm -f structurizr/workspace.json
 
     echo "--- Stopping containers ---"
-    # Stop containers started by this script (using IDs if available, or names)
     if [ -n "$WEBSHOP_CONTAINER_ID" ]; then docker stop "$WEBSHOP_CONTAINER_ID" > /dev/null 2>&1 || true; fi
     if [ -n "$PM_CONTAINER_ID" ]; then docker stop "$PM_CONTAINER_ID" > /dev/null 2>&1 || true; fi
     if [ -n "$WAREHOUSE_CONTAINER_ID" ]; then docker stop "$WAREHOUSE_CONTAINER_ID" > /dev/null 2>&1 || true; fi
     if [ -n "$ORDER_CONTAINER_ID" ]; then docker stop "$ORDER_CONTAINER_ID" > /dev/null 2>&1 || true; fi
+    if [ -n "$LOYALTY_CONTAINER_ID" ]; then docker stop "$LOYALTY_CONTAINER_ID" > /dev/null 2>&1 || true; fi
     if [ -n "$KEYCLOAK_CONTAINER_ID" ]; then docker stop "$KEYCLOAK_CONTAINER_ID" > /dev/null 2>&1 || true; fi
     if [ -n "$PROXY_CONTAINER_ID" ]; then docker stop "$PROXY_CONTAINER_ID" > /dev/null 2>&1 || true; fi
     if [ -n "$DB_WEBSHOP_ID" ]; then docker stop "$DB_WEBSHOP_ID" > /dev/null 2>&1 || true; fi
     if [ -n "$DB_PM_ID" ]; then docker stop "$DB_PM_ID" > /dev/null 2>&1 || true; fi
     if [ -n "$DB_WAREHOUSE_ID" ]; then docker stop "$DB_WAREHOUSE_ID" > /dev/null 2>&1 || true; fi
     if [ -n "$DB_ORDER_ID" ]; then docker stop "$DB_ORDER_ID" > /dev/null 2>&1 || true; fi
+    if [ -n "$DB_LOYALTY_ID" ]; then docker stop "$DB_LOYALTY_ID" > /dev/null 2>&1 || true; fi
 
-    # Also try to stop by name just in case
-    docker stop webshop-demo pm-demo warehouse-demo order-service keycloak reverse-proxy db_webshop db_pm db_warehouse db_order > /dev/null 2>&1 || true
+    docker stop webshop-demo pm-demo warehouse-demo order-service loyalty-service keycloak reverse-proxy db_webshop db_pm db_warehouse db_order db_loyalty > /dev/null 2>&1 || true
 
-    # Remove network
     if [ -n "$NETWORK_NAME" ]; then
         echo "Removing network: $NETWORK_NAME"
         docker network rm "$NETWORK_NAME" > /dev/null 2>&1 || true
@@ -58,7 +54,6 @@ cleanup() {
 trap cleanup EXIT
 
 # --- Setup ---
-# Function to run OPA validation and report results. Exits on failure.
 run_opa_validation() {
     local title="$1"
     local input_file="$2"
@@ -105,7 +100,6 @@ run_opa_validation() {
     fi
 }
 
-# Function to run a runtime check using curl
 run_runtime_check() {
     local title="$1"
     local url="$2"
@@ -117,7 +111,6 @@ run_runtime_check() {
     echo "--- Running: $title ---"
     echo "Checking URL: $url"
 
-    # Check if container is still running
     if [ -n "$container_id" ]; then
         if ! docker ps -q --no-trunc | grep -q "$container_id"; then
              echo "🔴 Validation Failed: Container $container_id is not running."
@@ -127,9 +120,7 @@ run_runtime_check() {
         fi
     fi
 
-    # Temporarily disable set -e to capture curl failure
     set +e
-    # Use -k to allow self-signed certs
     RESPONSE=$(docker run --rm --network="host" curlimages/curl:7.78.0 curl -k -v -s -w "\\n%{http_code}" "$url" 2>&1)
     CURL_EXIT_CODE=$?
     set -e
@@ -145,7 +136,6 @@ run_runtime_check() {
     fi
 
     HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
-    # Extract body (everything except the last line)
     HTTP_BODY=$(echo "$RESPONSE" | sed '$d')
 
     echo "Server returned status: $HTTP_STATUS"
@@ -187,29 +177,17 @@ echo "Step 3: Aggregating requirements..."
 docker run --rm -v "$(pwd):/workdir" mikefarah/yq eval-all -o=json '. as $doc ireduce ({}; .requirements += [$doc])' requirements/*.yaml > requirements.json
 
 echo "Step 4: Combining inputs for validations..."
-# Implementation Validation Input
 jq -n '{files: $files, reqs: $reqs}' --slurpfile files project-files.json --slurpfile reqs requirements.json > implementation-input.json
-
-# Code Structure Validation Input
 find . -name "*.java" -print0 | xargs -0 -I {} jq -Rs --arg path "{}" '{$path: .}' {} | jq -s 'add' > code-structure-files.json
 jq -n '{files: $files, reqs: $reqs}' --slurpfile files code-structure-files.json --slurpfile reqs requirements.json > code-structure-input.json
-
-# Test Content Input (for HTTPS check)
 find e2e-tests -name "*.js" -print0 | xargs -0 -I {} jq -Rs --arg path "{}" '{$path: .}' {} | jq -s 'add' > test-files.json
 jq -n '{files: $files, reqs: $reqs}' --slurpfile files test-files.json --slurpfile reqs requirements.json > test-content-input.json
-
-# Relation Validation Input (Model + Requirements)
 jq -n '{model: $model, reqs: $reqs}' --slurpfile model workspace.json --slurpfile reqs requirements.json > relation-input.json
 
 echo "Step 5: Parsing Kubernetes manifests..."
-# Merge all k8s yamls into a single json list. We use jq -s to wrap the stream of objects into an array.
 docker run --rm -v "$(pwd):/workdir" mikefarah/yq eval-all -o=json '.' infrastructure/k8s/*.yaml | jq -s . > k8s-manifests.json
 
 echo "Step 6: Combining inputs for K8s validation..."
-# Note: We use --slurpfile for k8s because it's already a JSON array in the file, but slurpfile wraps it in another array, so we access it as $k8s[0] inside jq if needed, or just pass it.
-# Actually, jq -s . above makes k8s-manifests.json a list of objects.
-# When we use --slurpfile k8s k8s-manifests.json, 'k8s' variable inside jq becomes [[obj1, obj2...]].
-# So we want {k8s: $k8s[0], ...}
 jq -n '{k8s: $k8s[0], reqs: $reqs}' --slurpfile k8s k8s-manifests.json --slurpfile reqs requirements.json > k8s-validation-input.json
 
 
@@ -228,24 +206,16 @@ run_opa_validation "Kubernetes Deployment Validation" "/project/k8s-validation-i
 # --- Contract Validation (Pact) ---
 echo
 echo "--- Running: Contract Validation (Pact) ---"
-
-# Ensure pacts directory exists
 mkdir -p pacts
+MODULES="webshop productManagementSystem warehouse orderService loyaltyService"
 
-# Define modules to scan
-MODULES="webshop productManagementSystem warehouse orderService"
-
-# 1. Run Consumer Tests (Generate Pacts)
 echo "Phase 1: Generating Contracts (Consumer Tests)..."
 for module in $MODULES; do
     if [ -d "applications/$module" ] && [ -f "applications/$module/pom.xml" ]; then
         echo "  Scanning $module for consumer tests..."
-        # We use 'mvn test' but filter by tag 'pact-consumer'.
-        # If no tests match, it might fail or pass depending on config, so we allow failure if no tests found but check output?
-        # Better: Just run it. If it fails, it fails. If no tests, it passes (usually).
         if ! docker run --rm \
             -v "$(pwd)/applications/$module:/usr/src/mymaven" \
-            -v "$(pwd)/pacts:/usr/pacts" \
+            -v "$(pwd)/pacts:/usr/src/pacts" \
             -v "$(pwd)/m2-cache:/root/.m2" \
             -w /usr/src/mymaven \
             maven:3.9.6-eclipse-temurin-21 mvn clean test -Dgroups=pact-consumer -DfailIfNoTests=false; then
@@ -255,14 +225,13 @@ for module in $MODULES; do
     fi
 done
 
-# 2. Run Provider Tests (Verify Pacts)
 echo "Phase 2: Verifying Contracts (Provider Tests)..."
 for module in $MODULES; do
     if [ -d "applications/$module" ] && [ -f "applications/$module/pom.xml" ]; then
         echo "  Scanning $module for provider tests..."
         if ! docker run --rm \
             -v "$(pwd)/applications/$module:/usr/src/mymaven" \
-            -v "$(pwd)/pacts:/usr/pacts" \
+            -v "$(pwd)/pacts:/usr/src/pacts" \
             -v "$(pwd)/m2-cache:/root/.m2" \
             -w /usr/src/mymaven \
             maven:3.9.6-eclipse-temurin-21 mvn clean test -Dgroups=pact-provider -DfailIfNoTests=false; then
@@ -281,7 +250,6 @@ echo "Setting up Certificates..."
 chmod +x infrastructure/setup-certs.sh
 ./infrastructure/setup-certs.sh
 
-# Create a local Maven cache directory
 mkdir -p ./m2-cache
 
 echo "Compiling Webshop application..."
@@ -308,34 +276,33 @@ docker run --rm \
     -v "$(pwd)/m2-cache:/root/.m2" \
     -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
 
-# Create a dedicated network for the containers
+echo "Compiling Loyalty Service..."
+docker run --rm \
+    -v "$(pwd)/applications/loyaltyService:/usr/src/mymaven" \
+    -v "$(pwd)/m2-cache:/root/.m2" \
+    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
+
 NETWORK_NAME="webshop-net-$$"
 docker network create $NETWORK_NAME
 
-# Start Webshop Database container
 echo "Starting Webshop Database container..."
 DB_WEBSHOP_ID=$(docker run -d --network $NETWORK_NAME --name db_webshop -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres postgres:14-alpine)
-echo "Webshop Database container started with ID: $DB_WEBSHOP_ID"
 
-# Start PM Database container
 echo "Starting PM Database container..."
 DB_PM_ID=$(docker run -d --network $NETWORK_NAME --name db_pm -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres postgres:14-alpine)
-echo "PM Database container started with ID: $DB_PM_ID"
 
-# Start Warehouse Database container
 echo "Starting Warehouse Database container..."
 DB_WAREHOUSE_ID=$(docker run -d --network $NETWORK_NAME --name db_warehouse -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres postgres:14-alpine)
-echo "Warehouse Database container started with ID: $DB_WAREHOUSE_ID"
 
-# Start Order Database container
 echo "Starting Order Database container..."
 DB_ORDER_ID=$(docker run -d --network $NETWORK_NAME --name db_order -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres postgres:14-alpine)
-echo "Order Database container started with ID: $DB_ORDER_ID"
+
+echo "Starting Loyalty Database container..."
+DB_LOYALTY_ID=$(docker run -d --network $NETWORK_NAME --name db_loyalty -e POSTGRES_DB=loyalty_db -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres postgres:14-alpine)
 
 echo "Waiting for Databases to initialize (15s)..."
 sleep 15
 
-# Start Keycloak
 echo "Starting Keycloak container..."
 KEYCLOAK_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name keycloak \
     -e KEYCLOAK_ADMIN=admin \
@@ -348,11 +315,8 @@ KEYCLOAK_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name keycloak \
     -v "$(pwd)/infrastructure/keycloak/realm-export.json:/opt/keycloak/data/import/realm.json:ro" \
     quay.io/keycloak/keycloak:23.0.7 \
     start-dev --import-realm)
-echo "Keycloak container started with ID: $KEYCLOAK_CONTAINER_ID"
 
-# Start Webshop container
-echo "Starting Webshop server in a Docker container..."
-# Named webshop-demo for PM to find it
+echo "Starting Webshop server..."
 WEBSHOP_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name webshop-demo \
     -v "$(pwd)/applications/webshop/target:/app" \
     -e DB_URL=jdbc:postgresql://db_webshop:5432/postgres \
@@ -361,11 +325,8 @@ WEBSHOP_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name webshop-demo
     -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
     -e ISSUER_URL=https://reverse-proxy:8446/realms/webshop-realm \
     eclipse-temurin:21-jre java -jar /app/webshop-1.0-SNAPSHOT-jar-with-dependencies.jar)
-echo "Webshop container started with ID: $WEBSHOP_CONTAINER_ID"
 
-# Start Product Management container
-echo "Starting Product Management server in a Docker container..."
-# Fixed name to pm-demo to match nginx.conf
+echo "Starting Product Management server..."
 PM_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name pm-demo \
     -v "$(pwd)/applications/productManagementSystem/target:/app" \
     -e DB_URL=jdbc:postgresql://db_pm:5432/postgres \
@@ -379,11 +340,8 @@ PM_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name pm-demo \
     -e CLIENT_SECRET=pm-secret \
     -e TOKEN_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token \
     eclipse-temurin:21-jre java -jar /app/productManagementSystem-1.0-SNAPSHOT-jar-with-dependencies.jar)
-echo "Product Management container started with ID: $PM_CONTAINER_ID"
 
-# Start Warehouse container
-echo "Starting Warehouse Service in a Docker container..."
-# Named warehouse-demo for PM to find it
+echo "Starting Warehouse Service..."
 WAREHOUSE_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name warehouse-demo \
     -v "$(pwd)/applications/warehouse/target:/app" \
     -e DB_URL=jdbc:postgresql://db_warehouse:5432/postgres \
@@ -396,10 +354,8 @@ WAREHOUSE_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name warehouse-
     -e CLIENT_SECRET=warehouse-secret \
     -e TOKEN_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token \
     eclipse-temurin:21-jre java -jar /app/warehouse-1.0-SNAPSHOT-jar-with-dependencies.jar)
-echo "Warehouse container started with ID: $WAREHOUSE_CONTAINER_ID"
 
-# Start Order Service container
-echo "Starting Order Service in a Docker container..."
+echo "Starting Order Service..."
 ORDER_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name order-service \
     -v "$(pwd)/applications/orderService/target:/app" \
     -e DB_URL=jdbc:postgresql://db_order:5432/postgres \
@@ -412,43 +368,42 @@ ORDER_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name order-service 
     -e CLIENT_SECRET=order-secret \
     -e TOKEN_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token \
     eclipse-temurin:21-jre java -jar /app/orderService-1.0-SNAPSHOT-jar-with-dependencies.jar)
-echo "Order Service container started with ID: $ORDER_CONTAINER_ID"
+
+echo "Starting Loyalty Service..."
+LOYALTY_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name loyalty-service \
+    -v "$(pwd)/applications/loyaltyService/target:/app" \
+    -e DB_URL=jdbc:postgresql://db_loyalty:5432/loyalty_db \
+    -e DB_USER=postgres \
+    -e DB_PASSWORD=postgres \
+    eclipse-temurin:21-jre java -jar /app/loyalty-service-1.0-SNAPSHOT-jar-with-dependencies.jar)
 
 echo "Waiting 2 seconds for Docker DNS to propagate..."
 sleep 2
 
-# Start Reverse Proxy
 echo "Starting Reverse Proxy (Nginx)..."
 PROXY_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name reverse-proxy \
-    -p 8443:8443 -p 8444:8444 -p 8445:8445 -p 8446:8446 -p 8447:8447 \
+    -p 8443:8443 -p 8444:8444 -p 8445:8445 -p 8446:8446 -p 8447:8447 -p 8448:8448 \
     -v "$(pwd)/infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro" \
     -v "$(pwd)/infrastructure/nginx/certs:/etc/nginx/certs:ro" \
     nginx:alpine)
-echo "Proxy container started with ID: $PROXY_CONTAINER_ID"
 
-echo "Waiting for services to initialize (40s)..."
-sleep 40
+echo "Waiting for services to initialize (60s)..."
+sleep 60
 
-# Check if proxy is running
 if ! docker ps -q --no-trunc | grep -q "$PROXY_CONTAINER_ID"; then
     echo "🔴 Reverse Proxy failed to start!"
     docker logs "$PROXY_CONTAINER_ID"
     exit 1
 fi
 
-# Run the actual runtime checks (via HTTPS Proxy)
-# Note: We use -k to ignore self-signed cert errors in validation
 run_runtime_check "Runtime Validation (REQ-005) - HTTPS" "https://localhost:8443/" "200" "" "$WEBSHOP_CONTAINER_ID"
 run_runtime_check "Runtime Validation (REQ-007) - HTTPS" "https://localhost:8443/products" "200" "Classic T-Shirt" "$WEBSHOP_CONTAINER_ID"
-# PM and Warehouse are now SECURED. They should return 302 Found (Redirect to Login) if accessed without token.
 run_runtime_check "Runtime Validation (REQ-014) - HTTPS (Secured)" "https://localhost:8444/products" "302" "" "$PM_CONTAINER_ID"
 run_runtime_check "Runtime Validation (REQ-031) - HTTPS (Secured)" "https://localhost:8445/products" "302" "" "$WAREHOUSE_CONTAINER_ID"
-# Webshop is public, so it should still be 200.
 run_runtime_check "Runtime Validation (REQ-034) - HTTPS (Secured)" "https://localhost:8445/products" "302" "" "$WAREHOUSE_CONTAINER_ID"
-# Check Keycloak
 run_runtime_check "Runtime Validation (Keycloak) - HTTPS" "https://localhost:8446/" "200" "Welcome to Keycloak" "$KEYCLOAK_CONTAINER_ID"
-# Check Order Service
 run_runtime_check "Runtime Validation (REQ-051) - HTTPS (Secured)" "https://localhost:8447/" "200" "Order Service" "$ORDER_CONTAINER_ID"
+run_runtime_check "Runtime Validation (Loyalty) - HTTPS" "https://localhost:8448/" "200" "Loyalty Admin Dashboard" "$LOYALTY_CONTAINER_ID"
 
 # --- Functional Validation (Cypress) ---
 echo
@@ -456,7 +411,6 @@ echo "--- Running: Functional Validation (Cypress) ---"
 echo "Running Cypress tests against https://reverse-proxy:8444..."
 
 set +e
-# Run Cypress in a container connected to the same network
 docker run --rm --network $NETWORK_NAME \
     -v "$(pwd)/e2e-tests:/e2e" \
     -w /e2e \
@@ -475,11 +429,12 @@ if [ $CYPRESS_EXIT_CODE -ne 0 ]; then
     docker logs "$WAREHOUSE_CONTAINER_ID" | tail -n 200
     echo "--- Order Service Logs ---"
     docker logs "$ORDER_CONTAINER_ID" | tail -n 200
+    echo "--- Loyalty Service Logs ---"
+    docker logs "$LOYALTY_CONTAINER_ID" | tail -n 200
     exit 1
 else
     echo "✅ Functional Validation Passed."
 fi
 
-# --- Final Status ---
 echo
 echo "All validations passed successfully!"

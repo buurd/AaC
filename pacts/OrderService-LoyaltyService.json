@@ -1,0 +1,125 @@
+{
+  "consumer": {
+    "name": "OrderService"
+  },
+  "interactions": [
+    {
+      "comments": {
+        "text": [
+
+        ]
+      },
+      "description": "A request to redeem points",
+      "key": "681af8d8",
+      "pending": false,
+      "request": {
+        "body": {
+          "content": {
+            "customerId": "user1",
+            "orderId": "102",
+            "pointsToRedeem": 50
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Authorization": [
+            "Bearer dummy-token"
+          ],
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "method": "POST",
+        "path": "/api/loyalty/redeem"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "pointsRedeemed": 50,
+            "remainingBalance": 50,
+            "status": "SUCCESS"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "status": 200
+      },
+      "transport": "https",
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "comments": {
+        "text": [
+
+        ]
+      },
+      "description": "A request to accrue points",
+      "key": "2ed4e493",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "Loyalty Service is up"
+        }
+      ],
+      "request": {
+        "body": {
+          "content": {
+            "currency": "EUR",
+            "customerId": "user1",
+            "items": [
+
+            ],
+            "orderId": "101",
+            "totalAmount": 100.00
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Authorization": [
+            "Bearer dummy-token"
+          ],
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "method": "POST",
+        "path": "/api/loyalty/accrue"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "status": "success"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "status": 200
+      },
+      "transport": "https",
+      "type": "Synchronous/HTTP"
+    }
+  ],
+  "metadata": {
+    "pact-jvm": {
+      "version": "4.6.5"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "LoyaltyService"
+  }
+}

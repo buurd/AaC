@@ -1,5 +1,6 @@
 package com.example.webshop;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -8,7 +9,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
@@ -30,6 +30,7 @@ class ProductSyncControllerTest {
         when(mockExchange.getRequestMethod()).thenReturn("POST");
         when(mockExchange.getRequestBody()).thenReturn(requestBody);
         when(mockExchange.getResponseBody()).thenReturn(new ByteArrayOutputStream());
+        when(mockExchange.getResponseHeaders()).thenReturn(new Headers());
 
         // Act
         controller.handle(mockExchange);
@@ -46,6 +47,8 @@ class ProductSyncControllerTest {
         assertEquals(20.00, capturedProduct.getPrice());
         assertEquals("pcs", capturedProduct.getUnit());
         
+        Headers headers = new Headers();
+        when(mockExchange.getResponseHeaders()).thenReturn(headers);
         verify(mockExchange).sendResponseHeaders(eq(200), anyLong());
     }
 }

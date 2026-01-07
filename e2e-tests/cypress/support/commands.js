@@ -29,6 +29,30 @@ Cypress.Commands.add('loginToWebshop', (username = 'manager', password = 'passwo
   cy.url().should('include', '/products');
 });
 
+Cypress.Commands.add('registerAndLoginToWebshop', (username, password) => {
+  const webshopUrl = 'https://reverse-proxy:8443';
+  cy.visit(webshopUrl);
+  cy.contains('Register').click();
+  // Keycloak Registration Flow
+  // Note: Webshop redirects to Keycloak at https://reverse-proxy:8446
+  cy.origin('https://reverse-proxy:8446', { args: { username, password } }, ({ username, password }) => {
+      cy.get('#username').type(username);
+      cy.get('#password').type(password);
+      cy.get('#password-confirm').type(password);
+      cy.get('#email').type(username + '@example.com');
+      cy.get('#firstName').type('Test');
+      cy.get('#lastName').type('User');
+      cy.get('input[type="submit"]').click();
+  });
+  
+  // Login
+  cy.visit(webshopUrl + '/login');
+  cy.get('input[name="username"]').type(username);
+  cy.get('input[name="password"]').type(password);
+  cy.get('button[type="submit"]').click();
+  cy.url().should('include', '/products');
+});
+
 Cypress.Commands.add('loginToOrderService', (username = 'o-user', password = 'o-user') => {
   const orderUrl = 'https://reverse-proxy:8447';
   cy.visit(orderUrl + '/orders'); // It redirects to login if not authenticated
@@ -42,6 +66,20 @@ Cypress.Commands.add('loginToOrderService', (username = 'o-user', password = 'o-
   });
   // Order Service redirects to /orders
   cy.url().should('include', '/orders');
+});
+
+Cypress.Commands.add('loginToLoyaltyService', (username = 'l-user', password = 'l-user') => {
+    const loyaltyUrl = 'https://reverse-proxy:8448';
+    cy.visit(loyaltyUrl + '/'); // It redirects to login if not authenticated
+    // Check if we are already logged in (url includes /) or redirected to login
+    cy.url().then(url => {
+        if (url.includes('/login')) {
+            cy.get('input[name="username"]').type(username);
+            cy.get('input[name="password"]').type(password);
+            cy.get('button[type="submit"]').click();
+        }
+    });
+    cy.url().should('include', loyaltyUrl + '/');
 });
 
 // --- Product Management Commands ---
