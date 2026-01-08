@@ -13,88 +13,88 @@ public class ProductRepository {
 <span class="fc" id="L13">    }</span>
 
     public List&lt;Product&gt; findAll() throws SQLException {
-<span class="nc" id="L16">        List&lt;Product&gt; products = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L17">        String sql = &quot;SELECT id, pm_id, name FROM products ORDER BY id&quot;;</span>
-<span class="nc" id="L18">        try (Statement stmt = connection.createStatement();</span>
-<span class="nc" id="L19">             ResultSet rs = stmt.executeQuery(sql)) {</span>
+<span class="fc" id="L16">        List&lt;Product&gt; products = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L17">        String sql = &quot;SELECT id, pm_id, name FROM products ORDER BY id&quot;;</span>
+<span class="fc" id="L18">        try (Statement stmt = connection.createStatement();</span>
+<span class="fc" id="L19">             ResultSet rs = stmt.executeQuery(sql)) {</span>
 
-<span class="nc bnc" id="L21" title="All 2 branches missed.">            while (rs.next()) {</span>
-<span class="nc" id="L22">                products.add(new Product(</span>
-<span class="nc" id="L23">                    rs.getInt(&quot;id&quot;),</span>
-<span class="nc" id="L24">                    (Integer) rs.getObject(&quot;pm_id&quot;),</span>
-<span class="nc" id="L25">                    rs.getString(&quot;name&quot;)</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L22">                products.add(new Product(</span>
+<span class="fc" id="L23">                    rs.getInt(&quot;id&quot;),</span>
+<span class="fc" id="L24">                    (Integer) rs.getObject(&quot;pm_id&quot;),</span>
+<span class="fc" id="L25">                    rs.getString(&quot;name&quot;)</span>
                 ));
             }
         }
-<span class="nc" id="L29">        return products;</span>
+<span class="fc" id="L29">        return products;</span>
     }
 
     public Product findById(int id) throws SQLException {
-<span class="nc" id="L33">        String sql = &quot;SELECT id, pm_id, name FROM products WHERE id = ?&quot;;</span>
-<span class="nc" id="L34">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
-<span class="nc" id="L35">            stmt.setInt(1, id);</span>
-<span class="nc" id="L36">            try (ResultSet rs = stmt.executeQuery()) {</span>
-<span class="nc bnc" id="L37" title="All 2 branches missed.">                if (rs.next()) {</span>
-<span class="nc" id="L38">                    return new Product(</span>
-<span class="nc" id="L39">                        rs.getInt(&quot;id&quot;),</span>
-<span class="nc" id="L40">                        (Integer) rs.getObject(&quot;pm_id&quot;),</span>
-<span class="nc" id="L41">                        rs.getString(&quot;name&quot;)</span>
+<span class="fc" id="L33">        String sql = &quot;SELECT id, pm_id, name FROM products WHERE id = ?&quot;;</span>
+<span class="fc" id="L34">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
+<span class="fc" id="L35">            stmt.setInt(1, id);</span>
+<span class="fc" id="L36">            try (ResultSet rs = stmt.executeQuery()) {</span>
+<span class="pc bpc" id="L37" title="1 of 2 branches missed.">                if (rs.next()) {</span>
+<span class="fc" id="L38">                    return new Product(</span>
+<span class="fc" id="L39">                        rs.getInt(&quot;id&quot;),</span>
+<span class="fc" id="L40">                        (Integer) rs.getObject(&quot;pm_id&quot;),</span>
+<span class="fc" id="L41">                        rs.getString(&quot;name&quot;)</span>
                     );
                 }
-<span class="nc bnc" id="L44" title="All 2 branches missed.">            }</span>
-<span class="nc bnc" id="L45" title="All 2 branches missed.">        }</span>
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">            }</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        }</span>
 <span class="nc" id="L46">        return null;</span>
     }
 
     public Product findByPmId(int pmId) throws SQLException {
-<span class="nc" id="L50">        String sql = &quot;SELECT id, pm_id, name FROM products WHERE pm_id = ?&quot;;</span>
-<span class="nc" id="L51">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
-<span class="nc" id="L52">            stmt.setInt(1, pmId);</span>
-<span class="nc" id="L53">            try (ResultSet rs = stmt.executeQuery()) {</span>
-<span class="nc bnc" id="L54" title="All 2 branches missed.">                if (rs.next()) {</span>
-<span class="nc" id="L55">                    return new Product(</span>
-<span class="nc" id="L56">                        rs.getInt(&quot;id&quot;),</span>
-<span class="nc" id="L57">                        (Integer) rs.getObject(&quot;pm_id&quot;),</span>
-<span class="nc" id="L58">                        rs.getString(&quot;name&quot;)</span>
+<span class="fc" id="L50">        String sql = &quot;SELECT id, pm_id, name FROM products WHERE pm_id = ?&quot;;</span>
+<span class="fc" id="L51">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
+<span class="fc" id="L52">            stmt.setInt(1, pmId);</span>
+<span class="fc" id="L53">            try (ResultSet rs = stmt.executeQuery()) {</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">                if (rs.next()) {</span>
+<span class="fc" id="L55">                    return new Product(</span>
+<span class="fc" id="L56">                        rs.getInt(&quot;id&quot;),</span>
+<span class="fc" id="L57">                        (Integer) rs.getObject(&quot;pm_id&quot;),</span>
+<span class="fc" id="L58">                        rs.getString(&quot;name&quot;)</span>
                     );
                 }
-<span class="nc bnc" id="L61" title="All 2 branches missed.">            }</span>
-<span class="nc bnc" id="L62" title="All 2 branches missed.">        }</span>
-<span class="nc" id="L63">        return null;</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">            }</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        }</span>
+<span class="fc" id="L63">        return null;</span>
     }
 
     public void upsert(Product product) throws SQLException {
-<span class="nc" id="L67">        String checkSql = &quot;SELECT id FROM products WHERE pm_id = ?&quot;;</span>
-<span class="nc" id="L68">        try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {</span>
-<span class="nc" id="L69">            checkStmt.setInt(1, product.getPmId());</span>
-<span class="nc" id="L70">            try (ResultSet rs = checkStmt.executeQuery()) {</span>
-<span class="nc bnc" id="L71" title="All 2 branches missed.">                if (rs.next()) {</span>
+<span class="fc" id="L67">        String checkSql = &quot;SELECT id FROM products WHERE pm_id = ?&quot;;</span>
+<span class="fc" id="L68">        try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {</span>
+<span class="fc" id="L69">            checkStmt.setInt(1, product.getPmId());</span>
+<span class="fc" id="L70">            try (ResultSet rs = checkStmt.executeQuery()) {</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">                if (rs.next()) {</span>
                     // Update
-<span class="nc" id="L73">                    String updateSql = &quot;UPDATE products SET name=? WHERE pm_id=?&quot;;</span>
-<span class="nc" id="L74">                    try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {</span>
-<span class="nc" id="L75">                        updateStmt.setString(1, product.getName());</span>
-<span class="nc" id="L76">                        updateStmt.setInt(2, product.getPmId());</span>
-<span class="nc" id="L77">                        updateStmt.executeUpdate();</span>
+<span class="fc" id="L73">                    String updateSql = &quot;UPDATE products SET name=? WHERE pm_id=?&quot;;</span>
+<span class="fc" id="L74">                    try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {</span>
+<span class="fc" id="L75">                        updateStmt.setString(1, product.getName());</span>
+<span class="fc" id="L76">                        updateStmt.setInt(2, product.getPmId());</span>
+<span class="fc" id="L77">                        updateStmt.executeUpdate();</span>
                     }
-<span class="nc" id="L79">                } else {</span>
+<span class="fc" id="L79">                } else {</span>
                     // Insert
-<span class="nc" id="L81">                    String insertSql = &quot;INSERT INTO products (pm_id, name) VALUES (?, ?)&quot;;</span>
-<span class="nc" id="L82">                    try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {</span>
-<span class="nc" id="L83">                        insertStmt.setInt(1, product.getPmId());</span>
-<span class="nc" id="L84">                        insertStmt.setString(2, product.getName());</span>
-<span class="nc" id="L85">                        insertStmt.executeUpdate();</span>
+<span class="fc" id="L81">                    String insertSql = &quot;INSERT INTO products (pm_id, name) VALUES (?, ?)&quot;;</span>
+<span class="fc" id="L82">                    try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {</span>
+<span class="fc" id="L83">                        insertStmt.setInt(1, product.getPmId());</span>
+<span class="fc" id="L84">                        insertStmt.setString(2, product.getName());</span>
+<span class="fc" id="L85">                        insertStmt.executeUpdate();</span>
                     }
                 }
             }
         }
-<span class="nc" id="L90">    }</span>
+<span class="fc" id="L90">    }</span>
 
     public void deleteByPmId(int pmId) throws SQLException {
-<span class="nc" id="L93">        String sql = &quot;DELETE FROM products WHERE pm_id = ?&quot;;</span>
-<span class="nc" id="L94">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
-<span class="nc" id="L95">            stmt.setInt(1, pmId);</span>
-<span class="nc" id="L96">            stmt.executeUpdate();</span>
+<span class="fc" id="L93">        String sql = &quot;DELETE FROM products WHERE pm_id = ?&quot;;</span>
+<span class="fc" id="L94">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
+<span class="fc" id="L95">            stmt.setInt(1, pmId);</span>
+<span class="fc" id="L96">            stmt.executeUpdate();</span>
         }
-<span class="nc" id="L98">    }</span>
+<span class="fc" id="L98">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

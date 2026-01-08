@@ -184,8 +184,13 @@ public class WarehouseApplication {
         private final HttpClient httpClient;
 
         public LoginHandler(String tokenUrl) {
+            this(tokenUrl, HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build());
+        }
+
+        // Added constructor for testing
+        public LoginHandler(String tokenUrl, HttpClient httpClient) {
             this.tokenUrl = tokenUrl;
-            this.httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
+            this.httpClient = httpClient;
         }
 
         @Override

@@ -26,11 +26,16 @@ public class OrderUpdateService {
     }
 
     public OrderUpdateService(String orderServiceUrl, TokenService tokenService) {
-        this.httpClient = HttpClient.newBuilder()
+        this(orderServiceUrl, tokenService, HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(5))
-                .build();
+                .build());
+    }
+
+    // Added constructor for testing
+    public OrderUpdateService(String orderServiceUrl, TokenService tokenService, HttpClient httpClient) {
         this.orderServiceUrl = orderServiceUrl;
         this.tokenService = tokenService;
+        this.httpClient = httpClient;
     }
 
     public void updateStatus(int orderId, String status) {

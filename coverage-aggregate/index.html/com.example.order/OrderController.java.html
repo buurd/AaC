@@ -246,12 +246,12 @@ public class OrderController implements HttpHandler {
                 
                 // Notification to Warehouse and Invoice creation is now moved to handleConfirmOrder
 
-                // Return 201 and &quot;created&quot; to match Pact contract
-<span class="fc" id="L250">                System.out.println(&quot;OrderController: Returning 201 Created&quot;);</span>
-<span class="fc" id="L251">                String response = &quot;{\&quot;status\&quot;:\&quot;created\&quot;, \&quot;orderId\&quot;:&quot; + orderId + &quot;}&quot;;</span>
+                // Return 200 and &quot;PENDING_CONFIRMATION&quot; to match Pact contract
+<span class="fc" id="L250">                System.out.println(&quot;OrderController: Returning 200 OK&quot;);</span>
+<span class="fc" id="L251">                String response = &quot;{\&quot;status\&quot;:\&quot;PENDING_CONFIRMATION\&quot;, \&quot;orderId\&quot;:&quot; + orderId + &quot;}&quot;;</span>
 <span class="fc" id="L252">                byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
 <span class="fc" id="L253">                exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;application/json&quot;);</span>
-<span class="fc" id="L254">                exchange.sendResponseHeaders(201, bytes.length);</span>
+<span class="fc" id="L254">                exchange.sendResponseHeaders(200, bytes.length);</span>
 <span class="fc" id="L255">                try (OutputStream os = exchange.getResponseBody()) {</span>
 <span class="fc" id="L256">                    os.write(bytes);</span>
                 }

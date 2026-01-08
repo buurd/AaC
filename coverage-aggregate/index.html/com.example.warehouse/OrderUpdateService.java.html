@@ -25,43 +25,48 @@ public class OrderUpdateService {
         );
 <span class="nc" id="L26">    }</span>
 
-<span class="nc" id="L28">    public OrderUpdateService(String orderServiceUrl, TokenService tokenService) {</span>
-<span class="nc" id="L29">        this.httpClient = HttpClient.newBuilder()</span>
+    public OrderUpdateService(String orderServiceUrl, TokenService tokenService) {
+<span class="nc" id="L29">        this(orderServiceUrl, tokenService, HttpClient.newBuilder()</span>
 <span class="nc" id="L30">                .connectTimeout(Duration.ofSeconds(5))</span>
-<span class="nc" id="L31">                .build();</span>
-<span class="nc" id="L32">        this.orderServiceUrl = orderServiceUrl;</span>
-<span class="nc" id="L33">        this.tokenService = tokenService;</span>
-<span class="nc" id="L34">    }</span>
+<span class="nc" id="L31">                .build());</span>
+<span class="nc" id="L32">    }</span>
+
+    // Added constructor for testing
+<span class="fc" id="L35">    public OrderUpdateService(String orderServiceUrl, TokenService tokenService, HttpClient httpClient) {</span>
+<span class="fc" id="L36">        this.orderServiceUrl = orderServiceUrl;</span>
+<span class="fc" id="L37">        this.tokenService = tokenService;</span>
+<span class="fc" id="L38">        this.httpClient = httpClient;</span>
+<span class="fc" id="L39">    }</span>
 
     public void updateStatus(int orderId, String status) {
-<span class="nc" id="L37">        tokenService.getAccessToken().thenAccept(token -&gt; {</span>
+<span class="fc" id="L42">        tokenService.getAccessToken().thenAccept(token -&gt; {</span>
             try {
-<span class="nc" id="L39">                System.out.println(&quot;Updating status for order &quot; + orderId + &quot; to &quot; + status);</span>
-<span class="nc" id="L40">                String json = String.format(Locale.US, &quot;{\&quot;orderId\&quot;:%d,\&quot;status\&quot;:\&quot;%s\&quot;}&quot;, orderId, status);</span>
+<span class="fc" id="L44">                System.out.println(&quot;Updating status for order &quot; + orderId + &quot; to &quot; + status);</span>
+<span class="fc" id="L45">                String json = String.format(Locale.US, &quot;{\&quot;orderId\&quot;:%d,\&quot;status\&quot;:\&quot;%s\&quot;}&quot;, orderId, status);</span>
 
-<span class="nc" id="L42">                HttpRequest request = HttpRequest.newBuilder()</span>
-<span class="nc" id="L43">                        .uri(URI.create(orderServiceUrl))</span>
-<span class="nc" id="L44">                        .header(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
-<span class="nc" id="L45">                        .header(&quot;Authorization&quot;, &quot;Bearer &quot; + token)</span>
-<span class="nc" id="L46">                        .POST(HttpRequest.BodyPublishers.ofString(json))</span>
-<span class="nc" id="L47">                        .build();</span>
+<span class="fc" id="L47">                HttpRequest request = HttpRequest.newBuilder()</span>
+<span class="fc" id="L48">                        .uri(URI.create(orderServiceUrl))</span>
+<span class="fc" id="L49">                        .header(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
+<span class="fc" id="L50">                        .header(&quot;Authorization&quot;, &quot;Bearer &quot; + token)</span>
+<span class="fc" id="L51">                        .POST(HttpRequest.BodyPublishers.ofString(json))</span>
+<span class="fc" id="L52">                        .build();</span>
 
-<span class="nc" id="L49">                httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())</span>
-<span class="nc" id="L50">                        .thenAccept(response -&gt; {</span>
-<span class="nc bnc" id="L51" title="All 2 branches missed.">                            if (response.statusCode() != 200) {</span>
-<span class="nc" id="L52">                                System.err.println(&quot;Failed to update order status. Status: &quot; + response.statusCode() + &quot; Body: &quot; + response.body());</span>
+<span class="fc" id="L54">                httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())</span>
+<span class="fc" id="L55">                        .thenAccept(response -&gt; {</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">                            if (response.statusCode() != 200) {</span>
+<span class="fc" id="L57">                                System.err.println(&quot;Failed to update order status. Status: &quot; + response.statusCode() + &quot; Body: &quot; + response.body());</span>
                             } else {
-<span class="nc" id="L54">                                System.out.println(&quot;Updated order status for &quot; + orderId + &quot; to &quot; + status);</span>
+<span class="fc" id="L59">                                System.out.println(&quot;Updated order status for &quot; + orderId + &quot; to &quot; + status);</span>
                             }
-<span class="nc" id="L56">                        })</span>
-<span class="nc" id="L57">                        .exceptionally(e -&gt; {</span>
-<span class="nc" id="L58">                            System.err.println(&quot;Exception during order status update: &quot; + e.getMessage());</span>
-<span class="nc" id="L59">                            throw new RuntimeException(&quot;Exception during order status update&quot;, e);</span>
+<span class="fc" id="L61">                        })</span>
+<span class="fc" id="L62">                        .exceptionally(e -&gt; {</span>
+<span class="fc" id="L63">                            System.err.println(&quot;Exception during order status update: &quot; + e.getMessage());</span>
+<span class="fc" id="L64">                            throw new RuntimeException(&quot;Exception during order status update&quot;, e);</span>
                         });
-<span class="nc" id="L61">            } catch (Exception e) {</span>
-<span class="nc" id="L62">                e.printStackTrace();</span>
-<span class="nc" id="L63">            }</span>
-<span class="nc" id="L64">        });</span>
-<span class="nc" id="L65">    }</span>
+<span class="nc" id="L66">            } catch (Exception e) {</span>
+<span class="nc" id="L67">                e.printStackTrace();</span>
+<span class="fc" id="L68">            }</span>
+<span class="fc" id="L69">        });</span>
+<span class="fc" id="L70">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

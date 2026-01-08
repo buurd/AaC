@@ -17,7 +17,18 @@ public class FulfillmentOrderRepository {
     }
 
     public void createFulfillmentOrder(int orderId) throws SQLException {
-        String sql = "INSERT INTO fulfillment_orders (order_id, status) VALUES (?, 'PENDING') ON CONFLICT (order_id) DO NOTHING";
+        // Check if exists (Standard SQL to avoid ON CONFLICT issues in H2)
+        String checkSql = "SELECT id FROM fulfillment_orders WHERE order_id = ?";
+        try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
+            checkStmt.setInt(1, orderId);
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                if (rs.next()) {
+                    return; // Already exists
+                }
+            }
+        }
+
+        String sql = "INSERT INTO fulfillment_orders (order_id, status) VALUES (?, 'PENDING')";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, orderId);
             stmt.executeUpdate();

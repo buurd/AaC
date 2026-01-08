@@ -28,6 +28,9 @@ public class ProductSyncController implements HttpHandler {
                 System.out.println("Warehouse Sync received: " + json);
                 
                 Product p = parseJson(json);
+                if (p.getPmId() == 0) {
+                    throw new IllegalArgumentException("Invalid JSON: Missing or invalid 'id'");
+                }
                 repository.upsert(p);
                 
                 sendResponse(exchange, 200, "{\"status\":\"success\"}");

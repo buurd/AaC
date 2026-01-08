@@ -9,6 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
@@ -47,8 +48,26 @@ class ProductSyncControllerTest {
         assertEquals(20.00, capturedProduct.getPrice());
         assertEquals("pcs", capturedProduct.getUnit());
         
-        Headers headers = new Headers();
-        when(mockExchange.getResponseHeaders()).thenReturn(headers);
+        verify(mockExchange).sendResponseHeaders(eq(200), anyLong());
+    }
+
+    @Test
+    void testHandleDelete_DeletesProductCorrectly() throws IOException, SQLException {
+        // Arrange
+        ProductRepository mockRepo = mock(ProductRepository.class);
+        ProductSyncController controller = new ProductSyncController(mockRepo);
+        HttpExchange mockExchange = mock(HttpExchange.class);
+
+        when(mockExchange.getRequestMethod()).thenReturn("DELETE");
+        when(mockExchange.getRequestURI()).thenReturn(URI.create("/api/products/sync?id=101"));
+        when(mockExchange.getResponseBody()).thenReturn(new ByteArrayOutputStream());
+        when(mockExchange.getResponseHeaders()).thenReturn(new Headers());
+
+        // Act
+        controller.handle(mockExchange);
+
+        // Assert
+        verify(mockRepo).deleteByPmId(101);
         verify(mockExchange).sendResponseHeaders(eq(200), anyLong());
     }
 }

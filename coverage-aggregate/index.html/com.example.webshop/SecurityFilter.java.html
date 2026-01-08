@@ -35,68 +35,75 @@ public class SecurityFilter extends Filter {
 <span class="nc" id="L35">        }</span>
 <span class="nc" id="L36">    }</span>
 
+    // Added constructor for testing
+<span class="fc" id="L39">    public SecurityFilter(JwkProvider jwkProvider, String issuer, String requiredRole) {</span>
+<span class="fc" id="L40">        this.jwkProvider = jwkProvider;</span>
+<span class="fc" id="L41">        this.issuer = issuer;</span>
+<span class="fc" id="L42">        this.requiredRole = requiredRole;</span>
+<span class="fc" id="L43">    }</span>
+
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     public void doFilter(HttpExchange exchange, Chain chain) throws IOException {
-<span class="nc" id="L41">        String authHeader = exchange.getRequestHeaders().getFirst(&quot;Authorization&quot;);</span>
-<span class="nc bnc" id="L42" title="All 4 branches missed.">        if (authHeader == null || !authHeader.startsWith(&quot;Bearer &quot;)) {</span>
-<span class="nc" id="L43">            sendError(exchange, 401, &quot;Missing or invalid Authorization header&quot;);</span>
-<span class="nc" id="L44">            return;</span>
+<span class="fc" id="L48">        String authHeader = exchange.getRequestHeaders().getFirst(&quot;Authorization&quot;);</span>
+<span class="pc bpc" id="L49" title="1 of 4 branches missed.">        if (authHeader == null || !authHeader.startsWith(&quot;Bearer &quot;)) {</span>
+<span class="fc" id="L50">            sendError(exchange, 401, &quot;Missing or invalid Authorization header&quot;);</span>
+<span class="fc" id="L51">            return;</span>
         }
 
-<span class="nc" id="L47">        String token = authHeader.substring(7);</span>
+<span class="fc" id="L54">        String token = authHeader.substring(7);</span>
         try {
-<span class="nc" id="L49">            DecodedJWT jwt = JWT.decode(token);</span>
-<span class="nc" id="L50">            RSAPublicKey publicKey = (RSAPublicKey) jwkProvider.get(jwt.getKeyId()).getPublicKey();</span>
-<span class="nc" id="L51">            Algorithm algorithm = Algorithm.RSA256(publicKey, null);</span>
+<span class="fc" id="L56">            DecodedJWT jwt = JWT.decode(token);</span>
+<span class="fc" id="L57">            RSAPublicKey publicKey = (RSAPublicKey) jwkProvider.get(jwt.getKeyId()).getPublicKey();</span>
+<span class="fc" id="L58">            Algorithm algorithm = Algorithm.RSA256(publicKey, null);</span>
             
-<span class="nc" id="L53">            JWTVerifier verifier = JWT.require(algorithm)</span>
-<span class="nc" id="L54">                    .withIssuer(issuer)</span>
-<span class="nc" id="L55">                    .build();</span>
+<span class="fc" id="L60">            JWTVerifier verifier = JWT.require(algorithm)</span>
+<span class="fc" id="L61">                    .withIssuer(issuer)</span>
+<span class="fc" id="L62">                    .build();</span>
             
-<span class="nc" id="L57">            verifier.verify(token);</span>
+<span class="fc" id="L64">            verifier.verify(token);</span>
 
             // Check Role (Client Role in resource_access)
             // Structure: resource_access -&gt; webshop-client -&gt; roles -&gt; [product-sync]
-<span class="nc" id="L61">            Map&lt;String, Object&gt; resourceAccess = jwt.getClaim(&quot;resource_access&quot;).asMap();</span>
-<span class="nc bnc" id="L62" title="All 2 branches missed.">            if (resourceAccess != null) {</span>
-<span class="nc" id="L63">                Map&lt;String, Object&gt; clientAccess = (Map&lt;String, Object&gt;) resourceAccess.get(&quot;webshop-client&quot;);</span>
-<span class="nc bnc" id="L64" title="All 2 branches missed.">                if (clientAccess != null) {</span>
-<span class="nc" id="L65">                    List&lt;String&gt; roles = (List&lt;String&gt;) clientAccess.get(&quot;roles&quot;);</span>
-<span class="nc bnc" id="L66" title="All 4 branches missed.">                    if (roles != null &amp;&amp; roles.contains(requiredRole)) {</span>
-<span class="nc" id="L67">                        chain.doFilter(exchange);</span>
-<span class="nc" id="L68">                        return;</span>
+<span class="fc" id="L68">            Map&lt;String, Object&gt; resourceAccess = jwt.getClaim(&quot;resource_access&quot;).asMap();</span>
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">            if (resourceAccess != null) {</span>
+<span class="fc" id="L70">                Map&lt;String, Object&gt; clientAccess = (Map&lt;String, Object&gt;) resourceAccess.get(&quot;webshop-client&quot;);</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">                if (clientAccess != null) {</span>
+<span class="fc" id="L72">                    List&lt;String&gt; roles = (List&lt;String&gt;) clientAccess.get(&quot;roles&quot;);</span>
+<span class="pc bpc" id="L73" title="1 of 4 branches missed.">                    if (roles != null &amp;&amp; roles.contains(requiredRole)) {</span>
+<span class="fc" id="L74">                        chain.doFilter(exchange);</span>
+<span class="fc" id="L75">                        return;</span>
                     }
                 }
             }
             
             // Also check Realm Roles just in case (though we mapped to client roles)
-<span class="nc" id="L74">            Map&lt;String, Object&gt; realmAccess = jwt.getClaim(&quot;realm_access&quot;).asMap();</span>
-<span class="nc bnc" id="L75" title="All 2 branches missed.">            if (realmAccess != null) {</span>
-<span class="nc" id="L76">                List&lt;String&gt; roles = (List&lt;String&gt;) realmAccess.get(&quot;roles&quot;);</span>
-<span class="nc bnc" id="L77" title="All 4 branches missed.">                if (roles != null &amp;&amp; roles.contains(requiredRole)) {</span>
-<span class="nc" id="L78">                    chain.doFilter(exchange);</span>
-<span class="nc" id="L79">                    return;</span>
+<span class="fc" id="L81">            Map&lt;String, Object&gt; realmAccess = jwt.getClaim(&quot;realm_access&quot;).asMap();</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">            if (realmAccess != null) {</span>
+<span class="nc" id="L83">                List&lt;String&gt; roles = (List&lt;String&gt;) realmAccess.get(&quot;roles&quot;);</span>
+<span class="nc bnc" id="L84" title="All 4 branches missed.">                if (roles != null &amp;&amp; roles.contains(requiredRole)) {</span>
+<span class="nc" id="L85">                    chain.doFilter(exchange);</span>
+<span class="nc" id="L86">                    return;</span>
                 }
             }
             
-<span class="nc" id="L83">            sendError(exchange, 403, &quot;Insufficient permissions&quot;);</span>
-<span class="nc" id="L84">        } catch (Exception e) {</span>
-<span class="nc" id="L85">            e.printStackTrace();</span>
-<span class="nc" id="L86">            sendError(exchange, 401, &quot;Invalid token: &quot; + e.getMessage());</span>
-<span class="nc" id="L87">        }</span>
-<span class="nc" id="L88">    }</span>
+<span class="fc" id="L90">            sendError(exchange, 403, &quot;Insufficient permissions&quot;);</span>
+<span class="nc" id="L91">        } catch (Exception e) {</span>
+<span class="nc" id="L92">            e.printStackTrace();</span>
+<span class="nc" id="L93">            sendError(exchange, 401, &quot;Invalid token: &quot; + e.getMessage());</span>
+<span class="fc" id="L94">        }</span>
+<span class="fc" id="L95">    }</span>
 
     private void sendError(HttpExchange exchange, int code, String message) throws IOException {
-<span class="nc" id="L91">        exchange.sendResponseHeaders(code, message.length());</span>
-<span class="nc" id="L92">        try (OutputStream os = exchange.getResponseBody()) {</span>
-<span class="nc" id="L93">            os.write(message.getBytes());</span>
+<span class="fc" id="L98">        exchange.sendResponseHeaders(code, message.length());</span>
+<span class="fc" id="L99">        try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="fc" id="L100">            os.write(message.getBytes());</span>
         }
-<span class="nc" id="L95">    }</span>
+<span class="fc" id="L102">    }</span>
 
     @Override
     public String description() {
-<span class="nc" id="L99">        return &quot;JWT Security Filter&quot;;</span>
+<span class="nc" id="L106">        return &quot;JWT Security Filter&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

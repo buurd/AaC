@@ -22,7 +22,7 @@ public class ProductSyncController implements HttpHandler {
 <span class="fc" id="L22">        String method = exchange.getRequestMethod();</span>
 <span class="fc" id="L23">        System.out.println(&quot;ProductSyncController received &quot; + method + &quot; request&quot;);</span>
         
-<span class="pc bpc" id="L25" title="1 of 2 branches missed.">        if (&quot;POST&quot;.equalsIgnoreCase(method)) {</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        if (&quot;POST&quot;.equalsIgnoreCase(method)) {</span>
             try {
 <span class="fc" id="L27">                InputStream is = exchange.getRequestBody();</span>
 <span class="fc" id="L28">                String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);</span>
@@ -38,19 +38,19 @@ public class ProductSyncController implements HttpHandler {
 <span class="nc" id="L38">                e.printStackTrace();</span>
 <span class="nc" id="L39">                sendResponse(exchange, 500, &quot;{\&quot;status\&quot;:\&quot;error\&quot;,\&quot;message\&quot;:\&quot;&quot; + e.getMessage() + &quot;\&quot;}&quot;);</span>
 <span class="pc" id="L40">            }</span>
-<span class="nc bnc" id="L41" title="All 2 branches missed.">        } else if (&quot;DELETE&quot;.equalsIgnoreCase(method)) {</span>
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">        } else if (&quot;DELETE&quot;.equalsIgnoreCase(method)) {</span>
             try {
-<span class="nc" id="L43">                String query = exchange.getRequestURI().getQuery();</span>
-<span class="nc" id="L44">                System.out.println(&quot;Received DELETE query: &quot; + query);</span>
-<span class="nc" id="L45">                int pmId = parseIdFromQuery(query);</span>
+<span class="fc" id="L43">                String query = exchange.getRequestURI().getQuery();</span>
+<span class="fc" id="L44">                System.out.println(&quot;Received DELETE query: &quot; + query);</span>
+<span class="fc" id="L45">                int pmId = parseIdFromQuery(query);</span>
                 
-<span class="nc" id="L47">                repository.deleteByPmId(pmId);</span>
+<span class="fc" id="L47">                repository.deleteByPmId(pmId);</span>
                 
-<span class="nc" id="L49">                sendResponse(exchange, 200, &quot;{\&quot;status\&quot;:\&quot;deleted\&quot;}&quot;);</span>
+<span class="fc" id="L49">                sendResponse(exchange, 200, &quot;{\&quot;status\&quot;:\&quot;deleted\&quot;}&quot;);</span>
 <span class="nc" id="L50">            } catch (Exception e) {</span>
 <span class="nc" id="L51">                e.printStackTrace();</span>
 <span class="nc" id="L52">                sendResponse(exchange, 500, &quot;{\&quot;status\&quot;:\&quot;error\&quot;,\&quot;message\&quot;:\&quot;&quot; + e.getMessage() + &quot;\&quot;}&quot;);</span>
-<span class="nc" id="L53">            }</span>
+<span class="pc" id="L53">            }</span>
         } else {
 <span class="nc" id="L55">            exchange.sendResponseHeaders(405, -1); // Method Not Allowed</span>
         }
@@ -66,11 +66,11 @@ public class ProductSyncController implements HttpHandler {
 <span class="fc" id="L66">    }</span>
 
     private int parseIdFromQuery(String query) {
-<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (query == null) throw new IllegalArgumentException(&quot;No query parameters&quot;);</span>
-<span class="nc bnc" id="L70" title="All 2 branches missed.">        for (String param : query.split(&quot;&amp;&quot;)) {</span>
-<span class="nc" id="L71">            String[] pair = param.split(&quot;=&quot;);</span>
-<span class="nc bnc" id="L72" title="All 4 branches missed.">            if (pair.length == 2 &amp;&amp; &quot;id&quot;.equals(pair[0])) {</span>
-<span class="nc" id="L73">                return Integer.parseInt(pair[1]);</span>
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">        if (query == null) throw new IllegalArgumentException(&quot;No query parameters&quot;);</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        for (String param : query.split(&quot;&amp;&quot;)) {</span>
+<span class="fc" id="L71">            String[] pair = param.split(&quot;=&quot;);</span>
+<span class="pc bpc" id="L72" title="2 of 4 branches missed.">            if (pair.length == 2 &amp;&amp; &quot;id&quot;.equals(pair[0])) {</span>
+<span class="fc" id="L73">                return Integer.parseInt(pair[1]);</span>
             }
         }
 <span class="nc" id="L76">        throw new IllegalArgumentException(&quot;No id parameter found&quot;);</span>

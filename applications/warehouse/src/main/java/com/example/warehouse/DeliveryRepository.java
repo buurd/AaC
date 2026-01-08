@@ -42,16 +42,23 @@ public class DeliveryRepository {
     }
 
     public int createDelivery(String sender) throws SQLException {
-        String sql = "INSERT INTO deliveries (sender) VALUES (?) RETURNING id";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        String sql = "INSERT INTO deliveries (sender) VALUES (?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, sender);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1);
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating delivery failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Creating delivery failed, no ID obtained.");
                 }
             }
         }
-        throw new SQLException("Failed to create delivery");
     }
 
     public void addIndividual(ProductIndividual individual) throws SQLException {

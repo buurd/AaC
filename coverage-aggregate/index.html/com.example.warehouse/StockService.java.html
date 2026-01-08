@@ -15,16 +15,16 @@ public class StockService {
     private final TokenService tokenService;
 
     public StockService() {
-<span class="nc" id="L18">        this(</span>
-<span class="nc" id="L19">            HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build(),</span>
-<span class="nc" id="L20">            System.getenv().getOrDefault(&quot;WEBSHOP_STOCK_API_URL&quot;, &quot;http://localhost:8000/api/stock/sync&quot;),</span>
+<span class="fc" id="L18">        this(</span>
+<span class="fc" id="L19">            HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build(),</span>
+<span class="fc" id="L20">            System.getenv().getOrDefault(&quot;WEBSHOP_STOCK_API_URL&quot;, &quot;http://localhost:8000/api/stock/sync&quot;),</span>
             new KeycloakTokenService(
-<span class="nc" id="L22">                System.getenv().getOrDefault(&quot;TOKEN_URL&quot;, &quot;http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token&quot;),</span>
-<span class="nc" id="L23">                System.getenv().getOrDefault(&quot;CLIENT_ID&quot;, &quot;warehouse-client&quot;),</span>
-<span class="nc" id="L24">                System.getenv().getOrDefault(&quot;CLIENT_SECRET&quot;, &quot;warehouse-secret&quot;)</span>
+<span class="fc" id="L22">                System.getenv().getOrDefault(&quot;TOKEN_URL&quot;, &quot;http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token&quot;),</span>
+<span class="fc" id="L23">                System.getenv().getOrDefault(&quot;CLIENT_ID&quot;, &quot;warehouse-client&quot;),</span>
+<span class="fc" id="L24">                System.getenv().getOrDefault(&quot;CLIENT_SECRET&quot;, &quot;warehouse-secret&quot;)</span>
             )
         );
-<span class="nc" id="L27">    }</span>
+<span class="fc" id="L27">    }</span>
 
     public StockService(String webshopStockApiUrl, TokenService tokenService) {
 <span class="fc" id="L30">        this(</span>
@@ -58,10 +58,10 @@ public class StockService {
 
 <span class="fc" id="L59">                httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())</span>
 <span class="fc" id="L60">                        .thenAccept(response -&gt; {</span>
-<span class="pc bpc" id="L61" title="1 of 2 branches missed.">                            if (response.statusCode() != 200) {</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">                            if (response.statusCode() != 200) {</span>
 <span class="fc" id="L62">                                System.err.println(&quot;Failed to sync stock to Webshop. Status: &quot; + response.statusCode() + &quot; Body: &quot; + response.body());</span>
                             } else {
-<span class="nc" id="L64">                                System.out.println(&quot;Synced stock for product &quot; + pmId + &quot; to Webshop.&quot;);</span>
+<span class="fc" id="L64">                                System.out.println(&quot;Synced stock for product &quot; + pmId + &quot; to Webshop.&quot;);</span>
                             }
 <span class="fc" id="L66">                        })</span>
 <span class="fc" id="L67">                        .exceptionally(e -&gt; {</span>

@@ -28,7 +28,7 @@ import java.net.URLEncoder;
 
 <span class="nc" id="L29">public class WebshopApplication {</span>
 
-<span class="nc" id="L31">    private static final Logger logger = LoggerFactory.getLogger(WebshopApplication.class);</span>
+<span class="fc" id="L31">    private static final Logger logger = LoggerFactory.getLogger(WebshopApplication.class);</span>
 
     private static final String CSS = 
         &quot;body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }&quot; +
@@ -193,93 +193,93 @@ import java.net.URLEncoder;
         private final String tokenUrl;
         private final HttpClient httpClient;
 
-<span class="nc" id="L196">        public LoginHandler(String tokenUrl) {</span>
-<span class="nc" id="L197">            this.tokenUrl = tokenUrl;</span>
-<span class="nc" id="L198">            this.httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();</span>
-<span class="nc" id="L199">        }</span>
+<span class="fc" id="L196">        public LoginHandler(String tokenUrl) {</span>
+<span class="fc" id="L197">            this.tokenUrl = tokenUrl;</span>
+<span class="fc" id="L198">            this.httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();</span>
+<span class="fc" id="L199">        }</span>
 
         @Override
         public void handle(HttpExchange t) throws IOException {
-<span class="nc" id="L203">            logger.info(&quot;Received request: {} {}&quot;, t.getRequestMethod(), t.getRequestURI().getPath());</span>
-<span class="nc bnc" id="L204" title="All 2 branches missed.">            if (&quot;POST&quot;.equalsIgnoreCase(t.getRequestMethod())) {</span>
-<span class="nc" id="L205">                InputStream is = t.getRequestBody();</span>
-<span class="nc" id="L206">                String formData = new String(is.readAllBytes(), StandardCharsets.UTF_8);</span>
-<span class="nc" id="L207">                Map&lt;String, String&gt; params = parseFormData(formData);</span>
+<span class="fc" id="L203">            logger.info(&quot;Received request: {} {}&quot;, t.getRequestMethod(), t.getRequestURI().getPath());</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">            if (&quot;POST&quot;.equalsIgnoreCase(t.getRequestMethod())) {</span>
+<span class="fc" id="L205">                InputStream is = t.getRequestBody();</span>
+<span class="fc" id="L206">                String formData = new String(is.readAllBytes(), StandardCharsets.UTF_8);</span>
+<span class="fc" id="L207">                Map&lt;String, String&gt; params = parseFormData(formData);</span>
                 
-<span class="nc" id="L209">                String username = params.get(&quot;username&quot;);</span>
-<span class="nc" id="L210">                String password = params.get(&quot;password&quot;);</span>
+<span class="fc" id="L209">                String username = params.get(&quot;username&quot;);</span>
+<span class="fc" id="L210">                String password = params.get(&quot;password&quot;);</span>
                 
-<span class="nc" id="L212">                String requestBody = &quot;client_id=webshop-client&amp;grant_type=password&amp;username=&quot; + username + &quot;&amp;password=&quot; + password;</span>
+<span class="fc" id="L212">                String requestBody = &quot;client_id=webshop-client&amp;grant_type=password&amp;username=&quot; + username + &quot;&amp;password=&quot; + password;</span>
                 
-<span class="nc" id="L214">                HttpRequest request = HttpRequest.newBuilder()</span>
-<span class="nc" id="L215">                        .uri(URI.create(tokenUrl))</span>
-<span class="nc" id="L216">                        .header(&quot;Content-Type&quot;, &quot;application/x-www-form-urlencoded&quot;)</span>
-<span class="nc" id="L217">                        .POST(HttpRequest.BodyPublishers.ofString(requestBody))</span>
-<span class="nc" id="L218">                        .build();</span>
+<span class="fc" id="L214">                HttpRequest request = HttpRequest.newBuilder()</span>
+<span class="fc" id="L215">                        .uri(URI.create(tokenUrl))</span>
+<span class="fc" id="L216">                        .header(&quot;Content-Type&quot;, &quot;application/x-www-form-urlencoded&quot;)</span>
+<span class="fc" id="L217">                        .POST(HttpRequest.BodyPublishers.ofString(requestBody))</span>
+<span class="fc" id="L218">                        .build();</span>
                 
                 try {
-<span class="nc" id="L221">                    HttpResponse&lt;String&gt; response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());</span>
-<span class="nc bnc" id="L222" title="All 2 branches missed.">                    if (response.statusCode() == 200) {</span>
-<span class="nc" id="L223">                        String json = response.body();</span>
-<span class="nc" id="L224">                        String accessToken = extractToken(json);</span>
+<span class="fc" id="L221">                    HttpResponse&lt;String&gt; response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());</span>
+<span class="fc bfc" id="L222" title="All 2 branches covered.">                    if (response.statusCode() == 200) {</span>
+<span class="fc" id="L223">                        String json = response.body();</span>
+<span class="fc" id="L224">                        String accessToken = extractToken(json);</span>
                         // Removed HttpOnly to allow JS access
-<span class="nc" id="L226">                        t.getResponseHeaders().add(&quot;Set-Cookie&quot;, &quot;webshop_auth_token=&quot; + accessToken + &quot;; Path=/&quot;);</span>
-<span class="nc" id="L227">                        t.getResponseHeaders().add(&quot;Set-Cookie&quot;, &quot;webshop_username=&quot; + username + &quot;; Path=/&quot;);</span>
-<span class="nc" id="L228">                        redirect(t, &quot;/products&quot;);</span>
-<span class="nc" id="L229">                    } else {</span>
-<span class="nc" id="L230">                        logger.warn(&quot;Login failed for user: {}&quot;, username);</span>
-<span class="nc" id="L231">                        sendResponse(t, 401, &quot;&lt;h1&gt;Login Failed&lt;/h1&gt;&lt;p&gt;Invalid credentials&lt;/p&gt;&lt;a href='/login'&gt;Try Again&lt;/a&gt;&quot;);</span>
+<span class="fc" id="L226">                        t.getResponseHeaders().add(&quot;Set-Cookie&quot;, &quot;webshop_auth_token=&quot; + accessToken + &quot;; Path=/&quot;);</span>
+<span class="fc" id="L227">                        t.getResponseHeaders().add(&quot;Set-Cookie&quot;, &quot;webshop_username=&quot; + username + &quot;; Path=/&quot;);</span>
+<span class="fc" id="L228">                        redirect(t, &quot;/products&quot;);</span>
+<span class="fc" id="L229">                    } else {</span>
+<span class="fc" id="L230">                        logger.warn(&quot;Login failed for user: {}&quot;, username);</span>
+<span class="fc" id="L231">                        sendResponse(t, 401, &quot;&lt;h1&gt;Login Failed&lt;/h1&gt;&lt;p&gt;Invalid credentials&lt;/p&gt;&lt;a href='/login'&gt;Try Again&lt;/a&gt;&quot;);</span>
                     }
 <span class="nc" id="L233">                } catch (InterruptedException e) {</span>
 <span class="nc" id="L234">                    logger.error(&quot;Error during login&quot;, e);</span>
 <span class="nc" id="L235">                    sendResponse(t, 500, &quot;&lt;h1&gt;Error&lt;/h1&gt;&lt;p&gt;&quot; + e.getMessage() + &quot;&lt;/p&gt;&quot;);</span>
-<span class="nc" id="L236">                }</span>
-<span class="nc" id="L237">            } else {</span>
-<span class="nc" id="L238">                String body = &quot;&lt;h1&gt;Login&lt;/h1&gt;&quot; +</span>
+<span class="fc" id="L236">                }</span>
+<span class="fc" id="L237">            } else {</span>
+<span class="fc" id="L238">                String body = &quot;&lt;h1&gt;Login&lt;/h1&gt;&quot; +</span>
                               &quot;&lt;form action='/login' method='post'&gt;&quot; +
                               &quot;&lt;label&gt;Username&lt;/label&gt;&lt;input type='text' name='username'&gt;&quot; +
                               &quot;&lt;label&gt;Password&lt;/label&gt;&lt;input type='password' name='password'&gt;&quot; +
                               &quot;&lt;button type='submit' class='btn btn-primary'&gt;Login&lt;/button&gt;&quot; +
                               &quot;&lt;/form&gt;&quot;;
-<span class="nc" id="L244">                sendResponse(t, 200, body);</span>
+<span class="fc" id="L244">                sendResponse(t, 200, body);</span>
             }
-<span class="nc" id="L246">        }</span>
+<span class="fc" id="L246">        }</span>
 
         private String extractToken(String json) {
-<span class="nc" id="L249">            int start = json.indexOf(&quot;\&quot;access_token\&quot;:\&quot;&quot;);</span>
-<span class="nc bnc" id="L250" title="All 2 branches missed.">            if (start == -1) return null;</span>
-<span class="nc" id="L251">            start += 16;</span>
-<span class="nc" id="L252">            int end = json.indexOf(&quot;\&quot;&quot;, start);</span>
-<span class="nc" id="L253">            return json.substring(start, end);</span>
+<span class="fc" id="L249">            int start = json.indexOf(&quot;\&quot;access_token\&quot;:\&quot;&quot;);</span>
+<span class="pc bpc" id="L250" title="1 of 2 branches missed.">            if (start == -1) return null;</span>
+<span class="fc" id="L251">            start += 16;</span>
+<span class="fc" id="L252">            int end = json.indexOf(&quot;\&quot;&quot;, start);</span>
+<span class="fc" id="L253">            return json.substring(start, end);</span>
         }
     }
 
     private static void sendResponse(HttpExchange t, int status, String body) throws IOException {
-<span class="nc" id="L258">        byte[] bytes = body.getBytes(StandardCharsets.UTF_8);</span>
-<span class="nc" id="L259">        t.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html; charset=utf-8&quot;);</span>
-<span class="nc" id="L260">        t.sendResponseHeaders(status, bytes.length);</span>
-<span class="nc" id="L261">        try (OutputStream os = t.getResponseBody()) {</span>
-<span class="nc" id="L262">            os.write(bytes);</span>
+<span class="fc" id="L258">        byte[] bytes = body.getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L259">        t.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html; charset=utf-8&quot;);</span>
+<span class="fc" id="L260">        t.sendResponseHeaders(status, bytes.length);</span>
+<span class="fc" id="L261">        try (OutputStream os = t.getResponseBody()) {</span>
+<span class="fc" id="L262">            os.write(bytes);</span>
         }
-<span class="nc" id="L264">    }</span>
+<span class="fc" id="L264">    }</span>
 
     private static void redirect(HttpExchange t, String location) throws IOException {
-<span class="nc" id="L267">        t.getResponseHeaders().set(&quot;Location&quot;, location);</span>
-<span class="nc" id="L268">        t.sendResponseHeaders(302, -1);</span>
-<span class="nc" id="L269">    }</span>
+<span class="fc" id="L267">        t.getResponseHeaders().set(&quot;Location&quot;, location);</span>
+<span class="fc" id="L268">        t.sendResponseHeaders(302, -1);</span>
+<span class="fc" id="L269">    }</span>
 
     private static Map&lt;String, String&gt; parseFormData(String formData) {
-<span class="nc" id="L272">        Map&lt;String, String&gt; map = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L273">        String[] pairs = formData.split(&quot;&amp;&quot;);</span>
-<span class="nc bnc" id="L274" title="All 2 branches missed.">        for (String pair : pairs) {</span>
-<span class="nc" id="L275">            String[] keyValue = pair.split(&quot;=&quot;);</span>
-<span class="nc bnc" id="L276" title="All 2 branches missed.">            if (keyValue.length &gt; 0) {</span>
-<span class="nc" id="L277">                String key = URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);</span>
-<span class="nc bnc" id="L278" title="All 2 branches missed.">                String value = keyValue.length &gt; 1 ? URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8) : &quot;&quot;;</span>
-<span class="nc" id="L279">                map.put(key, value);</span>
+<span class="fc" id="L272">        Map&lt;String, String&gt; map = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L273">        String[] pairs = formData.split(&quot;&amp;&quot;);</span>
+<span class="fc bfc" id="L274" title="All 2 branches covered.">        for (String pair : pairs) {</span>
+<span class="fc" id="L275">            String[] keyValue = pair.split(&quot;=&quot;);</span>
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">            if (keyValue.length &gt; 0) {</span>
+<span class="fc" id="L277">                String key = URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);</span>
+<span class="pc bpc" id="L278" title="1 of 2 branches missed.">                String value = keyValue.length &gt; 1 ? URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8) : &quot;&quot;;</span>
+<span class="fc" id="L279">                map.put(key, value);</span>
             }
         }
-<span class="nc" id="L282">        return map;</span>
+<span class="fc" id="L282">        return map;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

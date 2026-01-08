@@ -13,12 +13,12 @@ import java.util.List;
 
 public class ProductController implements HttpHandler {
 
-<span class="nc" id="L16">    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);</span>
+<span class="fc" id="L16">    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);</span>
     private final ProductRepository repository;
 
-<span class="nc" id="L19">    public ProductController(ProductRepository repository) {</span>
-<span class="nc" id="L20">        this.repository = repository;</span>
-<span class="nc" id="L21">    }</span>
+<span class="fc" id="L19">    public ProductController(ProductRepository repository) {</span>
+<span class="fc" id="L20">        this.repository = repository;</span>
+<span class="fc" id="L21">    }</span>
 
     private static final String CSS = 
         &quot;body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }&quot; +
@@ -33,7 +33,7 @@ public class ProductController implements HttpHandler {
         &quot;.btn-secondary { background-color: #6C757D; }&quot;;
 
     private String getHeader() {
-<span class="nc" id="L36">        return &quot;&lt;div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'&gt;&quot; +</span>
+<span class="fc" id="L36">        return &quot;&lt;div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'&gt;&quot; +</span>
                &quot;&lt;button onclick=\&quot;window.location.href='/'\&quot; class='btn btn-primary'&gt;Warehouse Dashboard&lt;/button&gt;&quot; +
                &quot;&lt;button onclick=\&quot;window.location.href='/logout'\&quot; class='btn btn-secondary'&gt;Logout&lt;/button&gt;&quot; +
                &quot;&lt;/div&gt;&quot;;
@@ -41,46 +41,46 @@ public class ProductController implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-<span class="nc" id="L44">        logger.info(&quot;Received request: {} {}&quot;, exchange.getRequestMethod(), exchange.getRequestURI().getPath());</span>
+<span class="fc" id="L44">        logger.info(&quot;Received request: {} {}&quot;, exchange.getRequestMethod(), exchange.getRequestURI().getPath());</span>
         try {
-<span class="nc" id="L46">            List&lt;Product&gt; products = repository.findAll();</span>
+<span class="fc" id="L46">            List&lt;Product&gt; products = repository.findAll();</span>
             
-<span class="nc" id="L48">            StringBuilder html = new StringBuilder();</span>
-<span class="nc" id="L49">            html.append(&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;style&gt;&quot;).append(CSS).append(&quot;&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&quot;);</span>
-<span class="nc" id="L50">            html.append(&quot;&lt;div class='container'&gt;&quot;);</span>
-<span class="nc" id="L51">            html.append(getHeader());</span>
-<span class="nc" id="L52">            html.append(&quot;&lt;h1&gt;Warehouse Products&lt;/h1&gt;&quot;);</span>
-<span class="nc" id="L53">            html.append(&quot;&lt;table&gt;&quot;);</span>
-<span class="nc" id="L54">            html.append(&quot;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;ID&lt;/th&gt;&lt;th&gt;PM_ID&lt;/th&gt;&lt;th&gt;Name&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&quot;);</span>
-<span class="nc" id="L55">            html.append(&quot;&lt;tbody&gt;&quot;);</span>
+<span class="fc" id="L48">            StringBuilder html = new StringBuilder();</span>
+<span class="fc" id="L49">            html.append(&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;style&gt;&quot;).append(CSS).append(&quot;&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&quot;);</span>
+<span class="fc" id="L50">            html.append(&quot;&lt;div class='container'&gt;&quot;);</span>
+<span class="fc" id="L51">            html.append(getHeader());</span>
+<span class="fc" id="L52">            html.append(&quot;&lt;h1&gt;Warehouse Products&lt;/h1&gt;&quot;);</span>
+<span class="fc" id="L53">            html.append(&quot;&lt;table&gt;&quot;);</span>
+<span class="fc" id="L54">            html.append(&quot;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;ID&lt;/th&gt;&lt;th&gt;PM_ID&lt;/th&gt;&lt;th&gt;Name&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&quot;);</span>
+<span class="fc" id="L55">            html.append(&quot;&lt;tbody&gt;&quot;);</span>
             
-<span class="nc bnc" id="L57" title="All 2 branches missed.">            for (Product p : products) {</span>
-<span class="nc" id="L58">                html.append(&quot;&lt;tr&gt;&quot;);</span>
-<span class="nc" id="L59">                html.append(&quot;&lt;td&gt;&quot;).append(p.getId()).append(&quot;&lt;/td&gt;&quot;);</span>
-<span class="nc bnc" id="L60" title="All 2 branches missed.">                html.append(&quot;&lt;td&gt;&quot;).append(p.getPmId() != null ? p.getPmId() : &quot;N/A&quot;).append(&quot;&lt;/td&gt;&quot;);</span>
-<span class="nc" id="L61">                html.append(&quot;&lt;td&gt;&quot;).append(p.getName()).append(&quot;&lt;/td&gt;&quot;);</span>
-<span class="nc" id="L62">                html.append(&quot;&lt;/tr&gt;&quot;);</span>
-<span class="nc" id="L63">            }</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            for (Product p : products) {</span>
+<span class="fc" id="L58">                html.append(&quot;&lt;tr&gt;&quot;);</span>
+<span class="fc" id="L59">                html.append(&quot;&lt;td&gt;&quot;).append(p.getId()).append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">                html.append(&quot;&lt;td&gt;&quot;).append(p.getPmId() != null ? p.getPmId() : &quot;N/A&quot;).append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="fc" id="L61">                html.append(&quot;&lt;td&gt;&quot;).append(p.getName()).append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="fc" id="L62">                html.append(&quot;&lt;/tr&gt;&quot;);</span>
+<span class="fc" id="L63">            }</span>
             
-<span class="nc" id="L65">            html.append(&quot;&lt;/tbody&gt;&lt;/table&gt;&quot;);</span>
-<span class="nc" id="L66">            html.append(&quot;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;&quot;);</span>
+<span class="fc" id="L65">            html.append(&quot;&lt;/tbody&gt;&lt;/table&gt;&quot;);</span>
+<span class="fc" id="L66">            html.append(&quot;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;&quot;);</span>
             
-<span class="nc" id="L68">            String response = html.toString();</span>
-<span class="nc" id="L69">            byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L68">            String response = html.toString();</span>
+<span class="fc" id="L69">            byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
             
-<span class="nc" id="L71">            exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html; charset=utf-8&quot;);</span>
-<span class="nc" id="L72">            exchange.sendResponseHeaders(200, bytes.length);</span>
-<span class="nc" id="L73">            try (OutputStream os = exchange.getResponseBody()) {</span>
-<span class="nc" id="L74">                os.write(bytes);</span>
+<span class="fc" id="L71">            exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html; charset=utf-8&quot;);</span>
+<span class="fc" id="L72">            exchange.sendResponseHeaders(200, bytes.length);</span>
+<span class="fc" id="L73">            try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="fc" id="L74">                os.write(bytes);</span>
             }
-<span class="nc" id="L76">        } catch (SQLException e) {</span>
-<span class="nc" id="L77">            logger.error(&quot;Error listing products&quot;, e);</span>
-<span class="nc" id="L78">            String errorResponse = &quot;Internal Server Error&quot;;</span>
-<span class="nc" id="L79">            exchange.sendResponseHeaders(500, errorResponse.getBytes().length);</span>
-<span class="nc" id="L80">            try (OutputStream os = exchange.getResponseBody()) {</span>
-<span class="nc" id="L81">                os.write(errorResponse.getBytes());</span>
+<span class="fc" id="L76">        } catch (SQLException e) {</span>
+<span class="fc" id="L77">            logger.error(&quot;Error listing products&quot;, e);</span>
+<span class="fc" id="L78">            String errorResponse = &quot;Internal Server Error&quot;;</span>
+<span class="fc" id="L79">            exchange.sendResponseHeaders(500, errorResponse.getBytes().length);</span>
+<span class="fc" id="L80">            try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="fc" id="L81">                os.write(errorResponse.getBytes());</span>
             }
-<span class="nc" id="L83">        }</span>
-<span class="nc" id="L84">    }</span>
+<span class="fc" id="L83">        }</span>
+<span class="fc" id="L84">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

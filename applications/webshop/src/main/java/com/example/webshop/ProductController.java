@@ -28,8 +28,13 @@ public class ProductController implements HttpHandler {
     private final HttpClient httpClient;
 
     public ProductController(ProductRepository repository) {
+        this(repository, HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build());
+    }
+
+    // Added constructor for testing
+    public ProductController(ProductRepository repository, HttpClient httpClient) {
         this.repository = repository;
-        this.httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build();
+        this.httpClient = httpClient;
     }
 
     private static final String CSS = 
@@ -254,7 +259,10 @@ public class ProductController implements HttpHandler {
                 // Simple parsing: remove [" and "] and replace "," with ", "
                 return json.replace("[\"", "").replace("\"]", "").replace("\",\"", ", ");
             }
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
+            if (e instanceof InterruptedException) {
+                Thread.currentThread().interrupt();
+            }
             logger.warn("Failed to fetch campaigns", e);
         }
         return "";

@@ -246,12 +246,12 @@ public class OrderController implements HttpHandler {
                 
                 // Notification to Warehouse and Invoice creation is now moved to handleConfirmOrder
 
-                // Return 201 and "created" to match Pact contract
-                System.out.println("OrderController: Returning 201 Created");
-                String response = "{\"status\":\"created\", \"orderId\":" + orderId + "}";
+                // Return 200 and "PENDING_CONFIRMATION" to match Pact contract
+                System.out.println("OrderController: Returning 200 OK");
+                String response = "{\"status\":\"PENDING_CONFIRMATION\", \"orderId\":" + orderId + "}";
                 byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
                 exchange.getResponseHeaders().set("Content-Type", "application/json");
-                exchange.sendResponseHeaders(201, bytes.length);
+                exchange.sendResponseHeaders(200, bytes.length);
                 try (OutputStream os = exchange.getResponseBody()) {
                     os.write(bytes);
                 }

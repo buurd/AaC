@@ -17,53 +17,71 @@ public class KeycloakTokenService implements TokenService {
     private String accessToken;
     private long tokenExpiresAt;
 
-<span class="nc" id="L20">    public KeycloakTokenService(String keycloakTokenUrl, String clientId, String clientSecret) {</span>
-<span class="nc" id="L21">        this.httpClient = HttpClient.newBuilder()</span>
-<span class="nc" id="L22">                .connectTimeout(Duration.ofSeconds(5))</span>
-<span class="nc" id="L23">                .build();</span>
-<span class="nc" id="L24">        this.keycloakTokenUrl = keycloakTokenUrl;</span>
-<span class="nc" id="L25">        this.clientId = clientId;</span>
-<span class="nc" id="L26">        this.clientSecret = clientSecret;</span>
-<span class="nc" id="L27">    }</span>
+    public KeycloakTokenService(String keycloakTokenUrl, String clientId, String clientSecret) {
+<span class="fc" id="L21">        this(keycloakTokenUrl, clientId, clientSecret, HttpClient.newBuilder()</span>
+<span class="fc" id="L22">                .connectTimeout(Duration.ofSeconds(5))</span>
+<span class="fc" id="L23">                .build());</span>
+<span class="fc" id="L24">    }</span>
+
+    // Added constructor for testing
+<span class="fc" id="L27">    public KeycloakTokenService(String keycloakTokenUrl, String clientId, String clientSecret, HttpClient httpClient) {</span>
+<span class="fc" id="L28">        this.keycloakTokenUrl = keycloakTokenUrl;</span>
+<span class="fc" id="L29">        this.clientId = clientId;</span>
+<span class="fc" id="L30">        this.clientSecret = clientSecret;</span>
+<span class="fc" id="L31">        this.httpClient = httpClient;</span>
+<span class="fc" id="L32">    }</span>
 
     @Override
     public CompletableFuture&lt;String&gt; getAccessToken() {
-<span class="nc bnc" id="L31" title="All 4 branches missed.">        if (accessToken != null &amp;&amp; tokenExpiresAt &gt; System.currentTimeMillis() + 5000) { // Refresh 5s before expiry</span>
-<span class="nc" id="L32">            return CompletableFuture.completedFuture(accessToken);</span>
+<span class="pc bpc" id="L36" title="1 of 4 branches missed.">        if (accessToken != null &amp;&amp; tokenExpiresAt &gt; System.currentTimeMillis() + 5000) { // Refresh 5s before expiry</span>
+<span class="fc" id="L37">            return CompletableFuture.completedFuture(accessToken);</span>
         }
 
-<span class="nc" id="L35">        String requestBody = &quot;grant_type=client_credentials&amp;client_id=&quot; + clientId + &quot;&amp;client_secret=&quot; + clientSecret;</span>
+<span class="fc" id="L40">        String requestBody = &quot;grant_type=client_credentials&amp;client_id=&quot; + clientId + &quot;&amp;client_secret=&quot; + clientSecret;</span>
         
-<span class="nc" id="L37">        HttpRequest request = HttpRequest.newBuilder()</span>
-<span class="nc" id="L38">                .uri(URI.create(keycloakTokenUrl))</span>
-<span class="nc" id="L39">                .header(&quot;Content-Type&quot;, &quot;application/x-www-form-urlencoded&quot;)</span>
-<span class="nc" id="L40">                .POST(HttpRequest.BodyPublishers.ofString(requestBody))</span>
-<span class="nc" id="L41">                .build();</span>
+<span class="fc" id="L42">        HttpRequest request = HttpRequest.newBuilder()</span>
+<span class="fc" id="L43">                .uri(URI.create(keycloakTokenUrl))</span>
+<span class="fc" id="L44">                .header(&quot;Content-Type&quot;, &quot;application/x-www-form-urlencoded&quot;)</span>
+<span class="fc" id="L45">                .POST(HttpRequest.BodyPublishers.ofString(requestBody))</span>
+<span class="fc" id="L46">                .build();</span>
 
-<span class="nc" id="L43">        return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())</span>
-<span class="nc" id="L44">                .thenApply(response -&gt; {</span>
-<span class="nc bnc" id="L45" title="All 2 branches missed.">                    if (response.statusCode() == 200) {</span>
-<span class="nc" id="L46">                        String json = response.body();</span>
+<span class="fc" id="L48">        return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())</span>
+<span class="fc" id="L49">                .thenApply(response -&gt; {</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">                    if (response.statusCode() == 200) {</span>
+<span class="fc" id="L51">                        String json = response.body();</span>
                         // Basic JSON parsing for access_token and expires_in
-<span class="nc" id="L48">                        int tokenStart = json.indexOf(&quot;\&quot;access_token\&quot;:\&quot;&quot;);</span>
-<span class="nc" id="L49">                        int tokenEnd = json.indexOf(&quot;\&quot;&quot;, tokenStart + 16);</span>
-<span class="nc" id="L50">                        String token = json.substring(tokenStart + 16, tokenEnd);</span>
+<span class="fc" id="L53">                        int tokenStart = json.indexOf(&quot;\&quot;access_token\&quot;:\&quot;&quot;);</span>
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">                        if (tokenStart == -1) {</span>
+<span class="nc" id="L55">                             throw new RuntimeException(&quot;Invalid response: access_token not found&quot;);</span>
+                        }
+<span class="fc" id="L57">                        int tokenEnd = json.indexOf(&quot;\&quot;&quot;, tokenStart + 16);</span>
+<span class="fc" id="L58">                        String token = json.substring(tokenStart + 16, tokenEnd);</span>
 
-<span class="nc" id="L52">                        int expiresStart = json.indexOf(&quot;\&quot;expires_in\&quot;:&quot;);</span>
-<span class="nc" id="L53">                        int expiresEnd = json.indexOf(&quot;,&quot;, expiresStart);</span>
-<span class="nc" id="L54">                        long expiresIn = Long.parseLong(json.substring(expiresStart + 13, expiresEnd));</span>
+<span class="fc" id="L60">                        int expiresStart = json.indexOf(&quot;\&quot;expires_in\&quot;:&quot;);</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">                        if (expiresStart == -1) {</span>
+                             // Default expiry if not found or handle error
+                             // For now let's assume it's there or default to short time
+<span class="nc" id="L64">                             expiresStart = -1; </span>
+                        }
+                        
+<span class="fc" id="L67">                        long expiresIn = 300; // Default 5 minutes</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">                        if (expiresStart != -1) {</span>
+<span class="fc" id="L69">                            int expiresEnd = json.indexOf(&quot;,&quot;, expiresStart);</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">                            if (expiresEnd == -1) expiresEnd = json.indexOf(&quot;}&quot;, expiresStart); // Could be last element</span>
+<span class="fc" id="L71">                            expiresIn = Long.parseLong(json.substring(expiresStart + 13, expiresEnd).trim());</span>
+                        }
 
-<span class="nc" id="L56">                        this.accessToken = token;</span>
-<span class="nc" id="L57">                        this.tokenExpiresAt = System.currentTimeMillis() + (expiresIn * 1000);</span>
-<span class="nc" id="L58">                        return token;</span>
+<span class="fc" id="L74">                        this.accessToken = token;</span>
+<span class="fc" id="L75">                        this.tokenExpiresAt = System.currentTimeMillis() + (expiresIn * 1000);</span>
+<span class="fc" id="L76">                        return token;</span>
                     } else {
-<span class="nc" id="L60">                        System.err.println(&quot;Failed to get access token. Status: &quot; + response.statusCode() + &quot; Body: &quot; + response.body());</span>
-<span class="nc" id="L61">                        throw new RuntimeException(&quot;Failed to get access token&quot;);</span>
+<span class="fc" id="L78">                        System.err.println(&quot;Failed to get access token. Status: &quot; + response.statusCode() + &quot; Body: &quot; + response.body());</span>
+<span class="fc" id="L79">                        throw new RuntimeException(&quot;Failed to get access token&quot;);</span>
                     }
                 })
-<span class="nc" id="L64">                .exceptionally(e -&gt; {</span>
-<span class="nc" id="L65">                    System.err.println(&quot;Exception getting access token: &quot; + e.getMessage());</span>
-<span class="nc" id="L66">                    throw new RuntimeException(&quot;Exception getting access token&quot;, e);</span>
+<span class="fc" id="L82">                .exceptionally(e -&gt; {</span>
+<span class="fc" id="L83">                    System.err.println(&quot;Exception getting access token: &quot; + e.getMessage());</span>
+<span class="fc" id="L84">                    throw new RuntimeException(&quot;Exception getting access token&quot;, e);</span>
                 });
     }
 }

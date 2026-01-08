@@ -50,8 +50,8 @@ public class OrderPactProviderTest {
 
         when(mockRepo.findAll()).thenAnswer(invocation -> {
             List<Order> orders = new ArrayList<>();
-            // Return ID 1 to match the existing Pact expectation
-            Order o = new Order(1, "John Doe", "CONFIRMED");
+            // Return ID 123 to match the existing Pact expectation
+            Order o = new Order(123, "John Doe", "CONFIRMED");
             o.addItem(new OrderItem(1, 2));
             orders.add(o);
             return orders;

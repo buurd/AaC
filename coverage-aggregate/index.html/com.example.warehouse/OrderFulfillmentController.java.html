@@ -19,7 +19,7 @@ public class OrderFulfillmentController implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-<span class="pc bpc" id="L22" title="1 of 2 branches missed.">        if (&quot;POST&quot;.equalsIgnoreCase(exchange.getRequestMethod())) {</span>
+<span class="fc bfc" id="L22" title="All 2 branches covered.">        if (&quot;POST&quot;.equalsIgnoreCase(exchange.getRequestMethod())) {</span>
             try {
 <span class="fc" id="L24">                InputStream is = exchange.getRequestBody();</span>
 <span class="fc" id="L25">                String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);</span>
@@ -35,28 +35,28 @@ public class OrderFulfillmentController implements HttpHandler {
 <span class="fc" id="L35">                try (OutputStream os = exchange.getResponseBody()) {</span>
 <span class="fc" id="L36">                    os.write(response.getBytes());</span>
                 }
-<span class="nc" id="L38">            } catch (Exception e) {</span>
-<span class="nc" id="L39">                e.printStackTrace();</span>
-<span class="nc" id="L40">                exchange.sendResponseHeaders(500, -1);</span>
-<span class="pc" id="L41">            }</span>
+<span class="fc" id="L38">            } catch (Exception e) {</span>
+<span class="fc" id="L39">                e.printStackTrace();</span>
+<span class="fc" id="L40">                exchange.sendResponseHeaders(500, -1);</span>
+<span class="fc" id="L41">            }</span>
         } else {
-<span class="nc" id="L43">            exchange.sendResponseHeaders(405, -1);</span>
+<span class="fc" id="L43">            exchange.sendResponseHeaders(405, -1);</span>
         }
 <span class="fc" id="L45">    }</span>
 
     private int parseOrderId(String json) {
 <span class="fc" id="L48">        json = json.replace(&quot;{&quot;, &quot;&quot;).replace(&quot;}&quot;, &quot;&quot;).replace(&quot;\&quot;&quot;, &quot;&quot;);</span>
 <span class="fc" id="L49">        String[] pairs = json.split(&quot;,&quot;);</span>
-<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        for (String pair : pairs) {</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        for (String pair : pairs) {</span>
 <span class="fc" id="L51">            String[] kv = pair.split(&quot;:&quot;);</span>
-<span class="pc bpc" id="L52" title="1 of 2 branches missed.">            if (kv.length &lt; 2) continue;</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">            if (kv.length &lt; 2) continue;</span>
 <span class="fc" id="L53">            String key = kv[0].trim();</span>
 <span class="fc" id="L54">            String value = kv[1].trim();</span>
 <span class="pc bpc" id="L55" title="1 of 2 branches missed.">            if (&quot;orderId&quot;.equals(key)) {</span>
 <span class="fc" id="L56">                return Integer.parseInt(value);</span>
             }
         }
-<span class="nc" id="L59">        throw new IllegalArgumentException(&quot;No orderId found&quot;);</span>
+<span class="fc" id="L59">        throw new IllegalArgumentException(&quot;No orderId found&quot;);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -4,8 +4,8 @@ set -e
 # Create logs directory if it doesn't exist
 mkdir -p logs
 
-# Redirect all output to log file and stdout
-exec > >(tee -a logs/coverage.log) 2>&1
+# Redirect all output to log file and stdout (overwrite log file)
+exec > >(tee logs/coverage.log) 2>&1
 
 echo "--- Running Tests with Coverage ---"
 

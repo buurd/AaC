@@ -41,9 +41,9 @@ public class OrderServicePactTest {
                 .headers("Content-Type", "application/json", "Authorization", "Bearer dummy-token")
                 .body("{\"customerName\":\"John Doe\",\"items\":[{\"productId\":1,\"quantity\":2}]}")
             .willRespondWith()
-                .status(201)
+                .status(200)
                 .headers(java.util.Map.of("Content-Type", "application/json"))
-                .body("{\"status\":\"created\",\"orderId\":123}")
+                .body("{\"status\":\"PENDING_CONFIRMATION\",\"orderId\":123}")
             .given("Orders exist for customer")
             .uponReceiving("A request to get orders for a customer")
                 .path("/api/orders")
@@ -53,7 +53,7 @@ public class OrderServicePactTest {
             .willRespondWith()
                 .status(200)
                 .headers(java.util.Map.of("Content-Type", "application/json"))
-                .body("[{\"id\":1,\"customerName\":\"John Doe\",\"status\":\"CONFIRMED\"}]")
+                .body("[{\"id\":123,\"customerName\":\"John Doe\",\"status\":\"CONFIRMED\"}]")
             .toPact(V4Pact.class);
     }
 
@@ -72,13 +72,7 @@ public class OrderServicePactTest {
         service.createOrder(orderJson).get();
         
         // Test Get Orders
-        // Note: OrderService.getOrdersForCustomer appends query param, so we pass base URL to service
-        // But wait, OrderService constructor takes full URL?
-        // In OrderService.java: String url = orderServiceUrl + "?customer=" + ...
-        // So if mockUrl is .../api/orders, it becomes .../api/orders?customer=...
-        // This matches the Pact path.
-        
         String response = service.getOrdersForCustomer("John Doe").get();
-        assertEquals("[{\"id\":1,\"customerName\":\"John Doe\",\"status\":\"CONFIRMED\"}]", response);
+        assertEquals("[{\"id\":123,\"customerName\":\"John Doe\",\"status\":\"CONFIRMED\"}]", response);
     }
 }

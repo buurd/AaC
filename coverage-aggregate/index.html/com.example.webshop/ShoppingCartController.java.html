@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-<span class="nc" id="L10">public class ShoppingCartController implements HttpHandler {</span>
+<span class="fc" id="L10">public class ShoppingCartController implements HttpHandler {</span>
 
     private static final String CSS = 
         &quot;body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }&quot; +
@@ -132,7 +132,7 @@ import java.nio.charset.StandardCharsets;
         &quot;&lt;/script&gt;&quot;;
 
     private String getHeader() {
-<span class="nc" id="L135">        return &quot;&lt;div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'&gt;&quot; +</span>
+<span class="fc" id="L135">        return &quot;&lt;div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'&gt;&quot; +</span>
                &quot;&lt;div&gt;&quot; +
                &quot;&lt;button onclick=\&quot;window.location.href='/'\&quot; class='btn btn-primary'&gt;Webshop Home&lt;/button&gt;&quot; +
                &quot;&lt;button onclick=\&quot;window.location.href='/products'\&quot; class='btn btn-secondary'&gt;Products&lt;/button&gt;&quot; +
@@ -145,39 +145,39 @@ import java.nio.charset.StandardCharsets;
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-<span class="nc" id="L148">        StringBuilder html = new StringBuilder();</span>
-<span class="nc" id="L149">        html.append(&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;style&gt;&quot;).append(CSS).append(&quot;&lt;/style&gt;&quot;);</span>
-<span class="nc" id="L150">        html.append(JS).append(&quot;&lt;/head&gt;&lt;body&gt;&quot;);</span>
-<span class="nc" id="L151">        html.append(&quot;&lt;div class='container'&gt;&quot;);</span>
-<span class="nc" id="L152">        html.append(getHeader());</span>
-<span class="nc" id="L153">        html.append(&quot;&lt;h1&gt;Shopping Cart&lt;/h1&gt;&quot;);</span>
-<span class="nc" id="L154">        html.append(&quot;&lt;table&gt;&quot;);</span>
-<span class="nc" id="L155">        html.append(&quot;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Product&lt;/th&gt;&lt;th&gt;Quantity&lt;/th&gt;&lt;th&gt;Price&lt;/th&gt;&lt;th&gt;Action&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&quot;);</span>
-<span class="nc" id="L156">        html.append(&quot;&lt;tbody id='cart-body'&gt;&lt;/tbody&gt;&quot;);</span>
-<span class="nc" id="L157">        html.append(&quot;&lt;/table&gt;&quot;);</span>
-<span class="nc" id="L158">        html.append(&quot;&lt;h3&gt;Total: &lt;span id='cart-total'&gt;0.00&lt;/span&gt; EUR&lt;/h3&gt;&quot;);</span>
-<span class="nc" id="L159">        html.append(&quot;&lt;h4&gt;Potential Loyalty Points: &lt;span id='potential-loyalty'&gt;0&lt;/span&gt;&lt;/h4&gt;&quot;);</span>
+<span class="fc" id="L148">        StringBuilder html = new StringBuilder();</span>
+<span class="fc" id="L149">        html.append(&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;style&gt;&quot;).append(CSS).append(&quot;&lt;/style&gt;&quot;);</span>
+<span class="fc" id="L150">        html.append(JS).append(&quot;&lt;/head&gt;&lt;body&gt;&quot;);</span>
+<span class="fc" id="L151">        html.append(&quot;&lt;div class='container'&gt;&quot;);</span>
+<span class="fc" id="L152">        html.append(getHeader());</span>
+<span class="fc" id="L153">        html.append(&quot;&lt;h1&gt;Shopping Cart&lt;/h1&gt;&quot;);</span>
+<span class="fc" id="L154">        html.append(&quot;&lt;table&gt;&quot;);</span>
+<span class="fc" id="L155">        html.append(&quot;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Product&lt;/th&gt;&lt;th&gt;Quantity&lt;/th&gt;&lt;th&gt;Price&lt;/th&gt;&lt;th&gt;Action&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&quot;);</span>
+<span class="fc" id="L156">        html.append(&quot;&lt;tbody id='cart-body'&gt;&lt;/tbody&gt;&quot;);</span>
+<span class="fc" id="L157">        html.append(&quot;&lt;/table&gt;&quot;);</span>
+<span class="fc" id="L158">        html.append(&quot;&lt;h3&gt;Total: &lt;span id='cart-total'&gt;0.00&lt;/span&gt; EUR&lt;/h3&gt;&quot;);</span>
+<span class="fc" id="L159">        html.append(&quot;&lt;h4&gt;Potential Loyalty Points: &lt;span id='potential-loyalty'&gt;0&lt;/span&gt;&lt;/h4&gt;&quot;);</span>
         
-<span class="nc" id="L161">        html.append(&quot;&lt;div id='loyalty-section' class='loyalty-section' style='display:none;'&gt;&quot;);</span>
-<span class="nc" id="L162">        html.append(&quot;&lt;h4&gt;Loyalty Program&lt;/h4&gt;&quot;);</span>
-<span class="nc" id="L163">        html.append(&quot;&lt;p&gt;You have &lt;strong id='loyalty-points'&gt;0&lt;/strong&gt; points (Value: &lt;strong id='loyalty-value'&gt;0.00&lt;/strong&gt; EUR).&lt;/p&gt;&quot;);</span>
-<span class="nc" id="L164">        html.append(&quot;&lt;label&gt;&lt;input type='checkbox' id='use-points'&gt; Pay with Points&lt;/label&gt;&quot;);</span>
-<span class="nc" id="L165">        html.append(&quot;&lt;input type='number' id='points-input' placeholder='Points to redeem' min='0'&gt;&quot;);</span>
-<span class="nc" id="L166">        html.append(&quot;&lt;input type='hidden' id='max-points'&gt;&quot;);</span>
-<span class="nc" id="L167">        html.append(&quot;&lt;/div&gt;&quot;);</span>
+<span class="fc" id="L161">        html.append(&quot;&lt;div id='loyalty-section' class='loyalty-section' style='display:none;'&gt;&quot;);</span>
+<span class="fc" id="L162">        html.append(&quot;&lt;h4&gt;Loyalty Program&lt;/h4&gt;&quot;);</span>
+<span class="fc" id="L163">        html.append(&quot;&lt;p&gt;You have &lt;strong id='loyalty-points'&gt;0&lt;/strong&gt; points (Value: &lt;strong id='loyalty-value'&gt;0.00&lt;/strong&gt; EUR).&lt;/p&gt;&quot;);</span>
+<span class="fc" id="L164">        html.append(&quot;&lt;label&gt;&lt;input type='checkbox' id='use-points'&gt; Pay with Points&lt;/label&gt;&quot;);</span>
+<span class="fc" id="L165">        html.append(&quot;&lt;input type='number' id='points-input' placeholder='Points to redeem' min='0'&gt;&quot;);</span>
+<span class="fc" id="L166">        html.append(&quot;&lt;input type='hidden' id='max-points'&gt;&quot;);</span>
+<span class="fc" id="L167">        html.append(&quot;&lt;/div&gt;&quot;);</span>
 
-<span class="nc" id="L169">        html.append(&quot;&lt;button id='checkout-btn' onclick='checkout()' class='btn btn-success'&gt;Checkout&lt;/button&gt; &quot;);</span>
-<span class="nc" id="L170">        html.append(&quot;&lt;button onclick=\&quot;window.location.href='/products'\&quot; class='btn btn-secondary'&gt;Back to Products&lt;/button&gt;&quot;);</span>
-<span class="nc" id="L171">        html.append(&quot;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;&quot;);</span>
+<span class="fc" id="L169">        html.append(&quot;&lt;button id='checkout-btn' onclick='checkout()' class='btn btn-success'&gt;Checkout&lt;/button&gt; &quot;);</span>
+<span class="fc" id="L170">        html.append(&quot;&lt;button onclick=\&quot;window.location.href='/products'\&quot; class='btn btn-secondary'&gt;Back to Products&lt;/button&gt;&quot;);</span>
+<span class="fc" id="L171">        html.append(&quot;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;&quot;);</span>
         
-<span class="nc" id="L173">        String response = html.toString();</span>
-<span class="nc" id="L174">        byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L173">        String response = html.toString();</span>
+<span class="fc" id="L174">        byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
         
-<span class="nc" id="L176">        exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html; charset=utf-8&quot;);</span>
-<span class="nc" id="L177">        exchange.sendResponseHeaders(200, bytes.length);</span>
-<span class="nc" id="L178">        try (OutputStream os = exchange.getResponseBody()) {</span>
-<span class="nc" id="L179">            os.write(bytes);</span>
+<span class="fc" id="L176">        exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html; charset=utf-8&quot;);</span>
+<span class="fc" id="L177">        exchange.sendResponseHeaders(200, bytes.length);</span>
+<span class="fc" id="L178">        try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="fc" id="L179">            os.write(bytes);</span>
         }
-<span class="nc" id="L181">    }</span>
+<span class="fc" id="L181">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

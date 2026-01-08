@@ -6,6 +6,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class KeycloakTokenService implements TokenService {
 
@@ -45,19 +47,30 @@ public class KeycloakTokenService implements TokenService {
                 .thenApply(response -> {
                     if (response.statusCode() == 200) {
                         String json = response.body();
-                        // Basic JSON parsing for access_token and expires_in
-                        int tokenStart = json.indexOf("\"access_token\":\"");
-                        int tokenEnd = json.indexOf("\"", tokenStart + 16);
-                        String token = json.substring(tokenStart + 16, tokenEnd);
+                        
+                        String token = null;
+                        long expiresIn = 300; // Default
 
-                        int expiresStart = json.indexOf("\"expires_in\":");
-                        int expiresEnd = json.indexOf(",", expiresStart);
-                        long expiresIn = Long.parseLong(json.substring(expiresStart + 13, expiresEnd));
+                        Pattern pToken = Pattern.compile("\"access_token\":\"([^\"]+)\"");
+                        Matcher mToken = pToken.matcher(json);
+                        if (mToken.find()) {
+                            token = mToken.group(1);
+                        }
 
-                        this.accessToken = token;
-                        this.tokenExpiresAt = System.currentTimeMillis() + (expiresIn * 1000);
-                        System.out.println("KeycloakTokenService: Token obtained successfully. Length: " + token.length());
-                        return token;
+                        Pattern pExpires = Pattern.compile("\"expires_in\":(\\d+)");
+                        Matcher mExpires = pExpires.matcher(json);
+                        if (mExpires.find()) {
+                            expiresIn = Long.parseLong(mExpires.group(1));
+                        }
+
+                        if (token != null) {
+                            this.accessToken = token;
+                            this.tokenExpiresAt = System.currentTimeMillis() + (expiresIn * 1000);
+                            System.out.println("KeycloakTokenService: Token obtained successfully. Length: " + token.length());
+                            return token;
+                        } else {
+                             throw new RuntimeException("Failed to parse access token");
+                        }
                     } else {
                         System.err.println("KeycloakTokenService: Failed to get token. Status: " + response.statusCode() + ", Body: " + response.body());
                         throw new RuntimeException("Failed to get access token");

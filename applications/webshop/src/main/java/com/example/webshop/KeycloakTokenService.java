@@ -18,12 +18,17 @@ public class KeycloakTokenService implements TokenService {
     private long tokenExpiresAt;
 
     public KeycloakTokenService(String keycloakTokenUrl, String clientId, String clientSecret) {
-        this.httpClient = HttpClient.newBuilder()
+        this(keycloakTokenUrl, clientId, clientSecret, HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(5))
-                .build();
+                .build());
+    }
+
+    // Added constructor for testing
+    public KeycloakTokenService(String keycloakTokenUrl, String clientId, String clientSecret, HttpClient httpClient) {
         this.keycloakTokenUrl = keycloakTokenUrl;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
+        this.httpClient = httpClient;
     }
 
     @Override
@@ -45,12 +50,17 @@ public class KeycloakTokenService implements TokenService {
                     if (response.statusCode() == 200) {
                         String json = response.body();
                         int tokenStart = json.indexOf("\"access_token\":\"");
+                        if (tokenStart == -1) throw new RuntimeException("Invalid response");
                         int tokenEnd = json.indexOf("\"", tokenStart + 16);
                         String token = json.substring(tokenStart + 16, tokenEnd);
 
                         int expiresStart = json.indexOf("\"expires_in\":");
-                        int expiresEnd = json.indexOf(",", expiresStart);
-                        long expiresIn = Long.parseLong(json.substring(expiresStart + 13, expiresEnd));
+                        long expiresIn = 300;
+                        if (expiresStart != -1) {
+                            int expiresEnd = json.indexOf(",", expiresStart);
+                            if (expiresEnd == -1) expiresEnd = json.indexOf("}", expiresStart);
+                            expiresIn = Long.parseLong(json.substring(expiresStart + 13, expiresEnd).trim());
+                        }
 
                         this.accessToken = token;
                         this.tokenExpiresAt = System.currentTimeMillis() + (expiresIn * 1000);

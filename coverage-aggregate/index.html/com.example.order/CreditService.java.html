@@ -8,18 +8,18 @@ public class CreditService {
     private final InvoiceRepository invoiceRepository;
     private static final double CREDIT_LIMIT = 500.00;
 
-<span class="nc" id="L11">    public CreditService(InvoiceRepository invoiceRepository) {</span>
-<span class="nc" id="L12">        this.invoiceRepository = invoiceRepository;</span>
-<span class="nc" id="L13">    }</span>
+<span class="fc" id="L11">    public CreditService(InvoiceRepository invoiceRepository) {</span>
+<span class="fc" id="L12">        this.invoiceRepository = invoiceRepository;</span>
+<span class="fc" id="L13">    }</span>
 
     public boolean checkCreditLimit(String customerName) {
         try {
-<span class="nc" id="L17">            List&lt;Invoice&gt; invoices = invoiceRepository.findByCustomer(customerName);</span>
-<span class="nc" id="L18">            double outstandingAmount = invoices.stream()</span>
-<span class="nc bnc" id="L19" title="All 2 branches missed.">                    .filter(i -&gt; !i.isPaid())</span>
-<span class="nc" id="L20">                    .mapToDouble(Invoice::getAmount)</span>
-<span class="nc" id="L21">                    .sum();</span>
-<span class="nc bnc" id="L22" title="All 2 branches missed.">            return outstandingAmount &lt;= CREDIT_LIMIT;</span>
+<span class="fc" id="L17">            List&lt;Invoice&gt; invoices = invoiceRepository.findByCustomer(customerName);</span>
+<span class="fc" id="L18">            double outstandingAmount = invoices.stream()</span>
+<span class="fc bfc" id="L19" title="All 2 branches covered.">                    .filter(i -&gt; !i.isPaid())</span>
+<span class="fc" id="L20">                    .mapToDouble(Invoice::getAmount)</span>
+<span class="fc" id="L21">                    .sum();</span>
+<span class="fc bfc" id="L22" title="All 2 branches covered.">            return outstandingAmount &lt;= CREDIT_LIMIT;</span>
 <span class="nc" id="L23">        } catch (SQLException e) {</span>
 <span class="nc" id="L24">            e.printStackTrace();</span>
 <span class="nc" id="L25">            return false; // Fail safe</span>
@@ -28,11 +28,11 @@ public class CreditService {
 
     public boolean checkOverdueInvoices(String customerName) {
         try {
-<span class="nc" id="L31">            List&lt;Invoice&gt; invoices = invoiceRepository.findByCustomer(customerName);</span>
-<span class="nc" id="L32">            LocalDate now = LocalDate.now();</span>
-<span class="nc" id="L33">            return invoices.stream()</span>
-<span class="nc bnc" id="L34" title="All 2 branches missed.">                    .filter(i -&gt; !i.isPaid())</span>
-<span class="nc" id="L35">                    .noneMatch(i -&gt; i.getDueDate().isBefore(now));</span>
+<span class="fc" id="L31">            List&lt;Invoice&gt; invoices = invoiceRepository.findByCustomer(customerName);</span>
+<span class="fc" id="L32">            LocalDate now = LocalDate.now();</span>
+<span class="fc" id="L33">            return invoices.stream()</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">                    .filter(i -&gt; !i.isPaid())</span>
+<span class="fc" id="L35">                    .noneMatch(i -&gt; i.getDueDate().isBefore(now));</span>
 <span class="nc" id="L36">        } catch (SQLException e) {</span>
 <span class="nc" id="L37">            e.printStackTrace();</span>
 <span class="nc" id="L38">            return false; // Fail safe</span>

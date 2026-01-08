@@ -35,6 +35,13 @@ public class SecurityFilter extends Filter {
         }
     }
 
+    // Added constructor for testing
+    public SecurityFilter(JwkProvider jwkProvider, String issuer, String requiredRole) {
+        this.jwkProvider = jwkProvider;
+        this.issuer = issuer;
+        this.requiredRole = requiredRole;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public void doFilter(HttpExchange exchange, Chain chain) throws IOException {
