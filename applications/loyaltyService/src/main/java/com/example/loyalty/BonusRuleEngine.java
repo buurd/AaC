@@ -1,5 +1,6 @@
 package com.example.loyalty;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -7,7 +8,16 @@ import java.util.List;
 
 public class BonusRuleEngine {
 
+    private final Clock clock;
     private boolean forceJanuaryBonus = false;
+
+    public BonusRuleEngine() {
+        this(Clock.systemDefaultZone());
+    }
+
+    public BonusRuleEngine(Clock clock) {
+        this.clock = clock;
+    }
 
     public int evaluate(double orderAmount, List<OrderItem> items) {
         int points = (int) orderAmount; // Base rule: 1 point per 1 unit currency
@@ -15,7 +25,7 @@ public class BonusRuleEngine {
         double multiplier = 1.0;
 
         // Time-based Rule: Double points in January OR if forced by Admin
-        if (LocalDate.now().getMonth() == Month.JANUARY || forceJanuaryBonus) {
+        if (LocalDate.now(clock).getMonth() == Month.JANUARY || forceJanuaryBonus) {
             multiplier *= 2.0;
         }
 
@@ -53,7 +63,7 @@ public class BonusRuleEngine {
     public List<String> getRuleDescriptions() {
         List<String> descriptions = new ArrayList<>();
         descriptions.add("Base Rule: 1 Point per 1 EUR");
-        if (LocalDate.now().getMonth() == Month.JANUARY || forceJanuaryBonus) {
+        if (LocalDate.now(clock).getMonth() == Month.JANUARY || forceJanuaryBonus) {
             descriptions.add("January Bonus");
         }
         descriptions.add("Double Points on 3+ Items");

@@ -4,6 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +22,9 @@ class LoyaltyProgramTest {
     @BeforeEach
     void setUp() {
         repository = mock(LoyaltyRepository.class);
-        ruleEngine = new BonusRuleEngine();
+        // Fix time to June 1st, 2023 (Not January)
+        Clock fixedClock = Clock.fixed(Instant.parse("2023-06-01T10:00:00Z"), ZoneId.of("UTC"));
+        ruleEngine = new BonusRuleEngine(fixedClock);
         pointService = new PointService(repository, ruleEngine);
     }
 

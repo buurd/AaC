@@ -13,27 +13,8 @@ Removing leftover container: db_order
 Removing leftover container: db_loyalty
 Step 1: Exporting Structurizr DSL to JSON...
 Step 2: Generating file system view...
-find: ‘./e2e-tests/cypress/downloads’: Åtkomst nekas
-find: ‘./production-data/order-db’: Åtkomst nekas
-find: ‘./production-data/webshop-db’: Åtkomst nekas
-find: ‘./production-data/pm-db’: Åtkomst nekas
-find: ‘./production-data/warehouse-db’: Åtkomst nekas
-find: ‘./production-data/grafana/png’: Åtkomst nekas
-find: ‘./production-data/grafana/pdf’: Åtkomst nekas
-find: ‘./production-data/grafana/csv’: Åtkomst nekas
-find: ‘./production-data/keycloak-db’: Åtkomst nekas
 Step 3: Aggregating requirements...
 Step 4: Combining inputs for validations...
-find: ‘./e2e-tests/cypress/downloads’: Åtkomst nekas
-find: ‘./production-data/order-db’: Åtkomst nekas
-find: ‘./production-data/webshop-db’: Åtkomst nekas
-find: ‘./production-data/pm-db’: Åtkomst nekas
-find: ‘./production-data/warehouse-db’: Åtkomst nekas
-find: ‘./production-data/grafana/png’: Åtkomst nekas
-find: ‘./production-data/grafana/pdf’: Åtkomst nekas
-find: ‘./production-data/grafana/csv’: Åtkomst nekas
-find: ‘./production-data/keycloak-db’: Åtkomst nekas
-find: ‘e2e-tests/cypress/downloads’: Åtkomst nekas
 Step 5: Parsing Kubernetes manifests...
 Step 6: Combining inputs for K8s validation...
 
@@ -67,6 +48,332 @@ Step 6: Combining inputs for K8s validation...
 --- Running: Kubernetes Deployment Validation ---
 ✅ Validation Passed.
 
+--- Running: Unit Validation ---
+  Running unit tests for webshop...
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.example:webshop >-------------------------
+[INFO] Building webshop 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ webshop ---
+[INFO] Deleting /usr/src/mymaven/target
+[INFO] 
+[INFO] --- jacoco:0.8.11:prepare-agent (default) @ webshop ---
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ webshop ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ webshop ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 13 source files with javac [debug target 21] to target/classes
+[INFO] /usr/src/mymaven/src/main/java/com/example/webshop/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/webshop/SecurityFilter.java uses or overrides a deprecated API.
+[INFO] /usr/src/mymaven/src/main/java/com/example/webshop/SecurityFilter.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ webshop ---
+[INFO] skip non existing resourceDirectory /usr/src/mymaven/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ webshop ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 4 source files with javac [debug target 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.2.3:test (default-test) @ webshop ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.webshop.ProductSyncControllerTest
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+ProductSyncController received POST request
+Received JSON: {"id":1,"type":"T-Shirt","name":"Classic T-Shirt - Red S","description":"100% Cotton","price":20.00,"unit":"pcs"}
+Parsed Product: Product{id=0, pmId=1, name='Classic T-Shirt - Red S', price=20.00 pcs, stock=0}
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.674 s -- in com.example.webshop.ProductSyncControllerTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jacoco:0.8.11:report (report) @ webshop ---
+[INFO] Loading execution data file /usr/src/mymaven/target/jacoco.exec
+[INFO] Analyzed bundle 'webshop' with 13 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.753 s
+[INFO] Finished at: 2026-01-07T19:57:43Z
+[INFO] ------------------------------------------------------------------------
+  Running unit tests for productManagementSystem...
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------< com.example:productManagementSystem >-----------------
+[INFO] Building productManagementSystem 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ productManagementSystem ---
+[INFO] Deleting /usr/src/mymaven/target
+[INFO] 
+[INFO] --- jacoco:0.8.11:prepare-agent (default) @ productManagementSystem ---
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ productManagementSystem ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ productManagementSystem ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 9 source files with javac [debug target 21] to target/classes
+[INFO] /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java uses or overrides a deprecated API.
+[INFO] /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java: Recompile with -Xlint:deprecation for details.
+[INFO] /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java uses unchecked or unsafe operations.
+[INFO] /usr/src/mymaven/src/main/java/com/example/productmanagement/SecurityFilter.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ productManagementSystem ---
+[INFO] skip non existing resourceDirectory /usr/src/mymaven/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ productManagementSystem ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 3 source files with javac [debug target 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.2.3:test (default-test) @ productManagementSystem ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.productmanagement.ProductServiceTest
+WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+ProductService initialized with Webshop API URL: null
+ProductService initialized with Warehouse API URL: null
+ProductService initialized with Webshop API URL: null
+ProductService initialized with Warehouse API URL: null
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.816 s -- in com.example.productmanagement.ProductServiceTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jacoco:0.8.11:report (report) @ productManagementSystem ---
+[INFO] Loading execution data file /usr/src/mymaven/target/jacoco.exec
+[INFO] Analyzed bundle 'productManagementSystem' with 9 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.226 s
+[INFO] Finished at: 2026-01-07T19:57:51Z
+[INFO] ------------------------------------------------------------------------
+  Running unit tests for warehouse...
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< com.example:warehouse >------------------------
+[INFO] Building warehouse 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ warehouse ---
+[INFO] Deleting /usr/src/mymaven/target
+[INFO] 
+[INFO] --- jacoco:0.8.11:prepare-agent (default) @ warehouse ---
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ warehouse ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ warehouse ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 19 source files with javac [debug target 21] to target/classes
+[INFO] /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java uses or overrides a deprecated API.
+[INFO] /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java: Recompile with -Xlint:deprecation for details.
+[INFO] /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java uses unchecked or unsafe operations.
+[INFO] /usr/src/mymaven/src/main/java/com/example/warehouse/SecurityFilter.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ warehouse ---
+[INFO] skip non existing resourceDirectory /usr/src/mymaven/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ warehouse ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 3 source files with javac [debug target 21] to target/test-classes
+[INFO] /usr/src/mymaven/src/test/java/com/example/warehouse/StockServiceTest.java: /usr/src/mymaven/src/test/java/com/example/warehouse/StockServiceTest.java uses unchecked or unsafe operations.
+[INFO] /usr/src/mymaven/src/test/java/com/example/warehouse/StockServiceTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.2.3:test (default-test) @ warehouse ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.warehouse.StockServiceTest
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+StockService initialized with Webshop Stock API URL: http://webshop/api/stock/sync
+Syncing stock for product 123 (Stock: 50) to http://webshop/api/stock/sync
+Failed to sync stock to Webshop. Status: 0 Body: null
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.880 s -- in com.example.warehouse.StockServiceTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jacoco:0.8.11:report (report) @ warehouse ---
+[INFO] Loading execution data file /usr/src/mymaven/target/jacoco.exec
+[INFO] Analyzed bundle 'warehouse' with 19 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.025 s
+[INFO] Finished at: 2026-01-07T19:57:59Z
+[INFO] ------------------------------------------------------------------------
+  Running unit tests for orderService...
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.example:orderService >----------------------
+[INFO] Building orderService 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ orderService ---
+[INFO] Deleting /usr/src/mymaven/target
+[INFO] 
+[INFO] --- jacoco:0.8.11:prepare-agent (default) @ orderService ---
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ orderService ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ orderService ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 15 source files with javac [debug target 21] to target/classes
+[INFO] /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java uses or overrides a deprecated API.
+[INFO] /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java: Recompile with -Xlint:deprecation for details.
+[INFO] /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java uses unchecked or unsafe operations.
+[INFO] /usr/src/mymaven/src/main/java/com/example/order/SecurityFilter.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ orderService ---
+[INFO] skip non existing resourceDirectory /usr/src/mymaven/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ orderService ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 5 source files with javac [debug target 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.2.3:test (default-test) @ orderService ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.order.OrderControllerTest
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+Received Order: {"customerName":"John Doe","items":[{"productId":1,"quantity":2},{"productId":5,"quantity":1}]}
+OrderController: Returning 201 Created
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.167 s -- in com.example.order.OrderControllerTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jacoco:0.8.11:report (report) @ orderService ---
+[INFO] Loading execution data file /usr/src/mymaven/target/jacoco.exec
+[INFO] Analyzed bundle 'orderService' with 15 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.631 s
+[INFO] Finished at: 2026-01-07T19:58:07Z
+[INFO] ------------------------------------------------------------------------
+  Running unit tests for loyaltyService...
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< com.example:loyalty-service >---------------------
+[INFO] Building loyalty-service 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ loyalty-service ---
+[INFO] Deleting /usr/src/mymaven/target
+[INFO] 
+[INFO] --- jacoco:0.8.11:prepare-agent (default) @ loyalty-service ---
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ loyalty-service ---
+[INFO] skip non existing resourceDirectory /usr/src/mymaven/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ loyalty-service ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 8 source files with javac [debug target 21] to target/classes
+[INFO] /usr/src/mymaven/src/main/java/com/example/loyalty/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/loyalty/SecurityFilter.java uses or overrides a deprecated API.
+[INFO] /usr/src/mymaven/src/main/java/com/example/loyalty/SecurityFilter.java: Recompile with -Xlint:deprecation for details.
+[INFO] /usr/src/mymaven/src/main/java/com/example/loyalty/SecurityFilter.java: /usr/src/mymaven/src/main/java/com/example/loyalty/SecurityFilter.java uses unchecked or unsafe operations.
+[INFO] /usr/src/mymaven/src/main/java/com/example/loyalty/SecurityFilter.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ loyalty-service ---
+[INFO] skip non existing resourceDirectory /usr/src/mymaven/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ loyalty-service ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 4 source files with javac [debug target 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.2.3:test (default-test) @ loyalty-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.loyalty.BonusRuleEngineTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s -- in com.example.loyalty.BonusRuleEngineTest
+[INFO] Running com.example.loyalty.LoyaltyProgramTest
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+Accrued 93 points for customer shopper3
+Accrued 100 points for customer shopper1
+Redeemed 50 points for customer shopper1
+Accrued 90 points for customer shopper2
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.382 s -- in com.example.loyalty.LoyaltyProgramTest
+[INFO] Running com.example.loyalty.PointServiceTest
+Redeemed 50 points for customer user1
+Failed to redeem 50 points for customer user1
+Accrued 100 points for customer user1
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.165 s -- in com.example.loyalty.PointServiceTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jacoco:0.8.11:report (report) @ loyalty-service ---
+[INFO] Loading execution data file /usr/src/mymaven/target/jacoco.exec
+[INFO] Analyzed bundle 'loyalty-service' with 9 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.365 s
+[INFO] Finished at: 2026-01-07T19:58:15Z
+[INFO] ------------------------------------------------------------------------
+✅ Unit Validation Passed.
+
 --- Running: Contract Validation (Pact) ---
 Phase 1: Generating Contracts (Consumer Tests)...
   Scanning webshop for consumer tests...
@@ -81,7 +388,7 @@ Phase 1: Generating Contracts (Consumer Tests)...
 [INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ webshop ---
-[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ webshop ---
 [INFO] Copying 1 resource from src/main/resources to target/classes
@@ -112,15 +419,15 @@ Phase 1: Generating Contracts (Consumer Tests)...
             variable to 'true'.
             
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.413 s -- in com.example.webshop.LoyaltyServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.085 s -- in com.example.webshop.LoyaltyServicePactTest
 [INFO] Running com.example.webshop.OrderServicePactTest
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-WARNING: A Java agent has been loaded dynamically (/root/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
+WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.208 s -- in com.example.webshop.OrderServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.782 s -- in com.example.webshop.OrderServicePactTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -133,8 +440,8 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.551 s
-[INFO] Finished at: 2026-01-06T20:52:32Z
+[INFO] Total time:  7.960 s
+[INFO] Finished at: 2026-01-07T19:58:24Z
 [INFO] ------------------------------------------------------------------------
   Scanning productManagementSystem for consumer tests...
 [INFO] Scanning for projects...
@@ -148,7 +455,7 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 [INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ productManagementSystem ---
-[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ productManagementSystem ---
 [INFO] Copying 1 resource from src/main/resources to target/classes
@@ -176,32 +483,52 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.productmanagement.ProductServicePactTest
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-WARNING: A Java agent has been loaded dynamically (/root/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
+WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-ProductService initialized with Webshop API URL: http://localhost:37281/api/products/sync
+ProductService initialized with Webshop API URL: http://localhost:33895/api/products/sync
 ProductService initialized with Warehouse API URL: http://warehouse-dummy
-Syncing product 1 to http://localhost:37281/api/products/sync
+Syncing product 1 to http://localhost:33895/api/products/sync
 Syncing product 1 to http://warehouse-dummy
 Exception during sync to http://warehouse-dummy: java.net.ConnectException
-Synced to http://localhost:37281/api/products/sync. Response: {"status":"success"}
 [Thread-3] WARN au.com.dius.pact.core.support.Metrics - 
             Please note: we are tracking events anonymously to gather important usage statistics like JVM version
             and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
             variable to 'true'.
             
+Exception during sync to http://localhost:33895/api/products/sync: java.io.IOException: HTTP/1.1 header parser received no bytes
+[HTTP-Dispatcher] ERROR au.com.dius.pact.consumer.BaseJdkMockServer$Companion - Failed to generate response
+java.io.IOException: stream is closed
+	at jdk.httpserver/sun.net.httpserver.Request$WriteStream.write(Request.java:379)
+	at java.base/java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:125)
+	at java.base/java.io.BufferedOutputStream.implFlush(BufferedOutputStream.java:252)
+	at java.base/java.io.BufferedOutputStream.flush(BufferedOutputStream.java:240)
+	at jdk.httpserver/sun.net.httpserver.ExchangeImpl.sendResponseHeaders(ExchangeImpl.java:281)
+	at jdk.httpserver/sun.net.httpserver.HttpExchangeImpl.sendResponseHeaders(HttpExchangeImpl.java:85)
+	at au.com.dius.pact.consumer.BaseJdkMockServer.pactResponseToHttpExchange(MockHttpServer.kt:283)
+	at au.com.dius.pact.consumer.BaseJdkMockServer.handle(MockHttpServer.kt:260)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:98)
+	at jdk.httpserver/sun.net.httpserver.AuthFilter.doFilter(AuthFilter.java:82)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:101)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(ServerImpl.java:871)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:98)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Exchange.run(ServerImpl.java:847)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$DefaultExecutor.execute(ServerImpl.java:204)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Dispatcher.handle(ServerImpl.java:566)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Dispatcher.run(ServerImpl.java:532)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.961 s -- in com.example.productmanagement.ProductServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.869 s -- in com.example.productmanagement.ProductServicePactTest
 [INFO] Running com.example.productmanagement.ProductServiceWarehousePactTest
 ProductService initialized with Webshop API URL: http://webshop-dummy
-ProductService initialized with Warehouse API URL: http://localhost:41353/api/products/sync
+ProductService initialized with Warehouse API URL: http://localhost:37667/api/products/sync
 Syncing product 1 to http://webshop-dummy
-Syncing product 1 to http://localhost:41353/api/products/sync
-Synced to http://localhost:41353/api/products/sync. Response: {"status":"success"}
-Exception during sync to http://webshop-dummy: java.net.ConnectException
+Syncing product 1 to http://localhost:37667/api/products/sync
+Exception during sync to http://webshop-dummy: java.net.ConnectExceptionSynced to http://localhost:37667/api/products/sync. Response: {"status":"success"}
+
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.626 s -- in com.example.productmanagement.ProductServiceWarehousePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.641 s -- in com.example.productmanagement.ProductServiceWarehousePactTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -214,8 +541,8 @@ Exception during sync to http://webshop-dummy: java.net.ConnectException
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  6.637 s
-[INFO] Finished at: 2026-01-06T20:52:40Z
+[INFO] Total time:  9.047 s
+[INFO] Finished at: 2026-01-07T19:58:35Z
 [INFO] ------------------------------------------------------------------------
   Scanning warehouse for consumer tests...
 [INFO] Scanning for projects...
@@ -229,7 +556,7 @@ Exception during sync to http://webshop-dummy: java.net.ConnectException
 [INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ warehouse ---
-[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ warehouse ---
 [INFO] Copying 1 resource from src/main/resources to target/classes
@@ -259,20 +586,40 @@ Exception during sync to http://webshop-dummy: java.net.ConnectException
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.warehouse.StockServicePactTest
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-WARNING: A Java agent has been loaded dynamically (/root/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
+WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-StockService initialized with Webshop Stock API URL: http://localhost:39413/api/stock/sync
-Syncing stock for product 1 (Stock: 50) to http://localhost:39413/api/stock/sync
+StockService initialized with Webshop Stock API URL: http://localhost:43509/api/stock/sync
+Syncing stock for product 1 (Stock: 50) to http://localhost:43509/api/stock/sync
 [Thread-3] WARN au.com.dius.pact.core.support.Metrics - 
             Please note: we are tracking events anonymously to gather important usage statistics like JVM version
             and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
             variable to 'true'.
             
-Synced stock for product 1 to Webshop.
+Exception during stock sync: java.io.IOException: HTTP/1.1 header parser received no bytes
+[HTTP-Dispatcher] ERROR au.com.dius.pact.consumer.BaseJdkMockServer$Companion - Failed to generate response
+java.io.IOException: stream is closed
+	at jdk.httpserver/sun.net.httpserver.Request$WriteStream.write(Request.java:379)
+	at java.base/java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:125)
+	at java.base/java.io.BufferedOutputStream.implFlush(BufferedOutputStream.java:252)
+	at java.base/java.io.BufferedOutputStream.flush(BufferedOutputStream.java:240)
+	at jdk.httpserver/sun.net.httpserver.ExchangeImpl.sendResponseHeaders(ExchangeImpl.java:281)
+	at jdk.httpserver/sun.net.httpserver.HttpExchangeImpl.sendResponseHeaders(HttpExchangeImpl.java:85)
+	at au.com.dius.pact.consumer.BaseJdkMockServer.pactResponseToHttpExchange(MockHttpServer.kt:283)
+	at au.com.dius.pact.consumer.BaseJdkMockServer.handle(MockHttpServer.kt:260)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:98)
+	at jdk.httpserver/sun.net.httpserver.AuthFilter.doFilter(AuthFilter.java:82)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:101)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(ServerImpl.java:871)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:98)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Exchange.run(ServerImpl.java:847)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$DefaultExecutor.execute(ServerImpl.java:204)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Dispatcher.handle(ServerImpl.java:566)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Dispatcher.run(ServerImpl.java:532)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.748 s -- in com.example.warehouse.StockServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.600 s -- in com.example.warehouse.StockServicePactTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -285,8 +632,8 @@ Synced stock for product 1 to Webshop.
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.789 s
-[INFO] Finished at: 2026-01-06T20:52:47Z
+[INFO] Total time:  7.902 s
+[INFO] Finished at: 2026-01-07T19:58:45Z
 [INFO] ------------------------------------------------------------------------
   Scanning orderService for consumer tests...
 [INFO] Scanning for projects...
@@ -300,7 +647,7 @@ Synced stock for product 1 to Webshop.
 [INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ orderService ---
-[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ orderService ---
 [INFO] Copying 1 resource from src/main/resources to target/classes
@@ -327,11 +674,11 @@ Synced stock for product 1 to Webshop.
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.order.LoyaltyIntegrationServicePactTest
-WARNING: A Java agent has been loaded dynamically (/root/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 LoyaltyIntegrationService: Accruing points for order 101
 LoyaltyIntegrationService: Redeeming 50 points for order 102
 [Thread-3] WARN au.com.dius.pact.core.support.Metrics - 
@@ -340,19 +687,19 @@ LoyaltyIntegrationService: Redeeming 50 points for order 102
             variable to 'true'.
             
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.840 s -- in com.example.order.LoyaltyIntegrationServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.736 s -- in com.example.order.LoyaltyIntegrationServicePactTest
 [INFO] Running com.example.order.StockReservationServicePactTest
-StockReservationService: Reserving stock for product 1 at http://localhost:33041/api/stock/reserve
+StockReservationService: Reserving stock for product 1 at http://localhost:33801/api/stock/reserve
 StockReservationService: Got token (length: 11)
 StockReservationService: Response status: 200
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.129 s -- in com.example.order.StockReservationServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.143 s -- in com.example.order.StockReservationServicePactTest
 [INFO] Running com.example.order.OrderFulfillmentServicePactTest
-OrderFulfillmentService: Notifying fulfillment for order 123 at http://localhost:38043/api/fulfillment/order
+OrderFulfillmentService: Notifying fulfillment for order 123 at http://localhost:34079/api/fulfillment/order
 OrderFulfillmentService: Got token (length: 11)
 OrderFulfillmentService: Response status: 200
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.122 s -- in com.example.order.OrderFulfillmentServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.136 s -- in com.example.order.OrderFulfillmentServicePactTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -365,8 +712,8 @@ OrderFulfillmentService: Response status: 200
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  6.473 s
-[INFO] Finished at: 2026-01-06T20:52:54Z
+[INFO] Total time:  8.761 s
+[INFO] Finished at: 2026-01-07T19:58:55Z
 [INFO] ------------------------------------------------------------------------
   Scanning loyaltyService for consumer tests...
 [INFO] Scanning for projects...
@@ -380,7 +727,7 @@ OrderFulfillmentService: Response status: 200
 [INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ loyalty-service ---
-[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ loyalty-service ---
 [INFO] skip non existing resourceDirectory /usr/src/mymaven/src/main/resources
@@ -418,8 +765,8 @@ OrderFulfillmentService: Response status: 200
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  2.671 s
-[INFO] Finished at: 2026-01-06T20:52:58Z
+[INFO] Total time:  3.859 s
+[INFO] Finished at: 2026-01-07T19:59:01Z
 [INFO] ------------------------------------------------------------------------
 Phase 2: Verifying Contracts (Provider Tests)...
   Scanning webshop for provider tests...
@@ -434,7 +781,7 @@ Phase 2: Verifying Contracts (Provider Tests)...
 [INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ webshop ---
-[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ webshop ---
 [INFO] Copying 1 resource from src/main/resources to target/classes
@@ -478,8 +825,8 @@ Stock Sync received: {"pmId":1,"stock":50}
 Mock Repository: Updated stock for PM ID 1 to 50
     returns a response which
       has status code 200 (OK)
-[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
       has a matching body (OK)
+[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
 [main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Webshop is up':SETUP
 
 Verifying a pact between ProductManagementSystem and WebshopService
@@ -497,7 +844,7 @@ Mock Repository: Upserted product Pact Book
       has status code 200 (OK)
       has a matching body (OK)
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.534 s -- in com.example.webshop.WebshopPactProviderTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.064 s -- in com.example.webshop.WebshopPactProviderTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -510,8 +857,8 @@ Mock Repository: Upserted product Pact Book
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  4.527 s
-[INFO] Finished at: 2026-01-06T20:53:04Z
+[INFO] Total time:  6.195 s
+[INFO] Finished at: 2026-01-07T19:59:09Z
 [INFO] ------------------------------------------------------------------------
   Scanning productManagementSystem for provider tests...
 [INFO] Scanning for projects...
@@ -525,7 +872,7 @@ Mock Repository: Upserted product Pact Book
 [INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ productManagementSystem ---
-[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ productManagementSystem ---
 [INFO] Copying 1 resource from src/main/resources to target/classes
@@ -563,8 +910,8 @@ Mock Repository: Upserted product Pact Book
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.005 s
-[INFO] Finished at: 2026-01-06T20:53:08Z
+[INFO] Total time:  4.140 s
+[INFO] Finished at: 2026-01-07T19:59:15Z
 [INFO] ------------------------------------------------------------------------
   Scanning warehouse for provider tests...
 [INFO] Scanning for projects...
@@ -578,7 +925,7 @@ Mock Repository: Upserted product Pact Book
 [INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ warehouse ---
-[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ warehouse ---
 [INFO] Copying 1 resource from src/main/resources to target/classes
@@ -625,11 +972,11 @@ Verifying a pact between OrderService and WarehouseService
             
 Fulfillment request received: {"orderId":123}
 Mock Repository: Created fulfillment order 123
+[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Not all of the 2 were verified. The following were missing:
+[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator -     A request to reserve stock
     returns a response which
       has status code 200 (OK)
       has a matching body (OK)
-[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Not all of the 2 were verified. The following were missing:
-[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator -     A request to reserve stock
 [main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Warehouse is up':SETUP
 
 Verifying a pact between OrderService and WarehouseService
@@ -661,7 +1008,7 @@ Mock Repository: Upserted product Pact Book
       has status code 200 (OK)
       has a matching body (OK)
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.614 s -- in com.example.warehouse.WarehousePactProviderTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.258 s -- in com.example.warehouse.WarehousePactProviderTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -674,8 +1021,8 @@ Mock Repository: Upserted product Pact Book
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.038 s
-[INFO] Finished at: 2026-01-06T20:53:14Z
+[INFO] Total time:  6.702 s
+[INFO] Finished at: 2026-01-07T19:59:23Z
 [INFO] ------------------------------------------------------------------------
   Scanning orderService for provider tests...
 [INFO] Scanning for projects...
@@ -689,7 +1036,7 @@ Mock Repository: Upserted product Pact Book
 [INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ orderService ---
-[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ orderService ---
 [INFO] Copying 1 resource from src/main/resources to target/classes
@@ -717,15 +1064,15 @@ Mock Repository: Upserted product Pact Book
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.order.OrderPactProviderTest
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-WARNING: A Java agent has been loaded dynamically (/root/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
+WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
 Test Server started on port 8083
 [main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Order Service is up':SETUP
 
-Verifying a pact between WebshopService and OrderService
-  [Using File ../pacts/WebshopService-OrderService.json]
+Verifying a pact between Webshop and OrderService
+  [Using File ../pacts/Webshop-OrderService.json]
   Given Order Service is up
   A request to create an order
 
@@ -736,23 +1083,6 @@ Verifying a pact between WebshopService and OrderService
             and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
             variable to 'true'.
             
-Received Order: {"customerName":"John Doe","items":[{"productId":1,"quantity":2}]}
-Mock Repository: Created order John Doe
-Mock Repository: Updated status for order 123 to PENDING_CONFIRMATION
-OrderController: Returning 201 Created
-    returns a response which
-      has status code 201 (OK)
-      has a matching body (OK)
-[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Order Service is up':SETUP
-
-Verifying a pact between Webshop and OrderService
-  [Using File ../pacts/Webshop-OrderService.json]
-  Given Order Service is up
-  A request to create an order
-
-  Comments:
-
 Received Order: {"customerName":"John Doe","items":[{"productId":1,"quantity":2}]}
 Mock Repository: Created order John Doe
 Mock Repository: Updated status for order 123 to PENDING_CONFIRMATION
@@ -772,14 +1102,14 @@ Verifying a pact between Webshop and OrderService
   Comments:
 
     returns a response which
+[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
       has status code 200 (OK)
       has a matching body (OK)
-[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.914 s -- in com.example.order.OrderPactProviderTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.459 s -- in com.example.order.OrderPactProviderTest
 [INFO] 
 [INFO] Results:
 [INFO] 
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 [INFO] 
 [INFO] 
 [INFO] --- jacoco:0.8.11:report (report) @ orderService ---
@@ -788,8 +1118,8 @@ Verifying a pact between Webshop and OrderService
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  6.393 s
-[INFO] Finished at: 2026-01-06T20:53:22Z
+[INFO] Total time:  8.961 s
+[INFO] Finished at: 2026-01-07T19:59:34Z
 [INFO] ------------------------------------------------------------------------
   Scanning loyaltyService for provider tests...
 [INFO] Scanning for projects...
@@ -803,7 +1133,7 @@ Verifying a pact between Webshop and OrderService
 [INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ loyalty-service ---
-[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ loyalty-service ---
 [INFO] skip non existing resourceDirectory /usr/src/mymaven/src/main/resources
@@ -830,7 +1160,7 @@ Verifying a pact between Webshop and OrderService
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.loyalty.LoyaltyPactProviderTest
-WARNING: A Java agent has been loaded dynamically (/root/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
+WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
@@ -882,7 +1212,7 @@ LoyaltyController received POST /api/loyalty/accrue
       has status code 200 (OK)
       has a matching body (OK)
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.033 s -- in com.example.loyalty.LoyaltyPactProviderTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.495 s -- in com.example.loyalty.LoyaltyPactProviderTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -895,8 +1225,8 @@ LoyaltyController received POST /api/loyalty/accrue
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.871 s
-[INFO] Finished at: 2026-01-06T20:53:29Z
+[INFO] Total time:  8.333 s
+[INFO] Finished at: 2026-01-07T19:59:44Z
 [INFO] ------------------------------------------------------------------------
 ✅ Contract Validation Passed.
 
@@ -917,7 +1247,7 @@ Created a new certificate valid for the following names 📜
 
 The certificate is at "/home/roland/Good Project/infrastructure/nginx/certs/localhost.pem" and the key at "/home/roland/Good Project/infrastructure/nginx/certs/localhost-key.pem" ✅
 
-It will expire on 6 April 2028 🗓
+It will expire on 7 April 2028 🗓
 
 Certificates generated in /home/roland/Good Project/infrastructure/nginx/certs
 Compiling Webshop application...
@@ -932,7 +1262,7 @@ Compiling Webshop application...
 [INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ webshop ---
-[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ webshop ---
 [INFO] Copying 1 resource from src/main/resources to target/classes
@@ -964,8 +1294,8 @@ Compiling Webshop application...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  4.426 s
-[INFO] Finished at: 2026-01-06T20:53:35Z
+[INFO] Total time:  5.665 s
+[INFO] Finished at: 2026-01-07T19:59:52Z
 [INFO] ------------------------------------------------------------------------
 Compiling Product Management application...
 [INFO] Scanning for projects...
@@ -979,7 +1309,7 @@ Compiling Product Management application...
 [INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ productManagementSystem ---
-[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ productManagementSystem ---
 [INFO] Copying 1 resource from src/main/resources to target/classes
@@ -1013,8 +1343,8 @@ Compiling Product Management application...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.964 s
-[INFO] Finished at: 2026-01-06T20:53:40Z
+[INFO] Total time:  5.727 s
+[INFO] Finished at: 2026-01-07T19:59:59Z
 [INFO] ------------------------------------------------------------------------
 Compiling Warehouse Service...
 [INFO] Scanning for projects...
@@ -1028,7 +1358,7 @@ Compiling Warehouse Service...
 [INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ warehouse ---
-[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ warehouse ---
 [INFO] Copying 1 resource from src/main/resources to target/classes
@@ -1064,8 +1394,8 @@ Compiling Warehouse Service...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  4.157 s
-[INFO] Finished at: 2026-01-06T20:53:45Z
+[INFO] Total time:  5.628 s
+[INFO] Finished at: 2026-01-07T20:00:07Z
 [INFO] ------------------------------------------------------------------------
 Compiling Order Service...
 [INFO] Scanning for projects...
@@ -1079,7 +1409,7 @@ Compiling Order Service...
 [INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ orderService ---
-[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ orderService ---
 [INFO] Copying 1 resource from src/main/resources to target/classes
@@ -1113,8 +1443,8 @@ Compiling Order Service...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.965 s
-[INFO] Finished at: 2026-01-06T20:53:50Z
+[INFO] Total time:  5.951 s
+[INFO] Finished at: 2026-01-07T20:00:14Z
 [INFO] ------------------------------------------------------------------------
 Compiling Loyalty Service...
 [INFO] Scanning for projects...
@@ -1128,7 +1458,7 @@ Compiling Loyalty Service...
 [INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ loyalty-service ---
-[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
+[INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ loyalty-service ---
 [INFO] skip non existing resourceDirectory /usr/src/mymaven/src/main/resources
@@ -1162,10 +1492,10 @@ Compiling Loyalty Service...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.895 s
-[INFO] Finished at: 2026-01-06T20:53:55Z
+[INFO] Total time:  5.241 s
+[INFO] Finished at: 2026-01-07T20:00:21Z
 [INFO] ------------------------------------------------------------------------
-2f44b6c33330a745a35603b859ca31216984e5901289d8441c77710cd345a215
+dc91ca0b1c82c3f62000a0ab503d68d2e0d847a4b5a0d7081be7353d8f7a9e5d
 Starting Webshop Database container...
 Starting PM Database container...
 Starting Warehouse Database container...
@@ -1231,7 +1561,7 @@ Running Cypress tests against https://reverse-proxy:8444...
 [STARTED] Task without title.
 [SUCCESS] Task without title.
 
-DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-be7d-a570f5996961
+DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-ae32-44a87f789ccc
 [35mThe [33mexperimentalSessionAndOrigin[35m configuration option was removed in Cypress version 12.0.0.[39m
 [35m[39m
 [35mYou can safely remove this option from your config.[39m
@@ -1261,12 +1591,12 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 
 [0m[0m
 [0m  Loyalty Program E2E[0m
-  [32m  ✓[0m[90m Test 1: Earn and Burn Flow[0m[33m (10178ms)[0m
-  [32m  ✓[0m[90m Test 2: Complex Rule Stacking[0m[90m (3648ms)[0m
-  [32m  ✓[0m[90m Test 3: Admin Dashboards[0m[90m (1487ms)[0m
+  [32m  ✓[0m[90m Test 1: Earn and Burn Flow[0m[33m (15341ms)[0m
+  [32m  ✓[0m[90m Test 2: Complex Rule Stacking[0m[90m (4413ms)[0m
+  [32m  ✓[0m[90m Test 3: Admin Dashboards[0m[90m (1958ms)[0m
 
 
-[92m [0m[32m 3 passing[0m[90m (17s)[0m
+[92m [0m[32m 3 passing[0m[90m (24s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -1279,7 +1609,7 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m16 seconds[39m                                                                       [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m23 seconds[39m                                                                       [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mloyalty_program.cy.js[32m[39m                                                            [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -1295,12 +1625,12 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 
 [0m[0m
 [0m  Navigation Links[0m
-  [32m  ✓[0m[90m should navigate correctly in Webshop[0m[90m (144ms)[0m
-  [32m  ✓[0m[90m should navigate correctly in Product Management[0m[90m (753ms)[0m
-  [32m  ✓[0m[90m should navigate correctly in Warehouse[0m[90m (748ms)[0m
+  [32m  ✓[0m[90m should navigate correctly in Webshop[0m[90m (197ms)[0m
+  [32m  ✓[0m[90m should navigate correctly in Product Management[0m[90m (1043ms)[0m
+  [32m  ✓[0m[90m should navigate correctly in Warehouse[0m[90m (1005ms)[0m
 
 
-[92m [0m[32m 3 passing[0m[90m (5s)[0m
+[92m [0m[32m 3 passing[0m[90m (8s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -1313,7 +1643,7 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m4 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m7 seconds[39m                                                                        [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mnavigation.cy.js[32m[39m                                                                 [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -1329,7 +1659,7 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 
 [0m[0m
 [0m  Order Flow[0m
-  [32m  ✓[0m[90m should place an order, reduce stock, and show in order history[0m[33m (13381ms)[0m
+  [32m  ✓[0m[90m should place an order, reduce stock, and show in order history[0m[33m (12949ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (13s)[0m
@@ -1345,7 +1675,7 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m13 seconds[39m                                                                       [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m12 seconds[39m                                                                       [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32morder_flow.cy.js[32m[39m                                                                 [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -1361,8 +1691,8 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 
 [0m[0m
 [0m  Order Service Navigation[0m
-  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (736ms)[0m
-  [32m  ✓[0m[90m should logout correctly from header[0m[90m (702ms)[0m
+  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (718ms)[0m
+  [32m  ✓[0m[90m should logout correctly from header[0m[90m (720ms)[0m
 
 
 [92m [0m[32m 2 passing[0m[90m (3s)[0m
@@ -1394,8 +1724,8 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 
 [0m[0m
 [0m  Product Management Navigation[0m
-  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (2330ms)[0m
-  [32m  ✓[0m[90m should logout correctly from header[0m[90m (642ms)[0m
+  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (2304ms)[0m
+  [32m  ✓[0m[90m should logout correctly from header[0m[90m (654ms)[0m
 
 
 [92m [0m[32m 2 passing[0m[90m (3s)[0m
@@ -1411,7 +1741,7 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m3 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m2 seconds[39m                                                                        [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mpm_navigation.cy.js[32m[39m                                                              [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -1427,7 +1757,7 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 
 [0m[0m
 [0m  Product Management CRUD[0m
-  [32m  ✓[0m[90m should create, edit, and delete a product[0m[90m (3152ms)[0m
+  [32m  ✓[0m[90m should create, edit, and delete a product[0m[90m (3139ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (3s)[0m
@@ -1459,7 +1789,7 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 
 [0m[0m
 [0m  Product Synchronization[0m
-  [32m  ✓[0m[90m should sync create, update, and delete to webshop[0m[90m (9224ms)[0m
+  [32m  ✓[0m[90m should sync create, update, and delete to webshop[0m[90m (9208ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (9s)[0m
@@ -1491,7 +1821,7 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 
 [0m[0m
 [0m  Product Variations[0m
-  [32m  ✓[0m[90m should handle dynamic attributes and prevent duplicates[0m[90m (5939ms)[0m
+  [32m  ✓[0m[90m should handle dynamic attributes and prevent duplicates[0m[90m (5952ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (6s)[0m
@@ -1523,7 +1853,7 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 
 [0m[0m
 [0m  User Registration Flow[0m
-  [32m  ✓[0m[90m should allow a new user to register, login, and logout[0m[90m (3963ms)[0m
+  [32m  ✓[0m[90m should allow a new user to register, login, and logout[0m[90m (3978ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (4s)[0m
@@ -1539,7 +1869,7 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m3 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m4 seconds[39m                                                                        [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mregistration_flow.cy.js[32m[39m                                                          [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -1555,10 +1885,10 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 
 [0m[0m
 [0m  Security and Error Handling[0m
-  [32m  ✓[0m[90m should reject login with invalid credentials[0m[90m (1718ms)[0m
-  [32m  ✓[0m[90m should enforce Role-Based Access Control (RBAC)[0m[90m (1120ms)[0m
-  [32m  ✓[0m[90m should redirect to login when accessing protected resources without auth[0m[90m (103ms)[0m
-  [32m  ✓[0m[90m should validate input when creating a product[0m[90m (1498ms)[0m
+  [32m  ✓[0m[90m should reject login with invalid credentials[0m[90m (1713ms)[0m
+  [32m  ✓[0m[90m should enforce Role-Based Access Control (RBAC)[0m[90m (1131ms)[0m
+  [32m  ✓[0m[90m should redirect to login when accessing protected resources without auth[0m[90m (99ms)[0m
+  [32m  ✓[0m[90m should validate input when creating a product[0m[90m (1505ms)[0m
 
 
 [92m [0m[32m 4 passing[0m[90m (8s)[0m
@@ -1590,8 +1920,8 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 
 [0m[0m
 [0m  Shopping Cart[0m
-  [32m  ✓[0m[90m should add, view, and remove a product from the cart[0m[90m (612ms)[0m
-  [32m  ✓[0m[90m should not allow adding more items than available in stock[0m[90m (854ms)[0m
+  [32m  ✓[0m[90m should add, view, and remove a product from the cart[0m[90m (616ms)[0m
+  [32m  ✓[0m[90m should not allow adding more items than available in stock[0m[90m (852ms)[0m
 
 
 [92m [0m[32m 2 passing[0m[90m (3s)[0m
@@ -1623,7 +1953,15 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 
 [0m[0m
 [0m  Warehouse Delivery Management[0m
-  [32m  ✓[0m[90m should create delivery, add items, and return delivery[0m[90m (1748ms)[0m
+Warning: vkCreateInstance: Found no drivers!
+Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
+    at CheckVkSuccessImpl (../../third_party/dawn/src/dawn/native/vulkan/VulkanError.cpp:88)
+    at CreateVkInstance (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:458)
+    at Initialize (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:344)
+    at Create (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:266)
+    at operator() (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:521)
+
+  [32m  ✓[0m[90m should create delivery, add items, and return delivery[0m[90m (1754ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (3s)[0m
@@ -1655,10 +1993,10 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 
 [0m[0m
 [0m  Warehouse Order Fulfillment[0m
-  [32m  ✓[0m[90m should display confirmed orders in warehouse and allow fulfillment[0m[90m (6529ms)[0m
+  [32m  ✓[0m[90m should display confirmed orders in warehouse and allow fulfillment[0m[90m (6424ms)[0m
 
 
-[92m [0m[32m 1 passing[0m[90m (7s)[0m
+[92m [0m[32m 1 passing[0m[90m (6s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -1687,16 +2025,8 @@ DevTools listening on ws://127.0.0.1:40149/devtools/browser/0295366f-7dd5-4b34-b
 
 [0m[0m
 [0m  Warehouse Navigation[0m
-Warning: vkCreateInstance: Found no drivers!
-Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
-    at CheckVkSuccessImpl (../../third_party/dawn/src/dawn/native/vulkan/VulkanError.cpp:88)
-    at CreateVkInstance (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:458)
-    at Initialize (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:344)
-    at Create (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:266)
-    at operator() (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:521)
-
-  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (1202ms)[0m
-  [32m  ✓[0m[90m should logout correctly from header[0m[90m (660ms)[0m
+  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (1263ms)[0m
+  [32m  ✓[0m[90m should logout correctly from header[0m[90m (625ms)[0m
 
 
 [92m [0m[32m 2 passing[0m[90m (3s)[0m
@@ -1728,7 +2058,7 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 
 [0m[0m
 [0m  Warehouse Synchronization[0m
-  [32m  ✓[0m[90m should sync create, update, and delete to warehouse[0m[33m (13303ms)[0m
+  [32m  ✓[0m[90m should sync create, update, and delete to warehouse[0m[33m (13219ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (13s)[0m
@@ -1760,8 +2090,8 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 
 [0m[0m
 [0m  Webshop Navigation[0m
-  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (4824ms)[0m
-  [32m  ✓[0m[90m should logout correctly from header[0m[90m (984ms)[0m
+  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (4787ms)[0m
+  [32m  ✓[0m[90m should logout correctly from header[0m[90m (956ms)[0m
 
 
 [92m [0m[32m 2 passing[0m[90m (7s)[0m
@@ -1777,7 +2107,7 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m7 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m6 seconds[39m                                                                        [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mwebshop_navigation.cy.js[32m[39m                                                         [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -1794,15 +2124,15 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 
 [90m   [39m    [90mSpec[39m                                              [90mTests[39m  [90mPassing[39m  [90mFailing[39m  [90mPending[39m  [90mSkipped[39m [90m [39m
 [90m  ┌[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┐[39m
-[90m  │[39m [32m✔[39m  [0mloyalty_program.cy.js[0m                    [90m00:16[39m        [0m3[0m        [32m3[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mloyalty_program.cy.js[0m                    [90m00:23[39m        [0m3[0m        [32m3[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mnavigation.cy.js[0m                         [90m00:04[39m        [0m3[0m        [32m3[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mnavigation.cy.js[0m                         [90m00:07[39m        [0m3[0m        [32m3[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0morder_flow.cy.js[0m                         [90m00:13[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0morder_flow.cy.js[0m                         [90m00:12[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0morder_navigation.cy.js[0m                   [90m00:02[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mpm_navigation.cy.js[0m                      [90m00:03[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mpm_navigation.cy.js[0m                      [90m00:02[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0mproduct_crud.cy.js[0m                       [90m00:03[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
@@ -1810,7 +2140,7 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0mproduct_variations.cy.js[0m                 [90m00:05[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mregistration_flow.cy.js[0m                  [90m00:03[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mregistration_flow.cy.js[0m                  [90m00:04[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0msecurity_and_errors.cy.js[0m                [90m00:07[39m        [0m4[0m        [32m4[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
@@ -1824,9 +2154,9 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0mwarehouse_sync.cy.js[0m                     [90m00:13[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mwebshop_navigation.cy.js[0m                 [90m00:07[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mwebshop_navigation.cy.js[0m                 [90m00:06[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
-[90m   [39m [32m✔[39m  [32mAll specs passed![39m                        [90m01:46[39m       [0m28[0m       [32m28[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m [39m
+[90m   [39m [32m✔[39m  [32mAll specs passed![39m                        [90m01:55[39m       [0m28[0m       [32m28[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m [39m
 
 ✅ Functional Validation Passed.
 
@@ -1834,5 +2164,5 @@ All validations passed successfully!
 
 --- Cleaning up temporary files ---
 --- Stopping containers ---
-Removing network: webshop-net-161966
-Total execution time: 332 seconds
+Removing network: webshop-net-310092
+Total execution time: 429 seconds

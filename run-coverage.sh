@@ -18,20 +18,30 @@ rm -f pacts/WebshopService-OrderService.json
 # Download JaCoCo CLI to cache so it's available for aggregation
 echo "Downloading JaCoCo CLI..."
 docker run --rm \
-    -v "$(pwd)/m2-cache:/root/.m2" \
+    -u "$(id -u):$(id -g)" \
+    -e HOME=/tmp \
+    -e MAVEN_CONFIG=/tmp/.m2 \
+    -v "$(pwd)/m2-cache:/tmp/.m2" \
+    -v /etc/passwd:/etc/passwd:ro \
+    -v /etc/group:/etc/group:ro \
     maven:3.9.6-eclipse-temurin-21 \
-    mvn dependency:get -Dartifact=org.jacoco:org.jacoco.cli:0.8.11:jar:nodeps
+    mvn dependency:get -Dartifact=org.jacoco:org.jacoco.cli:0.8.11:jar:nodeps -Dmaven.repo.local=/tmp/.m2/repository
 
 MODULES="productManagementSystem orderService warehouse webshop loyaltyService"
 
 for module in $MODULES; do
     echo "Running tests for $module..."
     docker run --rm \
+        -u "$(id -u):$(id -g)" \
+        -e HOME=/tmp \
+        -e MAVEN_CONFIG=/tmp/.m2 \
         -v "$(pwd)/applications/$module:/usr/src/mymaven" \
-        -v "$(pwd)/m2-cache:/root/.m2" \
+        -v "$(pwd)/m2-cache:/tmp/.m2" \
         -v "$(pwd)/pacts:/usr/src/pacts" \
+        -v /etc/passwd:/etc/passwd:ro \
+        -v /etc/group:/etc/group:ro \
         -w /usr/src/mymaven \
-        maven:3.9.6-eclipse-temurin-21 mvn clean test jacoco:report
+        maven:3.9.6-eclipse-temurin-21 mvn clean test jacoco:report -Dmaven.repo.local=/tmp/.m2/repository
 
     echo "Coverage report for $module generated at: applications/$module/target/site/jacoco/index.html"
 done
@@ -59,11 +69,15 @@ if [ -n "$JACOCO_ARGS" ]; then
     # Mount root project to /project to access all modules
     # Mount m2-cache to access the downloaded jacoco-cli jar
     docker run --rm \
+        -u "$(id -u):$(id -g)" \
+        -e HOME=/tmp \
         -v "$(pwd):/project" \
-        -v "$(pwd)/m2-cache:/root/.m2" \
+        -v "$(pwd)/m2-cache:/tmp/.m2" \
+        -v /etc/passwd:/etc/passwd:ro \
+        -v /etc/group:/etc/group:ro \
         -w /project \
         maven:3.9.6-eclipse-temurin-21 \
-        java -jar /root/.m2/repository/org/jacoco/org.jacoco.cli/0.8.11/org.jacoco.cli-0.8.11-nodeps.jar \
+        java -jar /tmp/.m2/repository/org/jacoco/org.jacoco.cli/0.8.11/org.jacoco.cli-0.8.11-nodeps.jar \
         report $JACOCO_ARGS \
         --html coverage-aggregate/index.html \
         --name "Good Project Aggregated Coverage"

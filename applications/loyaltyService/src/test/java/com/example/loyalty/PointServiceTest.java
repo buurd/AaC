@@ -6,6 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,7 +29,8 @@ class PointServiceTest {
         double amount = 100.0;
         int expectedPoints = 100;
 
-        when(ruleEngine.evaluate(amount)).thenReturn(expectedPoints);
+        // Fix: Match the actual call signature (evaluate(double, List))
+        when(ruleEngine.evaluate(eq(amount), any())).thenReturn(expectedPoints);
 
         pointService.accruePoints(customerId, amount);
 

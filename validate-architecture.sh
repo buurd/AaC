@@ -167,14 +167,14 @@ run_runtime_check() {
 
 # --- Pre-computation Steps ---
 echo "Step 1: Exporting Structurizr DSL to JSON..."
-docker run --rm -v "$(pwd)/structurizr:/usr/local/structurizr" structurizr/cli export -workspace workspace.dsl -format json > /dev/null
+docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd)/structurizr:/usr/local/structurizr" structurizr/cli export -workspace workspace.dsl -format json > /dev/null
 mv -f structurizr/workspace.json workspace.json
 
 echo "Step 2: Generating file system view..."
 find . -path ./.git -prune -o -type f -print | sed 's|^\./||' | jq -R . | jq -s . > project-files.json
 
 echo "Step 3: Aggregating requirements..."
-docker run --rm -v "$(pwd):/workdir" mikefarah/yq eval-all -o=json '. as $doc ireduce ({}; .requirements += [$doc])' requirements/*.yaml > requirements.json
+docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/workdir" mikefarah/yq eval-all -o=json '. as $doc ireduce ({}; .requirements += [$doc])' requirements/*.yaml > requirements.json
 
 echo "Step 4: Combining inputs for validations..."
 jq -n '{files: $files, reqs: $reqs}' --slurpfile files project-files.json --slurpfile reqs requirements.json > implementation-input.json
@@ -185,7 +185,7 @@ jq -n '{files: $files, reqs: $reqs}' --slurpfile files test-files.json --slurpfi
 jq -n '{model: $model, reqs: $reqs}' --slurpfile model workspace.json --slurpfile reqs requirements.json > relation-input.json
 
 echo "Step 5: Parsing Kubernetes manifests..."
-docker run --rm -v "$(pwd):/workdir" mikefarah/yq eval-all -o=json '.' infrastructure/k8s/*.yaml | jq -s . > k8s-manifests.json
+docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/workdir" mikefarah/yq eval-all -o=json '.' infrastructure/k8s/*.yaml | jq -s . > k8s-manifests.json
 
 echo "Step 6: Combining inputs for K8s validation..."
 jq -n '{k8s: $k8s[0], reqs: $reqs}' --slurpfile k8s k8s-manifests.json --slurpfile reqs requirements.json > k8s-validation-input.json
@@ -203,6 +203,33 @@ run_opa_validation "HTTPS Usage Validation" "/project/test-content-input.json" "
 run_opa_validation "Pact Verification Validation" "/project/implementation-input.json" "/project/policies/check_pact_verification.rego" "data.integration.pact.violation"
 run_opa_validation "Kubernetes Deployment Validation" "/project/k8s-validation-input.json" "/project/policies/check_k8s_deployment.rego" "data.k8s.deployment.violation"
 
+# --- Unit Validation ---
+echo
+echo "--- Running: Unit Validation ---"
+mkdir -p m2-cache
+MODULES="webshop productManagementSystem warehouse orderService loyaltyService"
+
+for module in $MODULES; do
+    if [ -d "applications/$module" ] && [ -f "applications/$module/pom.xml" ]; then
+        echo "  Running unit tests for $module..."
+        if ! docker run --rm \
+            -u "$(id -u):$(id -g)" \
+            -e HOME=/tmp \
+            -e MAVEN_CONFIG=/tmp/.m2 \
+            -v "$(pwd)/applications/$module:/usr/src/mymaven" \
+            -v "$(pwd)/m2-cache:/tmp/.m2" \
+            -v /etc/passwd:/etc/passwd:ro \
+            -v /etc/group:/etc/group:ro \
+            -w /usr/src/mymaven \
+            maven:3.9.6-eclipse-temurin-21 mvn clean test -Dgroups='!pact-consumer & !pact-provider' -Dmaven.repo.local=/tmp/.m2/repository; then
+            echo "🔴 Unit Tests Failed in $module"
+            exit 1
+        fi
+    fi
+done
+
+echo "✅ Unit Validation Passed."
+
 # --- Contract Validation (Pact) ---
 echo
 echo "--- Running: Contract Validation (Pact) ---"
@@ -214,11 +241,16 @@ for module in $MODULES; do
     if [ -d "applications/$module" ] && [ -f "applications/$module/pom.xml" ]; then
         echo "  Scanning $module for consumer tests..."
         if ! docker run --rm \
+            -u "$(id -u):$(id -g)" \
+            -e HOME=/tmp \
+            -e MAVEN_CONFIG=/tmp/.m2 \
             -v "$(pwd)/applications/$module:/usr/src/mymaven" \
             -v "$(pwd)/pacts:/usr/src/pacts" \
-            -v "$(pwd)/m2-cache:/root/.m2" \
+            -v "$(pwd)/m2-cache:/tmp/.m2" \
+            -v /etc/passwd:/etc/passwd:ro \
+            -v /etc/group:/etc/group:ro \
             -w /usr/src/mymaven \
-            maven:3.9.6-eclipse-temurin-21 mvn clean test -Dgroups=pact-consumer -DfailIfNoTests=false; then
+            maven:3.9.6-eclipse-temurin-21 mvn clean test -Dgroups=pact-consumer -DfailIfNoTests=false -Dmaven.repo.local=/tmp/.m2/repository; then
             echo "🔴 Consumer Contract Tests Failed in $module"
             exit 1
         fi
@@ -230,11 +262,16 @@ for module in $MODULES; do
     if [ -d "applications/$module" ] && [ -f "applications/$module/pom.xml" ]; then
         echo "  Scanning $module for provider tests..."
         if ! docker run --rm \
+            -u "$(id -u):$(id -g)" \
+            -e HOME=/tmp \
+            -e MAVEN_CONFIG=/tmp/.m2 \
             -v "$(pwd)/applications/$module:/usr/src/mymaven" \
             -v "$(pwd)/pacts:/usr/src/pacts" \
-            -v "$(pwd)/m2-cache:/root/.m2" \
+            -v "$(pwd)/m2-cache:/tmp/.m2" \
+            -v /etc/passwd:/etc/passwd:ro \
+            -v /etc/group:/etc/group:ro \
             -w /usr/src/mymaven \
-            maven:3.9.6-eclipse-temurin-21 mvn clean test -Dgroups=pact-provider -DfailIfNoTests=false; then
+            maven:3.9.6-eclipse-temurin-21 mvn clean test -Dgroups=pact-provider -DfailIfNoTests=false -Dmaven.repo.local=/tmp/.m2/repository; then
             echo "🔴 Provider Contract Verification Failed in $module"
             exit 1
         fi
@@ -254,33 +291,63 @@ mkdir -p ./m2-cache
 
 echo "Compiling Webshop application..."
 docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -e HOME=/tmp \
+    -e MAVEN_CONFIG=/tmp/.m2 \
     -v "$(pwd)/applications/webshop:/usr/src/mymaven" \
-    -v "$(pwd)/m2-cache:/root/.m2" \
-    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
+    -v "$(pwd)/m2-cache:/tmp/.m2" \
+    -v /etc/passwd:/etc/passwd:ro \
+    -v /etc/group:/etc/group:ro \
+    -w /usr/src/mymaven \
+    maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests -Dmaven.repo.local=/tmp/.m2/repository
 
 echo "Compiling Product Management application..."
 docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -e HOME=/tmp \
+    -e MAVEN_CONFIG=/tmp/.m2 \
     -v "$(pwd)/applications/productManagementSystem:/usr/src/mymaven" \
-    -v "$(pwd)/m2-cache:/root/.m2" \
-    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
+    -v "$(pwd)/m2-cache:/tmp/.m2" \
+    -v /etc/passwd:/etc/passwd:ro \
+    -v /etc/group:/etc/group:ro \
+    -w /usr/src/mymaven \
+    maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests -Dmaven.repo.local=/tmp/.m2/repository
 
 echo "Compiling Warehouse Service..."
 docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -e HOME=/tmp \
+    -e MAVEN_CONFIG=/tmp/.m2 \
     -v "$(pwd)/applications/warehouse:/usr/src/mymaven" \
-    -v "$(pwd)/m2-cache:/root/.m2" \
-    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
+    -v "$(pwd)/m2-cache:/tmp/.m2" \
+    -v /etc/passwd:/etc/passwd:ro \
+    -v /etc/group:/etc/group:ro \
+    -w /usr/src/mymaven \
+    maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests -Dmaven.repo.local=/tmp/.m2/repository
 
 echo "Compiling Order Service..."
 docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -e HOME=/tmp \
+    -e MAVEN_CONFIG=/tmp/.m2 \
     -v "$(pwd)/applications/orderService:/usr/src/mymaven" \
-    -v "$(pwd)/m2-cache:/root/.m2" \
-    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
+    -v "$(pwd)/m2-cache:/tmp/.m2" \
+    -v /etc/passwd:/etc/passwd:ro \
+    -v /etc/group:/etc/group:ro \
+    -w /usr/src/mymaven \
+    maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests -Dmaven.repo.local=/tmp/.m2/repository
 
 echo "Compiling Loyalty Service..."
 docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -e HOME=/tmp \
+    -e MAVEN_CONFIG=/tmp/.m2 \
     -v "$(pwd)/applications/loyaltyService:/usr/src/mymaven" \
-    -v "$(pwd)/m2-cache:/root/.m2" \
-    -w /usr/src/mymaven maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests
+    -v "$(pwd)/m2-cache:/tmp/.m2" \
+    -v /etc/passwd:/etc/passwd:ro \
+    -v /etc/group:/etc/group:ro \
+    -w /usr/src/mymaven \
+    maven:3.9.6-eclipse-temurin-21 mvn clean package -DskipTests -Dmaven.repo.local=/tmp/.m2/repository
 
 NETWORK_NAME="webshop-net-$$"
 docker network create $NETWORK_NAME
