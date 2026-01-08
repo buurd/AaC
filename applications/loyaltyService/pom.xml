@@ -63,6 +63,13 @@
             <version>5.7.0</version>
             <scope>test</scope>
         </dependency>
+        <!-- H2 Database for Testing -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.2.224</version>
+            <scope>test</scope>
+        </dependency>
         <!-- Pact Provider -->
         <dependency>
             <groupId>au.com.dius.pact.provider</groupId>

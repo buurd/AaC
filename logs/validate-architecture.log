@@ -1,16 +1,4 @@
 --- Checking for leftover containers ---
-Removing leftover container: webshop-demo
-Removing leftover container: pm-demo
-Removing leftover container: warehouse-demo
-Removing leftover container: order-service
-Removing leftover container: loyalty-service
-Removing leftover container: keycloak
-Removing leftover container: reverse-proxy
-Removing leftover container: db_webshop
-Removing leftover container: db_pm
-Removing leftover container: db_warehouse
-Removing leftover container: db_order
-Removing leftover container: db_loyalty
 Step 1: Exporting Structurizr DSL to JSON...
 Step 2: Generating file system view...
 Step 3: Aggregating requirements...
@@ -94,7 +82,7 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 ProductSyncController received POST request
 Received JSON: {"id":1,"type":"T-Shirt","name":"Classic T-Shirt - Red S","description":"100% Cotton","price":20.00,"unit":"pcs"}
 Parsed Product: Product{id=0, pmId=1, name='Classic T-Shirt - Red S', price=20.00 pcs, stock=0}
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.674 s -- in com.example.webshop.ProductSyncControllerTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.582 s -- in com.example.webshop.ProductSyncControllerTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -107,8 +95,8 @@ Parsed Product: Product{id=0, pmId=1, name='Classic T-Shirt - Red S', price=20.0
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.753 s
-[INFO] Finished at: 2026-01-07T19:57:43Z
+[INFO] Total time:  5.558 s
+[INFO] Finished at: 2026-01-08T16:55:11Z
 [INFO] ------------------------------------------------------------------------
   Running unit tests for productManagementSystem...
 [INFO] Scanning for projects...
@@ -149,16 +137,16 @@ Parsed Product: Product{id=0, pmId=1, name='Classic T-Shirt - Red S', price=20.0
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.productmanagement.ProductServiceTest
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 ProductService initialized with Webshop API URL: null
 ProductService initialized with Warehouse API URL: null
 ProductService initialized with Webshop API URL: null
 ProductService initialized with Warehouse API URL: null
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.816 s -- in com.example.productmanagement.ProductServiceTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.874 s -- in com.example.productmanagement.ProductServiceTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -171,8 +159,8 @@ ProductService initialized with Warehouse API URL: null
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  6.226 s
-[INFO] Finished at: 2026-01-07T19:57:51Z
+[INFO] Total time:  6.048 s
+[INFO] Finished at: 2026-01-08T16:55:19Z
 [INFO] ------------------------------------------------------------------------
   Running unit tests for warehouse...
 [INFO] Scanning for projects...
@@ -223,7 +211,7 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 StockService initialized with Webshop Stock API URL: http://webshop/api/stock/sync
 Syncing stock for product 123 (Stock: 50) to http://webshop/api/stock/sync
 Failed to sync stock to Webshop. Status: 0 Body: null
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.880 s -- in com.example.warehouse.StockServiceTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.705 s -- in com.example.warehouse.StockServiceTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -236,8 +224,8 @@ Failed to sync stock to Webshop. Status: 0 Body: null
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  6.025 s
-[INFO] Finished at: 2026-01-07T19:57:59Z
+[INFO] Total time:  5.752 s
+[INFO] Finished at: 2026-01-08T16:55:26Z
 [INFO] ------------------------------------------------------------------------
   Running unit tests for orderService...
 [INFO] Scanning for projects...
@@ -285,7 +273,7 @@ WARNING: If a serviceability tool is not in use, please run with -Djdk.instrumen
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
 Received Order: {"customerName":"John Doe","items":[{"productId":1,"quantity":2},{"productId":5,"quantity":1}]}
 OrderController: Returning 201 Created
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.167 s -- in com.example.order.OrderControllerTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.172 s -- in com.example.order.OrderControllerTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -298,8 +286,8 @@ OrderController: Returning 201 Created
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  6.631 s
-[INFO] Finished at: 2026-01-07T19:58:07Z
+[INFO] Total time:  6.416 s
+[INFO] Finished at: 2026-01-08T16:55:34Z
 [INFO] ------------------------------------------------------------------------
   Running unit tests for loyaltyService...
 [INFO] Scanning for projects...
@@ -331,7 +319,9 @@ OrderController: Returning 201 Created
 [INFO] 
 [INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ loyalty-service ---
 [INFO] Changes detected - recompiling the module! :dependency
-[INFO] Compiling 4 source files with javac [debug target 21] to target/test-classes
+[INFO] Compiling 9 source files with javac [debug target 21] to target/test-classes
+[INFO] /usr/src/mymaven/src/test/java/com/example/loyalty/LoyaltyApplicationTest.java: /usr/src/mymaven/src/test/java/com/example/loyalty/LoyaltyApplicationTest.java uses unchecked or unsafe operations.
+[INFO] /usr/src/mymaven/src/test/java/com/example/loyalty/LoyaltyApplicationTest.java: Recompile with -Xlint:unchecked for details.
 [INFO] 
 [INFO] --- surefire:3.2.3:test (default-test) @ loyalty-service ---
 [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
@@ -340,27 +330,286 @@ OrderController: Returning 201 Created
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.loyalty.BonusRuleEngineTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s -- in com.example.loyalty.BonusRuleEngineTest
-[INFO] Running com.example.loyalty.LoyaltyProgramTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.091 s -- in com.example.loyalty.BonusRuleEngineTest
+[INFO] Running com.example.loyalty.OrderItemTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.example.loyalty.OrderItemTest
+[INFO] Running com.example.loyalty.LoyaltyApplicationTest
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.709 s -- in com.example.loyalty.LoyaltyApplicationTest
+[INFO] Running com.example.loyalty.LoyaltyControllerTest
+LoyaltyController received GET /unknown
+LoyaltyController received POST /api/loyalty/calculate
+LoyaltyController received POST /api/loyalty/accrue
+LoyaltyController received GET /admin/dashboard
+LoyaltyController received POST /api/loyalty/accrue
+LoyaltyController received POST /api/loyalty/redeem
+LoyaltyController received GET /api/loyalty/balance/John Doe
+LoyaltyController received GET /
+LoyaltyController received POST /api/loyalty/redeem
+LoyaltyController received GET /api/loyalty/rules
+LoyaltyController received POST /api/loyalty/admin/toggle-bonus
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.789 s -- in com.example.loyalty.LoyaltyControllerTest
+[INFO] Running com.example.loyalty.LoyaltyProgramTest
 Accrued 93 points for customer shopper3
 Accrued 100 points for customer shopper1
 Redeemed 50 points for customer shopper1
 Accrued 90 points for customer shopper2
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.382 s -- in com.example.loyalty.LoyaltyProgramTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.068 s -- in com.example.loyalty.LoyaltyProgramTest
+[INFO] Running com.example.loyalty.LoyaltyRepositoryTest
+LoyaltyRepository: Adding 200 points to user2
+LoyaltyRepository: addPoints finished for user2
+LoyaltyRepository: Redeeming 50 points from user2
+LoyaltyRepository: Current points for user2: 200
+LoyaltyRepository: Redeemed successfully for user2
+LoyaltyRepository: getPoints for user2 -> 150
+LoyaltyRepository: Redeeming 50 points from unknown
+LoyaltyRepository: Redemption failed for unknown
+LoyaltyRepository: Adding 100 points to user1
+LoyaltyRepository: addPoints finished for user1
+LoyaltyRepository: getPoints for user1 -> 100
+LoyaltyRepository: Adding 50 points to user1
+LoyaltyRepository: addPoints finished for user1
+LoyaltyRepository: getPoints for user1 -> 150
+LoyaltyRepository: Adding 50 points to user3
+LoyaltyRepository: addPoints finished for user3
+LoyaltyRepository: Redeeming 100 points from user3
+LoyaltyRepository: Current points for user3: 50
+LoyaltyRepository: Redemption failed for user3
+LoyaltyRepository: getPoints for user3 -> 50
+LoyaltyRepository: getPoints for unknown -> 0 (not found)
+LoyaltyRepository: Adding 100 points to userA
+LoyaltyRepository: addPoints finished for userA
+LoyaltyRepository: Adding 200 points to userB
+LoyaltyRepository: addPoints finished for userB
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.604 s -- in com.example.loyalty.LoyaltyRepositoryTest
 [INFO] Running com.example.loyalty.PointServiceTest
 Redeemed 50 points for customer user1
 Failed to redeem 50 points for customer user1
 Accrued 100 points for customer user1
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.165 s -- in com.example.loyalty.PointServiceTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s -- in com.example.loyalty.PointServiceTest
+[INFO] Running com.example.loyalty.SecurityFilterTest
+java.lang.Exception: Invalid signature
+	at com.example.loyalty.SecurityFilterTest.testInvalidToken_ApiRequest(SecurityFilterTest.java:90)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:218)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:214)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:139)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+java.lang.Exception: Invalid signature
+	at com.example.loyalty.SecurityFilterTest.testInvalidToken_BrowserRequest(SecurityFilterTest.java:101)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:218)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:214)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:139)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+java.lang.Exception: Invalid signature
+	at com.example.loyalty.SecurityFilterTest.testTokenFromCookie(SecurityFilterTest.java:169)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:218)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:214)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:139)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.217 s -- in com.example.loyalty.SecurityFilterTest
 [INFO] 
 [INFO] Results:
 [INFO] 
-[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 47, Failures: 0, Errors: 0, Skipped: 0
 [INFO] 
 [INFO] 
 [INFO] --- jacoco:0.8.11:report (report) @ loyalty-service ---
@@ -369,8 +618,8 @@ Accrued 100 points for customer user1
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.365 s
-[INFO] Finished at: 2026-01-07T19:58:15Z
+[INFO] Total time:  7.262 s
+[INFO] Finished at: 2026-01-08T16:55:43Z
 [INFO] ------------------------------------------------------------------------
 ✅ Unit Validation Passed.
 
@@ -419,15 +668,15 @@ Phase 1: Generating Contracts (Consumer Tests)...
             variable to 'true'.
             
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.085 s -- in com.example.webshop.LoyaltyServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.131 s -- in com.example.webshop.LoyaltyServicePactTest
 [INFO] Running com.example.webshop.OrderServicePactTest
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.782 s -- in com.example.webshop.OrderServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.814 s -- in com.example.webshop.OrderServicePactTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -440,8 +689,8 @@ OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader clas
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  7.960 s
-[INFO] Finished at: 2026-01-07T19:58:24Z
+[INFO] Total time:  7.896 s
+[INFO] Finished at: 2026-01-08T16:55:53Z
 [INFO] ------------------------------------------------------------------------
   Scanning productManagementSystem for consumer tests...
 [INFO] Scanning for projects...
@@ -487,9 +736,9 @@ WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/byteb
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-ProductService initialized with Webshop API URL: http://localhost:33895/api/products/sync
+ProductService initialized with Webshop API URL: http://localhost:43857/api/products/sync
 ProductService initialized with Warehouse API URL: http://warehouse-dummy
-Syncing product 1 to http://localhost:33895/api/products/sync
+Syncing product 1 to http://localhost:43857/api/products/sync
 Syncing product 1 to http://warehouse-dummy
 Exception during sync to http://warehouse-dummy: java.net.ConnectException
 [Thread-3] WARN au.com.dius.pact.core.support.Metrics - 
@@ -497,7 +746,7 @@ Exception during sync to http://warehouse-dummy: java.net.ConnectException
             and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
             variable to 'true'.
             
-Exception during sync to http://localhost:33895/api/products/sync: java.io.IOException: HTTP/1.1 header parser received no bytes
+Exception during sync to http://localhost:43857/api/products/sync: java.io.IOException: HTTP/1.1 header parser received no bytes
 [HTTP-Dispatcher] ERROR au.com.dius.pact.consumer.BaseJdkMockServer$Companion - Failed to generate response
 java.io.IOException: stream is closed
 	at jdk.httpserver/sun.net.httpserver.Request$WriteStream.write(Request.java:379)
@@ -519,16 +768,16 @@ java.io.IOException: stream is closed
 	at jdk.httpserver/sun.net.httpserver.ServerImpl$Dispatcher.run(ServerImpl.java:532)
 	at java.base/java.lang.Thread.run(Thread.java:1583)
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.869 s -- in com.example.productmanagement.ProductServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.758 s -- in com.example.productmanagement.ProductServicePactTest
 [INFO] Running com.example.productmanagement.ProductServiceWarehousePactTest
 ProductService initialized with Webshop API URL: http://webshop-dummy
-ProductService initialized with Warehouse API URL: http://localhost:37667/api/products/sync
+ProductService initialized with Warehouse API URL: http://localhost:42215/api/products/sync
 Syncing product 1 to http://webshop-dummy
-Syncing product 1 to http://localhost:37667/api/products/sync
-Exception during sync to http://webshop-dummy: java.net.ConnectExceptionSynced to http://localhost:37667/api/products/sync. Response: {"status":"success"}
-
+Syncing product 1 to http://localhost:42215/api/products/sync
+Synced to http://localhost:42215/api/products/sync. Response: {"status":"success"}
+Exception during sync to http://webshop-dummy: java.net.ConnectException
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.641 s -- in com.example.productmanagement.ProductServiceWarehousePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.638 s -- in com.example.productmanagement.ProductServiceWarehousePactTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -541,8 +790,8 @@ Exception during sync to http://webshop-dummy: java.net.ConnectExceptionSynced t
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  9.047 s
-[INFO] Finished at: 2026-01-07T19:58:35Z
+[INFO] Total time:  8.607 s
+[INFO] Finished at: 2026-01-08T16:56:03Z
 [INFO] ------------------------------------------------------------------------
   Scanning warehouse for consumer tests...
 [INFO] Scanning for projects...
@@ -590,8 +839,8 @@ WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/byteb
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-StockService initialized with Webshop Stock API URL: http://localhost:43509/api/stock/sync
-Syncing stock for product 1 (Stock: 50) to http://localhost:43509/api/stock/sync
+StockService initialized with Webshop Stock API URL: http://localhost:40323/api/stock/sync
+Syncing stock for product 1 (Stock: 50) to http://localhost:40323/api/stock/sync
 [Thread-3] WARN au.com.dius.pact.core.support.Metrics - 
             Please note: we are tracking events anonymously to gather important usage statistics like JVM version
             and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
@@ -619,7 +868,7 @@ java.io.IOException: stream is closed
 	at jdk.httpserver/sun.net.httpserver.ServerImpl$Dispatcher.run(ServerImpl.java:532)
 	at java.base/java.lang.Thread.run(Thread.java:1583)
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.600 s -- in com.example.warehouse.StockServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.556 s -- in com.example.warehouse.StockServicePactTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -632,8 +881,8 @@ java.io.IOException: stream is closed
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  7.902 s
-[INFO] Finished at: 2026-01-07T19:58:45Z
+[INFO] Total time:  7.516 s
+[INFO] Finished at: 2026-01-08T16:56:13Z
 [INFO] ------------------------------------------------------------------------
   Scanning orderService for consumer tests...
 [INFO] Scanning for projects...
@@ -687,19 +936,19 @@ LoyaltyIntegrationService: Redeeming 50 points for order 102
             variable to 'true'.
             
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.736 s -- in com.example.order.LoyaltyIntegrationServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.774 s -- in com.example.order.LoyaltyIntegrationServicePactTest
 [INFO] Running com.example.order.StockReservationServicePactTest
-StockReservationService: Reserving stock for product 1 at http://localhost:33801/api/stock/reserve
+StockReservationService: Reserving stock for product 1 at http://localhost:38367/api/stock/reserve
 StockReservationService: Got token (length: 11)
 StockReservationService: Response status: 200
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.143 s -- in com.example.order.StockReservationServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.153 s -- in com.example.order.StockReservationServicePactTest
 [INFO] Running com.example.order.OrderFulfillmentServicePactTest
-OrderFulfillmentService: Notifying fulfillment for order 123 at http://localhost:34079/api/fulfillment/order
+OrderFulfillmentService: Notifying fulfillment for order 123 at http://localhost:38991/api/fulfillment/order
 OrderFulfillmentService: Got token (length: 11)
 OrderFulfillmentService: Response status: 200
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.136 s -- in com.example.order.OrderFulfillmentServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.143 s -- in com.example.order.OrderFulfillmentServicePactTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -712,8 +961,8 @@ OrderFulfillmentService: Response status: 200
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  8.761 s
-[INFO] Finished at: 2026-01-07T19:58:55Z
+[INFO] Total time:  8.405 s
+[INFO] Finished at: 2026-01-08T16:56:23Z
 [INFO] ------------------------------------------------------------------------
   Scanning loyaltyService for consumer tests...
 [INFO] Scanning for projects...
@@ -745,7 +994,9 @@ OrderFulfillmentService: Response status: 200
 [INFO] 
 [INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ loyalty-service ---
 [INFO] Changes detected - recompiling the module! :dependency
-[INFO] Compiling 4 source files with javac [debug target 21] to target/test-classes
+[INFO] Compiling 9 source files with javac [debug target 21] to target/test-classes
+[INFO] /usr/src/mymaven/src/test/java/com/example/loyalty/LoyaltyApplicationTest.java: /usr/src/mymaven/src/test/java/com/example/loyalty/LoyaltyApplicationTest.java uses unchecked or unsafe operations.
+[INFO] /usr/src/mymaven/src/test/java/com/example/loyalty/LoyaltyApplicationTest.java: Recompile with -Xlint:unchecked for details.
 [INFO] 
 [INFO] --- surefire:3.2.3:test (default-test) @ loyalty-service ---
 [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
@@ -765,8 +1016,8 @@ OrderFulfillmentService: Response status: 200
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.859 s
-[INFO] Finished at: 2026-01-07T19:59:01Z
+[INFO] Total time:  3.913 s
+[INFO] Finished at: 2026-01-08T16:56:28Z
 [INFO] ------------------------------------------------------------------------
 Phase 2: Verifying Contracts (Provider Tests)...
   Scanning webshop for provider tests...
@@ -844,7 +1095,7 @@ Mock Repository: Upserted product Pact Book
       has status code 200 (OK)
       has a matching body (OK)
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.064 s -- in com.example.webshop.WebshopPactProviderTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.066 s -- in com.example.webshop.WebshopPactProviderTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -857,8 +1108,8 @@ Mock Repository: Upserted product Pact Book
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  6.195 s
-[INFO] Finished at: 2026-01-07T19:59:09Z
+[INFO] Total time:  6.023 s
+[INFO] Finished at: 2026-01-08T16:56:36Z
 [INFO] ------------------------------------------------------------------------
   Scanning productManagementSystem for provider tests...
 [INFO] Scanning for projects...
@@ -910,8 +1161,8 @@ Mock Repository: Upserted product Pact Book
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  4.140 s
-[INFO] Finished at: 2026-01-07T19:59:15Z
+[INFO] Total time:  3.825 s
+[INFO] Finished at: 2026-01-08T16:56:41Z
 [INFO] ------------------------------------------------------------------------
   Scanning warehouse for provider tests...
 [INFO] Scanning for projects...
@@ -972,11 +1223,11 @@ Verifying a pact between OrderService and WarehouseService
             
 Fulfillment request received: {"orderId":123}
 Mock Repository: Created fulfillment order 123
-[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Not all of the 2 were verified. The following were missing:
-[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator -     A request to reserve stock
     returns a response which
       has status code 200 (OK)
       has a matching body (OK)
+[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Not all of the 2 were verified. The following were missing:
+[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator -     A request to reserve stock
 [main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Warehouse is up':SETUP
 
 Verifying a pact between OrderService and WarehouseService
@@ -1008,7 +1259,7 @@ Mock Repository: Upserted product Pact Book
       has status code 200 (OK)
       has a matching body (OK)
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.258 s -- in com.example.warehouse.WarehousePactProviderTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.238 s -- in com.example.warehouse.WarehousePactProviderTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -1021,8 +1272,8 @@ Mock Repository: Upserted product Pact Book
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  6.702 s
-[INFO] Finished at: 2026-01-07T19:59:23Z
+[INFO] Total time:  6.522 s
+[INFO] Finished at: 2026-01-08T16:56:50Z
 [INFO] ------------------------------------------------------------------------
   Scanning orderService for provider tests...
 [INFO] Scanning for projects...
@@ -1087,11 +1338,11 @@ Received Order: {"customerName":"John Doe","items":[{"productId":1,"quantity":2}
 Mock Repository: Created order John Doe
 Mock Repository: Updated status for order 123 to PENDING_CONFIRMATION
 OrderController: Returning 201 Created
+[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Not all of the 2 were verified. The following were missing:
+[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator -     A request to get orders for a customer
     returns a response which
       has status code 201 (OK)
       has a matching body (OK)
-[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Not all of the 2 were verified. The following were missing:
-[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator -     A request to get orders for a customer
 [main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Orders exist for customer':SETUP
 
 Verifying a pact between Webshop and OrderService
@@ -1102,10 +1353,10 @@ Verifying a pact between Webshop and OrderService
   Comments:
 
     returns a response which
-[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
       has status code 200 (OK)
       has a matching body (OK)
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.459 s -- in com.example.order.OrderPactProviderTest
+[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.892 s -- in com.example.order.OrderPactProviderTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -1118,8 +1369,8 @@ Verifying a pact between Webshop and OrderService
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  8.961 s
-[INFO] Finished at: 2026-01-07T19:59:34Z
+[INFO] Total time:  8.303 s
+[INFO] Finished at: 2026-01-08T16:57:00Z
 [INFO] ------------------------------------------------------------------------
   Scanning loyaltyService for provider tests...
 [INFO] Scanning for projects...
@@ -1151,7 +1402,9 @@ Verifying a pact between Webshop and OrderService
 [INFO] 
 [INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ loyalty-service ---
 [INFO] Changes detected - recompiling the module! :dependency
-[INFO] Compiling 4 source files with javac [debug target 21] to target/test-classes
+[INFO] Compiling 9 source files with javac [debug target 21] to target/test-classes
+[INFO] /usr/src/mymaven/src/test/java/com/example/loyalty/LoyaltyApplicationTest.java: /usr/src/mymaven/src/test/java/com/example/loyalty/LoyaltyApplicationTest.java uses unchecked or unsafe operations.
+[INFO] /usr/src/mymaven/src/test/java/com/example/loyalty/LoyaltyApplicationTest.java: Recompile with -Xlint:unchecked for details.
 [INFO] 
 [INFO] --- surefire:3.2.3:test (default-test) @ loyalty-service ---
 [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
@@ -1160,11 +1413,11 @@ Verifying a pact between Webshop and OrderService
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.loyalty.LoyaltyPactProviderTest
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 Test Server started on port 8084
 [main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Loyalty Service is up':SETUP
 
@@ -1212,7 +1465,7 @@ LoyaltyController received POST /api/loyalty/accrue
       has status code 200 (OK)
       has a matching body (OK)
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.495 s -- in com.example.loyalty.LoyaltyPactProviderTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.121 s -- in com.example.loyalty.LoyaltyPactProviderTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -1225,8 +1478,8 @@ LoyaltyController received POST /api/loyalty/accrue
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  8.333 s
-[INFO] Finished at: 2026-01-07T19:59:44Z
+[INFO] Total time:  8.087 s
+[INFO] Finished at: 2026-01-08T16:57:09Z
 [INFO] ------------------------------------------------------------------------
 ✅ Contract Validation Passed.
 
@@ -1247,7 +1500,7 @@ Created a new certificate valid for the following names 📜
 
 The certificate is at "/home/roland/Good Project/infrastructure/nginx/certs/localhost.pem" and the key at "/home/roland/Good Project/infrastructure/nginx/certs/localhost-key.pem" ✅
 
-It will expire on 7 April 2028 🗓
+It will expire on 8 April 2028 🗓
 
 Certificates generated in /home/roland/Good Project/infrastructure/nginx/certs
 Compiling Webshop application...
@@ -1294,8 +1547,8 @@ Compiling Webshop application...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.665 s
-[INFO] Finished at: 2026-01-07T19:59:52Z
+[INFO] Total time:  5.119 s
+[INFO] Finished at: 2026-01-08T16:57:16Z
 [INFO] ------------------------------------------------------------------------
 Compiling Product Management application...
 [INFO] Scanning for projects...
@@ -1343,8 +1596,8 @@ Compiling Product Management application...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.727 s
-[INFO] Finished at: 2026-01-07T19:59:59Z
+[INFO] Total time:  5.253 s
+[INFO] Finished at: 2026-01-08T16:57:23Z
 [INFO] ------------------------------------------------------------------------
 Compiling Warehouse Service...
 [INFO] Scanning for projects...
@@ -1394,8 +1647,8 @@ Compiling Warehouse Service...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.628 s
-[INFO] Finished at: 2026-01-07T20:00:07Z
+[INFO] Total time:  5.281 s
+[INFO] Finished at: 2026-01-08T16:57:30Z
 [INFO] ------------------------------------------------------------------------
 Compiling Order Service...
 [INFO] Scanning for projects...
@@ -1443,8 +1696,8 @@ Compiling Order Service...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.951 s
-[INFO] Finished at: 2026-01-07T20:00:14Z
+[INFO] Total time:  5.221 s
+[INFO] Finished at: 2026-01-08T16:57:37Z
 [INFO] ------------------------------------------------------------------------
 Compiling Loyalty Service...
 [INFO] Scanning for projects...
@@ -1476,7 +1729,9 @@ Compiling Loyalty Service...
 [INFO] 
 [INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ loyalty-service ---
 [INFO] Changes detected - recompiling the module! :dependency
-[INFO] Compiling 4 source files with javac [debug target 21] to target/test-classes
+[INFO] Compiling 9 source files with javac [debug target 21] to target/test-classes
+[INFO] /usr/src/mymaven/src/test/java/com/example/loyalty/LoyaltyApplicationTest.java: /usr/src/mymaven/src/test/java/com/example/loyalty/LoyaltyApplicationTest.java uses unchecked or unsafe operations.
+[INFO] /usr/src/mymaven/src/test/java/com/example/loyalty/LoyaltyApplicationTest.java: Recompile with -Xlint:unchecked for details.
 [INFO] 
 [INFO] --- surefire:3.2.3:test (default-test) @ loyalty-service ---
 [INFO] Tests are skipped.
@@ -1492,10 +1747,10 @@ Compiling Loyalty Service...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.241 s
-[INFO] Finished at: 2026-01-07T20:00:21Z
+[INFO] Total time:  5.096 s
+[INFO] Finished at: 2026-01-08T16:57:44Z
 [INFO] ------------------------------------------------------------------------
-dc91ca0b1c82c3f62000a0ab503d68d2e0d847a4b5a0d7081be7353d8f7a9e5d
+2d2ecac223fd54127e54eae88b4f5b373d51670390b581f182ee6e0c110ebf50
 Starting Webshop Database container...
 Starting PM Database container...
 Starting Warehouse Database container...
@@ -1561,7 +1816,7 @@ Running Cypress tests against https://reverse-proxy:8444...
 [STARTED] Task without title.
 [SUCCESS] Task without title.
 
-DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-ae32-44a87f789ccc
+DevTools listening on ws://127.0.0.1:38853/devtools/browser/9cf70b8e-ab5f-4d23-a596-c1196bd77c30
 [35mThe [33mexperimentalSessionAndOrigin[35m configuration option was removed in Cypress version 12.0.0.[39m
 [35m[39m
 [35mYou can safely remove this option from your config.[39m
@@ -1591,12 +1846,12 @@ DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-a
 
 [0m[0m
 [0m  Loyalty Program E2E[0m
-  [32m  ✓[0m[90m Test 1: Earn and Burn Flow[0m[33m (15341ms)[0m
-  [32m  ✓[0m[90m Test 2: Complex Rule Stacking[0m[90m (4413ms)[0m
-  [32m  ✓[0m[90m Test 3: Admin Dashboards[0m[90m (1958ms)[0m
+  [32m  ✓[0m[90m Test 1: Earn and Burn Flow[0m[33m (14006ms)[0m
+  [32m  ✓[0m[90m Test 2: Complex Rule Stacking[0m[90m (4247ms)[0m
+  [32m  ✓[0m[90m Test 3: Admin Dashboards[0m[90m (1832ms)[0m
 
 
-[92m [0m[32m 3 passing[0m[90m (24s)[0m
+[92m [0m[32m 3 passing[0m[90m (22s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -1609,7 +1864,7 @@ DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-a
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m23 seconds[39m                                                                       [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m22 seconds[39m                                                                       [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mloyalty_program.cy.js[32m[39m                                                            [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -1625,12 +1880,12 @@ DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-a
 
 [0m[0m
 [0m  Navigation Links[0m
-  [32m  ✓[0m[90m should navigate correctly in Webshop[0m[90m (197ms)[0m
-  [32m  ✓[0m[90m should navigate correctly in Product Management[0m[90m (1043ms)[0m
-  [32m  ✓[0m[90m should navigate correctly in Warehouse[0m[90m (1005ms)[0m
+  [32m  ✓[0m[90m should navigate correctly in Webshop[0m[90m (215ms)[0m
+  [32m  ✓[0m[90m should navigate correctly in Product Management[0m[90m (1010ms)[0m
+  [32m  ✓[0m[90m should navigate correctly in Warehouse[0m[90m (939ms)[0m
 
 
-[92m [0m[32m 3 passing[0m[90m (8s)[0m
+[92m [0m[32m 3 passing[0m[90m (7s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -1659,10 +1914,10 @@ DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-a
 
 [0m[0m
 [0m  Order Flow[0m
-  [32m  ✓[0m[90m should place an order, reduce stock, and show in order history[0m[33m (12949ms)[0m
+  [32m  ✓[0m[90m should place an order, reduce stock, and show in order history[0m[33m (15891ms)[0m
 
 
-[92m [0m[32m 1 passing[0m[90m (13s)[0m
+[92m [0m[32m 1 passing[0m[90m (16s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -1675,7 +1930,7 @@ DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-a
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m12 seconds[39m                                                                       [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m15 seconds[39m                                                                       [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32morder_flow.cy.js[32m[39m                                                                 [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -1691,11 +1946,11 @@ DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-a
 
 [0m[0m
 [0m  Order Service Navigation[0m
-  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (718ms)[0m
-  [32m  ✓[0m[90m should logout correctly from header[0m[90m (720ms)[0m
+  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (952ms)[0m
+  [32m  ✓[0m[90m should logout correctly from header[0m[90m (976ms)[0m
 
 
-[92m [0m[32m 2 passing[0m[90m (3s)[0m
+[92m [0m[32m 2 passing[0m[90m (4s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -1708,7 +1963,7 @@ DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-a
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m2 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m3 seconds[39m                                                                        [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32morder_navigation.cy.js[32m[39m                                                           [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -1724,11 +1979,11 @@ DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-a
 
 [0m[0m
 [0m  Product Management Navigation[0m
-  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (2304ms)[0m
-  [32m  ✓[0m[90m should logout correctly from header[0m[90m (654ms)[0m
+  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (2747ms)[0m
+  [32m  ✓[0m[90m should logout correctly from header[0m[90m (843ms)[0m
 
 
-[92m [0m[32m 2 passing[0m[90m (3s)[0m
+[92m [0m[32m 2 passing[0m[90m (4s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -1741,7 +1996,7 @@ DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-a
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m2 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m3 seconds[39m                                                                        [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mpm_navigation.cy.js[32m[39m                                                              [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -1757,10 +2012,10 @@ DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-a
 
 [0m[0m
 [0m  Product Management CRUD[0m
-  [32m  ✓[0m[90m should create, edit, and delete a product[0m[90m (3139ms)[0m
+  [32m  ✓[0m[90m should create, edit, and delete a product[0m[90m (3771ms)[0m
 
 
-[92m [0m[32m 1 passing[0m[90m (3s)[0m
+[92m [0m[32m 1 passing[0m[90m (4s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -1789,10 +2044,10 @@ DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-a
 
 [0m[0m
 [0m  Product Synchronization[0m
-  [32m  ✓[0m[90m should sync create, update, and delete to webshop[0m[90m (9208ms)[0m
+  [32m  ✓[0m[90m should sync create, update, and delete to webshop[0m[90m (9938ms)[0m
 
 
-[92m [0m[32m 1 passing[0m[90m (9s)[0m
+[92m [0m[32m 1 passing[0m[90m (10s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -1821,10 +2076,10 @@ DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-a
 
 [0m[0m
 [0m  Product Variations[0m
-  [32m  ✓[0m[90m should handle dynamic attributes and prevent duplicates[0m[90m (5952ms)[0m
+  [32m  ✓[0m[90m should handle dynamic attributes and prevent duplicates[0m[90m (6771ms)[0m
 
 
-[92m [0m[32m 1 passing[0m[90m (6s)[0m
+[92m [0m[32m 1 passing[0m[90m (7s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -1837,7 +2092,7 @@ DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-a
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m5 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m6 seconds[39m                                                                        [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mproduct_variations.cy.js[32m[39m                                                         [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -1853,7 +2108,115 @@ DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-a
 
 [0m[0m
 [0m  User Registration Flow[0m
-  [32m  ✓[0m[90m should allow a new user to register, login, and logout[0m[90m (3978ms)[0m
+  [32m  ✓[0m[90m should allow a new user to register, login, and logout[0m[90m (5219ms)[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (5s)[0m
+
+
+[32m  ([4m[1mResults[22m[24m)[39m
+
+[90m  ┌[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┐[39m
+[90m  │[39m [90mTests:[39m        [32m1[39m                                                                                [90m│[39m
+[90m  │[39m [90mPassing:[39m      [32m1[39m                                                                                [90m│[39m
+[90m  │[39m [90mFailing:[39m      [32m0[39m                                                                                [90m│[39m
+[90m  │[39m [90mPending:[39m      [32m0[39m                                                                                [90m│[39m
+[90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
+[90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
+[90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m5 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mSpec Ran:[39m     [32m[32mregistration_flow.cy.js[32m[39m                                                          [90m│[39m
+[90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
+
+
+[36m  ([4m[1mVideo[22m[24m)[39m
+
+  -  Video output: [36m/e2e/cypress/videos/registration_flow.cy.js.mp4[39m
+
+
+[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m
+                                                                                                    
+  Running:  [90msecurity_and_errors.cy.js[39m                                                     [90m(10 of 16)[39m
+
+[0m[0m
+[0m  Security and Error Handling[0m
+  [32m  ✓[0m[90m should reject login with invalid credentials[0m[90m (1967ms)[0m
+  [32m  ✓[0m[90m should enforce Role-Based Access Control (RBAC)[0m[90m (1442ms)[0m
+Warning: vkCreateInstance: Found no drivers!
+Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
+    at CheckVkSuccessImpl (../../third_party/dawn/src/dawn/native/vulkan/VulkanError.cpp:88)
+    at CreateVkInstance (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:458)
+    at Initialize (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:344)
+    at Create (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:266)
+    at operator() (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:521)
+
+  [32m  ✓[0m[90m should redirect to login when accessing protected resources without auth[0m[90m (176ms)[0m
+  [32m  ✓[0m[90m should validate input when creating a product[0m[90m (1682ms)[0m
+
+
+[92m [0m[32m 4 passing[0m[90m (11s)[0m
+
+
+[32m  ([4m[1mResults[22m[24m)[39m
+
+[90m  ┌[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┐[39m
+[90m  │[39m [90mTests:[39m        [32m4[39m                                                                                [90m│[39m
+[90m  │[39m [90mPassing:[39m      [32m4[39m                                                                                [90m│[39m
+[90m  │[39m [90mFailing:[39m      [32m0[39m                                                                                [90m│[39m
+[90m  │[39m [90mPending:[39m      [32m0[39m                                                                                [90m│[39m
+[90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
+[90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
+[90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m11 seconds[39m                                                                       [90m│[39m
+[90m  │[39m [90mSpec Ran:[39m     [32m[32msecurity_and_errors.cy.js[32m[39m                                                        [90m│[39m
+[90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
+
+
+[36m  ([4m[1mVideo[22m[24m)[39m
+
+  -  Video output: [36m/e2e/cypress/videos/security_and_errors.cy.js.mp4[39m
+
+
+[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m
+                                                                                                    
+  Running:  [90mshopping_cart.cy.js[39m                                                           [90m(11 of 16)[39m
+
+[0m[0m
+[0m  Shopping Cart[0m
+  [32m  ✓[0m[90m should add, view, and remove a product from the cart[0m[90m (765ms)[0m
+  [32m  ✓[0m[90m should not allow adding more items than available in stock[0m[90m (982ms)[0m
+
+
+[92m [0m[32m 2 passing[0m[90m (4s)[0m
+
+
+[32m  ([4m[1mResults[22m[24m)[39m
+
+[90m  ┌[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┐[39m
+[90m  │[39m [90mTests:[39m        [32m2[39m                                                                                [90m│[39m
+[90m  │[39m [90mPassing:[39m      [32m2[39m                                                                                [90m│[39m
+[90m  │[39m [90mFailing:[39m      [32m0[39m                                                                                [90m│[39m
+[90m  │[39m [90mPending:[39m      [32m0[39m                                                                                [90m│[39m
+[90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
+[90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
+[90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m3 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mSpec Ran:[39m     [32m[32mshopping_cart.cy.js[32m[39m                                                              [90m│[39m
+[90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
+
+
+[36m  ([4m[1mVideo[22m[24m)[39m
+
+  -  Video output: [36m/e2e/cypress/videos/shopping_cart.cy.js.mp4[39m
+
+
+[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m
+                                                                                                    
+  Running:  [90mwarehouse_delivery.cy.js[39m                                                      [90m(12 of 16)[39m
+
+[0m[0m
+[0m  Warehouse Delivery Management[0m
+  [32m  ✓[0m[90m should create delivery, add items, and return delivery[0m[90m (2206ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (4s)[0m
@@ -1870,114 +2233,6 @@ DevTools listening on ws://127.0.0.1:34127/devtools/browser/2036412e-f5ff-4ba3-a
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
 [90m  │[39m [90mDuration:[39m     [32m4 seconds[39m                                                                        [90m│[39m
-[90m  │[39m [90mSpec Ran:[39m     [32m[32mregistration_flow.cy.js[32m[39m                                                          [90m│[39m
-[90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
-
-
-[36m  ([4m[1mVideo[22m[24m)[39m
-
-  -  Video output: [36m/e2e/cypress/videos/registration_flow.cy.js.mp4[39m
-
-
-[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m
-                                                                                                    
-  Running:  [90msecurity_and_errors.cy.js[39m                                                     [90m(10 of 16)[39m
-
-[0m[0m
-[0m  Security and Error Handling[0m
-  [32m  ✓[0m[90m should reject login with invalid credentials[0m[90m (1713ms)[0m
-  [32m  ✓[0m[90m should enforce Role-Based Access Control (RBAC)[0m[90m (1131ms)[0m
-  [32m  ✓[0m[90m should redirect to login when accessing protected resources without auth[0m[90m (99ms)[0m
-  [32m  ✓[0m[90m should validate input when creating a product[0m[90m (1505ms)[0m
-
-
-[92m [0m[32m 4 passing[0m[90m (8s)[0m
-
-
-[32m  ([4m[1mResults[22m[24m)[39m
-
-[90m  ┌[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┐[39m
-[90m  │[39m [90mTests:[39m        [32m4[39m                                                                                [90m│[39m
-[90m  │[39m [90mPassing:[39m      [32m4[39m                                                                                [90m│[39m
-[90m  │[39m [90mFailing:[39m      [32m0[39m                                                                                [90m│[39m
-[90m  │[39m [90mPending:[39m      [32m0[39m                                                                                [90m│[39m
-[90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
-[90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
-[90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m7 seconds[39m                                                                        [90m│[39m
-[90m  │[39m [90mSpec Ran:[39m     [32m[32msecurity_and_errors.cy.js[32m[39m                                                        [90m│[39m
-[90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
-
-
-[36m  ([4m[1mVideo[22m[24m)[39m
-
-  -  Video output: [36m/e2e/cypress/videos/security_and_errors.cy.js.mp4[39m
-
-
-[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m
-                                                                                                    
-  Running:  [90mshopping_cart.cy.js[39m                                                           [90m(11 of 16)[39m
-
-[0m[0m
-[0m  Shopping Cart[0m
-  [32m  ✓[0m[90m should add, view, and remove a product from the cart[0m[90m (616ms)[0m
-  [32m  ✓[0m[90m should not allow adding more items than available in stock[0m[90m (852ms)[0m
-
-
-[92m [0m[32m 2 passing[0m[90m (3s)[0m
-
-
-[32m  ([4m[1mResults[22m[24m)[39m
-
-[90m  ┌[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┐[39m
-[90m  │[39m [90mTests:[39m        [32m2[39m                                                                                [90m│[39m
-[90m  │[39m [90mPassing:[39m      [32m2[39m                                                                                [90m│[39m
-[90m  │[39m [90mFailing:[39m      [32m0[39m                                                                                [90m│[39m
-[90m  │[39m [90mPending:[39m      [32m0[39m                                                                                [90m│[39m
-[90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
-[90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
-[90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m2 seconds[39m                                                                        [90m│[39m
-[90m  │[39m [90mSpec Ran:[39m     [32m[32mshopping_cart.cy.js[32m[39m                                                              [90m│[39m
-[90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
-
-
-[36m  ([4m[1mVideo[22m[24m)[39m
-
-  -  Video output: [36m/e2e/cypress/videos/shopping_cart.cy.js.mp4[39m
-
-
-[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m
-                                                                                                    
-  Running:  [90mwarehouse_delivery.cy.js[39m                                                      [90m(12 of 16)[39m
-
-[0m[0m
-[0m  Warehouse Delivery Management[0m
-Warning: vkCreateInstance: Found no drivers!
-Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
-    at CheckVkSuccessImpl (../../third_party/dawn/src/dawn/native/vulkan/VulkanError.cpp:88)
-    at CreateVkInstance (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:458)
-    at Initialize (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:344)
-    at Create (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:266)
-    at operator() (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:521)
-
-  [32m  ✓[0m[90m should create delivery, add items, and return delivery[0m[90m (1754ms)[0m
-
-
-[92m [0m[32m 1 passing[0m[90m (3s)[0m
-
-
-[32m  ([4m[1mResults[22m[24m)[39m
-
-[90m  ┌[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┐[39m
-[90m  │[39m [90mTests:[39m        [32m1[39m                                                                                [90m│[39m
-[90m  │[39m [90mPassing:[39m      [32m1[39m                                                                                [90m│[39m
-[90m  │[39m [90mFailing:[39m      [32m0[39m                                                                                [90m│[39m
-[90m  │[39m [90mPending:[39m      [32m0[39m                                                                                [90m│[39m
-[90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
-[90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
-[90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m2 seconds[39m                                                                        [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mwarehouse_delivery.cy.js[32m[39m                                                         [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -1993,10 +2248,10 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 
 [0m[0m
 [0m  Warehouse Order Fulfillment[0m
-  [32m  ✓[0m[90m should display confirmed orders in warehouse and allow fulfillment[0m[90m (6424ms)[0m
+  [32m  ✓[0m[90m should display confirmed orders in warehouse and allow fulfillment[0m[90m (8568ms)[0m
 
 
-[92m [0m[32m 1 passing[0m[90m (6s)[0m
+[92m [0m[32m 1 passing[0m[90m (9s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -2009,7 +2264,7 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m6 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m8 seconds[39m                                                                        [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mwarehouse_fulfillment.cy.js[32m[39m                                                      [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -2025,11 +2280,11 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 
 [0m[0m
 [0m  Warehouse Navigation[0m
-  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (1263ms)[0m
-  [32m  ✓[0m[90m should logout correctly from header[0m[90m (625ms)[0m
+  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (1545ms)[0m
+  [32m  ✓[0m[90m should logout correctly from header[0m[90m (814ms)[0m
 
 
-[92m [0m[32m 2 passing[0m[90m (3s)[0m
+[92m [0m[32m 2 passing[0m[90m (4s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -2042,7 +2297,7 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m3 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m4 seconds[39m                                                                        [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mwarehouse_navigation.cy.js[32m[39m                                                       [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -2058,10 +2313,10 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 
 [0m[0m
 [0m  Warehouse Synchronization[0m
-  [32m  ✓[0m[90m should sync create, update, and delete to warehouse[0m[33m (13219ms)[0m
+  [32m  ✓[0m[90m should sync create, update, and delete to warehouse[0m[33m (15457ms)[0m
 
 
-[92m [0m[32m 1 passing[0m[90m (13s)[0m
+[92m [0m[32m 1 passing[0m[90m (15s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -2074,7 +2329,7 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m13 seconds[39m                                                                       [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m15 seconds[39m                                                                       [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mwarehouse_sync.cy.js[32m[39m                                                             [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -2090,11 +2345,11 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 
 [0m[0m
 [0m  Webshop Navigation[0m
-  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (4787ms)[0m
-  [32m  ✓[0m[90m should logout correctly from header[0m[90m (956ms)[0m
+  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (6244ms)[0m
+  [32m  ✓[0m[90m should logout correctly from header[0m[90m (1149ms)[0m
 
 
-[92m [0m[32m 2 passing[0m[90m (7s)[0m
+[92m [0m[32m 2 passing[0m[90m (9s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -2107,7 +2362,7 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m6 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m9 seconds[39m                                                                        [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mwebshop_navigation.cy.js[32m[39m                                                         [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -2124,39 +2379,39 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 
 [90m   [39m    [90mSpec[39m                                              [90mTests[39m  [90mPassing[39m  [90mFailing[39m  [90mPending[39m  [90mSkipped[39m [90m [39m
 [90m  ┌[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┐[39m
-[90m  │[39m [32m✔[39m  [0mloyalty_program.cy.js[0m                    [90m00:23[39m        [0m3[0m        [32m3[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mloyalty_program.cy.js[0m                    [90m00:22[39m        [0m3[0m        [32m3[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0mnavigation.cy.js[0m                         [90m00:07[39m        [0m3[0m        [32m3[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0morder_flow.cy.js[0m                         [90m00:12[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0morder_flow.cy.js[0m                         [90m00:15[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0morder_navigation.cy.js[0m                   [90m00:02[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0morder_navigation.cy.js[0m                   [90m00:03[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mpm_navigation.cy.js[0m                      [90m00:02[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mpm_navigation.cy.js[0m                      [90m00:03[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0mproduct_crud.cy.js[0m                       [90m00:03[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0mproduct_sync.cy.js[0m                       [90m00:09[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mproduct_variations.cy.js[0m                 [90m00:05[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mproduct_variations.cy.js[0m                 [90m00:06[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mregistration_flow.cy.js[0m                  [90m00:04[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mregistration_flow.cy.js[0m                  [90m00:05[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0msecurity_and_errors.cy.js[0m                [90m00:07[39m        [0m4[0m        [32m4[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0msecurity_and_errors.cy.js[0m                [90m00:11[39m        [0m4[0m        [32m4[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mshopping_cart.cy.js[0m                      [90m00:02[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mshopping_cart.cy.js[0m                      [90m00:03[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mwarehouse_delivery.cy.js[0m                 [90m00:02[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mwarehouse_delivery.cy.js[0m                 [90m00:04[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mwarehouse_fulfillment.cy.js[0m              [90m00:06[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mwarehouse_fulfillment.cy.js[0m              [90m00:08[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mwarehouse_navigation.cy.js[0m               [90m00:03[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mwarehouse_navigation.cy.js[0m               [90m00:04[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mwarehouse_sync.cy.js[0m                     [90m00:13[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mwarehouse_sync.cy.js[0m                     [90m00:15[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mwebshop_navigation.cy.js[0m                 [90m00:06[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mwebshop_navigation.cy.js[0m                 [90m00:09[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
-[90m   [39m [32m✔[39m  [32mAll specs passed![39m                        [90m01:55[39m       [0m28[0m       [32m28[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m [39m
+[90m   [39m [32m✔[39m  [32mAll specs passed![39m                        [90m02:15[39m       [0m28[0m       [32m28[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m [39m
 
 ✅ Functional Validation Passed.
 
@@ -2164,5 +2419,5 @@ All validations passed successfully!
 
 --- Cleaning up temporary files ---
 --- Stopping containers ---
-Removing network: webshop-net-310092
-Total execution time: 429 seconds
+Removing network: webshop-net-359118
+Total execution time: 451 seconds

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InvoiceRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Good Project Aggregated Coverage</a> &gt; <a href="index.source.html" class="el_package">com.example.order</a> &gt; <span class="el_source">InvoiceRepository.java</span></div><h1>InvoiceRepository.java</h1><pre class="source lang-java linenums">package com.example.order;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+public class InvoiceRepository {
+    private final Connection connection;
+
+<span class="nc" id="L14">    public InvoiceRepository(Connection connection) {</span>
+<span class="nc" id="L15">        this.connection = connection;</span>
+<span class="nc" id="L16">    }</span>
+
+    public void createInvoice(Invoice invoice) throws SQLException {
+<span class="nc" id="L19">        String sql = &quot;INSERT INTO invoices (order_id, customer_name, amount, due_date, paid) VALUES (?, ?, ?, ?, ?)&quot;;</span>
+<span class="nc" id="L20">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
+<span class="nc" id="L21">            stmt.setInt(1, invoice.getOrderId());</span>
+<span class="nc" id="L22">            stmt.setString(2, invoice.getCustomerName());</span>
+<span class="nc" id="L23">            stmt.setDouble(3, invoice.getAmount());</span>
+<span class="nc" id="L24">            stmt.setDate(4, Date.valueOf(invoice.getDueDate()));</span>
+<span class="nc" id="L25">            stmt.setBoolean(5, invoice.isPaid());</span>
+<span class="nc" id="L26">            stmt.executeUpdate();</span>
+        }
+<span class="nc" id="L28">    }</span>
+
+    public List&lt;Invoice&gt; findByCustomer(String customerName) throws SQLException {
+<span class="nc" id="L31">        List&lt;Invoice&gt; invoices = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L32">        String sql = &quot;SELECT * FROM invoices WHERE customer_name = ?&quot;;</span>
+<span class="nc" id="L33">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
+<span class="nc" id="L34">            stmt.setString(1, customerName);</span>
+<span class="nc" id="L35">            try (ResultSet rs = stmt.executeQuery()) {</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">                while (rs.next()) {</span>
+<span class="nc" id="L37">                    invoices.add(mapRow(rs));</span>
+                }
+            }
+        }
+<span class="nc" id="L41">        return invoices;</span>
+    }
+
+    public Invoice findById(int id) throws SQLException {
+<span class="nc" id="L45">        String sql = &quot;SELECT * FROM invoices WHERE id = ?&quot;;</span>
+<span class="nc" id="L46">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
+<span class="nc" id="L47">            stmt.setInt(1, id);</span>
+<span class="nc" id="L48">            try (ResultSet rs = stmt.executeQuery()) {</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">                if (rs.next()) {</span>
+<span class="nc" id="L50">                    return mapRow(rs);</span>
+                }
+<span class="nc bnc" id="L52" title="All 2 branches missed.">            }</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        }</span>
+<span class="nc" id="L54">        return null;</span>
+    }
+
+    public void markPaid(int id) throws SQLException {
+<span class="nc" id="L58">        String sql = &quot;UPDATE invoices SET paid = true WHERE id = ?&quot;;</span>
+<span class="nc" id="L59">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
+<span class="nc" id="L60">            stmt.setInt(1, id);</span>
+<span class="nc" id="L61">            stmt.executeUpdate();</span>
+        }
+<span class="nc" id="L63">    }</span>
+    
+    public List&lt;Invoice&gt; findAll() throws SQLException {
+<span class="nc" id="L66">        List&lt;Invoice&gt; invoices = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L67">        String sql = &quot;SELECT * FROM invoices&quot;;</span>
+<span class="nc" id="L68">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
+<span class="nc" id="L69">            try (ResultSet rs = stmt.executeQuery()) {</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">                while (rs.next()) {</span>
+<span class="nc" id="L71">                    invoices.add(mapRow(rs));</span>
+                }
+            }
+        }
+<span class="nc" id="L75">        return invoices;</span>
+    }
+
+    private Invoice mapRow(ResultSet rs) throws SQLException {
+<span class="nc" id="L79">        Invoice invoice = new Invoice();</span>
+<span class="nc" id="L80">        invoice.setId(rs.getInt(&quot;id&quot;));</span>
+<span class="nc" id="L81">        invoice.setOrderId(rs.getInt(&quot;order_id&quot;));</span>
+<span class="nc" id="L82">        invoice.setCustomerName(rs.getString(&quot;customer_name&quot;));</span>
+<span class="nc" id="L83">        invoice.setAmount(rs.getDouble(&quot;amount&quot;));</span>
+<span class="nc" id="L84">        invoice.setDueDate(rs.getDate(&quot;due_date&quot;).toLocalDate());</span>
+<span class="nc" id="L85">        invoice.setPaid(rs.getBoolean(&quot;paid&quot;));</span>
+<span class="nc" id="L86">        return invoice;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

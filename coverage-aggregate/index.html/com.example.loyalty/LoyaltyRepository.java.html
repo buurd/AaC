@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoyaltyRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Good Project Aggregated Coverage</a> &gt; <a href="index.source.html" class="el_package">com.example.loyalty</a> &gt; <span class="el_source">LoyaltyRepository.java</span></div><h1>LoyaltyRepository.java</h1><pre class="source lang-java linenums">package com.example.loyalty;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class LoyaltyRepository {
+
+    private final String dbUrl;
+    private final String dbUser;
+    private final String dbPassword;
+
+<span class="fc" id="L16">    public LoyaltyRepository(String dbUrl, String dbUser, String dbPassword) {</span>
+<span class="fc" id="L17">        this.dbUrl = dbUrl;</span>
+<span class="fc" id="L18">        this.dbUser = dbUser;</span>
+<span class="fc" id="L19">        this.dbPassword = dbPassword;</span>
+<span class="fc" id="L20">        initializeDatabase();</span>
+<span class="fc" id="L21">    }</span>
+
+    private void initializeDatabase() {
+<span class="fc" id="L24">        try (Connection conn = getConnection();</span>
+<span class="fc" id="L25">             Statement stmt = conn.createStatement()) {</span>
+<span class="fc" id="L26">            String sql = &quot;CREATE TABLE IF NOT EXISTS loyalty_points (&quot; +</span>
+                         &quot;customer_id VARCHAR(255) PRIMARY KEY, &quot; +
+                         &quot;points INT NOT NULL DEFAULT 0&quot; +
+                         &quot;)&quot;;
+<span class="fc" id="L30">            stmt.execute(sql);</span>
+<span class="nc" id="L31">        } catch (SQLException e) {</span>
+<span class="nc" id="L32">            e.printStackTrace();</span>
+<span class="fc" id="L33">        }</span>
+<span class="fc" id="L34">    }</span>
+
+    private Connection getConnection() throws SQLException {
+<span class="fc" id="L37">        return DriverManager.getConnection(dbUrl, dbUser, dbPassword);</span>
+    }
+
+    public int getPoints(String customerId) {
+<span class="fc" id="L41">        String sql = &quot;SELECT points FROM loyalty_points WHERE customer_id = ?&quot;;</span>
+<span class="fc" id="L42">        try (Connection conn = getConnection();</span>
+<span class="fc" id="L43">             PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L44">            pstmt.setString(1, customerId);</span>
+<span class="fc" id="L45">            try (ResultSet rs = pstmt.executeQuery()) {</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">                if (rs.next()) {</span>
+<span class="fc" id="L47">                    int points = rs.getInt(&quot;points&quot;);</span>
+<span class="fc" id="L48">                    System.out.println(&quot;LoyaltyRepository: getPoints for &quot; + customerId + &quot; -&gt; &quot; + points);</span>
+<span class="fc" id="L49">                    return points;</span>
+                }
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">            }</span>
+<span class="pc bpc" id="L52" title="2 of 4 branches missed.">        } catch (SQLException e) {</span>
+<span class="nc" id="L53">            e.printStackTrace();</span>
+<span class="fc" id="L54">        }</span>
+<span class="fc" id="L55">        System.out.println(&quot;LoyaltyRepository: getPoints for &quot; + customerId + &quot; -&gt; 0 (not found)&quot;);</span>
+<span class="fc" id="L56">        return 0; // Default if not found</span>
+    }
+
+    public void addPoints(String customerId, int pointsToAdd) {
+<span class="fc" id="L60">        System.out.println(&quot;LoyaltyRepository: Adding &quot; + pointsToAdd + &quot; points to &quot; + customerId);</span>
+        
+        // Try update first (standard SQL, works on H2 and Postgres)
+<span class="fc" id="L63">        String updateSql = &quot;UPDATE loyalty_points SET points = points + ? WHERE customer_id = ?&quot;;</span>
+<span class="fc" id="L64">        String insertSql = &quot;INSERT INTO loyalty_points (customer_id, points) VALUES (?, ?)&quot;;</span>
+        
+<span class="fc" id="L66">        try (Connection conn = getConnection()) {</span>
+<span class="fc" id="L67">            boolean updated = false;</span>
+<span class="fc" id="L68">            try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {</span>
+<span class="fc" id="L69">                updateStmt.setInt(1, pointsToAdd);</span>
+<span class="fc" id="L70">                updateStmt.setString(2, customerId);</span>
+<span class="fc" id="L71">                int rows = updateStmt.executeUpdate();</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">                updated = (rows &gt; 0);</span>
+            }
+            
+<span class="fc bfc" id="L75" title="All 2 branches covered.">            if (!updated) {</span>
+<span class="fc" id="L76">                try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {</span>
+<span class="fc" id="L77">                    insertStmt.setString(1, customerId);</span>
+<span class="fc" id="L78">                    insertStmt.setInt(2, pointsToAdd);</span>
+<span class="fc" id="L79">                    insertStmt.executeUpdate();</span>
+                }
+            }
+<span class="fc" id="L82">            System.out.println(&quot;LoyaltyRepository: addPoints finished for &quot; + customerId);</span>
+<span class="nc" id="L83">        } catch (SQLException e) {</span>
+<span class="nc" id="L84">            e.printStackTrace();</span>
+<span class="fc" id="L85">        }</span>
+<span class="fc" id="L86">    }</span>
+
+    public boolean redeemPoints(String customerId, int pointsToRedeem) {
+<span class="fc" id="L89">        System.out.println(&quot;LoyaltyRepository: Redeeming &quot; + pointsToRedeem + &quot; points from &quot; + customerId);</span>
+        // Transactional check and update
+<span class="fc" id="L91">        String checkSql = &quot;SELECT points FROM loyalty_points WHERE customer_id = ?&quot;;</span>
+<span class="fc" id="L92">        String updateSql = &quot;UPDATE loyalty_points SET points = points - ? WHERE customer_id = ?&quot;;</span>
+        
+<span class="fc" id="L94">        try (Connection conn = getConnection()) {</span>
+<span class="fc" id="L95">            conn.setAutoCommit(false);</span>
+<span class="fc" id="L96">            try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {</span>
+<span class="fc" id="L97">                checkStmt.setString(1, customerId);</span>
+<span class="fc" id="L98">                ResultSet rs = checkStmt.executeQuery();</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">                if (rs.next()) {</span>
+<span class="fc" id="L100">                    int currentPoints = rs.getInt(&quot;points&quot;);</span>
+<span class="fc" id="L101">                    System.out.println(&quot;LoyaltyRepository: Current points for &quot; + customerId + &quot;: &quot; + currentPoints);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">                    if (currentPoints &gt;= pointsToRedeem) {</span>
+<span class="fc" id="L103">                        try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {</span>
+<span class="fc" id="L104">                            updateStmt.setInt(1, pointsToRedeem);</span>
+<span class="fc" id="L105">                            updateStmt.setString(2, customerId);</span>
+<span class="fc" id="L106">                            updateStmt.executeUpdate();</span>
+                        }
+<span class="fc" id="L108">                        conn.commit();</span>
+<span class="fc" id="L109">                        System.out.println(&quot;LoyaltyRepository: Redeemed successfully for &quot; + customerId);</span>
+<span class="fc" id="L110">                        return true;</span>
+                    }
+                }
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">            } catch (SQLException e) {</span>
+<span class="nc" id="L114">                conn.rollback();</span>
+<span class="nc" id="L115">                e.printStackTrace();</span>
+            } finally {
+<span class="fc" id="L117">                conn.setAutoCommit(true);</span>
+            }
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="nc" id="L120">            e.printStackTrace();</span>
+<span class="fc" id="L121">        }</span>
+<span class="fc" id="L122">        System.out.println(&quot;LoyaltyRepository: Redemption failed for &quot; + customerId);</span>
+<span class="fc" id="L123">        return false;</span>
+    }
+
+    public long getTotalPointsIssued() {
+<span class="fc" id="L127">        String sql = &quot;SELECT SUM(points) FROM loyalty_points&quot;;</span>
+<span class="fc" id="L128">        try (Connection conn = getConnection();</span>
+<span class="fc" id="L129">             Statement stmt = conn.createStatement();</span>
+<span class="fc" id="L130">             ResultSet rs = stmt.executeQuery(sql)) {</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">            if (rs.next()) {</span>
+<span class="fc" id="L132">                return rs.getLong(1);</span>
+            }
+<span class="pc bpc" id="L134" title="3 of 6 branches missed.">        } catch (SQLException e) {</span>
+<span class="nc" id="L135">            e.printStackTrace();</span>
+<span class="nc" id="L136">        }</span>
+<span class="nc" id="L137">        return 0;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

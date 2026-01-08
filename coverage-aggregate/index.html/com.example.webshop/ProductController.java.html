@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Good Project Aggregated Coverage</a> &gt; <a href="index.source.html" class="el_package">com.example.webshop</a> &gt; <span class="el_source">ProductController.java</span></div><h1>ProductController.java</h1><pre class="source lang-java linenums">package com.example.webshop;
+
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpExchange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+import java.time.Duration;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
+public class ProductController implements HttpHandler {
+
+<span class="nc" id="L26">    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);</span>
+    private final ProductRepository repository;
+    private final HttpClient httpClient;
+
+<span class="nc" id="L30">    public ProductController(ProductRepository repository) {</span>
+<span class="nc" id="L31">        this.repository = repository;</span>
+<span class="nc" id="L32">        this.httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build();</span>
+<span class="nc" id="L33">    }</span>
+
+    private static final String CSS = 
+        &quot;body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }&quot; +
+        &quot;.container { max-width: 1200px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }&quot; +
+        &quot;h1 { color: #343A40; }&quot; +
+        &quot;table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }&quot; +
+        &quot;th { background-color: #007BFF; color: #FFFFFF; padding: 12px; text-align: left; }&quot; +
+        &quot;td { padding: 12px; border-bottom: 1px solid #DEE2E6; }&quot; +
+        &quot;tr:nth-child(even) { background-color: #F2F2F2; }&quot; +
+        &quot;.btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }&quot; +
+        &quot;.btn-primary { background-color: #007BFF; }&quot; +
+        &quot;.btn-success { background-color: #28A745; }&quot; +
+        &quot;.btn-secondary { background-color: #6C757D; }&quot; +
+        &quot;.product-card { border: 1px solid #DEE2E6; padding: 15px; margin-bottom: 15px; border-radius: 4px; }&quot; +
+        &quot;.variant-selector { margin-bottom: 10px; }&quot; +
+        &quot;.campaign-info { font-size: 0.9em; color: #28A745; margin-top: 5px; font-style: italic; }&quot;;
+
+    private static final String JS = 
+        &quot;&lt;script&gt;&quot; +
+        &quot;function addToCart(id, name, price, stock) {&quot; +
+        &quot;  let cart = JSON.parse(localStorage.getItem('cart')) || [];&quot; +
+        &quot;  let item = cart.find(i =&gt; i.id === id);&quot; +
+        &quot;  if (item) {&quot; +
+        &quot;    if (item.quantity &lt; stock) {&quot; +
+        &quot;      item.quantity++;&quot; +
+        &quot;      alert('Added ' + name + ' to cart!');&quot; +
+        &quot;    } else {&quot; +
+        &quot;      alert('Cannot add more. Out of stock!');&quot; +
+        &quot;    }&quot; +
+        &quot;  } else {&quot; +
+        &quot;    if (stock &gt; 0) {&quot; +
+        &quot;      cart.push({id: id, name: name, price: price, quantity: 1});&quot; +
+        &quot;      alert('Added ' + name + ' to cart!');&quot; +
+        &quot;    } else {&quot; +
+        &quot;      alert('Out of stock!');&quot; +
+        &quot;    }&quot; +
+        &quot;  }&quot; +
+        &quot;  localStorage.setItem('cart', JSON.stringify(cart));&quot; +
+        &quot;}&quot; +
+        &quot;function updateVariant(groupId) {&quot; +
+        &quot;  const selectors = document.querySelectorAll('.variant-selector-' + groupId);&quot; +
+        &quot;  const selectedAttributes = {};&quot; +
+        &quot;  selectors.forEach(sel =&gt; selectedAttributes[sel.dataset.attribute] = sel.value);&quot; +
+        &quot;  &quot; +
+        &quot;  const variants = JSON.parse(document.getElementById('variants-' + groupId).textContent);&quot; +
+        &quot;  const match = variants.find(v =&gt; {&quot; +
+        &quot;    const attrs = v.attributes;&quot; +
+        &quot;    for (const key in selectedAttributes) {&quot; +
+        &quot;      if (attrs[key] !== selectedAttributes[key]) return false;&quot; +
+        &quot;    }&quot; +
+        &quot;    return true;&quot; +
+        &quot;  });&quot; +
+        &quot;  &quot; +
+        &quot;  const display = document.getElementById('product-display-' + groupId);&quot; +
+        &quot;  const addToCartBtn = document.getElementById('add-to-cart-' + groupId);&quot; +
+        &quot;  &quot; +
+        &quot;  if (match) {&quot; +
+        &quot;    display.innerHTML = 'Price: ' + match.price.toFixed(2) + ' ' + match.unit + '&lt;br&gt;Stock: ' + match.stock;&quot; +
+        &quot;    addToCartBtn.disabled = match.stock &lt;= 0;&quot; +
+        &quot;    addToCartBtn.onclick = function() { addToCart(match.id, match.name, match.price, match.stock); };&quot; +
+        &quot;    addToCartBtn.textContent = match.stock &gt; 0 ? 'Add to Cart' : 'Out of Stock';&quot; +
+        &quot;  } else {&quot; +
+        &quot;    display.innerHTML = 'Variant not available';&quot; +
+        &quot;    addToCartBtn.disabled = true;&quot; +
+        &quot;    addToCartBtn.textContent = 'Unavailable';&quot; +
+        &quot;  }&quot; +
+        &quot;}&quot; +
+        &quot;&lt;/script&gt;&quot;;
+
+    private String getHeader() {
+<span class="nc" id="L104">        return &quot;&lt;div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'&gt;&quot; +</span>
+               &quot;&lt;div&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/'\&quot; class='btn btn-primary'&gt;Webshop Home&lt;/button&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/products'\&quot; class='btn btn-secondary'&gt;Products&lt;/button&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/cart'\&quot; class='btn btn-secondary'&gt;Cart&lt;/button&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/my-orders'\&quot; class='btn btn-secondary'&gt;My Orders&lt;/button&gt;&quot; +
+               &quot;&lt;/div&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/logout'\&quot; class='btn btn-secondary'&gt;Logout&lt;/button&gt;&quot; +
+               &quot;&lt;/div&gt;&quot;;
+    }
+
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+<span class="nc" id="L117">        String path = exchange.getRequestURI().getPath();</span>
+<span class="nc" id="L118">        logger.info(&quot;Received request: {} {}&quot;, exchange.getRequestMethod(), path);</span>
+        try {
+<span class="nc" id="L120">            List&lt;Product&gt; products = repository.findAll();</span>
+<span class="nc" id="L121">            String campaigns = fetchCampaigns();</span>
+            
+            // Group products by base name (assuming format &quot;GroupName - Attributes&quot;)
+<span class="nc" id="L124">            Map&lt;String, List&lt;Product&gt;&gt; groupedProducts = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">            for (Product p : products) {</span>
+<span class="nc" id="L126">                String baseName = p.getName().split(&quot; - &quot;)[0];</span>
+<span class="nc" id="L127">                groupedProducts.computeIfAbsent(baseName, k -&gt; new ArrayList&lt;&gt;()).add(p);</span>
+<span class="nc" id="L128">            }</span>
+
+<span class="nc" id="L130">            StringBuilder html = new StringBuilder();</span>
+<span class="nc" id="L131">            html.append(&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;style&gt;&quot;).append(CSS).append(&quot;&lt;/style&gt;&quot;);</span>
+<span class="nc" id="L132">            html.append(JS).append(&quot;&lt;/head&gt;&lt;body&gt;&quot;);</span>
+<span class="nc" id="L133">            html.append(&quot;&lt;div class='container'&gt;&quot;);</span>
+<span class="nc" id="L134">            html.append(getHeader());</span>
+<span class="nc" id="L135">            html.append(&quot;&lt;h1&gt;Webshop Products&lt;/h1&gt;&quot;);</span>
+            
+<span class="nc" id="L137">            int groupIdCounter = 0;</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">            for (Map.Entry&lt;String, List&lt;Product&gt;&gt; entry : groupedProducts.entrySet()) {</span>
+<span class="nc" id="L139">                String groupName = entry.getKey();</span>
+<span class="nc" id="L140">                List&lt;Product&gt; variants = entry.getValue();</span>
+<span class="nc" id="L141">                Product firstVariant = variants.get(0); // Use first variant for description</span>
+<span class="nc" id="L142">                groupIdCounter++;</span>
+                
+<span class="nc" id="L144">                html.append(&quot;&lt;div class='product-card'&gt;&quot;);</span>
+<span class="nc" id="L145">                html.append(&quot;&lt;h2&gt;&quot;).append(groupName).append(&quot;&lt;/h2&gt;&quot;);</span>
+<span class="nc" id="L146">                html.append(&quot;&lt;p&gt;&quot;).append(firstVariant.getDescription()).append(&quot;&lt;/p&gt;&quot;);</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">                if (!campaigns.isEmpty()) {</span>
+<span class="nc" id="L148">                    html.append(&quot;&lt;p class='campaign-info'&gt;Possible campaigns: &quot;).append(campaigns).append(&quot;&lt;/p&gt;&quot;);</span>
+                }
+                
+                // Extract all unique attributes
+<span class="nc" id="L152">                Map&lt;String, List&lt;String&gt;&gt; attributesMap = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">                for (Product v : variants) {</span>
+<span class="nc" id="L154">                    Map&lt;String, String&gt; attrs = parseAttributesFromName(v.getName());</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">                    for (Map.Entry&lt;String, String&gt; attr : attrs.entrySet()) {</span>
+<span class="nc" id="L156">                        attributesMap.computeIfAbsent(attr.getKey(), k -&gt; new ArrayList&lt;&gt;()).add(attr.getValue());</span>
+<span class="nc" id="L157">                    }</span>
+<span class="nc" id="L158">                }</span>
+                
+                // Deduplicate attribute values
+<span class="nc bnc" id="L161" title="All 2 branches missed.">                for (Map.Entry&lt;String, List&lt;String&gt;&gt; attrEntry : attributesMap.entrySet()) {</span>
+<span class="nc" id="L162">                    attrEntry.setValue(attrEntry.getValue().stream().distinct().sorted().collect(Collectors.toList()));</span>
+<span class="nc" id="L163">                }</span>
+
+                // Render Dropdowns
+<span class="nc bnc" id="L166" title="All 2 branches missed.">                if (!attributesMap.isEmpty()) {</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">                    for (Map.Entry&lt;String, List&lt;String&gt;&gt; attr : attributesMap.entrySet()) {</span>
+<span class="nc" id="L168">                        html.append(&quot;&lt;div class='variant-selector'&gt;&quot;);</span>
+<span class="nc" id="L169">                        html.append(&quot;&lt;label&gt;&quot;).append(attr.getKey()).append(&quot;: &lt;/label&gt;&quot;);</span>
+<span class="nc" id="L170">                        html.append(&quot;&lt;select class='variant-selector-&quot;).append(groupIdCounter).append(&quot;' data-attribute='&quot;).append(attr.getKey()).append(&quot;' onchange='updateVariant(&quot;).append(groupIdCounter).append(&quot;)'&gt;&quot;);</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">                        for (String val : attr.getValue()) {</span>
+<span class="nc" id="L172">                            html.append(&quot;&lt;option value='&quot;).append(val).append(&quot;'&gt;&quot;).append(val).append(&quot;&lt;/option&gt;&quot;);</span>
+<span class="nc" id="L173">                        }</span>
+<span class="nc" id="L174">                        html.append(&quot;&lt;/select&gt;&quot;);</span>
+<span class="nc" id="L175">                        html.append(&quot;&lt;/div&gt;&quot;);</span>
+<span class="nc" id="L176">                    }</span>
+                }
+
+                // Initial Display (First Variant)
+<span class="nc" id="L180">                String priceStr = String.format(Locale.US, &quot;%.2f&quot;, firstVariant.getPrice());</span>
+                
+<span class="nc" id="L182">                html.append(&quot;&lt;div id='product-display-&quot;).append(groupIdCounter).append(&quot;'&gt;&quot;);</span>
+<span class="nc" id="L183">                html.append(&quot;Price: &quot;).append(priceStr).append(&quot; &quot;).append(firstVariant.getUnit()).append(&quot;&lt;br&gt;&quot;);</span>
+<span class="nc" id="L184">                html.append(&quot;Stock: &quot;).append(firstVariant.getStock());</span>
+<span class="nc" id="L185">                html.append(&quot;&lt;/div&gt;&quot;);</span>
+
+                // Add to Cart Button
+<span class="nc bnc" id="L188" title="All 2 branches missed.">                Integer productId = firstVariant.getPmId() != null ? firstVariant.getPmId() : firstVariant.getId();</span>
+<span class="nc" id="L189">                html.append(&quot;&lt;button id='add-to-cart-&quot;).append(groupIdCounter).append(&quot;' onclick=\&quot;addToCart(&quot;)</span>
+<span class="nc" id="L190">                    .append(productId).append(&quot;, '&quot;)</span>
+<span class="nc" id="L191">                    .append(firstVariant.getName().replace(&quot;'&quot;, &quot;\\'&quot;)).append(&quot;', &quot;)</span>
+<span class="nc" id="L192">                    .append(firstVariant.getPrice()).append(&quot;, &quot;)</span>
+<span class="nc" id="L193">                    .append(firstVariant.getStock()).append(&quot;)\&quot; class='btn btn-success'&gt;Add to Cart&lt;/button&gt;&quot;);</span>
+
+                // Hidden JSON data for variants
+<span class="nc" id="L196">                html.append(&quot;&lt;script id='variants-&quot;).append(groupIdCounter).append(&quot;' type='application/json'&gt;&quot;);</span>
+<span class="nc" id="L197">                html.append(&quot;[&quot;);</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">                for (int i = 0; i &lt; variants.size(); i++) {</span>
+<span class="nc" id="L199">                    Product v = variants.get(i);</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">                    Integer vId = v.getPmId() != null ? v.getPmId() : v.getId();</span>
+<span class="nc" id="L201">                    Map&lt;String, String&gt; attrs = parseAttributesFromName(v.getName());</span>
+<span class="nc" id="L202">                    html.append(&quot;{&quot;);</span>
+<span class="nc" id="L203">                    html.append(&quot;\&quot;id\&quot;:&quot;).append(vId).append(&quot;,&quot;);</span>
+<span class="nc" id="L204">                    html.append(&quot;\&quot;name\&quot;:\&quot;&quot;).append(v.getName().replace(&quot;\&quot;&quot;, &quot;\\\&quot;&quot;)).append(&quot;\&quot;,&quot;);</span>
+<span class="nc" id="L205">                    html.append(&quot;\&quot;price\&quot;:&quot;).append(v.getPrice()).append(&quot;,&quot;);</span>
+<span class="nc" id="L206">                    html.append(&quot;\&quot;unit\&quot;:\&quot;&quot;).append(v.getUnit()).append(&quot;\&quot;,&quot;);</span>
+<span class="nc" id="L207">                    html.append(&quot;\&quot;stock\&quot;:&quot;).append(v.getStock()).append(&quot;,&quot;);</span>
+<span class="nc" id="L208">                    html.append(&quot;\&quot;attributes\&quot;:{&quot;);</span>
+<span class="nc" id="L209">                    int k = 0;</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">                    for (Map.Entry&lt;String, String&gt; attr : attrs.entrySet()) {</span>
+<span class="nc" id="L211">                        html.append(&quot;\&quot;&quot;).append(attr.getKey()).append(&quot;\&quot;:\&quot;&quot;).append(attr.getValue()).append(&quot;\&quot;&quot;);</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">                        if (k &lt; attrs.size() - 1) html.append(&quot;,&quot;);</span>
+<span class="nc" id="L213">                        k++;</span>
+<span class="nc" id="L214">                    }</span>
+<span class="nc" id="L215">                    html.append(&quot;}&quot;);</span>
+<span class="nc" id="L216">                    html.append(&quot;}&quot;);</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">                    if (i &lt; variants.size() - 1) html.append(&quot;,&quot;);</span>
+                }
+<span class="nc" id="L219">                html.append(&quot;]&quot;);</span>
+<span class="nc" id="L220">                html.append(&quot;&lt;/script&gt;&quot;);</span>
+                
+<span class="nc" id="L222">                html.append(&quot;&lt;/div&gt;&quot;);</span>
+<span class="nc" id="L223">            }</span>
+            
+<span class="nc" id="L225">            html.append(&quot;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;&quot;);</span>
+            
+<span class="nc" id="L227">            String response = html.toString();</span>
+<span class="nc" id="L228">            byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
+            
+<span class="nc" id="L230">            exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html; charset=utf-8&quot;);</span>
+<span class="nc" id="L231">            exchange.sendResponseHeaders(200, bytes.length);</span>
+<span class="nc" id="L232">            try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="nc" id="L233">                os.write(bytes);</span>
+            }
+<span class="nc" id="L235">        } catch (SQLException e) {</span>
+<span class="nc" id="L236">            logger.error(&quot;Error handling request&quot;, e);</span>
+<span class="nc" id="L237">            String errorResponse = &quot;Internal Server Error&quot;;</span>
+<span class="nc" id="L238">            exchange.sendResponseHeaders(500, errorResponse.getBytes().length);</span>
+<span class="nc" id="L239">            try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="nc" id="L240">                os.write(errorResponse.getBytes());</span>
+            }
+<span class="nc" id="L242">        }</span>
+<span class="nc" id="L243">    }</span>
+
+    private String fetchCampaigns() {
+        try {
+<span class="nc" id="L247">            HttpRequest request = HttpRequest.newBuilder()</span>
+<span class="nc" id="L248">                    .uri(URI.create(&quot;http://loyalty-service:8084/api/loyalty/rules&quot;))</span>
+<span class="nc" id="L249">                    .GET()</span>
+<span class="nc" id="L250">                    .build();</span>
+<span class="nc" id="L251">            HttpResponse&lt;String&gt; response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());</span>
+<span class="nc bnc" id="L252" title="All 2 branches missed.">            if (response.statusCode() == 200) {</span>
+<span class="nc" id="L253">                String json = response.body();</span>
+                // Simple parsing: remove [&quot; and &quot;] and replace &quot;,&quot; with &quot;, &quot;
+<span class="nc" id="L255">                return json.replace(&quot;[\&quot;&quot;, &quot;&quot;).replace(&quot;\&quot;]&quot;, &quot;&quot;).replace(&quot;\&quot;,\&quot;&quot;, &quot;, &quot;);</span>
+            }
+<span class="nc" id="L257">        } catch (Exception e) {</span>
+<span class="nc" id="L258">            logger.warn(&quot;Failed to fetch campaigns&quot;, e);</span>
+<span class="nc" id="L259">        }</span>
+<span class="nc" id="L260">        return &quot;&quot;;</span>
+    }
+
+    private Map&lt;String, String&gt; parseAttributesFromName(String fullName) {
+<span class="nc" id="L264">        Map&lt;String, String&gt; attributes = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L265">        String[] parts = fullName.split(&quot; - &quot;);</span>
+<span class="nc bnc" id="L266" title="All 2 branches missed.">        if (parts.length &gt; 1) {</span>
+<span class="nc" id="L267">            String suffix = parts[1];</span>
+<span class="nc" id="L268">            String[] values = suffix.split(&quot; &quot;);</span>
+<span class="nc bnc" id="L269" title="All 2 branches missed.">            for (int i = 0; i &lt; values.length; i++) {</span>
+<span class="nc" id="L270">                attributes.put(&quot;Option &quot; + (i + 1), values[i]);</span>
+            }
+        }
+<span class="nc" id="L273">        return attributes;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

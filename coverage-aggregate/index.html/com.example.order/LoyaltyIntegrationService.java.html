@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoyaltyIntegrationService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Good Project Aggregated Coverage</a> &gt; <a href="index.source.html" class="el_package">com.example.order</a> &gt; <span class="el_source">LoyaltyIntegrationService.java</span></div><h1>LoyaltyIntegrationService.java</h1><pre class="source lang-java linenums">package com.example.order;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class LoyaltyIntegrationService {
+
+    private final HttpClient httpClient;
+    private final String loyaltyAccrueUrl;
+    private final String loyaltyRedeemUrl;
+    private final TokenService tokenService;
+
+    public LoyaltyIntegrationService() {
+<span class="fc" id="L20">        this(</span>
+<span class="fc" id="L21">            System.getenv().getOrDefault(&quot;LOYALTY_ACCRUE_URL&quot;, &quot;http://loyalty-service:8084/api/loyalty/accrue&quot;),</span>
+<span class="fc" id="L22">            System.getenv().getOrDefault(&quot;LOYALTY_REDEEM_URL&quot;, &quot;http://loyalty-service:8084/api/loyalty/redeem&quot;),</span>
+            new KeycloakTokenService(
+<span class="fc" id="L24">                System.getenv().getOrDefault(&quot;TOKEN_URL&quot;, &quot;http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token&quot;),</span>
+<span class="fc" id="L25">                System.getenv().getOrDefault(&quot;CLIENT_ID&quot;, &quot;order-client&quot;),</span>
+<span class="fc" id="L26">                System.getenv().getOrDefault(&quot;CLIENT_SECRET&quot;, &quot;order-secret&quot;)</span>
+            )
+        );
+<span class="fc" id="L29">    }</span>
+
+<span class="fc" id="L31">    public LoyaltyIntegrationService(String loyaltyAccrueUrl, String loyaltyRedeemUrl, TokenService tokenService) {</span>
+<span class="fc" id="L32">        this.httpClient = HttpClient.newBuilder()</span>
+<span class="fc" id="L33">                .connectTimeout(Duration.ofSeconds(5))</span>
+<span class="fc" id="L34">                .build();</span>
+<span class="fc" id="L35">        this.loyaltyAccrueUrl = loyaltyAccrueUrl;</span>
+<span class="fc" id="L36">        this.loyaltyRedeemUrl = loyaltyRedeemUrl;</span>
+<span class="fc" id="L37">        this.tokenService = tokenService;</span>
+<span class="fc" id="L38">    }</span>
+
+    public CompletableFuture&lt;Integer&gt; accruePoints(String customerId, int orderId, double totalAmount, String itemsJson) {
+<span class="fc" id="L41">        System.out.println(&quot;LoyaltyIntegrationService: Accruing points for order &quot; + orderId);</span>
+<span class="fc" id="L42">        return tokenService.getAccessToken().thenCompose(token -&gt; {</span>
+<span class="fc" id="L43">            String json = String.format(&quot;{\&quot;customerId\&quot;:\&quot;%s\&quot;,\&quot;orderId\&quot;:\&quot;%d\&quot;,\&quot;totalAmount\&quot;:%.2f,\&quot;currency\&quot;:\&quot;EUR\&quot;,\&quot;items\&quot;:%s}&quot;,</span>
+<span class="fc" id="L44">                customerId, orderId, totalAmount, itemsJson);</span>
+            
+<span class="fc" id="L46">            HttpRequest request = HttpRequest.newBuilder()</span>
+<span class="fc" id="L47">                    .uri(URI.create(loyaltyAccrueUrl))</span>
+<span class="fc" id="L48">                    .header(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
+<span class="fc" id="L49">                    .header(&quot;Authorization&quot;, &quot;Bearer &quot; + token)</span>
+<span class="fc" id="L50">                    .POST(HttpRequest.BodyPublishers.ofString(json))</span>
+<span class="fc" id="L51">                    .build();</span>
+
+<span class="fc" id="L53">            return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())</span>
+<span class="fc" id="L54">                    .thenApply(response -&gt; {</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">                        if (response.statusCode() == 200) {</span>
+<span class="fc" id="L56">                            String body = response.body();</span>
+<span class="fc" id="L57">                            Pattern p = Pattern.compile(&quot;\&quot;pointsAccrued\&quot;:(\\d+)&quot;);</span>
+<span class="fc" id="L58">                            Matcher m = p.matcher(body);</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">                            if (m.find()) {</span>
+<span class="nc" id="L60">                                return Integer.parseInt(m.group(1));</span>
+                            }
+<span class="fc" id="L62">                        } else {</span>
+<span class="nc" id="L63">                            System.err.println(&quot;Failed to accrue points for order &quot; + orderId + &quot;. Status: &quot; + response.statusCode() + &quot;, Body: &quot; + response.body());</span>
+                        }
+<span class="fc" id="L65">                        return 0;</span>
+                    });
+        });
+    }
+
+    public CompletableFuture&lt;Boolean&gt; redeemPoints(String customerId, int orderId, int pointsToRedeem) {
+<span class="fc" id="L71">        System.out.println(&quot;LoyaltyIntegrationService: Redeeming &quot; + pointsToRedeem + &quot; points for order &quot; + orderId);</span>
+<span class="fc" id="L72">        return tokenService.getAccessToken().thenCompose(token -&gt; {</span>
+<span class="fc" id="L73">            String json = String.format(&quot;{\&quot;customerId\&quot;:\&quot;%s\&quot;,\&quot;orderId\&quot;:\&quot;%d\&quot;,\&quot;pointsToRedeem\&quot;:%d}&quot;,</span>
+<span class="fc" id="L74">                customerId, orderId, pointsToRedeem);</span>
+
+<span class="fc" id="L76">            HttpRequest request = HttpRequest.newBuilder()</span>
+<span class="fc" id="L77">                    .uri(URI.create(loyaltyRedeemUrl))</span>
+<span class="fc" id="L78">                    .header(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
+<span class="fc" id="L79">                    .header(&quot;Authorization&quot;, &quot;Bearer &quot; + token)</span>
+<span class="fc" id="L80">                    .POST(HttpRequest.BodyPublishers.ofString(json))</span>
+<span class="fc" id="L81">                    .build();</span>
+
+<span class="fc" id="L83">            return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())</span>
+<span class="fc" id="L84">                    .thenApply(response -&gt; {</span>
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">                        if (response.statusCode() == 200) {</span>
+<span class="fc" id="L86">                            return true;</span>
+                        } else {
+<span class="nc" id="L88">                            System.err.println(&quot;Failed to redeem points for order &quot; + orderId + &quot;. Status: &quot; + response.statusCode() + &quot;, Body: &quot; + response.body());</span>
+<span class="nc" id="L89">                            return false;</span>
+                        }
+                    });
+        });
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -17,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.net.URLEncoder;
 
 public class LoyaltyApplication {
 
@@ -71,8 +70,12 @@ public class LoyaltyApplication {
         private final HttpClient httpClient;
 
         public LoginHandler(String tokenUrl) {
+            this(tokenUrl, HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build());
+        }
+
+        public LoginHandler(String tokenUrl, HttpClient httpClient) {
             this.tokenUrl = tokenUrl;
-            this.httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
+            this.httpClient = httpClient;
         }
 
         @Override
@@ -124,33 +127,33 @@ public class LoyaltyApplication {
             int end = json.indexOf("\"", start);
             return json.substring(start, end);
         }
-    }
 
-    private static void sendResponse(HttpExchange t, int status, String body) throws IOException {
-        byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
-        t.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
-        t.sendResponseHeaders(status, bytes.length);
-        try (OutputStream os = t.getResponseBody()) {
-            os.write(bytes);
-        }
-    }
-
-    private static void redirect(HttpExchange t, String location) throws IOException {
-        t.getResponseHeaders().set("Location", location);
-        t.sendResponseHeaders(302, -1);
-    }
-
-    private static Map<String, String> parseFormData(String formData) {
-        Map<String, String> map = new HashMap<>();
-        String[] pairs = formData.split("&");
-        for (String pair : pairs) {
-            String[] keyValue = pair.split("=");
-            if (keyValue.length > 0) {
-                String key = URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);
-                String value = keyValue.length > 1 ? URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8) : "";
-                map.put(key, value);
+        private void sendResponse(HttpExchange t, int status, String body) throws IOException {
+            byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
+            t.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
+            t.sendResponseHeaders(status, bytes.length);
+            try (OutputStream os = t.getResponseBody()) {
+                os.write(bytes);
             }
         }
-        return map;
+
+        private void redirect(HttpExchange t, String location) throws IOException {
+            t.getResponseHeaders().set("Location", location);
+            t.sendResponseHeaders(302, -1);
+        }
+
+        private Map<String, String> parseFormData(String formData) {
+            Map<String, String> map = new HashMap<>();
+            String[] pairs = formData.split("&");
+            for (String pair : pairs) {
+                String[] keyValue = pair.split("=");
+                if (keyValue.length > 0) {
+                    String key = URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);
+                    String value = keyValue.length > 1 ? URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8) : "";
+                    map.put(key, value);
+                }
+            }
+            return map;
+        }
     }
 }

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Good Project Aggregated Coverage</a> &gt; <a href="index.source.html" class="el_package">com.example.webshop</a> &gt; <span class="el_source">SecurityFilter.java</span></div><h1>SecurityFilter.java</h1><pre class="source lang-java linenums">package com.example.webshop;
+
+import com.auth0.jwk.JwkProvider;
+import com.auth0.jwk.JwkProviderBuilder;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.interfaces.JWTVerifier;
+import com.sun.net.httpserver.Filter;
+import com.sun.net.httpserver.HttpExchange;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URL;
+import java.security.interfaces.RSAPublicKey;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+public class SecurityFilter extends Filter {
+
+    private final String requiredRole;
+    private final JwkProvider jwkProvider;
+    private final String issuer;
+
+<span class="nc" id="L26">    public SecurityFilter(String jwksUrl, String issuer, String requiredRole) {</span>
+<span class="nc" id="L27">        this.requiredRole = requiredRole;</span>
+<span class="nc" id="L28">        this.issuer = issuer;</span>
+        try {
+<span class="nc" id="L30">            this.jwkProvider = new JwkProviderBuilder(new URL(jwksUrl))</span>
+<span class="nc" id="L31">                    .cached(10, 24, TimeUnit.HOURS)</span>
+<span class="nc" id="L32">                    .build();</span>
+<span class="nc" id="L33">        } catch (Exception e) {</span>
+<span class="nc" id="L34">            throw new RuntimeException(&quot;Failed to initialize JWK Provider&quot;, e);</span>
+<span class="nc" id="L35">        }</span>
+<span class="nc" id="L36">    }</span>
+
+    @Override
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public void doFilter(HttpExchange exchange, Chain chain) throws IOException {
+<span class="nc" id="L41">        String authHeader = exchange.getRequestHeaders().getFirst(&quot;Authorization&quot;);</span>
+<span class="nc bnc" id="L42" title="All 4 branches missed.">        if (authHeader == null || !authHeader.startsWith(&quot;Bearer &quot;)) {</span>
+<span class="nc" id="L43">            sendError(exchange, 401, &quot;Missing or invalid Authorization header&quot;);</span>
+<span class="nc" id="L44">            return;</span>
+        }
+
+<span class="nc" id="L47">        String token = authHeader.substring(7);</span>
+        try {
+<span class="nc" id="L49">            DecodedJWT jwt = JWT.decode(token);</span>
+<span class="nc" id="L50">            RSAPublicKey publicKey = (RSAPublicKey) jwkProvider.get(jwt.getKeyId()).getPublicKey();</span>
+<span class="nc" id="L51">            Algorithm algorithm = Algorithm.RSA256(publicKey, null);</span>
+            
+<span class="nc" id="L53">            JWTVerifier verifier = JWT.require(algorithm)</span>
+<span class="nc" id="L54">                    .withIssuer(issuer)</span>
+<span class="nc" id="L55">                    .build();</span>
+            
+<span class="nc" id="L57">            verifier.verify(token);</span>
+
+            // Check Role (Client Role in resource_access)
+            // Structure: resource_access -&gt; webshop-client -&gt; roles -&gt; [product-sync]
+<span class="nc" id="L61">            Map&lt;String, Object&gt; resourceAccess = jwt.getClaim(&quot;resource_access&quot;).asMap();</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">            if (resourceAccess != null) {</span>
+<span class="nc" id="L63">                Map&lt;String, Object&gt; clientAccess = (Map&lt;String, Object&gt;) resourceAccess.get(&quot;webshop-client&quot;);</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">                if (clientAccess != null) {</span>
+<span class="nc" id="L65">                    List&lt;String&gt; roles = (List&lt;String&gt;) clientAccess.get(&quot;roles&quot;);</span>
+<span class="nc bnc" id="L66" title="All 4 branches missed.">                    if (roles != null &amp;&amp; roles.contains(requiredRole)) {</span>
+<span class="nc" id="L67">                        chain.doFilter(exchange);</span>
+<span class="nc" id="L68">                        return;</span>
+                    }
+                }
+            }
+            
+            // Also check Realm Roles just in case (though we mapped to client roles)
+<span class="nc" id="L74">            Map&lt;String, Object&gt; realmAccess = jwt.getClaim(&quot;realm_access&quot;).asMap();</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">            if (realmAccess != null) {</span>
+<span class="nc" id="L76">                List&lt;String&gt; roles = (List&lt;String&gt;) realmAccess.get(&quot;roles&quot;);</span>
+<span class="nc bnc" id="L77" title="All 4 branches missed.">                if (roles != null &amp;&amp; roles.contains(requiredRole)) {</span>
+<span class="nc" id="L78">                    chain.doFilter(exchange);</span>
+<span class="nc" id="L79">                    return;</span>
+                }
+            }
+            
+<span class="nc" id="L83">            sendError(exchange, 403, &quot;Insufficient permissions&quot;);</span>
+<span class="nc" id="L84">        } catch (Exception e) {</span>
+<span class="nc" id="L85">            e.printStackTrace();</span>
+<span class="nc" id="L86">            sendError(exchange, 401, &quot;Invalid token: &quot; + e.getMessage());</span>
+<span class="nc" id="L87">        }</span>
+<span class="nc" id="L88">    }</span>
+
+    private void sendError(HttpExchange exchange, int code, String message) throws IOException {
+<span class="nc" id="L91">        exchange.sendResponseHeaders(code, message.length());</span>
+<span class="nc" id="L92">        try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="nc" id="L93">            os.write(message.getBytes());</span>
+        }
+<span class="nc" id="L95">    }</span>
+
+    @Override
+    public String description() {
+<span class="nc" id="L99">        return &quot;JWT Security Filter&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

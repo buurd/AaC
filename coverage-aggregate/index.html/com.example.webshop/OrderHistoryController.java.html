@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderHistoryController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Good Project Aggregated Coverage</a> &gt; <a href="index.source.html" class="el_package">com.example.webshop</a> &gt; <span class="el_source">OrderHistoryController.java</span></div><h1>OrderHistoryController.java</h1><pre class="source lang-java linenums">package com.example.webshop;
+
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpExchange;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class OrderHistoryController implements HttpHandler {
+
+    private final OrderService orderService;
+
+<span class="nc" id="L17">    public OrderHistoryController(OrderService orderService) {</span>
+<span class="nc" id="L18">        this.orderService = orderService;</span>
+<span class="nc" id="L19">    }</span>
+
+    private static final String CSS = 
+        &quot;body { font-family: Arial, Helvetica, sans-serif; background-color: #F8F9FA; color: #343A40; margin: 0; padding: 20px; }&quot; +
+        &quot;.container { max-width: 1200px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }&quot; +
+        &quot;h1 { color: #343A40; }&quot; +
+        &quot;table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }&quot; +
+        &quot;th { background-color: #007BFF; color: #FFFFFF; padding: 12px; text-align: left; }&quot; +
+        &quot;td { padding: 12px; border-bottom: 1px solid #DEE2E6; }&quot; +
+        &quot;tr:nth-child(even) { background-color: #F2F2F2; }&quot; +
+        &quot;.btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; color: #FFFFFF; font-weight: bold; border: none; cursor: pointer; margin-right: 10px; }&quot; +
+        &quot;.btn-secondary { background-color: #6C757D; }&quot; +
+        &quot;.btn-primary { background-color: #007BFF; }&quot;;
+
+    private String getHeader() {
+<span class="nc" id="L34">        return &quot;&lt;div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'&gt;&quot; +</span>
+               &quot;&lt;div&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/'\&quot; class='btn btn-primary'&gt;Webshop Home&lt;/button&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/products'\&quot; class='btn btn-secondary'&gt;Products&lt;/button&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/cart'\&quot; class='btn btn-secondary'&gt;Cart&lt;/button&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/my-orders'\&quot; class='btn btn-secondary'&gt;My Orders&lt;/button&gt;&quot; +
+               &quot;&lt;/div&gt;&quot; +
+               &quot;&lt;button onclick=\&quot;window.location.href='/logout'\&quot; class='btn btn-secondary'&gt;Logout&lt;/button&gt;&quot; +
+               &quot;&lt;/div&gt;&quot;;
+    }
+
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+<span class="nc" id="L47">        String customerName = getCookie(exchange, &quot;webshop_username&quot;);</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        if (customerName == null) {</span>
+            // Redirect to login if no user cookie
+<span class="nc" id="L50">            exchange.getResponseHeaders().set(&quot;Location&quot;, &quot;/login&quot;);</span>
+<span class="nc" id="L51">            exchange.sendResponseHeaders(302, -1);</span>
+<span class="nc" id="L52">            return;</span>
+        }
+
+        try {
+<span class="nc" id="L56">            String json = orderService.getOrdersForCustomer(customerName).get();</span>
+            
+<span class="nc" id="L58">            StringBuilder html = new StringBuilder();</span>
+<span class="nc" id="L59">            html.append(&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;style&gt;&quot;).append(CSS).append(&quot;&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&quot;);</span>
+<span class="nc" id="L60">            html.append(&quot;&lt;div class='container'&gt;&quot;);</span>
+<span class="nc" id="L61">            html.append(getHeader());</span>
+<span class="nc" id="L62">            html.append(&quot;&lt;h1&gt;My Orders&lt;/h1&gt;&quot;);</span>
+<span class="nc" id="L63">            html.append(&quot;&lt;button onclick=\&quot;window.location.href='/products'\&quot; class='btn btn-secondary'&gt;Back to Shop&lt;/button&gt;&quot;);</span>
+            
+<span class="nc" id="L65">            html.append(&quot;&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Order ID&lt;/th&gt;&lt;th&gt;Status&lt;/th&gt;&lt;th&gt;Points Earned&lt;/th&gt;&lt;th&gt;Points Redeemed&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&quot;);</span>
+            
+            // Simple JSON parsing
+<span class="nc" id="L68">            Pattern p = Pattern.compile(&quot;\\{\&quot;id\&quot;:(\\d+),\&quot;customerName\&quot;:\&quot;[^\&quot;]+\&quot;,\&quot;status\&quot;:\&quot;([^\&quot;]+)\&quot;,\&quot;pointsEarned\&quot;:(\\d+),\&quot;pointsRedeemed\&quot;:(\\d+)\\}&quot;);</span>
+<span class="nc" id="L69">            Matcher m = p.matcher(json);</span>
+            
+<span class="nc bnc" id="L71" title="All 2 branches missed.">            while (m.find()) {</span>
+<span class="nc" id="L72">                html.append(&quot;&lt;tr&gt;&quot;);</span>
+<span class="nc" id="L73">                html.append(&quot;&lt;td&gt;&quot;).append(m.group(1)).append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="nc" id="L74">                html.append(&quot;&lt;td&gt;&quot;).append(m.group(2)).append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="nc" id="L75">                html.append(&quot;&lt;td&gt;&quot;).append(m.group(3)).append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="nc" id="L76">                html.append(&quot;&lt;td&gt;&quot;).append(m.group(4)).append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="nc" id="L77">                html.append(&quot;&lt;/tr&gt;&quot;);</span>
+            }
+            
+<span class="nc" id="L80">            html.append(&quot;&lt;/tbody&gt;&lt;/table&gt;&quot;);</span>
+<span class="nc" id="L81">            html.append(&quot;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;&quot;);</span>
+            
+<span class="nc" id="L83">            String response = html.toString();</span>
+<span class="nc" id="L84">            byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
+<span class="nc" id="L85">            exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html; charset=utf-8&quot;);</span>
+<span class="nc" id="L86">            exchange.sendResponseHeaders(200, bytes.length);</span>
+<span class="nc" id="L87">            try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="nc" id="L88">                os.write(bytes);</span>
+            }
+            
+<span class="nc" id="L91">        } catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L92">            e.printStackTrace();</span>
+<span class="nc" id="L93">            String error = &quot;Failed to load orders&quot;;</span>
+<span class="nc" id="L94">            exchange.sendResponseHeaders(500, error.length());</span>
+<span class="nc" id="L95">            try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="nc" id="L96">                os.write(error.getBytes());</span>
+            }
+<span class="nc" id="L98">        }</span>
+<span class="nc" id="L99">    }</span>
+
+    private String getCookie(HttpExchange exchange, String name) {
+<span class="nc" id="L102">        String cookieHeader = exchange.getRequestHeaders().getFirst(&quot;Cookie&quot;);</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        if (cookieHeader != null) {</span>
+<span class="nc" id="L104">            String[] cookies = cookieHeader.split(&quot;;&quot;);</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">            for (String cookie : cookies) {</span>
+<span class="nc" id="L106">                String[] parts = cookie.trim().split(&quot;=&quot;);</span>
+<span class="nc bnc" id="L107" title="All 4 branches missed.">                if (parts.length == 2 &amp;&amp; parts[0].equals(name)) {</span>
+<span class="nc" id="L108">                    return parts[1];</span>
+                }
+            }
+        }
+<span class="nc" id="L112">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

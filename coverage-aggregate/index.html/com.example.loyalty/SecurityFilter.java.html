@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Good Project Aggregated Coverage</a> &gt; <a href="index.source.html" class="el_package">com.example.loyalty</a> &gt; <span class="el_source">SecurityFilter.java</span></div><h1>SecurityFilter.java</h1><pre class="source lang-java linenums">package com.example.loyalty;
+
+import com.sun.net.httpserver.Filter;
+import com.sun.net.httpserver.HttpExchange;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.interfaces.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwk.JwkProvider;
+import com.auth0.jwk.JwkProviderBuilder;
+import com.auth0.jwt.interfaces.Claim;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.interfaces.RSAPublicKey;
+import java.util.List;
+import java.util.Map;
+
+public class SecurityFilter extends Filter {
+    private final String issuer;
+    private final String requiredRole;
+    private final JwkProvider jwkProvider;
+
+<span class="nc" id="L26">    public SecurityFilter(String jwksUrl, String issuer, String requiredRole) {</span>
+<span class="nc" id="L27">        this.issuer = issuer;</span>
+<span class="nc" id="L28">        this.requiredRole = requiredRole;</span>
+        try {
+<span class="nc" id="L30">            this.jwkProvider = new JwkProviderBuilder(new URL(jwksUrl)).build();</span>
+<span class="nc" id="L31">        } catch (Exception e) {</span>
+<span class="nc" id="L32">            throw new RuntimeException(&quot;Failed to initialize JwkProvider&quot;, e);</span>
+<span class="nc" id="L33">        }</span>
+<span class="nc" id="L34">    }</span>
+
+    // Constructor for testing
+<span class="fc" id="L37">    public SecurityFilter(JwkProvider jwkProvider, String issuer, String requiredRole) {</span>
+<span class="fc" id="L38">        this.jwkProvider = jwkProvider;</span>
+<span class="fc" id="L39">        this.issuer = issuer;</span>
+<span class="fc" id="L40">        this.requiredRole = requiredRole;</span>
+<span class="fc" id="L41">    }</span>
+
+    @Override
+    public void doFilter(HttpExchange exchange, Chain chain) throws IOException {
+<span class="fc" id="L45">        String token = getToken(exchange);</span>
+
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (token == null) {</span>
+<span class="fc" id="L48">            handleMissingToken(exchange);</span>
+<span class="fc" id="L49">            return;</span>
+        }
+
+        try {
+<span class="fc" id="L53">            DecodedJWT jwt = verifyToken(token);</span>
+
+            // Role check
+<span class="fc" id="L56">            Claim realmAccess = jwt.getClaim(&quot;realm_access&quot;);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            if (realmAccess.isNull()) {</span>
+<span class="fc" id="L58">                 sendError(exchange, 403, &quot;Forbidden: No realm_access claim&quot;);</span>
+<span class="fc" id="L59">                 return;</span>
+            }
+<span class="fc" id="L61">            Map&lt;String, Object&gt; realmAccessMap = realmAccess.asMap();</span>
+<span class="fc" id="L62">            List&lt;String&gt; roles = (List&lt;String&gt;) realmAccessMap.get(&quot;roles&quot;);</span>
+
+<span class="fc bfc" id="L64" title="All 4 branches covered.">            if (roles == null || !roles.contains(requiredRole)) {</span>
+<span class="fc" id="L65">                sendError(exchange, 403, &quot;Forbidden: Insufficient role&quot;);</span>
+<span class="fc" id="L66">                return;</span>
+            }
+
+<span class="fc" id="L69">            chain.doFilter(exchange);</span>
+<span class="fc" id="L70">        } catch (Exception e) {</span>
+<span class="fc" id="L71">            e.printStackTrace();</span>
+<span class="fc" id="L72">            handleInvalidToken(exchange);</span>
+<span class="fc" id="L73">        }</span>
+<span class="fc" id="L74">    }</span>
+
+    protected DecodedJWT verifyToken(String token) throws Exception {
+<span class="nc" id="L77">        DecodedJWT jwt = JWT.decode(token);</span>
+<span class="nc" id="L78">        RSAPublicKey publicKey = (RSAPublicKey) jwkProvider.get(jwt.getKeyId()).getPublicKey();</span>
+<span class="nc" id="L79">        Algorithm algorithm = Algorithm.RSA256(publicKey, null);</span>
+<span class="nc" id="L80">        JWTVerifier verifier = JWT.require(algorithm)</span>
+<span class="nc" id="L81">            .withIssuer(issuer)</span>
+<span class="nc" id="L82">            .build();</span>
+        
+<span class="nc" id="L84">        return verifier.verify(jwt);</span>
+    }
+
+    private void handleMissingToken(HttpExchange exchange) throws IOException {
+<span class="fc" id="L88">        String accept = exchange.getRequestHeaders().getFirst(&quot;Accept&quot;);</span>
+<span class="pc bpc" id="L89" title="1 of 4 branches missed.">        if (accept != null &amp;&amp; accept.contains(&quot;text/html&quot;)) {</span>
+<span class="fc" id="L90">            exchange.getResponseHeaders().set(&quot;Location&quot;, &quot;/login&quot;);</span>
+<span class="fc" id="L91">            exchange.sendResponseHeaders(302, -1);</span>
+<span class="fc" id="L92">            return;</span>
+        }
+<span class="fc" id="L94">        sendError(exchange, 401, &quot;Unauthorized: No token provided&quot;);</span>
+<span class="fc" id="L95">    }</span>
+
+    private void handleInvalidToken(HttpExchange exchange) throws IOException {
+<span class="fc" id="L98">        String accept = exchange.getRequestHeaders().getFirst(&quot;Accept&quot;);</span>
+<span class="pc bpc" id="L99" title="1 of 4 branches missed.">        if (accept != null &amp;&amp; accept.contains(&quot;text/html&quot;)) {</span>
+<span class="fc" id="L100">            exchange.getResponseHeaders().set(&quot;Location&quot;, &quot;/login&quot;);</span>
+<span class="fc" id="L101">            exchange.sendResponseHeaders(302, -1);</span>
+<span class="fc" id="L102">            return;</span>
+        }
+<span class="fc" id="L104">        sendError(exchange, 401, &quot;Unauthorized: Invalid token&quot;);</span>
+<span class="fc" id="L105">    }</span>
+
+    private String getToken(HttpExchange exchange) {
+        // 1. Check Authorization header
+<span class="fc" id="L109">        String authHeader = exchange.getRequestHeaders().getFirst(&quot;Authorization&quot;);</span>
+<span class="pc bpc" id="L110" title="1 of 4 branches missed.">        if (authHeader != null &amp;&amp; authHeader.startsWith(&quot;Bearer &quot;)) {</span>
+<span class="fc" id="L111">            return authHeader.substring(7);</span>
+        }
+        
+        // 2. Check Cookie
+<span class="fc" id="L115">        String cookieHeader = exchange.getRequestHeaders().getFirst(&quot;Cookie&quot;);</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        if (cookieHeader != null) {</span>
+<span class="fc" id="L117">            String[] cookies = cookieHeader.split(&quot;;&quot;);</span>
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">            for (String cookie : cookies) {</span>
+<span class="fc" id="L119">                String[] parts = cookie.trim().split(&quot;=&quot;);</span>
+<span class="pc bpc" id="L120" title="1 of 4 branches missed.">                if (parts.length == 2 &amp;&amp; &quot;auth_token&quot;.equals(parts[0])) {</span>
+<span class="fc" id="L121">                    return parts[1];</span>
+                }
+            }
+        }
+
+<span class="fc" id="L126">        return null;</span>
+    }
+
+    private void sendError(HttpExchange exchange, int code, String message) throws IOException {
+<span class="fc" id="L130">        byte[] bytes = message.getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L131">        exchange.sendResponseHeaders(code, bytes.length);</span>
+<span class="fc" id="L132">        try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="fc" id="L133">            os.write(bytes);</span>
+        }
+<span class="fc" id="L135">    }</span>
+
+    @Override
+    public String description() {
+<span class="fc" id="L139">        return &quot;JWT Security Filter&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

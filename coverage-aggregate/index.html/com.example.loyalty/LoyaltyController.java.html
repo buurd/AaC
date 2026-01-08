@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoyaltyController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Good Project Aggregated Coverage</a> &gt; <a href="index.source.html" class="el_package">com.example.loyalty</a> &gt; <span class="el_source">LoyaltyController.java</span></div><h1>LoyaltyController.java</h1><pre class="source lang-java linenums">package com.example.loyalty;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpExchange;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
+public class LoyaltyController implements HttpHandler {
+
+    private final PointService pointService;
+    private final BonusRuleEngine ruleEngine;
+    private final ObjectMapper objectMapper;
+
+<span class="fc" id="L20">    public LoyaltyController(PointService pointService, BonusRuleEngine ruleEngine) {</span>
+<span class="fc" id="L21">        this.pointService = pointService;</span>
+<span class="fc" id="L22">        this.ruleEngine = ruleEngine;</span>
+<span class="fc" id="L23">        this.objectMapper = new ObjectMapper();</span>
+<span class="fc" id="L24">    }</span>
+
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+<span class="fc" id="L28">        String method = exchange.getRequestMethod();</span>
+<span class="fc" id="L29">        String path = exchange.getRequestURI().getPath();</span>
+
+<span class="fc" id="L31">        System.out.println(&quot;LoyaltyController received &quot; + method + &quot; &quot; + path);</span>
+
+<span class="fc bfc" id="L33" title="All 4 branches covered.">        if (&quot;GET&quot;.equalsIgnoreCase(method) &amp;&amp; path.equals(&quot;/api/loyalty/rules&quot;)) {</span>
+<span class="fc" id="L34">            handleGetRules(exchange);</span>
+<span class="fc bfc" id="L35" title="All 4 branches covered.">        } else if (&quot;POST&quot;.equalsIgnoreCase(method) &amp;&amp; path.equals(&quot;/api/loyalty/calculate&quot;)) {</span>
+<span class="fc" id="L36">            handleCalculate(exchange);</span>
+<span class="fc bfc" id="L37" title="All 4 branches covered.">        } else if (&quot;GET&quot;.equalsIgnoreCase(method) &amp;&amp; path.equals(&quot;/&quot;)) {</span>
+<span class="fc" id="L38">            handleHome(exchange);</span>
+<span class="fc bfc" id="L39" title="All 4 branches covered.">        } else if (&quot;GET&quot;.equalsIgnoreCase(method) &amp;&amp; path.equals(&quot;/admin/dashboard&quot;)) {</span>
+<span class="fc" id="L40">            handleDashboard(exchange);</span>
+<span class="fc bfc" id="L41" title="All 4 branches covered.">        } else if (&quot;POST&quot;.equalsIgnoreCase(method) &amp;&amp; path.endsWith(&quot;/accrue&quot;)) {</span>
+<span class="fc" id="L42">            handleAccrue(exchange);</span>
+<span class="fc bfc" id="L43" title="All 4 branches covered.">        } else if (&quot;POST&quot;.equalsIgnoreCase(method) &amp;&amp; path.endsWith(&quot;/redeem&quot;)) {</span>
+<span class="fc" id="L44">            handleRedeem(exchange);</span>
+<span class="fc bfc" id="L45" title="All 4 branches covered.">        } else if (&quot;GET&quot;.equalsIgnoreCase(method) &amp;&amp; path.contains(&quot;/balance/&quot;)) {</span>
+<span class="fc" id="L46">            handleGetBalance(exchange);</span>
+<span class="pc bpc" id="L47" title="1 of 4 branches missed.">        } else if (&quot;POST&quot;.equalsIgnoreCase(method) &amp;&amp; path.endsWith(&quot;/admin/toggle-bonus&quot;)) {</span>
+<span class="fc" id="L48">            handleToggleBonus(exchange);</span>
+        } else {
+<span class="fc" id="L50">            sendResponse(exchange, 404, &quot;{\&quot;status\&quot;:\&quot;not_found\&quot;}&quot;);</span>
+        }
+<span class="fc" id="L52">    }</span>
+
+    private void handleHome(HttpExchange exchange) throws IOException {
+<span class="fc" id="L55">        String response = &quot;&lt;html&gt;&lt;body&gt;&lt;h1&gt;Loyalty Admin Dashboard&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;&quot;;</span>
+<span class="fc" id="L56">        sendResponse(exchange, 200, response);</span>
+<span class="fc" id="L57">    }</span>
+
+    private void handleGetRules(HttpExchange exchange) throws IOException {
+<span class="fc" id="L60">        List&lt;String&gt; rules = ruleEngine.getRuleDescriptions();</span>
+<span class="fc" id="L61">        String response = objectMapper.writeValueAsString(rules);</span>
+<span class="fc" id="L62">        sendResponse(exchange, 200, response);</span>
+<span class="fc" id="L63">    }</span>
+
+    private void handleCalculate(HttpExchange exchange) throws IOException {
+        try {
+<span class="fc" id="L67">            InputStream is = exchange.getRequestBody();</span>
+<span class="fc" id="L68">            AccrueRequest request = objectMapper.readValue(is, AccrueRequest.class);</span>
+            
+            // We don't need customerId for calculation, just amount and items
+<span class="fc" id="L71">            int points = ruleEngine.evaluate(request.getTotalAmount(), request.getItems());</span>
+<span class="fc" id="L72">            sendResponse(exchange, 200, &quot;{\&quot;points\&quot;:&quot; + points + &quot;}&quot;);</span>
+<span class="nc" id="L73">        } catch (Exception e) {</span>
+<span class="nc" id="L74">            e.printStackTrace();</span>
+<span class="nc" id="L75">            sendResponse(exchange, 500, &quot;{\&quot;status\&quot;:\&quot;error\&quot;,\&quot;message\&quot;:\&quot;&quot; + e.getMessage() + &quot;\&quot;}&quot;);</span>
+<span class="fc" id="L76">        }</span>
+<span class="fc" id="L77">    }</span>
+
+    private void handleDashboard(HttpExchange exchange) throws IOException {
+<span class="fc" id="L80">        long totalPoints = pointService.getTotalPointsIssued();</span>
+<span class="fc" id="L81">        boolean bonusActive = ruleEngine.isForceJanuaryBonus();</span>
+<span class="fc" id="L82">        List&lt;String&gt; rules = ruleEngine.getRuleDescriptions();</span>
+        
+<span class="fc" id="L84">        StringBuilder rulesHtml = new StringBuilder(&quot;&lt;ul&gt;&quot;);</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        for (String rule : rules) {</span>
+<span class="fc" id="L86">            rulesHtml.append(&quot;&lt;li&gt;&quot;).append(rule).append(&quot;&lt;/li&gt;&quot;);</span>
+<span class="fc" id="L87">        }</span>
+<span class="fc" id="L88">        rulesHtml.append(&quot;&lt;/ul&gt;&quot;);</span>
+
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        String html = &quot;&lt;html&gt;&quot; +</span>
+                &quot;&lt;head&gt;&lt;title&gt;Loyalty Admin&lt;/title&gt;&lt;style&gt;body{font-family:sans-serif;padding:20px;}.card{border:1px solid #ccc;padding:20px;margin:10px;border-radius:5px;}&lt;/style&gt;&lt;/head&gt;&quot; +
+                &quot;&lt;body&gt;&quot; +
+                &quot;&lt;h1&gt;Loyalty Admin Dashboard&lt;/h1&gt;&quot; +
+                &quot;&lt;div class='card'&gt;&quot; +
+                &quot;&lt;h2&gt;Statistics&lt;/h2&gt;&quot; +
+                &quot;&lt;p&gt;Total Points Issued: &lt;strong&gt;&quot; + totalPoints + &quot;&lt;/strong&gt;&lt;/p&gt;&quot; +
+                &quot;&lt;/div&gt;&quot; +
+                &quot;&lt;div class='card'&gt;&quot; +
+                &quot;&lt;h2&gt;Campaign Management&lt;/h2&gt;&quot; +
+                &quot;&lt;p&gt;January Bonus Active: &lt;strong&gt;&quot; + bonusActive + &quot;&lt;/strong&gt;&lt;/p&gt;&quot; +
+                &quot;&lt;form method='POST' action='/api/loyalty/admin/toggle-bonus'&gt;&quot; +
+                &quot;&lt;input type='hidden' name='active' value='&quot; + (!bonusActive) + &quot;'&gt;&quot; +
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">                &quot;&lt;button type='submit'&gt;&quot; + (bonusActive ? &quot;Disable&quot; : &quot;Enable&quot;) + &quot; Bonus&lt;/button&gt;&quot; +</span>
+                &quot;&lt;/form&gt;&quot; +
+                &quot;&lt;h3&gt;Available Rules:&lt;/h3&gt;&quot; +
+<span class="fc" id="L106">                rulesHtml.toString() +</span>
+                &quot;&lt;/div&gt;&quot; +
+                &quot;&lt;/body&gt;&quot; +
+                &quot;&lt;/html&gt;&quot;;
+
+<span class="fc" id="L111">        byte[] bytes = html.getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L112">        exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html&quot;);</span>
+<span class="fc" id="L113">        exchange.sendResponseHeaders(200, bytes.length);</span>
+<span class="fc" id="L114">        try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="fc" id="L115">            os.write(bytes);</span>
+        }
+<span class="fc" id="L117">    }</span>
+
+    private void handleToggleBonus(HttpExchange exchange) throws IOException {
+<span class="fc" id="L120">        String body = readBody(exchange);</span>
+        // Simple form parsing (active=true)
+<span class="fc" id="L122">        boolean active = body.contains(&quot;active=true&quot;);</span>
+<span class="fc" id="L123">        ruleEngine.setForceJanuaryBonus(active);</span>
+        
+        // Redirect back to dashboard
+<span class="fc" id="L126">        exchange.getResponseHeaders().set(&quot;Location&quot;, &quot;/admin/dashboard&quot;);</span>
+<span class="fc" id="L127">        exchange.sendResponseHeaders(303, -1);</span>
+<span class="fc" id="L128">    }</span>
+
+    private void handleAccrue(HttpExchange exchange) throws IOException {
+        try {
+<span class="fc" id="L132">            InputStream is = exchange.getRequestBody();</span>
+<span class="fc" id="L133">            AccrueRequest request = objectMapper.readValue(is, AccrueRequest.class);</span>
+            
+<span class="pc bpc" id="L135" title="1 of 4 branches missed.">            if (request.getCustomerId() != null &amp;&amp; request.getTotalAmount() &gt; 0) {</span>
+<span class="fc" id="L136">                int points = pointService.accruePoints(request.getCustomerId(), request.getTotalAmount(), request.getItems());</span>
+<span class="fc" id="L137">                sendResponse(exchange, 200, &quot;{\&quot;status\&quot;:\&quot;success\&quot;,\&quot;pointsAccrued\&quot;:&quot; + points + &quot;}&quot;);</span>
+<span class="fc" id="L138">            } else {</span>
+<span class="fc" id="L139">                sendResponse(exchange, 400, &quot;{\&quot;status\&quot;:\&quot;error\&quot;,\&quot;message\&quot;:\&quot;Missing fields\&quot;}&quot;);</span>
+            }
+<span class="nc" id="L141">        } catch (Exception e) {</span>
+<span class="nc" id="L142">            e.printStackTrace();</span>
+<span class="nc" id="L143">            sendResponse(exchange, 500, &quot;{\&quot;status\&quot;:\&quot;error\&quot;,\&quot;message\&quot;:\&quot;&quot; + e.getMessage() + &quot;\&quot;}&quot;);</span>
+<span class="fc" id="L144">        }</span>
+<span class="fc" id="L145">    }</span>
+
+    private void handleRedeem(HttpExchange exchange) throws IOException {
+        try {
+<span class="fc" id="L149">            InputStream is = exchange.getRequestBody();</span>
+<span class="fc" id="L150">            JsonNode node = objectMapper.readTree(is);</span>
+            
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">            String customerId = node.has(&quot;customerId&quot;) ? node.get(&quot;customerId&quot;).asText() : null;</span>
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">            int points = node.has(&quot;pointsToRedeem&quot;) ? node.get(&quot;pointsToRedeem&quot;).asInt() : 0;</span>
+
+<span class="pc bpc" id="L155" title="2 of 4 branches missed.">            if (customerId != null &amp;&amp; points &gt; 0) {</span>
+<span class="fc" id="L156">                boolean success = pointService.redeemPoints(customerId, points);</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">                if (success) {</span>
+<span class="fc" id="L158">                    int remaining = pointService.getBalance(customerId);</span>
+<span class="fc" id="L159">                    sendResponse(exchange, 200, &quot;{\&quot;status\&quot;:\&quot;SUCCESS\&quot;,\&quot;pointsRedeemed\&quot;:&quot; + points + &quot;,\&quot;remainingBalance\&quot;:&quot; + remaining + &quot;}&quot;);</span>
+<span class="fc" id="L160">                } else {</span>
+<span class="fc" id="L161">                    sendResponse(exchange, 409, &quot;{\&quot;status\&quot;:\&quot;INSUFFICIENT_FUNDS\&quot;}&quot;);</span>
+                }
+<span class="fc" id="L163">            } else {</span>
+<span class="nc" id="L164">                sendResponse(exchange, 400, &quot;{\&quot;status\&quot;:\&quot;error\&quot;,\&quot;message\&quot;:\&quot;Missing fields\&quot;}&quot;);</span>
+            }
+<span class="nc" id="L166">        } catch (Exception e) {</span>
+<span class="nc" id="L167">            e.printStackTrace();</span>
+<span class="nc" id="L168">            sendResponse(exchange, 500, &quot;{\&quot;status\&quot;:\&quot;error\&quot;,\&quot;message\&quot;:\&quot;&quot; + e.getMessage() + &quot;\&quot;}&quot;);</span>
+<span class="fc" id="L169">        }</span>
+<span class="fc" id="L170">    }</span>
+
+    private void handleGetBalance(HttpExchange exchange) throws IOException {
+<span class="fc" id="L173">        String path = exchange.getRequestURI().getPath();</span>
+<span class="fc" id="L174">        String customerId = path.substring(path.lastIndexOf(&quot;/&quot;) + 1);</span>
+        // Decode URL encoded customer ID (e.g. John%20Doe -&gt; John Doe)
+<span class="fc" id="L176">        customerId = java.net.URLDecoder.decode(customerId, StandardCharsets.UTF_8);</span>
+        
+<span class="fc" id="L178">        int points = pointService.getBalance(customerId);</span>
+<span class="fc" id="L179">        double value = points / 10.0; // 10 points = 1 Euro</span>
+        
+        // Add Cache-Control header to prevent caching
+<span class="fc" id="L182">        exchange.getResponseHeaders().set(&quot;Cache-Control&quot;, &quot;no-store, no-cache, must-revalidate&quot;);</span>
+        
+<span class="fc" id="L184">        String response = String.format(&quot;{\&quot;customerId\&quot;:\&quot;%s\&quot;,\&quot;points\&quot;:%d,\&quot;value\&quot;:%.2f,\&quot;currency\&quot;:\&quot;EUR\&quot;}&quot;, customerId, points, value);</span>
+<span class="fc" id="L185">        sendResponse(exchange, 200, response);</span>
+<span class="fc" id="L186">    }</span>
+
+    private String readBody(HttpExchange exchange) throws IOException {
+<span class="fc" id="L189">        try (InputStream is = exchange.getRequestBody()) {</span>
+<span class="fc" id="L190">            return new String(is.readAllBytes(), StandardCharsets.UTF_8);</span>
+        }
+    }
+
+    private void sendResponse(HttpExchange exchange, int status, String response) throws IOException {
+<span class="fc" id="L195">        byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
+        // Set Content-Type based on response content
+<span class="fc bfc" id="L197" title="All 4 branches covered.">        if (response.trim().startsWith(&quot;{&quot;) || response.trim().startsWith(&quot;[&quot;)) {</span>
+<span class="fc" id="L198">            exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;application/json&quot;);</span>
+        } else {
+<span class="fc" id="L200">            exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html&quot;);</span>
+        }
+<span class="fc" id="L202">        exchange.sendResponseHeaders(status, bytes.length);</span>
+<span class="fc" id="L203">        try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="fc" id="L204">            os.write(bytes);</span>
+        }
+<span class="fc" id="L206">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

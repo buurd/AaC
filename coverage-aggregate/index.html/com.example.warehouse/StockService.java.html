@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StockService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Good Project Aggregated Coverage</a> &gt; <a href="index.source.html" class="el_package">com.example.warehouse</a> &gt; <span class="el_source">StockService.java</span></div><h1>StockService.java</h1><pre class="source lang-java linenums">package com.example.warehouse;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
+
+public class StockService {
+
+    private final HttpClient httpClient;
+    private final String webshopStockApiUrl;
+    private final TokenService tokenService;
+
+    public StockService() {
+<span class="nc" id="L18">        this(</span>
+<span class="nc" id="L19">            HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build(),</span>
+<span class="nc" id="L20">            System.getenv().getOrDefault(&quot;WEBSHOP_STOCK_API_URL&quot;, &quot;http://localhost:8000/api/stock/sync&quot;),</span>
+            new KeycloakTokenService(
+<span class="nc" id="L22">                System.getenv().getOrDefault(&quot;TOKEN_URL&quot;, &quot;http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/token&quot;),</span>
+<span class="nc" id="L23">                System.getenv().getOrDefault(&quot;CLIENT_ID&quot;, &quot;warehouse-client&quot;),</span>
+<span class="nc" id="L24">                System.getenv().getOrDefault(&quot;CLIENT_SECRET&quot;, &quot;warehouse-secret&quot;)</span>
+            )
+        );
+<span class="nc" id="L27">    }</span>
+
+    public StockService(String webshopStockApiUrl, TokenService tokenService) {
+<span class="fc" id="L30">        this(</span>
+<span class="fc" id="L31">            HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build(),</span>
+            webshopStockApiUrl,
+            tokenService
+        );
+<span class="fc" id="L35">    }</span>
+
+    // Constructor for testing with a mock HttpClient
+<span class="fc" id="L38">    public StockService(HttpClient httpClient, String webshopStockApiUrl, TokenService tokenService) {</span>
+<span class="fc" id="L39">        this.httpClient = httpClient;</span>
+<span class="fc" id="L40">        this.webshopStockApiUrl = webshopStockApiUrl;</span>
+<span class="fc" id="L41">        this.tokenService = tokenService;</span>
+        
+<span class="fc" id="L43">        System.out.println(&quot;StockService initialized with Webshop Stock API URL: &quot; + this.webshopStockApiUrl);</span>
+<span class="fc" id="L44">    }</span>
+
+    public void syncStock(int pmId, int stock) {
+<span class="fc" id="L47">        tokenService.getAccessToken().thenAccept(token -&gt; {</span>
+            try {
+<span class="fc" id="L49">                System.out.println(&quot;Syncing stock for product &quot; + pmId + &quot; (Stock: &quot; + stock + &quot;) to &quot; + webshopStockApiUrl);</span>
+<span class="fc" id="L50">                String json = String.format(Locale.US, &quot;{\&quot;pmId\&quot;:%d,\&quot;stock\&quot;:%d}&quot;, pmId, stock);</span>
+
+<span class="fc" id="L52">                HttpRequest request = HttpRequest.newBuilder()</span>
+<span class="fc" id="L53">                        .uri(URI.create(webshopStockApiUrl))</span>
+<span class="fc" id="L54">                        .header(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
+<span class="fc" id="L55">                        .header(&quot;Authorization&quot;, &quot;Bearer &quot; + token)</span>
+<span class="fc" id="L56">                        .POST(HttpRequest.BodyPublishers.ofString(json))</span>
+<span class="fc" id="L57">                        .build();</span>
+
+<span class="fc" id="L59">                httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())</span>
+<span class="fc" id="L60">                        .thenAccept(response -&gt; {</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">                            if (response.statusCode() != 200) {</span>
+<span class="fc" id="L62">                                System.err.println(&quot;Failed to sync stock to Webshop. Status: &quot; + response.statusCode() + &quot; Body: &quot; + response.body());</span>
+                            } else {
+<span class="nc" id="L64">                                System.out.println(&quot;Synced stock for product &quot; + pmId + &quot; to Webshop.&quot;);</span>
+                            }
+<span class="fc" id="L66">                        })</span>
+<span class="fc" id="L67">                        .exceptionally(e -&gt; {</span>
+<span class="fc" id="L68">                            System.err.println(&quot;Exception during stock sync: &quot; + e.getMessage());</span>
+<span class="fc" id="L69">                            throw new RuntimeException(&quot;Exception during stock sync&quot;, e);</span>
+                        });
+<span class="nc" id="L71">            } catch (Exception e) {</span>
+<span class="nc" id="L72">                e.printStackTrace();</span>
+<span class="fc" id="L73">            }</span>
+<span class="fc" id="L74">        });</span>
+<span class="fc" id="L75">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

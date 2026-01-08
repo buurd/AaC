@@ -58,14 +58,27 @@ public class LoyaltyRepository {
 
     public void addPoints(String customerId, int pointsToAdd) {
         System.out.println("LoyaltyRepository: Adding " + pointsToAdd + " points to " + customerId);
-        String sql = "INSERT INTO loyalty_points (customer_id, points) VALUES (?, ?) " +
-                     "ON CONFLICT (customer_id) DO UPDATE SET points = loyalty_points.points + ?";
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, customerId);
-            pstmt.setInt(2, pointsToAdd);
-            pstmt.setInt(3, pointsToAdd);
-            pstmt.executeUpdate();
+        
+        // Try update first (standard SQL, works on H2 and Postgres)
+        String updateSql = "UPDATE loyalty_points SET points = points + ? WHERE customer_id = ?";
+        String insertSql = "INSERT INTO loyalty_points (customer_id, points) VALUES (?, ?)";
+        
+        try (Connection conn = getConnection()) {
+            boolean updated = false;
+            try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+                updateStmt.setInt(1, pointsToAdd);
+                updateStmt.setString(2, customerId);
+                int rows = updateStmt.executeUpdate();
+                updated = (rows > 0);
+            }
+            
+            if (!updated) {
+                try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+                    insertStmt.setString(1, customerId);
+                    insertStmt.setInt(2, pointsToAdd);
+                    insertStmt.executeUpdate();
+                }
+            }
             System.out.println("LoyaltyRepository: addPoints finished for " + customerId);
         } catch (SQLException e) {
             e.printStackTrace();
