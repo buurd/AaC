@@ -165,6 +165,11 @@ public class ProductManagementApplication {
                 
                 String username = params.get("username");
                 String password = params.get("password");
+
+                if (username == null || password == null) {
+                    sendResponse(t, 400, "<h1>Error</h1><p>Missing username or password</p>");
+                    return;
+                }
                 
                 String requestBody = "client_id=webshop-client&grant_type=password&username=" + username + "&password=" + password;
                 

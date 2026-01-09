@@ -8,164 +8,172 @@ public class ProductRepository {
 
     private final Connection connection;
 
-<span class="nc" id="L11">    public ProductRepository(Connection connection) {</span>
-<span class="nc" id="L12">        this.connection = connection;</span>
-<span class="nc" id="L13">    }</span>
+<span class="fc" id="L11">    public ProductRepository(Connection connection) {</span>
+<span class="fc" id="L12">        this.connection = connection;</span>
+<span class="fc" id="L13">    }</span>
 
     // --- Product Group Methods ---
 
     public List&lt;ProductGroup&gt; findAllGroups() throws SQLException {
-<span class="nc" id="L18">        List&lt;ProductGroup&gt; groups = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L19">        String sql = &quot;SELECT id, name, description, base_price, base_unit FROM product_groups ORDER BY id&quot;;</span>
-<span class="nc" id="L20">        try (Statement stmt = connection.createStatement();</span>
-<span class="nc" id="L21">             ResultSet rs = stmt.executeQuery(sql)) {</span>
-<span class="nc bnc" id="L22" title="All 2 branches missed.">            while (rs.next()) {</span>
-<span class="nc" id="L23">                groups.add(mapGroupRow(rs));</span>
+<span class="fc" id="L18">        List&lt;ProductGroup&gt; groups = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L19">        String sql = &quot;SELECT id, name, description, base_price, base_unit FROM product_groups ORDER BY id&quot;;</span>
+<span class="fc" id="L20">        try (Statement stmt = connection.createStatement();</span>
+<span class="fc" id="L21">             ResultSet rs = stmt.executeQuery(sql)) {</span>
+<span class="fc bfc" id="L22" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L23">                groups.add(mapGroupRow(rs));</span>
             }
         }
-<span class="nc" id="L26">        return groups;</span>
+<span class="fc" id="L26">        return groups;</span>
     }
 
     public ProductGroup findGroupById(int id) throws SQLException {
-<span class="nc" id="L30">        String sql = &quot;SELECT id, name, description, base_price, base_unit FROM product_groups WHERE id = ?&quot;;</span>
-<span class="nc" id="L31">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
-<span class="nc" id="L32">            stmt.setInt(1, id);</span>
-<span class="nc" id="L33">            try (ResultSet rs = stmt.executeQuery()) {</span>
-<span class="nc bnc" id="L34" title="All 2 branches missed.">                if (rs.next()) {</span>
-<span class="nc" id="L35">                    return mapGroupRow(rs);</span>
+<span class="fc" id="L30">        String sql = &quot;SELECT id, name, description, base_price, base_unit FROM product_groups WHERE id = ?&quot;;</span>
+<span class="fc" id="L31">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
+<span class="fc" id="L32">            stmt.setInt(1, id);</span>
+<span class="fc" id="L33">            try (ResultSet rs = stmt.executeQuery()) {</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">                if (rs.next()) {</span>
+<span class="fc" id="L35">                    return mapGroupRow(rs);</span>
                 }
-<span class="nc bnc" id="L37" title="All 2 branches missed.">            }</span>
-<span class="nc bnc" id="L38" title="All 2 branches missed.">        }</span>
+<span class="pc bpc" id="L37" title="1 of 2 branches missed.">            }</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">        }</span>
 <span class="nc" id="L39">        return null;</span>
     }
 
     public int createGroup(ProductGroup group) throws SQLException {
-<span class="nc" id="L43">        String sql = &quot;INSERT INTO product_groups (name, description, base_price, base_unit) VALUES (?, ?, ?, ?) RETURNING id&quot;;</span>
-<span class="nc" id="L44">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
-<span class="nc" id="L45">            stmt.setString(1, group.getName());</span>
-<span class="nc" id="L46">            stmt.setString(2, group.getDescription());</span>
-<span class="nc" id="L47">            stmt.setDouble(3, group.getBasePrice());</span>
-<span class="nc" id="L48">            stmt.setString(4, group.getBaseUnit());</span>
-<span class="nc" id="L49">            try (ResultSet rs = stmt.executeQuery()) {</span>
-<span class="nc bnc" id="L50" title="All 2 branches missed.">                if (rs.next()) {</span>
-<span class="nc" id="L51">                    return rs.getInt(1);</span>
-                }
-<span class="nc bnc" id="L53" title="All 2 branches missed.">            }</span>
-<span class="nc bnc" id="L54" title="All 2 branches missed.">        }</span>
-<span class="nc" id="L55">        throw new SQLException(&quot;Creating product group failed, no ID obtained.&quot;);</span>
+        // H2 compatibility: use Statement.RETURN_GENERATED_KEYS instead of RETURNING id
+<span class="fc" id="L44">        String sql = &quot;INSERT INTO product_groups (name, description, base_price, base_unit) VALUES (?, ?, ?, ?)&quot;;</span>
+<span class="fc" id="L45">        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {</span>
+<span class="fc" id="L46">            stmt.setString(1, group.getName());</span>
+<span class="fc" id="L47">            stmt.setString(2, group.getDescription());</span>
+<span class="fc" id="L48">            stmt.setDouble(3, group.getBasePrice());</span>
+<span class="fc" id="L49">            stmt.setString(4, group.getBaseUnit());</span>
+<span class="fc" id="L50">            int affectedRows = stmt.executeUpdate();</span>
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">            if (affectedRows &gt; 0) {</span>
+<span class="fc" id="L52">                try (ResultSet rs = stmt.getGeneratedKeys()) {</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">                    if (rs.next()) {</span>
+<span class="fc" id="L54">                        return rs.getInt(1);</span>
+                    }
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">                }</span>
+            }
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        }</span>
+<span class="nc" id="L59">        throw new SQLException(&quot;Creating product group failed, no ID obtained.&quot;);</span>
     }
 
     // --- Product Methods ---
 
     public List&lt;Product&gt; findAll() throws SQLException {
-<span class="nc" id="L61">        List&lt;Product&gt; products = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L62">        String sql = &quot;SELECT id, group_id, type, name, description, price, unit, attributes FROM products ORDER BY id&quot;;</span>
-<span class="nc" id="L63">        try (Statement stmt = connection.createStatement();</span>
-<span class="nc" id="L64">             ResultSet rs = stmt.executeQuery(sql)) {</span>
-<span class="nc bnc" id="L65" title="All 2 branches missed.">            while (rs.next()) {</span>
-<span class="nc" id="L66">                products.add(mapRow(rs));</span>
+<span class="fc" id="L65">        List&lt;Product&gt; products = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L66">        String sql = &quot;SELECT id, group_id, type, name, description, price, unit, attributes FROM products ORDER BY id&quot;;</span>
+<span class="fc" id="L67">        try (Statement stmt = connection.createStatement();</span>
+<span class="fc" id="L68">             ResultSet rs = stmt.executeQuery(sql)) {</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L70">                products.add(mapRow(rs));</span>
             }
         }
-<span class="nc" id="L69">        return products;</span>
+<span class="fc" id="L73">        return products;</span>
     }
 
     public List&lt;Product&gt; findByGroupId(int groupId) throws SQLException {
-<span class="nc" id="L73">        List&lt;Product&gt; products = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L74">        String sql = &quot;SELECT id, group_id, type, name, description, price, unit, attributes FROM products WHERE group_id = ? ORDER BY id&quot;;</span>
-<span class="nc" id="L75">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
-<span class="nc" id="L76">            stmt.setInt(1, groupId);</span>
-<span class="nc" id="L77">            try (ResultSet rs = stmt.executeQuery()) {</span>
-<span class="nc bnc" id="L78" title="All 2 branches missed.">                while (rs.next()) {</span>
-<span class="nc" id="L79">                    products.add(mapRow(rs));</span>
+<span class="fc" id="L77">        List&lt;Product&gt; products = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L78">        String sql = &quot;SELECT id, group_id, type, name, description, price, unit, attributes FROM products WHERE group_id = ? ORDER BY id&quot;;</span>
+<span class="fc" id="L79">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
+<span class="fc" id="L80">            stmt.setInt(1, groupId);</span>
+<span class="fc" id="L81">            try (ResultSet rs = stmt.executeQuery()) {</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">                while (rs.next()) {</span>
+<span class="fc" id="L83">                    products.add(mapRow(rs));</span>
                 }
             }
         }
-<span class="nc" id="L83">        return products;</span>
+<span class="fc" id="L87">        return products;</span>
     }
 
     public Product findById(int id) throws SQLException {
-<span class="nc" id="L87">        String sql = &quot;SELECT id, group_id, type, name, description, price, unit, attributes FROM products WHERE id = ?&quot;;</span>
-<span class="nc" id="L88">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
-<span class="nc" id="L89">            stmt.setInt(1, id);</span>
-<span class="nc" id="L90">            try (ResultSet rs = stmt.executeQuery()) {</span>
-<span class="nc bnc" id="L91" title="All 2 branches missed.">                if (rs.next()) {</span>
-<span class="nc" id="L92">                    return mapRow(rs);</span>
+<span class="fc" id="L91">        String sql = &quot;SELECT id, group_id, type, name, description, price, unit, attributes FROM products WHERE id = ?&quot;;</span>
+<span class="fc" id="L92">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
+<span class="fc" id="L93">            stmt.setInt(1, id);</span>
+<span class="fc" id="L94">            try (ResultSet rs = stmt.executeQuery()) {</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">                if (rs.next()) {</span>
+<span class="fc" id="L96">                    return mapRow(rs);</span>
                 }
-<span class="nc bnc" id="L94" title="All 2 branches missed.">            }</span>
-<span class="nc bnc" id="L95" title="All 2 branches missed.">        }</span>
-<span class="nc" id="L96">        return null;</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">            }</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">        }</span>
+<span class="fc" id="L100">        return null;</span>
     }
 
     public int create(Product product) throws SQLException {
-<span class="nc" id="L100">        String sql = &quot;INSERT INTO products (group_id, type, name, description, price, unit, attributes) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id&quot;;</span>
-<span class="nc" id="L101">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
-<span class="nc bnc" id="L102" title="All 2 branches missed.">            if (product.getGroupId() != null) {</span>
-<span class="nc" id="L103">                stmt.setInt(1, product.getGroupId());</span>
+        // H2 compatibility: use Statement.RETURN_GENERATED_KEYS instead of RETURNING id
+<span class="fc" id="L105">        String sql = &quot;INSERT INTO products (group_id, type, name, description, price, unit, attributes) VALUES (?, ?, ?, ?, ?, ?, ?)&quot;;</span>
+<span class="fc" id="L106">        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">            if (product.getGroupId() != null) {</span>
+<span class="fc" id="L108">                stmt.setInt(1, product.getGroupId());</span>
             } else {
-<span class="nc" id="L105">                stmt.setNull(1, Types.INTEGER);</span>
+<span class="fc" id="L110">                stmt.setNull(1, Types.INTEGER);</span>
             }
-<span class="nc" id="L107">            stmt.setString(2, product.getType());</span>
-<span class="nc" id="L108">            stmt.setString(3, product.getName());</span>
-<span class="nc" id="L109">            stmt.setString(4, product.getDescription());</span>
-<span class="nc" id="L110">            stmt.setDouble(5, product.getPrice());</span>
-<span class="nc" id="L111">            stmt.setString(6, product.getUnit());</span>
-<span class="nc" id="L112">            stmt.setString(7, product.getAttributes());</span>
-<span class="nc" id="L113">            try (ResultSet rs = stmt.executeQuery()) {</span>
-<span class="nc bnc" id="L114" title="All 2 branches missed.">                if (rs.next()) {</span>
-<span class="nc" id="L115">                    return rs.getInt(1);</span>
-                }
-<span class="nc bnc" id="L117" title="All 2 branches missed.">            }</span>
-<span class="nc bnc" id="L118" title="All 2 branches missed.">        }</span>
-<span class="nc" id="L119">        throw new SQLException(&quot;Creating product failed, no ID obtained.&quot;);</span>
+<span class="fc" id="L112">            stmt.setString(2, product.getType());</span>
+<span class="fc" id="L113">            stmt.setString(3, product.getName());</span>
+<span class="fc" id="L114">            stmt.setString(4, product.getDescription());</span>
+<span class="fc" id="L115">            stmt.setDouble(5, product.getPrice());</span>
+<span class="fc" id="L116">            stmt.setString(6, product.getUnit());</span>
+<span class="fc" id="L117">            stmt.setString(7, product.getAttributes());</span>
+<span class="fc" id="L118">            int affectedRows = stmt.executeUpdate();</span>
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">            if (affectedRows &gt; 0) {</span>
+<span class="fc" id="L120">                try (ResultSet rs = stmt.getGeneratedKeys()) {</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">                    if (rs.next()) {</span>
+<span class="fc" id="L122">                        return rs.getInt(1);</span>
+                    }
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">                }</span>
+            }
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">        }</span>
+<span class="nc" id="L127">        throw new SQLException(&quot;Creating product failed, no ID obtained.&quot;);</span>
     }
 
     public void update(Product product) throws SQLException {
-<span class="nc" id="L123">        String sql = &quot;UPDATE products SET group_id = ?, type = ?, name = ?, description = ?, price = ?, unit = ?, attributes = ? WHERE id = ?&quot;;</span>
-<span class="nc" id="L124">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
-<span class="nc bnc" id="L125" title="All 2 branches missed.">            if (product.getGroupId() != null) {</span>
-<span class="nc" id="L126">                stmt.setInt(1, product.getGroupId());</span>
+<span class="fc" id="L131">        String sql = &quot;UPDATE products SET group_id = ?, type = ?, name = ?, description = ?, price = ?, unit = ?, attributes = ? WHERE id = ?&quot;;</span>
+<span class="fc" id="L132">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">            if (product.getGroupId() != null) {</span>
+<span class="nc" id="L134">                stmt.setInt(1, product.getGroupId());</span>
             } else {
-<span class="nc" id="L128">                stmt.setNull(1, Types.INTEGER);</span>
+<span class="fc" id="L136">                stmt.setNull(1, Types.INTEGER);</span>
             }
-<span class="nc" id="L130">            stmt.setString(2, product.getType());</span>
-<span class="nc" id="L131">            stmt.setString(3, product.getName());</span>
-<span class="nc" id="L132">            stmt.setString(4, product.getDescription());</span>
-<span class="nc" id="L133">            stmt.setDouble(5, product.getPrice());</span>
-<span class="nc" id="L134">            stmt.setString(6, product.getUnit());</span>
-<span class="nc" id="L135">            stmt.setString(7, product.getAttributes());</span>
-<span class="nc" id="L136">            stmt.setInt(8, product.getId());</span>
-<span class="nc" id="L137">            stmt.executeUpdate();</span>
+<span class="fc" id="L138">            stmt.setString(2, product.getType());</span>
+<span class="fc" id="L139">            stmt.setString(3, product.getName());</span>
+<span class="fc" id="L140">            stmt.setString(4, product.getDescription());</span>
+<span class="fc" id="L141">            stmt.setDouble(5, product.getPrice());</span>
+<span class="fc" id="L142">            stmt.setString(6, product.getUnit());</span>
+<span class="fc" id="L143">            stmt.setString(7, product.getAttributes());</span>
+<span class="fc" id="L144">            stmt.setInt(8, product.getId());</span>
+<span class="fc" id="L145">            stmt.executeUpdate();</span>
         }
-<span class="nc" id="L139">    }</span>
+<span class="fc" id="L147">    }</span>
 
     public void delete(int id) throws SQLException {
-<span class="nc" id="L142">        String sql = &quot;DELETE FROM products WHERE id = ?&quot;;</span>
-<span class="nc" id="L143">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
-<span class="nc" id="L144">            stmt.setInt(1, id);</span>
-<span class="nc" id="L145">            stmt.executeUpdate();</span>
+<span class="fc" id="L150">        String sql = &quot;DELETE FROM products WHERE id = ?&quot;;</span>
+<span class="fc" id="L151">        try (PreparedStatement stmt = connection.prepareStatement(sql)) {</span>
+<span class="fc" id="L152">            stmt.setInt(1, id);</span>
+<span class="fc" id="L153">            stmt.executeUpdate();</span>
         }
-<span class="nc" id="L147">    }</span>
+<span class="fc" id="L155">    }</span>
 
     private Product mapRow(ResultSet rs) throws SQLException {
-<span class="nc" id="L150">        return new Product(</span>
-<span class="nc" id="L151">            rs.getInt(&quot;id&quot;),</span>
-<span class="nc" id="L152">            (Integer) rs.getObject(&quot;group_id&quot;),</span>
-<span class="nc" id="L153">            rs.getString(&quot;type&quot;),</span>
-<span class="nc" id="L154">            rs.getString(&quot;name&quot;),</span>
-<span class="nc" id="L155">            rs.getString(&quot;description&quot;),</span>
-<span class="nc" id="L156">            rs.getDouble(&quot;price&quot;),</span>
-<span class="nc" id="L157">            rs.getString(&quot;unit&quot;),</span>
-<span class="nc" id="L158">            rs.getString(&quot;attributes&quot;)</span>
+<span class="fc" id="L158">        return new Product(</span>
+<span class="fc" id="L159">            rs.getInt(&quot;id&quot;),</span>
+<span class="fc" id="L160">            (Integer) rs.getObject(&quot;group_id&quot;),</span>
+<span class="fc" id="L161">            rs.getString(&quot;type&quot;),</span>
+<span class="fc" id="L162">            rs.getString(&quot;name&quot;),</span>
+<span class="fc" id="L163">            rs.getString(&quot;description&quot;),</span>
+<span class="fc" id="L164">            rs.getDouble(&quot;price&quot;),</span>
+<span class="fc" id="L165">            rs.getString(&quot;unit&quot;),</span>
+<span class="fc" id="L166">            rs.getString(&quot;attributes&quot;)</span>
         );
     }
 
     private ProductGroup mapGroupRow(ResultSet rs) throws SQLException {
-<span class="nc" id="L163">        return new ProductGroup(</span>
-<span class="nc" id="L164">            rs.getInt(&quot;id&quot;),</span>
-<span class="nc" id="L165">            rs.getString(&quot;name&quot;),</span>
-<span class="nc" id="L166">            rs.getString(&quot;description&quot;),</span>
-<span class="nc" id="L167">            rs.getDouble(&quot;base_price&quot;),</span>
-<span class="nc" id="L168">            rs.getString(&quot;base_unit&quot;)</span>
+<span class="fc" id="L171">        return new ProductGroup(</span>
+<span class="fc" id="L172">            rs.getInt(&quot;id&quot;),</span>
+<span class="fc" id="L173">            rs.getString(&quot;name&quot;),</span>
+<span class="fc" id="L174">            rs.getString(&quot;description&quot;),</span>
+<span class="fc" id="L175">            rs.getDouble(&quot;base_price&quot;),</span>
+<span class="fc" id="L176">            rs.getString(&quot;base_unit&quot;)</span>
         );
     }
 }

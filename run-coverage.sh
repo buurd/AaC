@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+clear
+
 # Create logs directory if it doesn't exist
 mkdir -p logs
 

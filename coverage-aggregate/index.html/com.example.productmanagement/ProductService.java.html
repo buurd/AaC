@@ -48,19 +48,19 @@ public class ProductService {
 <span class="fc" id="L48">    }</span>
 
     public void createProduct(Product product) throws SQLException {
-<span class="nc" id="L51">        int newId = repository.create(product);</span>
-<span class="nc" id="L52">        product.setId(newId);</span>
-<span class="nc" id="L53">    }</span>
+<span class="fc" id="L51">        int newId = repository.create(product);</span>
+<span class="fc" id="L52">        product.setId(newId);</span>
+<span class="fc" id="L53">    }</span>
 
     public void updateProduct(Product product) throws SQLException {
-<span class="nc" id="L56">        repository.update(product);</span>
-<span class="nc" id="L57">    }</span>
+<span class="fc" id="L56">        repository.update(product);</span>
+<span class="fc" id="L57">    }</span>
 
     public void deleteProduct(int id) throws SQLException {
-<span class="nc" id="L60">        repository.delete(id);</span>
-<span class="nc" id="L61">        syncDeleteToWebshop(id);</span>
-<span class="nc" id="L62">        syncDeleteToWarehouse(id);</span>
-<span class="nc" id="L63">    }</span>
+<span class="fc" id="L60">        repository.delete(id);</span>
+<span class="fc" id="L61">        syncDeleteToWebshop(id);</span>
+<span class="fc" id="L62">        syncDeleteToWarehouse(id);</span>
+<span class="fc" id="L63">    }</span>
 
     public void syncProduct(int id) throws SQLException {
 <span class="fc" id="L66">        Product p = repository.findById(id);</span>
@@ -73,8 +73,8 @@ public class ProductService {
     // --- Group Logic ---
 
     public void createProductGroup(ProductGroup group) throws SQLException {
-<span class="nc" id="L76">        repository.createGroup(group);</span>
-<span class="nc" id="L77">    }</span>
+<span class="fc" id="L76">        repository.createGroup(group);</span>
+<span class="fc" id="L77">    }</span>
 
     public void generateVariants(int groupId, Map&lt;String, List&lt;String&gt;&gt; attributes) throws SQLException {
 <span class="fc" id="L80">        ProductGroup group = repository.findGroupById(groupId);</span>
@@ -151,22 +151,22 @@ public class ProductService {
     // Helper method to parse JSON attributes back to a Map
     private Map&lt;String, String&gt; parseAttributes(String json) {
         // Use TreeMap to ensure keys are sorted alphabetically
-<span class="nc" id="L154">        Map&lt;String, String&gt; attributes = new TreeMap&lt;&gt;();</span>
-<span class="nc bnc" id="L155" title="All 6 branches missed.">        if (json == null || json.isEmpty() || json.equals(&quot;{}&quot;)) {</span>
+<span class="fc" id="L154">        Map&lt;String, String&gt; attributes = new TreeMap&lt;&gt;();</span>
+<span class="pc bpc" id="L155" title="3 of 6 branches missed.">        if (json == null || json.isEmpty() || json.equals(&quot;{}&quot;)) {</span>
 <span class="nc" id="L156">            return attributes;</span>
         }
         
-<span class="nc" id="L159">        String content = json.substring(1, json.length() - 1); // Remove { and }</span>
-<span class="nc" id="L160">        String[] pairs = content.split(&quot;,&quot;);</span>
-<span class="nc bnc" id="L161" title="All 2 branches missed.">        for (String pair : pairs) {</span>
-<span class="nc" id="L162">            String[] parts = pair.split(&quot;:&quot;);</span>
-<span class="nc bnc" id="L163" title="All 2 branches missed.">            if (parts.length == 2) {</span>
-<span class="nc" id="L164">                String key = parts[0].trim().replace(&quot;\&quot;&quot;, &quot;&quot;);</span>
-<span class="nc" id="L165">                String value = parts[1].trim().replace(&quot;\&quot;&quot;, &quot;&quot;);</span>
-<span class="nc" id="L166">                attributes.put(key, value);</span>
+<span class="fc" id="L159">        String content = json.substring(1, json.length() - 1); // Remove { and }</span>
+<span class="fc" id="L160">        String[] pairs = content.split(&quot;,&quot;);</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        for (String pair : pairs) {</span>
+<span class="fc" id="L162">            String[] parts = pair.split(&quot;:&quot;);</span>
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">            if (parts.length == 2) {</span>
+<span class="fc" id="L164">                String key = parts[0].trim().replace(&quot;\&quot;&quot;, &quot;&quot;);</span>
+<span class="fc" id="L165">                String value = parts[1].trim().replace(&quot;\&quot;&quot;, &quot;&quot;);</span>
+<span class="fc" id="L166">                attributes.put(key, value);</span>
             }
         }
-<span class="nc" id="L169">        return attributes;</span>
+<span class="fc" id="L169">        return attributes;</span>
     }
 
     private String mapToJson(Map&lt;String, String&gt; map) {
@@ -178,12 +178,12 @@ public class ProductService {
     }
 
     public void syncGroup(int groupId) throws SQLException {
-<span class="nc" id="L181">        List&lt;Product&gt; variants = repository.findByGroupId(groupId);</span>
-<span class="nc bnc" id="L182" title="All 2 branches missed.">        for (Product p : variants) {</span>
-<span class="nc" id="L183">            syncToWebshop(p);</span>
-<span class="nc" id="L184">            syncToWarehouse(p);</span>
-<span class="nc" id="L185">        }</span>
-<span class="nc" id="L186">    }</span>
+<span class="fc" id="L181">        List&lt;Product&gt; variants = repository.findByGroupId(groupId);</span>
+<span class="fc bfc" id="L182" title="All 2 branches covered.">        for (Product p : variants) {</span>
+<span class="fc" id="L183">            syncToWebshop(p);</span>
+<span class="fc" id="L184">            syncToWarehouse(p);</span>
+<span class="fc" id="L185">        }</span>
+<span class="fc" id="L186">    }</span>
 
     // --- Sync Logic ---
 
@@ -194,11 +194,11 @@ public class ProductService {
                 
                 // Flattening: We construct the display name dynamically here for the downstream system
 <span class="fc" id="L196">                String displayName = p.getName();</span>
-<span class="pc bpc" id="L197" title="3 of 4 branches missed.">                if (p.getAttributes() != null &amp;&amp; !p.getAttributes().isEmpty()) {</span>
-<span class="nc" id="L198">                    Map&lt;String, String&gt; attrs = parseAttributes(p.getAttributes());</span>
-<span class="nc bnc" id="L199" title="All 2 branches missed.">                    if (!attrs.isEmpty()) {</span>
-<span class="nc" id="L200">                        String variantSuffix = attrs.values().stream().collect(Collectors.joining(&quot; &quot;));</span>
-<span class="nc" id="L201">                        displayName = displayName + &quot; - &quot; + variantSuffix;</span>
+<span class="pc bpc" id="L197" title="1 of 4 branches missed.">                if (p.getAttributes() != null &amp;&amp; !p.getAttributes().isEmpty()) {</span>
+<span class="fc" id="L198">                    Map&lt;String, String&gt; attrs = parseAttributes(p.getAttributes());</span>
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">                    if (!attrs.isEmpty()) {</span>
+<span class="fc" id="L200">                        String variantSuffix = attrs.values().stream().collect(Collectors.joining(&quot; &quot;));</span>
+<span class="fc" id="L201">                        displayName = displayName + &quot; - &quot; + variantSuffix;</span>
                     }
                 }
 
@@ -220,11 +220,11 @@ public class ProductService {
                 
                 // Flattening: We construct the display name dynamically here for the downstream system
 <span class="fc" id="L222">                String displayName = p.getName();</span>
-<span class="pc bpc" id="L223" title="3 of 4 branches missed.">                if (p.getAttributes() != null &amp;&amp; !p.getAttributes().isEmpty()) {</span>
-<span class="nc" id="L224">                    Map&lt;String, String&gt; attrs = parseAttributes(p.getAttributes());</span>
-<span class="nc bnc" id="L225" title="All 2 branches missed.">                    if (!attrs.isEmpty()) {</span>
-<span class="nc" id="L226">                        String variantSuffix = attrs.values().stream().collect(Collectors.joining(&quot; &quot;));</span>
-<span class="nc" id="L227">                        displayName = displayName + &quot; - &quot; + variantSuffix;</span>
+<span class="pc bpc" id="L223" title="1 of 4 branches missed.">                if (p.getAttributes() != null &amp;&amp; !p.getAttributes().isEmpty()) {</span>
+<span class="fc" id="L224">                    Map&lt;String, String&gt; attrs = parseAttributes(p.getAttributes());</span>
+<span class="pc bpc" id="L225" title="1 of 2 branches missed.">                    if (!attrs.isEmpty()) {</span>
+<span class="fc" id="L226">                        String variantSuffix = attrs.values().stream().collect(Collectors.joining(&quot; &quot;));</span>
+<span class="fc" id="L227">                        displayName = displayName + &quot; - &quot; + variantSuffix;</span>
                     }
                 }
 
@@ -263,42 +263,42 @@ public class ProductService {
 <span class="fc" id="L263">    }</span>
 
     private void syncDeleteToWebshop(int id) {
-<span class="nc" id="L266">        tokenService.getAccessToken().thenAccept(token -&gt; {</span>
-<span class="nc" id="L267">            sendDeleteRequest(webshopApiUrl, id, token);</span>
-<span class="nc" id="L268">        });</span>
-<span class="nc" id="L269">    }</span>
+<span class="fc" id="L266">        tokenService.getAccessToken().thenAccept(token -&gt; {</span>
+<span class="fc" id="L267">            sendDeleteRequest(webshopApiUrl, id, token);</span>
+<span class="fc" id="L268">        });</span>
+<span class="fc" id="L269">    }</span>
 
     private void syncDeleteToWarehouse(int id) {
-<span class="nc" id="L272">        tokenService.getAccessToken().thenAccept(token -&gt; {</span>
-<span class="nc" id="L273">            sendDeleteRequest(warehouseApiUrl, id, token);</span>
-<span class="nc" id="L274">        });</span>
-<span class="nc" id="L275">    }</span>
+<span class="fc" id="L272">        tokenService.getAccessToken().thenAccept(token -&gt; {</span>
+<span class="fc" id="L273">            sendDeleteRequest(warehouseApiUrl, id, token);</span>
+<span class="fc" id="L274">        });</span>
+<span class="fc" id="L275">    }</span>
 
     private void sendDeleteRequest(String url, int id, String token) {
         try {
-<span class="nc" id="L279">            System.out.println(&quot;Syncing delete product &quot; + id + &quot; to &quot; + url);</span>
-<span class="nc" id="L280">            HttpRequest request = HttpRequest.newBuilder()</span>
-<span class="nc" id="L281">                    .uri(URI.create(url + &quot;?id=&quot; + id))</span>
-<span class="nc" id="L282">                    .header(&quot;Authorization&quot;, &quot;Bearer &quot; + token)</span>
-<span class="nc" id="L283">                    .DELETE()</span>
-<span class="nc" id="L284">                    .build();</span>
+<span class="fc" id="L279">            System.out.println(&quot;Syncing delete product &quot; + id + &quot; to &quot; + url);</span>
+<span class="fc" id="L280">            HttpRequest request = HttpRequest.newBuilder()</span>
+<span class="fc" id="L281">                    .uri(URI.create(url + &quot;?id=&quot; + id))</span>
+<span class="fc" id="L282">                    .header(&quot;Authorization&quot;, &quot;Bearer &quot; + token)</span>
+<span class="fc" id="L283">                    .DELETE()</span>
+<span class="fc" id="L284">                    .build();</span>
 
-<span class="nc" id="L286">            httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())</span>
-<span class="nc" id="L287">                    .thenAccept(response -&gt; {</span>
-<span class="nc bnc" id="L288" title="All 2 branches missed.">                        if (response.statusCode() != 200) {</span>
+<span class="fc" id="L286">            httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())</span>
+<span class="fc" id="L287">                    .thenAccept(response -&gt; {</span>
+<span class="pc bpc" id="L288" title="1 of 2 branches missed.">                        if (response.statusCode() != 200) {</span>
 <span class="nc" id="L289">                            System.err.println(&quot;Failed to sync delete to &quot; + url + &quot;. Status: &quot; + response.statusCode() + &quot; Body: &quot; + response.body());</span>
                         } else {
-<span class="nc" id="L291">                            System.out.println(&quot;Synced delete product &quot; + id + &quot; to &quot; + url + &quot;. Response: &quot; + response.body());</span>
+<span class="fc" id="L291">                            System.out.println(&quot;Synced delete product &quot; + id + &quot; to &quot; + url + &quot;. Response: &quot; + response.body());</span>
                         }
-<span class="nc" id="L293">                    })</span>
-<span class="nc" id="L294">                    .exceptionally(e -&gt; {</span>
+<span class="fc" id="L293">                    })</span>
+<span class="fc" id="L294">                    .exceptionally(e -&gt; {</span>
 <span class="nc" id="L295">                        System.err.println(&quot;Exception during delete sync to &quot; + url + &quot;: &quot; + e.getMessage());</span>
 <span class="nc" id="L296">                        throw new RuntimeException(&quot;Exception during delete sync to &quot; + url, e);</span>
                     });
 <span class="nc" id="L298">        } catch (Exception e) {</span>
 <span class="nc" id="L299">            System.err.println(&quot;Error preparing delete sync request to &quot; + url + &quot;: &quot; + e.getMessage());</span>
 <span class="nc" id="L300">            e.printStackTrace();</span>
-<span class="nc" id="L301">        }</span>
-<span class="nc" id="L302">    }</span>
+<span class="fc" id="L301">        }</span>
+<span class="fc" id="L302">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

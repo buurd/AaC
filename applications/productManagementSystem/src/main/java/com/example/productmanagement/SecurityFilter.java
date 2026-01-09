@@ -34,6 +34,13 @@ public class SecurityFilter extends Filter {
         }
     }
 
+    // Constructor for testing
+    public SecurityFilter(JwkProvider jwkProvider, String issuer, String requiredRole) {
+        this.jwkProvider = jwkProvider;
+        this.issuer = issuer;
+        this.requiredRole = requiredRole;
+    }
+
     @Override
     public void doFilter(HttpExchange exchange, Chain chain) throws IOException {
         String token = getToken(exchange);

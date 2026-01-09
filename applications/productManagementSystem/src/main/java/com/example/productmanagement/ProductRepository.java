@@ -40,15 +40,19 @@ public class ProductRepository {
     }
 
     public int createGroup(ProductGroup group) throws SQLException {
-        String sql = "INSERT INTO product_groups (name, description, base_price, base_unit) VALUES (?, ?, ?, ?) RETURNING id";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        // H2 compatibility: use Statement.RETURN_GENERATED_KEYS instead of RETURNING id
+        String sql = "INSERT INTO product_groups (name, description, base_price, base_unit) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, group.getName());
             stmt.setString(2, group.getDescription());
             stmt.setDouble(3, group.getBasePrice());
             stmt.setString(4, group.getBaseUnit());
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1);
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows > 0) {
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return rs.getInt(1);
+                    }
                 }
             }
         }
@@ -97,8 +101,9 @@ public class ProductRepository {
     }
 
     public int create(Product product) throws SQLException {
-        String sql = "INSERT INTO products (group_id, type, name, description, price, unit, attributes) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        // H2 compatibility: use Statement.RETURN_GENERATED_KEYS instead of RETURNING id
+        String sql = "INSERT INTO products (group_id, type, name, description, price, unit, attributes) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             if (product.getGroupId() != null) {
                 stmt.setInt(1, product.getGroupId());
             } else {
@@ -110,9 +115,12 @@ public class ProductRepository {
             stmt.setDouble(5, product.getPrice());
             stmt.setString(6, product.getUnit());
             stmt.setString(7, product.getAttributes());
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1);
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows > 0) {
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return rs.getInt(1);
+                    }
                 }
             }
         }
