@@ -53,7 +53,7 @@ public class OrderController implements HttpHandler {
         &quot;.btn-primary { background-color: #007BFF; }&quot;;
 
     private String getHeader() {
-<span class="nc" id="L56">        return &quot;&lt;div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'&gt;&quot; +</span>
+<span class="fc" id="L56">        return &quot;&lt;div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;'&gt;&quot; +</span>
                &quot;&lt;button onclick=\&quot;window.location.href='/'\&quot; class='btn btn-primary'&gt;Order Dashboard&lt;/button&gt;&quot; +
                &quot;&lt;button onclick=\&quot;window.location.href='/logout'\&quot; class='btn btn-secondary'&gt;Logout&lt;/button&gt;&quot; +
                &quot;&lt;/div&gt;&quot;;
@@ -64,19 +64,19 @@ public class OrderController implements HttpHandler {
 <span class="fc" id="L64">        String method = exchange.getRequestMethod();</span>
 <span class="fc" id="L65">        String path = exchange.getRequestURI().getPath();</span>
 
-<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        if (&quot;/orders&quot;.equals(path)) {</span>
-<span class="nc bnc" id="L68" title="All 2 branches missed.">            if (&quot;GET&quot;.equalsIgnoreCase(method)) {</span>
-<span class="nc" id="L69">                handleListOrders(exchange);</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (&quot;/orders&quot;.equals(path)) {</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">            if (&quot;GET&quot;.equalsIgnoreCase(method)) {</span>
+<span class="fc" id="L69">                handleListOrders(exchange);</span>
             } else {
-<span class="nc" id="L71">                exchange.sendResponseHeaders(405, -1);</span>
+<span class="fc" id="L71">                exchange.sendResponseHeaders(405, -1);</span>
             }
-<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        } else if (&quot;/orders/confirm&quot;.equals(path)) {</span>
-<span class="nc bnc" id="L74" title="All 2 branches missed.">            if (&quot;POST&quot;.equalsIgnoreCase(method)) {</span>
-<span class="nc" id="L75">                handleConfirmOrder(exchange);</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        } else if (&quot;/orders/confirm&quot;.equals(path)) {</span>
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">            if (&quot;POST&quot;.equalsIgnoreCase(method)) {</span>
+<span class="fc" id="L75">                handleConfirmOrder(exchange);</span>
             } else {
 <span class="nc" id="L77">                exchange.sendResponseHeaders(405, -1);</span>
             }
-<span class="pc bpc" id="L79" title="1 of 2 branches missed.">        } else if (&quot;/api/orders&quot;.equals(path)) {</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        } else if (&quot;/api/orders&quot;.equals(path)) {</span>
 <span class="fc bfc" id="L80" title="All 2 branches covered.">            if (&quot;GET&quot;.equalsIgnoreCase(method)) {</span>
 <span class="fc" id="L81">                handleApiListOrders(exchange);</span>
 <span class="pc bpc" id="L82" title="1 of 2 branches missed.">            } else if (&quot;POST&quot;.equalsIgnoreCase(method)) {</span>
@@ -84,14 +84,14 @@ public class OrderController implements HttpHandler {
             } else {
 <span class="nc" id="L85">                exchange.sendResponseHeaders(405, -1);</span>
             }
-<span class="nc bnc" id="L87" title="All 2 branches missed.">        } else if (&quot;/api/orders/status&quot;.equals(path)) {</span>
-<span class="nc bnc" id="L88" title="All 2 branches missed.">            if (&quot;POST&quot;.equalsIgnoreCase(method)) {</span>
-<span class="nc" id="L89">                handleUpdateStatus(exchange);</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        } else if (&quot;/api/orders/status&quot;.equals(path)) {</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">            if (&quot;POST&quot;.equalsIgnoreCase(method)) {</span>
+<span class="fc" id="L89">                handleUpdateStatus(exchange);</span>
             } else {
 <span class="nc" id="L91">                exchange.sendResponseHeaders(405, -1);</span>
             }
         } else {
-<span class="nc" id="L94">            exchange.sendResponseHeaders(404, -1);</span>
+<span class="fc" id="L94">            exchange.sendResponseHeaders(404, -1);</span>
         }
 <span class="fc" id="L96">    }</span>
 
@@ -146,47 +146,47 @@ public class OrderController implements HttpHandler {
 
     private void handleListOrders(HttpExchange exchange) throws IOException {
         try {
-<span class="nc" id="L149">            List&lt;Order&gt; orders = repository.findAll();</span>
-<span class="nc" id="L150">            System.out.println(&quot;Listing &quot; + orders.size() + &quot; orders.&quot;); // Added logging</span>
+<span class="fc" id="L149">            List&lt;Order&gt; orders = repository.findAll();</span>
+<span class="fc" id="L150">            System.out.println(&quot;Listing &quot; + orders.size() + &quot; orders.&quot;); // Added logging</span>
             
-<span class="nc" id="L152">            StringBuilder sb = new StringBuilder();</span>
-<span class="nc" id="L153">            sb.append(&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;style&gt;&quot;).append(CSS).append(&quot;&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div class='container'&gt;&quot;);</span>
-<span class="nc" id="L154">            sb.append(getHeader());</span>
-<span class="nc" id="L155">            sb.append(&quot;&lt;h1&gt;Order Management&lt;/h1&gt;&quot;);</span>
-<span class="nc" id="L156">            sb.append(&quot;&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;ID&lt;/th&gt;&lt;th&gt;Customer&lt;/th&gt;&lt;th&gt;Status&lt;/th&gt;&lt;th&gt;Items&lt;/th&gt;&lt;th&gt;Points Earned&lt;/th&gt;&lt;th&gt;Actions&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&quot;);</span>
+<span class="fc" id="L152">            StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L153">            sb.append(&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;style&gt;&quot;).append(CSS).append(&quot;&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div class='container'&gt;&quot;);</span>
+<span class="fc" id="L154">            sb.append(getHeader());</span>
+<span class="fc" id="L155">            sb.append(&quot;&lt;h1&gt;Order Management&lt;/h1&gt;&quot;);</span>
+<span class="fc" id="L156">            sb.append(&quot;&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;ID&lt;/th&gt;&lt;th&gt;Customer&lt;/th&gt;&lt;th&gt;Status&lt;/th&gt;&lt;th&gt;Items&lt;/th&gt;&lt;th&gt;Points Earned&lt;/th&gt;&lt;th&gt;Actions&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&quot;);</span>
             
-<span class="nc bnc" id="L158" title="All 2 branches missed.">            for (Order o : orders) {</span>
-<span class="nc" id="L159">                System.out.println(&quot;Order: &quot; + o.getId() + &quot;, Status: &quot; + o.getStatus()); // Added logging</span>
-<span class="nc" id="L160">                sb.append(&quot;&lt;tr&gt;&quot;);</span>
-<span class="nc" id="L161">                sb.append(&quot;&lt;td&gt;&quot;).append(o.getId()).append(&quot;&lt;/td&gt;&quot;);</span>
-<span class="nc" id="L162">                sb.append(&quot;&lt;td&gt;&quot;).append(o.getCustomerName()).append(&quot;&lt;/td&gt;&quot;);</span>
-<span class="nc" id="L163">                sb.append(&quot;&lt;td&gt;&quot;).append(o.getStatus()).append(&quot;&lt;/td&gt;&quot;);</span>
-<span class="nc" id="L164">                sb.append(&quot;&lt;td&gt;&quot;).append(o.getItems().size()).append(&quot;&lt;/td&gt;&quot;);</span>
-<span class="nc" id="L165">                sb.append(&quot;&lt;td&gt;&quot;).append(o.getPointsEarned()).append(&quot;&lt;/td&gt;&quot;);</span>
-<span class="nc" id="L166">                sb.append(&quot;&lt;td&gt;&quot;);</span>
-<span class="nc bnc" id="L167" title="All 2 branches missed.">                if (&quot;PENDING_CONFIRMATION&quot;.equals(o.getStatus())) {</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">            for (Order o : orders) {</span>
+<span class="fc" id="L159">                System.out.println(&quot;Order: &quot; + o.getId() + &quot;, Status: &quot; + o.getStatus()); // Added logging</span>
+<span class="fc" id="L160">                sb.append(&quot;&lt;tr&gt;&quot;);</span>
+<span class="fc" id="L161">                sb.append(&quot;&lt;td&gt;&quot;).append(o.getId()).append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="fc" id="L162">                sb.append(&quot;&lt;td&gt;&quot;).append(o.getCustomerName()).append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="fc" id="L163">                sb.append(&quot;&lt;td&gt;&quot;).append(o.getStatus()).append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="fc" id="L164">                sb.append(&quot;&lt;td&gt;&quot;).append(o.getItems().size()).append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="fc" id="L165">                sb.append(&quot;&lt;td&gt;&quot;).append(o.getPointsEarned()).append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="fc" id="L166">                sb.append(&quot;&lt;td&gt;&quot;);</span>
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">                if (&quot;PENDING_CONFIRMATION&quot;.equals(o.getStatus())) {</span>
 <span class="nc" id="L168">                     sb.append(&quot;&lt;form action='/orders/confirm' method='post' style='display:inline;'&gt;&quot;);</span>
 <span class="nc" id="L169">                     sb.append(&quot;&lt;input type='hidden' name='id' value='&quot;).append(o.getId()).append(&quot;'&gt;&quot;);</span>
 <span class="nc" id="L170">                     sb.append(&quot;&lt;button type='submit' class='btn btn-success'&gt;Confirm&lt;/button&gt;&quot;);</span>
 <span class="nc" id="L171">                     sb.append(&quot;&lt;/form&gt;&quot;);</span>
                 }
-<span class="nc" id="L173">                sb.append(&quot;&lt;/td&gt;&quot;);</span>
-<span class="nc" id="L174">                sb.append(&quot;&lt;/tr&gt;&quot;);</span>
-<span class="nc" id="L175">            }</span>
-<span class="nc" id="L176">            sb.append(&quot;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;&quot;);</span>
+<span class="fc" id="L173">                sb.append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="fc" id="L174">                sb.append(&quot;&lt;/tr&gt;&quot;);</span>
+<span class="fc" id="L175">            }</span>
+<span class="fc" id="L176">            sb.append(&quot;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;&quot;);</span>
             
-<span class="nc" id="L178">            String response = sb.toString();</span>
-<span class="nc" id="L179">            byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
-<span class="nc" id="L180">            exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html; charset=utf-8&quot;);</span>
-<span class="nc" id="L181">            exchange.sendResponseHeaders(200, bytes.length);</span>
-<span class="nc" id="L182">            try (OutputStream os = exchange.getResponseBody()) {</span>
-<span class="nc" id="L183">                os.write(bytes);</span>
+<span class="fc" id="L178">            String response = sb.toString();</span>
+<span class="fc" id="L179">            byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L180">            exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;text/html; charset=utf-8&quot;);</span>
+<span class="fc" id="L181">            exchange.sendResponseHeaders(200, bytes.length);</span>
+<span class="fc" id="L182">            try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="fc" id="L183">                os.write(bytes);</span>
             }
 <span class="nc" id="L185">        } catch (SQLException e) {</span>
 <span class="nc" id="L186">            e.printStackTrace();</span>
 <span class="nc" id="L187">            exchange.sendResponseHeaders(500, -1);</span>
-<span class="nc" id="L188">        }</span>
-<span class="nc" id="L189">    }</span>
+<span class="fc" id="L188">        }</span>
+<span class="fc" id="L189">    }</span>
 
     private void handleCreateOrder(HttpExchange exchange) throws IOException {
 <span class="fc" id="L192">        int orderId = -1;</span>
@@ -202,7 +202,7 @@ public class OrderController implements HttpHandler {
             }
 
             // Handle Point Redemption
-<span class="pc bpc" id="L205" title="1 of 2 branches missed.">            if (order.getPointsToRedeem() &gt; 0) {</span>
+<span class="fc bfc" id="L205" title="All 2 branches covered.">            if (order.getPointsToRedeem() &gt; 0) {</span>
                 // We need an order ID to redeem points against, but we haven't created the order yet.
                 // Strategy says: &quot;Order Service calls Loyalty Service to redeem (deduct) the points.&quot;
                 // &quot;If the order fails, the points must be refunded (Compensating Transaction).&quot;
@@ -214,19 +214,19 @@ public class OrderController implements HttpHandler {
 <span class="fc" id="L214">            orderId = repository.createOrder(order);</span>
             
 <span class="fc" id="L216">            boolean redemptionSuccess = true;</span>
-<span class="pc bpc" id="L217" title="1 of 2 branches missed.">            if (order.getPointsToRedeem() &gt; 0) {</span>
-<span class="nc" id="L218">                redemptionSuccess = loyaltyService.redeemPoints(order.getCustomerName(), orderId, order.getPointsToRedeem()).join();</span>
-<span class="nc bnc" id="L219" title="All 2 branches missed.">                if (!redemptionSuccess) {</span>
-<span class="nc" id="L220">                    System.out.println(&quot;Point redemption failed for order &quot; + orderId);</span>
-<span class="nc" id="L221">                    repository.updateStatus(orderId, &quot;REDEMPTION_FAILED&quot;);</span>
-<span class="nc" id="L222">                    String response = &quot;{\&quot;status\&quot;:\&quot;REDEMPTION_FAILED\&quot;, \&quot;orderId\&quot;:&quot; + orderId + &quot;}&quot;;</span>
-<span class="nc" id="L223">                    byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
-<span class="nc" id="L224">                    exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;application/json&quot;);</span>
-<span class="nc" id="L225">                    exchange.sendResponseHeaders(409, bytes.length);</span>
-<span class="nc" id="L226">                    try (OutputStream os = exchange.getResponseBody()) {</span>
-<span class="nc" id="L227">                        os.write(bytes);</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">            if (order.getPointsToRedeem() &gt; 0) {</span>
+<span class="fc" id="L218">                redemptionSuccess = loyaltyService.redeemPoints(order.getCustomerName(), orderId, order.getPointsToRedeem()).join();</span>
+<span class="pc bpc" id="L219" title="1 of 2 branches missed.">                if (!redemptionSuccess) {</span>
+<span class="fc" id="L220">                    System.out.println(&quot;Point redemption failed for order &quot; + orderId);</span>
+<span class="fc" id="L221">                    repository.updateStatus(orderId, &quot;REDEMPTION_FAILED&quot;);</span>
+<span class="fc" id="L222">                    String response = &quot;{\&quot;status\&quot;:\&quot;REDEMPTION_FAILED\&quot;, \&quot;orderId\&quot;:&quot; + orderId + &quot;}&quot;;</span>
+<span class="fc" id="L223">                    byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L224">                    exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;application/json&quot;);</span>
+<span class="fc" id="L225">                    exchange.sendResponseHeaders(409, bytes.length);</span>
+<span class="fc" id="L226">                    try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="fc" id="L227">                        os.write(bytes);</span>
                     }
-<span class="nc" id="L229">                    return;</span>
+<span class="fc" id="L229">                    return;</span>
                 }
             }
 
@@ -234,13 +234,13 @@ public class OrderController implements HttpHandler {
 <span class="fc" id="L234">            boolean allReserved = true;</span>
 <span class="fc bfc" id="L235" title="All 2 branches covered.">            for (OrderItem item : order.getItems()) {</span>
 <span class="fc" id="L236">                boolean reserved = stockService.reserveStock(item.getProductId(), item.getQuantity()).join();</span>
-<span class="pc bpc" id="L237" title="1 of 2 branches missed.">                if (!reserved) {</span>
-<span class="nc" id="L238">                    allReserved = false;</span>
-<span class="nc" id="L239">                    break;</span>
+<span class="fc bfc" id="L237" title="All 2 branches covered.">                if (!reserved) {</span>
+<span class="fc" id="L238">                    allReserved = false;</span>
+<span class="fc" id="L239">                    break;</span>
                 }
 <span class="fc" id="L241">            }</span>
             
-<span class="pc bpc" id="L243" title="1 of 2 branches missed.">            if (allReserved) {</span>
+<span class="fc bfc" id="L243" title="All 2 branches covered.">            if (allReserved) {</span>
                 // Changed from CONFIRMED to PENDING_CONFIRMATION to allow manual confirmation
 <span class="fc" id="L245">                repository.updateStatus(orderId, &quot;PENDING_CONFIRMATION&quot;);</span>
                 
@@ -258,16 +258,16 @@ public class OrderController implements HttpHandler {
 <span class="fc" id="L258">            } else {</span>
                 // If stock reservation failed, we should refund points if they were redeemed.
                 // For MVP, we log this.
-<span class="nc bnc" id="L261" title="All 2 branches missed.">                if (order.getPointsToRedeem() &gt; 0) {</span>
+<span class="pc bpc" id="L261" title="1 of 2 branches missed.">                if (order.getPointsToRedeem() &gt; 0) {</span>
 <span class="nc" id="L262">                    System.err.println(&quot;CRITICAL: Stock reservation failed but points were redeemed for order &quot; + orderId + &quot;. Manual refund required.&quot;);</span>
                 }
 
-<span class="nc" id="L265">                repository.updateStatus(orderId, &quot;REJECTED&quot;);</span>
-<span class="nc" id="L266">                String response = &quot;{\&quot;status\&quot;:\&quot;REJECTED\&quot;, \&quot;orderId\&quot;:&quot; + orderId + &quot;}&quot;;</span>
-<span class="nc" id="L267">                byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
-<span class="nc" id="L268">                exchange.sendResponseHeaders(409, bytes.length); // Conflict</span>
-<span class="nc" id="L269">                try (OutputStream os = exchange.getResponseBody()) {</span>
-<span class="nc" id="L270">                    os.write(bytes);</span>
+<span class="fc" id="L265">                repository.updateStatus(orderId, &quot;REJECTED&quot;);</span>
+<span class="fc" id="L266">                String response = &quot;{\&quot;status\&quot;:\&quot;REJECTED\&quot;, \&quot;orderId\&quot;:&quot; + orderId + &quot;}&quot;;</span>
+<span class="fc" id="L267">                byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L268">                exchange.sendResponseHeaders(409, bytes.length); // Conflict</span>
+<span class="fc" id="L269">                try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="fc" id="L270">                    os.write(bytes);</span>
                 }
             }
             
@@ -286,13 +286,13 @@ public class OrderController implements HttpHandler {
 
     private void handleConfirmOrder(HttpExchange exchange) throws IOException {
         try {
-<span class="nc" id="L289">            InputStream is = exchange.getRequestBody();</span>
-<span class="nc" id="L290">            String formData = new String(is.readAllBytes(), StandardCharsets.UTF_8);</span>
-<span class="nc" id="L291">            Map&lt;String, String&gt; params = parseFormData(formData);</span>
+<span class="fc" id="L289">            InputStream is = exchange.getRequestBody();</span>
+<span class="fc" id="L290">            String formData = new String(is.readAllBytes(), StandardCharsets.UTF_8);</span>
+<span class="fc" id="L291">            Map&lt;String, String&gt; params = parseFormData(formData);</span>
             
-<span class="nc" id="L293">            int orderId = Integer.parseInt(params.get(&quot;id&quot;));</span>
+<span class="fc" id="L293">            int orderId = Integer.parseInt(params.get(&quot;id&quot;));</span>
             
-<span class="nc" id="L295">            repository.updateStatus(orderId, &quot;CONFIRMED&quot;);</span>
+<span class="fc" id="L295">            repository.updateStatus(orderId, &quot;CONFIRMED&quot;);</span>
             
             // Create Invoice (Moved from handleCreateOrder)
             // We need to fetch the order details to get customer name and calculate amount
@@ -305,12 +305,12 @@ public class OrderController implements HttpHandler {
             // repository.findAll() exists.
             
             // Let's try to find the order from findAll (inefficient but works for now)
-<span class="nc" id="L308">            List&lt;Order&gt; allOrders = repository.findAll();</span>
-<span class="nc bnc" id="L309" title="All 2 branches missed.">            Order order = allOrders.stream().filter(o -&gt; o.getId() == orderId).findFirst().orElse(null);</span>
+<span class="fc" id="L308">            List&lt;Order&gt; allOrders = repository.findAll();</span>
+<span class="pc bpc" id="L309" title="1 of 2 branches missed.">            Order order = allOrders.stream().filter(o -&gt; o.getId() == orderId).findFirst().orElse(null);</span>
             
-<span class="nc bnc" id="L311" title="All 2 branches missed.">            if (order != null) {</span>
-<span class="nc" id="L312">                 double totalAmount = order.getTotalAmount();</span>
-<span class="nc" id="L313">                 invoiceRepository.createInvoice(new Invoice(orderId, order.getCustomerName(), totalAmount, LocalDate.now().plusDays(30)));</span>
+<span class="pc bpc" id="L311" title="1 of 2 branches missed.">            if (order != null) {</span>
+<span class="fc" id="L312">                 double totalAmount = order.getTotalAmount();</span>
+<span class="fc" id="L313">                 invoiceRepository.createInvoice(new Invoice(orderId, order.getCustomerName(), totalAmount, LocalDate.now().plusDays(30)));</span>
                  
                  // Accrue Points
                  // We need to calculate total amount properly or pass it.
@@ -320,75 +320,75 @@ public class OrderController implements HttpHandler {
                  // Actually, LoyaltyIntegrationService needs itemsJson.
                  // We can reconstruct itemsJson from order.getItems().
                  
-<span class="nc" id="L323">                 StringBuilder itemsJson = new StringBuilder(&quot;[&quot;);</span>
-<span class="nc bnc" id="L324" title="All 2 branches missed.">                 for (int i = 0; i &lt; order.getItems().size(); i++) {</span>
-<span class="nc" id="L325">                     OrderItem item = order.getItems().get(i);</span>
-<span class="nc" id="L326">                     itemsJson.append(String.format(&quot;{\&quot;productId\&quot;:\&quot;%d\&quot;,\&quot;quantity\&quot;:%d}&quot;, item.getProductId(), item.getQuantity()));</span>
-<span class="nc bnc" id="L327" title="All 2 branches missed.">                     if (i &lt; order.getItems().size() - 1) itemsJson.append(&quot;,&quot;);</span>
+<span class="fc" id="L323">                 StringBuilder itemsJson = new StringBuilder(&quot;[&quot;);</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">                 for (int i = 0; i &lt; order.getItems().size(); i++) {</span>
+<span class="fc" id="L325">                     OrderItem item = order.getItems().get(i);</span>
+<span class="fc" id="L326">                     itemsJson.append(String.format(&quot;{\&quot;productId\&quot;:\&quot;%d\&quot;,\&quot;quantity\&quot;:%d}&quot;, item.getProductId(), item.getQuantity()));</span>
+<span class="pc bpc" id="L327" title="1 of 2 branches missed.">                     if (i &lt; order.getItems().size() - 1) itemsJson.append(&quot;,&quot;);</span>
                  }
-<span class="nc" id="L329">                 itemsJson.append(&quot;]&quot;);</span>
+<span class="fc" id="L329">                 itemsJson.append(&quot;]&quot;);</span>
                  
-<span class="nc" id="L331">                 int pointsEarned = loyaltyService.accruePoints(order.getCustomerName(), orderId, totalAmount, itemsJson.toString()).join();</span>
-<span class="nc" id="L332">                 repository.updatePointsEarned(orderId, pointsEarned);</span>
-<span class="nc" id="L333">            } else {</span>
+<span class="fc" id="L331">                 int pointsEarned = loyaltyService.accruePoints(order.getCustomerName(), orderId, totalAmount, itemsJson.toString()).join();</span>
+<span class="fc" id="L332">                 repository.updatePointsEarned(orderId, pointsEarned);</span>
+<span class="fc" id="L333">            } else {</span>
 <span class="nc" id="L334">                System.err.println(&quot;Order not found for invoice creation: &quot; + orderId);</span>
             }
             
             // Notify Warehouse for fulfillment
-<span class="nc" id="L338">            boolean notified = fulfillmentService.notifyOrderConfirmed(orderId).join();</span>
-<span class="nc bnc" id="L339" title="All 2 branches missed.">            if (!notified) {</span>
-<span class="nc" id="L340">                System.err.println(&quot;Failed to notify warehouse for order &quot; + orderId);</span>
-<span class="nc" id="L341">                repository.updateStatus(orderId, &quot;CONFIRMATION_FAILED&quot;);</span>
-<span class="nc" id="L342">                throw new IOException(&quot;Failed to notify warehouse for fulfillment&quot;);</span>
+<span class="fc" id="L338">            boolean notified = fulfillmentService.notifyOrderConfirmed(orderId).join();</span>
+<span class="fc bfc" id="L339" title="All 2 branches covered.">            if (!notified) {</span>
+<span class="fc" id="L340">                System.err.println(&quot;Failed to notify warehouse for order &quot; + orderId);</span>
+<span class="fc" id="L341">                repository.updateStatus(orderId, &quot;CONFIRMATION_FAILED&quot;);</span>
+<span class="fc" id="L342">                throw new IOException(&quot;Failed to notify warehouse for fulfillment&quot;);</span>
             }
 
-<span class="nc" id="L345">            exchange.getResponseHeaders().set(&quot;Location&quot;, &quot;/orders&quot;);</span>
-<span class="nc" id="L346">            exchange.sendResponseHeaders(302, -1);</span>
-<span class="nc" id="L347">        } catch (Exception e) {</span>
-<span class="nc" id="L348">            e.printStackTrace();</span>
-<span class="nc" id="L349">            exchange.sendResponseHeaders(500, -1);</span>
-<span class="nc" id="L350">        }</span>
-<span class="nc" id="L351">    }</span>
+<span class="fc" id="L345">            exchange.getResponseHeaders().set(&quot;Location&quot;, &quot;/orders&quot;);</span>
+<span class="fc" id="L346">            exchange.sendResponseHeaders(302, -1);</span>
+<span class="fc" id="L347">        } catch (Exception e) {</span>
+<span class="fc" id="L348">            e.printStackTrace();</span>
+<span class="fc" id="L349">            exchange.sendResponseHeaders(500, -1);</span>
+<span class="fc" id="L350">        }</span>
+<span class="fc" id="L351">    }</span>
 
     private void handleUpdateStatus(HttpExchange exchange) throws IOException {
         try {
-<span class="nc" id="L355">            InputStream is = exchange.getRequestBody();</span>
-<span class="nc" id="L356">            String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);</span>
-<span class="nc" id="L357">            System.out.println(&quot;Update Status Request: &quot; + json);</span>
+<span class="fc" id="L355">            InputStream is = exchange.getRequestBody();</span>
+<span class="fc" id="L356">            String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);</span>
+<span class="fc" id="L357">            System.out.println(&quot;Update Status Request: &quot; + json);</span>
             
-<span class="nc" id="L359">            int orderId = -1;</span>
-<span class="nc" id="L360">            String status = null;</span>
+<span class="fc" id="L359">            int orderId = -1;</span>
+<span class="fc" id="L360">            String status = null;</span>
             
             // Simple JSON parsing
-<span class="nc" id="L363">            Pattern pId = Pattern.compile(&quot;\&quot;orderId\&quot;\\s*:\\s*(\\d+)&quot;);</span>
-<span class="nc" id="L364">            Matcher mId = pId.matcher(json);</span>
-<span class="nc bnc" id="L365" title="All 2 branches missed.">            if (mId.find()) {</span>
-<span class="nc" id="L366">                orderId = Integer.parseInt(mId.group(1));</span>
+<span class="fc" id="L363">            Pattern pId = Pattern.compile(&quot;\&quot;orderId\&quot;\\s*:\\s*(\\d+)&quot;);</span>
+<span class="fc" id="L364">            Matcher mId = pId.matcher(json);</span>
+<span class="pc bpc" id="L365" title="1 of 2 branches missed.">            if (mId.find()) {</span>
+<span class="fc" id="L366">                orderId = Integer.parseInt(mId.group(1));</span>
             }
             
-<span class="nc" id="L369">            Pattern pStatus = Pattern.compile(&quot;\&quot;status\&quot;\\s*:\\s*\&quot;([^\&quot;]+)\&quot;&quot;);</span>
-<span class="nc" id="L370">            Matcher mStatus = pStatus.matcher(json);</span>
-<span class="nc bnc" id="L371" title="All 2 branches missed.">            if (mStatus.find()) {</span>
-<span class="nc" id="L372">                status = mStatus.group(1);</span>
+<span class="fc" id="L369">            Pattern pStatus = Pattern.compile(&quot;\&quot;status\&quot;\\s*:\\s*\&quot;([^\&quot;]+)\&quot;&quot;);</span>
+<span class="fc" id="L370">            Matcher mStatus = pStatus.matcher(json);</span>
+<span class="pc bpc" id="L371" title="1 of 2 branches missed.">            if (mStatus.find()) {</span>
+<span class="fc" id="L372">                status = mStatus.group(1);</span>
             }
             
-<span class="nc bnc" id="L375" title="All 4 branches missed.">            if (orderId != -1 &amp;&amp; status != null) {</span>
-<span class="nc" id="L376">                repository.updateStatus(orderId, status);</span>
-<span class="nc" id="L377">                String response = &quot;{\&quot;status\&quot;:\&quot;updated\&quot;}&quot;;</span>
-<span class="nc" id="L378">                byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
-<span class="nc" id="L379">                exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;application/json&quot;);</span>
-<span class="nc" id="L380">                exchange.sendResponseHeaders(200, bytes.length);</span>
-<span class="nc" id="L381">                try (OutputStream os = exchange.getResponseBody()) {</span>
-<span class="nc" id="L382">                    os.write(bytes);</span>
+<span class="pc bpc" id="L375" title="2 of 4 branches missed.">            if (orderId != -1 &amp;&amp; status != null) {</span>
+<span class="fc" id="L376">                repository.updateStatus(orderId, status);</span>
+<span class="fc" id="L377">                String response = &quot;{\&quot;status\&quot;:\&quot;updated\&quot;}&quot;;</span>
+<span class="fc" id="L378">                byte[] bytes = response.getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L379">                exchange.getResponseHeaders().set(&quot;Content-Type&quot;, &quot;application/json&quot;);</span>
+<span class="fc" id="L380">                exchange.sendResponseHeaders(200, bytes.length);</span>
+<span class="fc" id="L381">                try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="fc" id="L382">                    os.write(bytes);</span>
                 }
-<span class="nc" id="L384">            } else {</span>
+<span class="fc" id="L384">            } else {</span>
 <span class="nc" id="L385">                exchange.sendResponseHeaders(400, -1);</span>
             }
 <span class="nc" id="L387">        } catch (Exception e) {</span>
 <span class="nc" id="L388">            e.printStackTrace();</span>
 <span class="nc" id="L389">            exchange.sendResponseHeaders(500, -1);</span>
-<span class="nc" id="L390">        }</span>
-<span class="nc" id="L391">    }</span>
+<span class="fc" id="L390">        }</span>
+<span class="fc" id="L391">    }</span>
 
     private Order parseOrder(String json) {
 <span class="fc" id="L394">        Order order = new Order();</span>
@@ -405,8 +405,8 @@ public class OrderController implements HttpHandler {
         // Extract pointsToRedeem
 <span class="fc" id="L406">        Pattern pointsPattern = Pattern.compile(&quot;\&quot;pointsToRedeem\&quot;\\s*:\\s*(\\d+)&quot;);</span>
 <span class="fc" id="L407">        Matcher pointsMatcher = pointsPattern.matcher(json);</span>
-<span class="pc bpc" id="L408" title="1 of 2 branches missed.">        if (pointsMatcher.find()) {</span>
-<span class="nc" id="L409">            order.setPointsToRedeem(Integer.parseInt(pointsMatcher.group(1)));</span>
+<span class="fc bfc" id="L408" title="All 2 branches covered.">        if (pointsMatcher.find()) {</span>
+<span class="fc" id="L409">            order.setPointsToRedeem(Integer.parseInt(pointsMatcher.group(1)));</span>
         }
 
         // Extract totalAmount
@@ -454,17 +454,17 @@ public class OrderController implements HttpHandler {
 <span class="nc" id="L454">    }</span>
 
     private Map&lt;String, String&gt; parseFormData(String formData) {
-<span class="nc" id="L457">        Map&lt;String, String&gt; map = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L458">        String[] pairs = formData.split(&quot;&amp;&quot;);</span>
-<span class="nc bnc" id="L459" title="All 2 branches missed.">        for (String pair : pairs) {</span>
-<span class="nc" id="L460">            String[] keyValue = pair.split(&quot;=&quot;);</span>
-<span class="nc bnc" id="L461" title="All 2 branches missed.">            if (keyValue.length &gt; 0) {</span>
-<span class="nc" id="L462">                String key = java.net.URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);</span>
-<span class="nc bnc" id="L463" title="All 2 branches missed.">                String value = keyValue.length &gt; 1 ? java.net.URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8) : &quot;&quot;;</span>
-<span class="nc" id="L464">                map.put(key, value);</span>
+<span class="fc" id="L457">        Map&lt;String, String&gt; map = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L458">        String[] pairs = formData.split(&quot;&amp;&quot;);</span>
+<span class="fc bfc" id="L459" title="All 2 branches covered.">        for (String pair : pairs) {</span>
+<span class="fc" id="L460">            String[] keyValue = pair.split(&quot;=&quot;);</span>
+<span class="pc bpc" id="L461" title="1 of 2 branches missed.">            if (keyValue.length &gt; 0) {</span>
+<span class="fc" id="L462">                String key = java.net.URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);</span>
+<span class="pc bpc" id="L463" title="1 of 2 branches missed.">                String value = keyValue.length &gt; 1 ? java.net.URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8) : &quot;&quot;;</span>
+<span class="fc" id="L464">                map.put(key, value);</span>
             }
         }
-<span class="nc" id="L467">        return map;</span>
+<span class="fc" id="L467">        return map;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

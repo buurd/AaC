@@ -1,4 +1,4 @@
-package com.example.webshop;
+package com.example.order;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-class WebshopApplicationTest {
+class LoginHandlerTest {
 
     @Mock
     private HttpClient httpClient;
@@ -29,17 +29,17 @@ class WebshopApplicationTest {
     @Mock
     private HttpExchange exchange;
 
-    private WebshopApplication.LoginHandler loginHandler;
+    private OrderApplication.LoginHandler loginHandler;
     private Headers responseHeaders;
     private ByteArrayOutputStream responseBody;
 
     @BeforeEach
     void setUp() throws NoSuchFieldException, IllegalAccessException {
         MockitoAnnotations.openMocks(this);
-        loginHandler = new WebshopApplication.LoginHandler("http://token-url");
+        loginHandler = new OrderApplication.LoginHandler("http://token-url");
         
         // Inject mock HttpClient
-        Field httpClientField = WebshopApplication.LoginHandler.class.getDeclaredField("httpClient");
+        Field httpClientField = OrderApplication.LoginHandler.class.getDeclaredField("httpClient");
         httpClientField.setAccessible(true);
         httpClientField.set(loginHandler, httpClient);
 
@@ -77,8 +77,8 @@ class WebshopApplicationTest {
         loginHandler.handle(exchange);
 
         verify(exchange).sendResponseHeaders(eq(302), anyLong());
-        assertTrue(responseHeaders.getFirst("Location").endsWith("/products"));
-        assertTrue(responseHeaders.getFirst("Set-Cookie").contains("webshop_auth_token=mock-token"));
+        assertTrue(responseHeaders.getFirst("Location").endsWith("/orders"));
+        assertTrue(responseHeaders.getFirst("Set-Cookie").contains("auth_token=mock-token"));
     }
 
     @Test

@@ -259,11 +259,11 @@ public class ProductController implements HttpHandler {
                 // Simple parsing: remove [" and "] and replace "," with ", "
                 return json.replace("[\"", "").replace("\"]", "").replace("\",\"", ", ");
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) { // Catch Exception to be safe
             if (e instanceof InterruptedException) {
                 Thread.currentThread().interrupt();
             }
-            logger.warn("Failed to fetch campaigns", e);
+            logger.warn("Error fetching campaigns", e);
         }
         return "";
     }

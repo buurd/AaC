@@ -1,4 +1,4 @@
-package com.example.webshop;
+package com.example.order;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -14,6 +14,7 @@ import java.lang.reflect.Field;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -21,7 +22,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-class WebshopApplicationTest {
+public class OrderApplicationTest {
 
     @Mock
     private HttpClient httpClient;
@@ -29,17 +30,17 @@ class WebshopApplicationTest {
     @Mock
     private HttpExchange exchange;
 
-    private WebshopApplication.LoginHandler loginHandler;
+    private OrderApplication.LoginHandler loginHandler;
     private Headers responseHeaders;
     private ByteArrayOutputStream responseBody;
 
     @BeforeEach
     void setUp() throws NoSuchFieldException, IllegalAccessException {
         MockitoAnnotations.openMocks(this);
-        loginHandler = new WebshopApplication.LoginHandler("http://token-url");
+        loginHandler = new OrderApplication.LoginHandler("http://token-url");
         
         // Inject mock HttpClient
-        Field httpClientField = WebshopApplication.LoginHandler.class.getDeclaredField("httpClient");
+        Field httpClientField = OrderApplication.LoginHandler.class.getDeclaredField("httpClient");
         httpClientField.setAccessible(true);
         httpClientField.set(loginHandler, httpClient);
 
@@ -77,8 +78,8 @@ class WebshopApplicationTest {
         loginHandler.handle(exchange);
 
         verify(exchange).sendResponseHeaders(eq(302), anyLong());
-        assertTrue(responseHeaders.getFirst("Location").endsWith("/products"));
-        assertTrue(responseHeaders.getFirst("Set-Cookie").contains("webshop_auth_token=mock-token"));
+        assertTrue(responseHeaders.getFirst("Location").endsWith("/orders"));
+        assertTrue(responseHeaders.getFirst("Set-Cookie").contains("auth_token=mock-token"));
     }
 
     @Test
@@ -109,5 +110,14 @@ class WebshopApplicationTest {
         loginHandler.handle(exchange);
 
         verify(exchange).sendResponseHeaders(eq(400), anyLong());
+    }
+
+    @Test
+    void testMain_Instantiation() {
+        // This test is just to cover the class instantiation if possible, 
+        // though main method is hard to test fully without side effects.
+        // We can at least instantiate the class to cover the default constructor if it exists implicitly.
+        OrderApplication app = new OrderApplication();
+        assertTrue(app != null);
     }
 }

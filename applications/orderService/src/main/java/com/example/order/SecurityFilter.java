@@ -34,6 +34,13 @@ public class SecurityFilter extends Filter {
         }
     }
 
+    // Constructor for testing
+    protected SecurityFilter(JwkProvider jwkProvider, String issuer, String requiredRole) {
+        this.jwkProvider = jwkProvider;
+        this.issuer = issuer;
+        this.requiredRole = requiredRole;
+    }
+
     @Override
     public void doFilter(HttpExchange exchange, Chain chain) throws IOException {
         String token = getToken(exchange);
@@ -74,7 +81,6 @@ public class SecurityFilter extends Filter {
             
             sendError(exchange, 403, "Insufficient permissions");
         } catch (Exception e) {
-            e.printStackTrace();
             if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
                 exchange.getResponseHeaders().set("Location", "/login");
                 exchange.sendResponseHeaders(302, -1);

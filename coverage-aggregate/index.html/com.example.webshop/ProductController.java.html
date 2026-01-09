@@ -259,11 +259,11 @@ public class ProductController implements HttpHandler {
                 // Simple parsing: remove [&quot; and &quot;] and replace &quot;,&quot; with &quot;, &quot;
 <span class="fc" id="L260">                return json.replace(&quot;[\&quot;&quot;, &quot;&quot;).replace(&quot;\&quot;]&quot;, &quot;&quot;).replace(&quot;\&quot;,\&quot;&quot;, &quot;, &quot;);</span>
             }
-<span class="fc" id="L262">        } catch (IOException | InterruptedException e) {</span>
+<span class="fc" id="L262">        } catch (Exception e) { // Catch Exception to be safe</span>
 <span class="pc bpc" id="L263" title="1 of 2 branches missed.">            if (e instanceof InterruptedException) {</span>
 <span class="nc" id="L264">                Thread.currentThread().interrupt();</span>
             }
-<span class="fc" id="L266">            logger.warn(&quot;Failed to fetch campaigns&quot;, e);</span>
+<span class="fc" id="L266">            logger.warn(&quot;Error fetching campaigns&quot;, e);</span>
 <span class="nc" id="L267">        }</span>
 <span class="fc" id="L268">        return &quot;&quot;;</span>
     }

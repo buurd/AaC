@@ -28,8 +28,8 @@ public class ProductSyncController implements HttpHandler {
 <span class="fc" id="L28">                System.out.println(&quot;Warehouse Sync received: &quot; + json);</span>
                 
 <span class="fc" id="L30">                Product p = parseJson(json);</span>
-<span class="pc bpc" id="L31" title="1 of 2 branches missed.">                if (p.getPmId() == 0) {</span>
-<span class="nc" id="L32">                    throw new IllegalArgumentException(&quot;Invalid JSON: Missing or invalid 'id'&quot;);</span>
+<span class="pc bpc" id="L31" title="1 of 4 branches missed.">                if (p.getPmId() == null || p.getPmId() == 0) {</span>
+<span class="fc" id="L32">                    throw new IllegalArgumentException(&quot;Invalid JSON: Missing or invalid 'id'&quot;);</span>
                 }
 <span class="fc" id="L34">                repository.upsert(p);</span>
                 

@@ -31,24 +31,31 @@ public class OrderRepository {
     }
 
     public int createOrder(Order order) throws SQLException {
-        String sql = "INSERT INTO orders (customer_name, status, total_amount, points_redeemed) VALUES (?, ?, ?, ?) RETURNING id";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        String sql = "INSERT INTO orders (customer_name, status, total_amount, points_redeemed) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, order.getCustomerName());
             stmt.setString(2, order.getStatus());
             stmt.setDouble(3, order.getTotalAmount());
             stmt.setInt(4, order.getPointsToRedeem());
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    int orderId = rs.getInt(1);
+            int affectedRows = stmt.executeUpdate();
+            
+            if (affectedRows == 0) {
+                throw new SQLException("Creating order failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    int orderId = generatedKeys.getInt(1);
                     System.out.println("OrderRepository: Created order with ID " + orderId);
                     for (OrderItem item : order.getItems()) {
                         createOrderItem(orderId, item);
                     }
                     return orderId;
+                } else {
+                    throw new SQLException("Creating order failed, no ID obtained.");
                 }
             }
         }
-        throw new SQLException("Failed to create order");
     }
 
     public void updatePointsEarned(int orderId, int points) throws SQLException {
