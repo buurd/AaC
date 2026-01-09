@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: code-coverage-generation
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-098
+      type: quality
+      description: "Code coverage reports must be generated during the build process for all applications."
+      priority: high
+      validation_policy: "policies/check_code_coverage.rego"
+      tags:
+        - Quality
+        - Testing

@@ -17,6 +17,12 @@ The primary goal is to provide a seamless shopping experience for customers.
 *   **Security**: Customers must be logged in to place an order (**REQ-064**).
 *   **Order History**: Customers can view their past orders (**REQ-060**).
 
+### Loyalty Program (Customer)
+Customers are rewarded for their purchases.
+*   **Earn Points**: Customers earn points on confirmed orders (**REQ-091**).
+*   **Redeem Points**: Customers can redeem points during checkout (**REQ-092**).
+*   **View Balance**: Customers can view their point balance (**REQ-093**).
+
 ### Product Management (Product Manager)
 Product Managers need tools to maintain the product catalog.
 *   **Access**: The Product Manager uses the Product Management System (**REQ-010**).
@@ -37,6 +43,12 @@ Order Managers oversee the order fulfillment process.
 *   **Access**: The Order Manager uses the Order Service (**REQ-051**).
 *   **Order List**: Managers can view a list of placed orders (**REQ-052**).
 *   **Variant Handling**: The system handles orders for specific product variants (**REQ-075**).
+
+### Loyalty Administration (Loyalty Administrator)
+Loyalty Administrators manage the loyalty program.
+*   **Access**: The Loyalty Administrator uses the Loyalty Service dashboard (**REQ-094**).
+*   **Dashboard**: View system statistics and recent transactions (**REQ-095**).
+*   **Rule Management**: Manage bonus rules (**REQ-096**).
 
 ---
 
@@ -84,6 +96,7 @@ The system is built with security as a core concern.
     *   **Warehouse**: Requires `warehouse-staff` role (**REQ-085**).
     *   **Order Service**: Requires `order-manager` role (**REQ-086**).
     *   **Webshop Ordering**: Requires `customer` role (**REQ-087**).
+    *   **Loyalty Administration**: Requires `loyalty-admin` role.
 
 ---
 
@@ -131,6 +144,13 @@ The system follows a microservices-inspired architecture using the C4 model.
 *   **Implementation**: Maven project.
 *   **Containers**: Web Server and Database.
 *   **Runtime**: Accessible via HTTP.
+
+### Loyalty Service
+*   **Implementation**: Maven project.
+*   **Containers**: Web Server and Database.
+*   **Runtime**: Accessible via HTTP.
+*   **Components**: `LoyaltyController`, `PointService`, `BonusRuleEngine`, `LoyaltyRepository`.
+*   **Domain**: `LoyaltyAccount`, `Transaction`.
 
 ---
 

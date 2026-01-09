@@ -176,9 +176,33 @@ class ProductServiceTest {
 
         ArgumentCaptor<HttpRequest> captor = ArgumentCaptor.forClass(HttpRequest.class);
         verify(mockHttpClient, times(2)).sendAsync(captor.capture(), any(HttpResponse.BodyHandler.class));
-        
-        // Verify that the JSON body contains the flattened name
-        // We can't easily inspect the body publisher content without more complex mocking, 
-        // but we verified the call happened.
+    }
+
+    @Test
+    void testSyncProduct_Failure() throws SQLException {
+        Product p = new Product();
+        p.setId(1);
+        when(mockRepo.findById(1)).thenReturn(p);
+
+        when(mockResponse.statusCode()).thenReturn(500);
+        when(mockResponse.body()).thenReturn("Error");
+
+        productService.syncProduct(1);
+
+        verify(mockHttpClient, times(2)).sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandler.class));
+    }
+
+    @Test
+    void testSyncProduct_Exception() throws SQLException {
+        Product p = new Product();
+        p.setId(1);
+        when(mockRepo.findById(1)).thenReturn(p);
+
+        when(mockHttpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenReturn(CompletableFuture.failedFuture(new RuntimeException("Network Error")));
+
+        productService.syncProduct(1);
+
+        verify(mockHttpClient, times(2)).sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandler.class));
     }
 }

@@ -81,6 +81,19 @@ class SecurityFilterTest {
     }
 
     @Test
+    void doFilter_validRealmRole_callsChain() throws IOException {
+        // Arrange
+        String token = createTokenWithRealmRole(requiredRole);
+        exchange.getRequestHeaders().add("Authorization", "Bearer " + token);
+
+        // Act
+        securityFilter.doFilter(exchange, chain);
+
+        // Assert
+        verify(chain).doFilter(exchange);
+    }
+
+    @Test
     void doFilter_missingToken_returns401() throws IOException {
         // Act
         securityFilter.doFilter(exchange, chain);
@@ -104,6 +117,19 @@ class SecurityFilterTest {
         verify(chain, never()).doFilter(exchange);
     }
 
+    @Test
+    void doFilter_invalidToken_returns401() throws IOException {
+        // Arrange
+        exchange.getRequestHeaders().add("Authorization", "Bearer invalid-token");
+
+        // Act
+        securityFilter.doFilter(exchange, chain);
+
+        // Assert
+        verify(exchange).sendResponseHeaders(eq(401), anyLong());
+        verify(chain, never()).doFilter(exchange);
+    }
+
     private String createToken(String role) {
         Map<String, Object> clientAccess = new HashMap<>();
         clientAccess.put("roles", Collections.singletonList(role));
@@ -115,6 +141,17 @@ class SecurityFilterTest {
                 .withIssuer(issuer)
                 .withKeyId("key-id")
                 .withClaim("resource_access", resourceAccess)
+                .sign(Algorithm.RSA256(null, privateKey));
+    }
+
+    private String createTokenWithRealmRole(String role) {
+        Map<String, Object> realmAccess = new HashMap<>();
+        realmAccess.put("roles", Collections.singletonList(role));
+        
+        return JWT.create()
+                .withIssuer(issuer)
+                .withKeyId("key-id")
+                .withClaim("realm_access", realmAccess)
                 .sign(Algorithm.RSA256(null, privateKey));
     }
 }

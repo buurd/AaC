@@ -11,8 +11,8 @@ Downloading JaCoCo CLI...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  0.775 s
-[INFO] Finished at: 2026-01-09T17:18:18Z
+[INFO] Total time:  0.666 s
+[INFO] Finished at: 2026-01-09T19:41:22Z
 [INFO] ------------------------------------------------------------------------
 Running tests for productManagementSystem...
 [INFO] Scanning for projects...
@@ -60,24 +60,24 @@ WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/byteb
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-ProductService initialized with Webshop API URL: http://localhost:34071/api/products/sync
+ProductService initialized with Webshop API URL: http://localhost:35897/api/products/sync
 ProductService initialized with Warehouse API URL: http://warehouse-dummy
-Syncing product 1 to http://localhost:34071/api/products/sync
+Syncing product 1 to http://localhost:35897/api/products/sync
 Syncing product 1 to http://warehouse-dummy
 Exception during sync to http://warehouse-dummy: java.net.ConnectException
+Synced to http://localhost:35897/api/products/sync. Response: {"status":"success"}
 [Thread-3] WARN au.com.dius.pact.core.support.Metrics - 
             Please note: we are tracking events anonymously to gather important usage statistics like JVM version
             and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
             variable to 'true'.
             
-Synced to http://localhost:34071/api/products/sync. Response: {"status":"success"}
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.781 s -- in com.example.productmanagement.ProductServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.613 s -- in com.example.productmanagement.ProductServicePactTest
 [INFO] Running com.example.productmanagement.KeycloakTokenServiceTest
 Exception getting access token: java.lang.RuntimeException: Network error
 Failed to get access token. Status: 401 Body: Unauthorized
 Exception getting access token: java.lang.RuntimeException: Failed to get access token
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.146 s -- in com.example.productmanagement.KeycloakTokenServiceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.143 s -- in com.example.productmanagement.KeycloakTokenServiceTest
 [INFO] Running com.example.productmanagement.ProductManagementApplicationTest
 [main] INFO com.example.productmanagement.ProductManagementApplication - Received request: POST /login
 [main] WARN com.example.productmanagement.ProductManagementApplication - Login failed for user: testuser. Status: 401. Body: null
@@ -86,9 +86,9 @@ Exception getting access token: java.lang.RuntimeException: Failed to get access
 [main] INFO com.example.productmanagement.ProductManagementApplication - Received request: POST /login
 [main] INFO com.example.productmanagement.ProductManagementApplication - Access Token obtained: true
 [main] INFO com.example.productmanagement.ProductManagementApplication - Redirecting to: /products
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.063 s -- in com.example.productmanagement.ProductManagementApplicationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.055 s -- in com.example.productmanagement.ProductManagementApplicationTest
 [INFO] Running com.example.productmanagement.ProductControllerTest
-[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.082 s -- in com.example.productmanagement.ProductControllerTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.080 s -- in com.example.productmanagement.ProductControllerTest
 [INFO] Running com.example.productmanagement.SecurityFilterTest
 SecurityFilter: No token found. Headers: []
 SecurityFilter: No token found. Headers: []
@@ -171,18 +171,18 @@ com.auth0.jwt.exceptions.JWTDecodeException: The token was expected to have 3 pa
 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.149 s -- in com.example.productmanagement.SecurityFilterTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.172 s -- in com.example.productmanagement.SecurityFilterTest
 [INFO] Running com.example.productmanagement.ProductServiceWarehousePactTest
 ProductService initialized with Webshop API URL: http://webshop-dummy
-ProductService initialized with Warehouse API URL: http://localhost:33231/api/products/sync
+ProductService initialized with Warehouse API URL: http://localhost:46139/api/products/sync
 Syncing product 1 to http://webshop-dummy
-Syncing product 1 to http://localhost:33231/api/products/sync
-Synced to http://localhost:33231/api/products/sync. Response: {"status":"success"}
+Syncing product 1 to http://localhost:46139/api/products/sync
+Synced to http://localhost:46139/api/products/sync. Response: {"status":"success"}
 Exception during sync to http://webshop-dummy: java.net.ConnectException
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.624 s -- in com.example.productmanagement.ProductServiceWarehousePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.620 s -- in com.example.productmanagement.ProductServiceWarehousePactTest
 [INFO] Running com.example.productmanagement.ProductRepositoryTest
-[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.372 s -- in com.example.productmanagement.ProductRepositoryTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.364 s -- in com.example.productmanagement.ProductRepositoryTest
 [INFO] Running com.example.productmanagement.ProductServiceTest
 ProductService initialized with Webshop API URL: http://webshop-dummy
 ProductService initialized with Warehouse API URL: http://warehouse-dummy
@@ -198,6 +198,12 @@ Syncing product 1 to http://warehouse-dummy
 Synced to http://warehouse-dummy. Response: {"status":"success"}
 ProductService initialized with Webshop API URL: http://webshop-dummy
 ProductService initialized with Warehouse API URL: http://warehouse-dummy
+ProductService initialized with Webshop API URL: http://webshop-dummy
+ProductService initialized with Warehouse API URL: http://warehouse-dummy
+Syncing product 1 to http://webshop-dummy
+Failed to sync to http://webshop-dummy. Status: 500 Body: Error
+Failed to sync to http://warehouse-dummy. Status: 500 Body: Error
+Syncing product 1 to http://warehouse-dummy
 ProductService initialized with Webshop API URL: http://webshop-dummy
 ProductService initialized with Warehouse API URL: http://warehouse-dummy
 Syncing product 1 to http://webshop-dummy
@@ -219,14 +225,20 @@ Synced delete product 1 to http://warehouse-dummy. Response: {"status":"success"
 ProductService initialized with Webshop API URL: http://webshop-dummy
 ProductService initialized with Warehouse API URL: http://warehouse-dummy
 Syncing product 1 to http://webshop-dummy
+Exception during sync to http://webshop-dummy: java.lang.RuntimeException: Network Error
+Exception during sync to http://warehouse-dummy: java.lang.RuntimeException: Network Error
+Syncing product 1 to http://warehouse-dummy
+ProductService initialized with Webshop API URL: http://webshop-dummy
+ProductService initialized with Warehouse API URL: http://warehouse-dummy
+Syncing product 1 to http://webshop-dummy
 Synced to http://webshop-dummy. Response: {"status":"success"}
 Syncing product 1 to http://warehouse-dummy
 Synced to http://warehouse-dummy. Response: {"status":"success"}
-[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s -- in com.example.productmanagement.ProductServiceTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.043 s -- in com.example.productmanagement.ProductServiceTest
 [INFO] 
 [INFO] Results:
 [INFO] 
-[INFO] Tests run: 49, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 51, Failures: 0, Errors: 0, Skipped: 0
 [INFO] 
 [INFO] 
 [INFO] --- jacoco:0.8.11:report (report) @ productManagementSystem ---
@@ -239,8 +251,8 @@ Synced to http://warehouse-dummy. Response: {"status":"success"}
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  8.682 s
-[INFO] Finished at: 2026-01-09T17:18:28Z
+[INFO] Total time:  8.366 s
+[INFO] Finished at: 2026-01-09T19:41:31Z
 [INFO] ------------------------------------------------------------------------
 Coverage report for productManagementSystem generated at: applications/productManagementSystem/target/site/jacoco/index.html
 Running tests for orderService...
@@ -284,16 +296,16 @@ Running tests for orderService...
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.order.CreditServiceTest
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.151 s -- in com.example.order.CreditServiceTest
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.161 s -- in com.example.order.CreditServiceTest
 [INFO] Running com.example.order.InvoiceControllerTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.318 s -- in com.example.order.InvoiceControllerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.309 s -- in com.example.order.InvoiceControllerTest
 [INFO] Running com.example.order.InvoiceRepositoryTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.582 s -- in com.example.order.InvoiceRepositoryTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.579 s -- in com.example.order.InvoiceRepositoryTest
 [INFO] Running com.example.order.OrderRepositoryTest
 OrderRepository: Created order with ID 1
 OrderRepository: Updating points earned for order 1 to 50
@@ -304,13 +316,13 @@ OrderRepository: Found 1 orders.
 OrderRepository: Created order with ID 1
 OrderRepository: Updated status for order 1 to CONFIRMED. Rows affected: 1
 OrderRepository: Found 1 orders.
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 s -- in com.example.order.OrderRepositoryTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.049 s -- in com.example.order.OrderRepositoryTest
 [INFO] Running com.example.order.KeycloakTokenServiceTest
 KeycloakTokenService: Requesting new token for client client from http://keycloak/token
 KeycloakTokenService: Token obtained successfully. Length: 10
 KeycloakTokenService: Requesting new token for client client from http://keycloak/token
 KeycloakTokenService: Failed to get token. Status: 401, Body: Unauthorized
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.306 s -- in com.example.order.KeycloakTokenServiceTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.296 s -- in com.example.order.KeycloakTokenServiceTest
 [INFO] Running com.example.order.LoyaltyIntegrationServicePactTest
 LoyaltyIntegrationService: Accruing points for order 101
 LoyaltyIntegrationService: Redeeming 50 points for order 102
@@ -320,13 +332,13 @@ LoyaltyIntegrationService: Redeeming 50 points for order 102
             variable to 'true'.
             
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.374 s -- in com.example.order.LoyaltyIntegrationServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.228 s -- in com.example.order.LoyaltyIntegrationServicePactTest
 [INFO] Running com.example.order.StockReservationServicePactTest
-StockReservationService: Reserving stock for product 1 at http://localhost:32943/api/stock/reserve
+StockReservationService: Reserving stock for product 1 at http://localhost:41255/api/stock/reserve
 StockReservationService: Got token (length: 11)
 StockReservationService: Response status: 200
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.125 s -- in com.example.order.StockReservationServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.124 s -- in com.example.order.StockReservationServicePactTest
 [INFO] Running com.example.order.OrderPactProviderTest
 Test Server started on port 8083
 [main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Order Service is up':SETUP
@@ -360,7 +372,7 @@ Verifying a pact between Webshop and OrderService
       has status code 200 (OK)
       has a matching body (OK)
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.344 s -- in com.example.order.OrderPactProviderTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.370 s -- in com.example.order.OrderPactProviderTest
 [INFO] Running com.example.order.OrderControllerTest
 Listing 1 orders.
 Order: 1, Status: PENDING
@@ -444,13 +456,13 @@ OrderController: Returning 200 OK
 Received Order: {"customerName":"John Doe","items":[{"productId":1,"quantity":1}]}
 Received Order: {"customerName":"John Doe","pointsToRedeem":100,"items":[{"productId":1,"quantity":1}]}
 Point redemption failed for order 101
-[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.068 s -- in com.example.order.OrderControllerTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.080 s -- in com.example.order.OrderControllerTest
 [INFO] Running com.example.order.OrderFulfillmentServicePactTest
-OrderFulfillmentService: Notifying fulfillment for order 123 at http://localhost:41285/api/fulfillment/order
+OrderFulfillmentService: Notifying fulfillment for order 123 at http://localhost:41465/api/fulfillment/order
 OrderFulfillmentService: Got token (length: 11)
 OrderFulfillmentService: Response status: 200
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.124 s -- in com.example.order.OrderFulfillmentServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.120 s -- in com.example.order.OrderFulfillmentServicePactTest
 [INFO] Running com.example.order.OrderApplicationTest
 [main] INFO com.example.order.OrderApplication - Received request: POST /login
 [main] WARN com.example.order.OrderApplication - Login failed for user: testuser. Status: 401. Body: null
@@ -459,7 +471,7 @@ OrderFulfillmentService: Response status: 200
 [main] INFO com.example.order.OrderApplication - Received request: POST /login
 [main] INFO com.example.order.OrderApplication - Access Token obtained: true
 [main] INFO com.example.order.OrderApplication - Redirecting to: /orders
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in com.example.order.OrderApplicationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in com.example.order.OrderApplicationTest
 [INFO] Running com.example.order.LoginHandlerTest
 [main] INFO com.example.order.OrderApplication - Received request: POST /login
 [main] WARN com.example.order.OrderApplication - Login failed for user: testuser. Status: 401. Body: null
@@ -468,12 +480,12 @@ OrderFulfillmentService: Response status: 200
 [main] INFO com.example.order.OrderApplication - Received request: POST /login
 [main] INFO com.example.order.OrderApplication - Access Token obtained: true
 [main] INFO com.example.order.OrderApplication - Redirecting to: /orders
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.example.order.LoginHandlerTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s -- in com.example.order.LoginHandlerTest
 [INFO] Running com.example.order.SecurityFilterTest
 SecurityFilter: Checking for role 'user'. Found roles: [user]
 SecurityFilter: Checking for role 'user'. Found roles: [user]
 SecurityFilter: Checking for role 'user'. Found roles: [wrong-role]
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.035 s -- in com.example.order.SecurityFilterTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.318 s -- in com.example.order.SecurityFilterTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -490,8 +502,8 @@ SecurityFilter: Checking for role 'user'. Found roles: [wrong-role]
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  13.445 s
-[INFO] Finished at: 2026-01-09T17:18:43Z
+[INFO] Total time:  9.311 s
+[INFO] Finished at: 2026-01-09T19:41:42Z
 [INFO] ------------------------------------------------------------------------
 Coverage report for orderService generated at: applications/orderService/target/site/jacoco/index.html
 Running tests for warehouse...
@@ -535,25 +547,25 @@ Running tests for warehouse...
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.warehouse.KeycloakTokenServiceTest
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 Failed to get access token. Status: 401 Body: Unauthorized
 Exception getting access token: java.lang.RuntimeException: Failed to get access token
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.402 s -- in com.example.warehouse.KeycloakTokenServiceTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.415 s -- in com.example.warehouse.KeycloakTokenServiceTest
 [INFO] Running com.example.warehouse.StockServicePactTest
-StockService initialized with Webshop Stock API URL: http://localhost:45155/api/stock/sync
-Syncing stock for product 1 (Stock: 50) to http://localhost:45155/api/stock/sync
+StockService initialized with Webshop Stock API URL: http://localhost:45611/api/stock/sync
+Syncing stock for product 1 (Stock: 50) to http://localhost:45611/api/stock/sync
+Synced stock for product 1 to Webshop.
 [Thread-3] WARN au.com.dius.pact.core.support.Metrics - 
             Please note: we are tracking events anonymously to gather important usage statistics like JVM version
             and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
             variable to 'true'.
             
-Synced stock for product 1 to Webshop.
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.768 s -- in com.example.warehouse.StockServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.752 s -- in com.example.warehouse.StockServicePactTest
 [INFO] Running com.example.warehouse.WarehouseApplicationTest
 [main] INFO com.example.warehouse.WarehouseApplication - Received request: POST /login
 [main] INFO com.example.warehouse.WarehouseApplication - Access Token obtained: true
@@ -561,7 +573,7 @@ Synced stock for product 1 to Webshop.
 [main] INFO com.example.warehouse.WarehouseApplication - Received request: POST /login
 [main] WARN com.example.warehouse.WarehouseApplication - Login failed for user: testuser. Status: 401. Body: Unauthorized
 [main] INFO com.example.warehouse.WarehouseApplication - Received request: GET /login
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.068 s -- in com.example.warehouse.WarehouseApplicationTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.058 s -- in com.example.warehouse.WarehouseApplicationTest
 [INFO] Running com.example.warehouse.OrderUpdateServiceTest
 Updating status for order 123 to SHIPPED
 Updated order status for 123 to SHIPPED
@@ -569,7 +581,7 @@ Updating status for order 123 to SHIPPED
 Failed to update order status. Status: 500 Body: Internal Server Error
 Updating status for order 123 to SHIPPED
 Exception during order status update: java.lang.RuntimeException: Network error
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s -- in com.example.warehouse.OrderUpdateServiceTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in com.example.warehouse.OrderUpdateServiceTest
 [INFO] Running com.example.warehouse.FulfillmentControllerTest
 java.sql.SQLException: DB Error
 	at com.example.warehouse.FulfillmentOrderRepository.updateFulfillmentStatus(FulfillmentOrderRepository.java:55)
@@ -870,9 +882,9 @@ java.lang.IllegalArgumentException: Invalid JSON: Missing or invalid 'id'
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
 Warehouse Sync received DELETE query: id=101
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.045 s -- in com.example.warehouse.ProductSyncControllerTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.055 s -- in com.example.warehouse.ProductSyncControllerTest
 [INFO] Running com.example.warehouse.DeliveryControllerTest
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.084 s -- in com.example.warehouse.DeliveryControllerTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.079 s -- in com.example.warehouse.DeliveryControllerTest
 [INFO] Running com.example.warehouse.ProductControllerTest
 [main] INFO com.example.warehouse.ProductController - Received request: GET /
 [main] INFO com.example.warehouse.ProductController - Received request: GET /
@@ -951,7 +963,7 @@ java.sql.SQLException: DB Error
 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.example.warehouse.ProductControllerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.example.warehouse.ProductControllerTest
 [INFO] Running com.example.warehouse.OrderFulfillmentControllerTest
 Fulfillment request received: {"orderId":123}
 Fulfillment request received: invalid-json
@@ -1028,9 +1040,9 @@ java.lang.IllegalArgumentException: No orderId found
 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s -- in com.example.warehouse.OrderFulfillmentControllerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.example.warehouse.OrderFulfillmentControllerTest
 [INFO] Running com.example.warehouse.FulfillmentOrderRepositoryTest
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.395 s -- in com.example.warehouse.FulfillmentOrderRepositoryTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.425 s -- in com.example.warehouse.FulfillmentOrderRepositoryTest
 [INFO] Running com.example.warehouse.WarehousePactProviderTest
 StockService initialized with Webshop Stock API URL: null
 Test Server started on port 8082
@@ -1051,6 +1063,7 @@ Mock Repository: Created fulfillment order 123
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Not all of the 2 were verified. The following were missing:
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator -     A request to reserve stock
 [main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Warehouse is up':SETUP
+[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
 
 Verifying a pact between OrderService and WarehouseService
   [Using File ../pacts/OrderService-WarehouseService.json]
@@ -1065,9 +1078,7 @@ Mock Service: Synced stock 100 for PM ID 1
     returns a response which
       has status code 200 (OK)
       has a matching body (OK)
-[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
 [main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Warehouse is up':SETUP
-[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
 
 Verifying a pact between ProductManagementSystem and WarehouseService
   [Using File ../pacts/ProductManagementSystem-WarehouseService.json]
@@ -1081,9 +1092,10 @@ Mock Repository: Upserted product Pact Book
     returns a response which
       has status code 200 (OK)
       has a matching body (OK)
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.296 s -- in com.example.warehouse.WarehousePactProviderTest
+[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.354 s -- in com.example.warehouse.WarehousePactProviderTest
 [INFO] Running com.example.warehouse.DeliveryRepositoryTest
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.050 s -- in com.example.warehouse.DeliveryRepositoryTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.047 s -- in com.example.warehouse.DeliveryRepositoryTest
 [INFO] Running com.example.warehouse.ModelTest
 [INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.example.warehouse.ModelTest
 [INFO] Running com.example.warehouse.StockServiceTest
@@ -1098,7 +1110,7 @@ Failed to sync stock to Webshop. Status: 500 Body: Error
 StockService initialized with Webshop Stock API URL: http://webshop/api/stock/sync
 Syncing stock for product 123 (Stock: 50) to http://webshop/api/stock/sync
 Exception during stock sync: java.lang.RuntimeException: Network error
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.example.warehouse.StockServiceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.example.warehouse.StockServiceTest
 [INFO] Running com.example.warehouse.SecurityFilterTest
 SecurityFilter: Insufficient permissions. Roles: [wrong-role]
 SecurityFilter: Sending error 403: Insufficient permissions
@@ -1107,9 +1119,9 @@ Headers:
 SecurityFilter: No token found for POST null
 Headers: 
 SecurityFilter: Sending error 401: Missing or invalid Authorization header/cookie
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.012 s -- in com.example.warehouse.SecurityFilterTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.878 s -- in com.example.warehouse.SecurityFilterTest
 [INFO] Running com.example.warehouse.ProductRepositoryTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in com.example.warehouse.ProductRepositoryTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s -- in com.example.warehouse.ProductRepositoryTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -1126,8 +1138,8 @@ SecurityFilter: Sending error 401: Missing or invalid Authorization header/cooki
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  9.148 s
-[INFO] Finished at: 2026-01-09T17:18:53Z
+[INFO] Total time:  9.102 s
+[INFO] Finished at: 2026-01-09T19:41:52Z
 [INFO] ------------------------------------------------------------------------
 Coverage report for warehouse generated at: applications/warehouse/target/site/jacoco/index.html
 Running tests for webshop...
@@ -1158,7 +1170,7 @@ Running tests for webshop...
 [INFO] 
 [INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ webshop ---
 [INFO] Changes detected - recompiling the module! :dependency
-[INFO] Compiling 12 source files with javac [debug target 21] to target/test-classes
+[INFO] Compiling 13 source files with javac [debug target 21] to target/test-classes
 [INFO] /usr/src/mymaven/src/test/java/com/example/webshop/KeycloakTokenServiceTest.java: Some input files use unchecked or unsafe operations.
 [INFO] /usr/src/mymaven/src/test/java/com/example/webshop/KeycloakTokenServiceTest.java: Recompile with -Xlint:unchecked for details.
 [INFO] 
@@ -1168,22 +1180,246 @@ Running tests for webshop...
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
-[INFO] Running com.example.webshop.KeycloakTokenServiceTest
+[INFO] Running com.example.webshop.StockSyncControllerTest
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.290 s -- in com.example.webshop.KeycloakTokenServiceTest
+java.lang.RuntimeException: Stream error
+	at com.example.webshop.StockSyncController.handle(StockSyncController.java:23)
+	at com.example.webshop.StockSyncControllerTest.testHandlePost_Exception_Returns500(StockSyncControllerTest.java:72)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:218)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:214)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:139)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+Stock Sync received: {"pmId": 1, "stock": 100}
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.274 s -- in com.example.webshop.StockSyncControllerTest
+[INFO] Running com.example.webshop.KeycloakTokenServiceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.256 s -- in com.example.webshop.KeycloakTokenServiceTest
 [INFO] Running com.example.webshop.ProductSyncControllerTest
+ProductSyncController received POST request
+java.lang.RuntimeException: Stream error
+	at com.example.webshop.ProductSyncController.handle(ProductSyncController.java:27)
+	at com.example.webshop.ProductSyncControllerTest.testHandlePost_Exception_Returns500(ProductSyncControllerTest.java:122)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:218)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:214)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:139)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
 ProductSyncController received POST request
 Received JSON: {"id":1,"type":"T-Shirt","name":"Classic T-Shirt - Red S","description":"100% Cotton","price":20.00,"unit":"pcs"}
 Parsed Product: Product{id=0, pmId=1, name='Classic T-Shirt - Red S', price=20.00 pcs, stock=0}
+ProductSyncController received GET request
 ProductSyncController received DELETE request
 Received DELETE query: id=101
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.185 s -- in com.example.webshop.ProductSyncControllerTest
+ProductSyncController received DELETE request
+Received DELETE query: foo=bar
+java.lang.IllegalArgumentException: No id parameter found
+	at com.example.webshop.ProductSyncController.parseIdFromQuery(ProductSyncController.java:76)
+	at com.example.webshop.ProductSyncController.handle(ProductSyncController.java:45)
+	at com.example.webshop.ProductSyncControllerTest.testHandleDelete_MissingId_Returns500(ProductSyncControllerTest.java:87)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:218)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:214)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:139)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.063 s -- in com.example.webshop.ProductSyncControllerTest
 [INFO] Running com.example.webshop.ShoppingCartControllerTest
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s -- in com.example.webshop.ShoppingCartControllerTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 s -- in com.example.webshop.ShoppingCartControllerTest
 [INFO] Running com.example.webshop.LoyaltyServicePactTest
 [Thread-3] WARN au.com.dius.pact.core.support.Metrics - 
             Please note: we are tracking events anonymously to gather important usage statistics like JVM version
@@ -1191,15 +1427,91 @@ Received DELETE query: id=101
             variable to 'true'.
             
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.006 s -- in com.example.webshop.LoyaltyServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.960 s -- in com.example.webshop.LoyaltyServicePactTest
 [INFO] Running com.example.webshop.ProductControllerTest
 [main] INFO com.example.webshop.ProductController - Received request: GET /products
+[main] INFO com.example.webshop.ProductController - Received request: GET /products
+[main] INFO com.example.webshop.ProductController - Received request: GET /products
+[main] WARN com.example.webshop.ProductController - Error fetching campaigns
+java.lang.InterruptedException: Interrupted
+	at com.example.webshop.ProductController.fetchCampaigns(ProductController.java:256)
+	at com.example.webshop.ProductController.handle(ProductController.java:126)
+	at com.example.webshop.ProductControllerTest.testHandle_CampaignServiceInterrupted(ProductControllerTest.java:179)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:218)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:214)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:139)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
 [main] INFO com.example.webshop.ProductController - Received request: GET /products
 [main] WARN com.example.webshop.ProductController - Error fetching campaigns
 java.io.IOException: Network Error
 	at com.example.webshop.ProductController.fetchCampaigns(ProductController.java:256)
 	at com.example.webshop.ProductController.handle(ProductController.java:126)
-	at com.example.webshop.ProductControllerTest.testHandle_CampaignServiceFailure(ProductControllerTest.java:121)
+	at com.example.webshop.ProductControllerTest.testHandle_CampaignServiceFailure(ProductControllerTest.java:154)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
@@ -1274,7 +1586,7 @@ java.io.IOException: Network Error
 java.sql.SQLException: DB Error
 	at com.example.webshop.ProductRepository.findAll(ProductRepository.java:16)
 	at com.example.webshop.ProductController.handle(ProductController.java:125)
-	at com.example.webshop.ProductControllerTest.testHandle_RepositoryError(ProductControllerTest.java:99)
+	at com.example.webshop.ProductControllerTest.testHandle_RepositoryError(ProductControllerTest.java:132)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
@@ -1344,7 +1656,7 @@ java.sql.SQLException: DB Error
 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.068 s -- in com.example.webshop.ProductControllerTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 s -- in com.example.webshop.ProductControllerTest
 [INFO] Running com.example.webshop.OrderHistoryControllerTest
 java.util.concurrent.ExecutionException: java.lang.RuntimeException: Service down
 	at java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:396)
@@ -1423,14 +1735,14 @@ java.util.concurrent.ExecutionException: java.lang.RuntimeException: Service dow
 Caused by: java.lang.RuntimeException: Service down
 	at com.example.webshop.OrderHistoryControllerTest.testHandle_ServiceFailure_Returns500(OrderHistoryControllerTest.java:74)
 	... 69 more
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.126 s -- in com.example.webshop.OrderHistoryControllerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 s -- in com.example.webshop.OrderHistoryControllerTest
 [INFO] Running com.example.webshop.WebshopApplicationTest
 [main] INFO com.example.webshop.WebshopApplication - Received request: POST /login
 [main] WARN com.example.webshop.WebshopApplication - Login failed for user: testuser
 [main] INFO com.example.webshop.WebshopApplication - Received request: POST /login
 [main] INFO com.example.webshop.WebshopApplication - Received request: GET /login
 [main] INFO com.example.webshop.WebshopApplication - Received request: POST /login
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s -- in com.example.webshop.WebshopApplicationTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 s -- in com.example.webshop.WebshopApplicationTest
 [INFO] Running com.example.webshop.OrderControllerTest
 java.util.concurrent.CompletionException: java.lang.RuntimeException: Service down
 	at java.base/java.util.concurrent.CompletableFuture.reportJoin(CompletableFuture.java:413)
@@ -1509,15 +1821,93 @@ java.util.concurrent.CompletionException: java.lang.RuntimeException: Service do
 Caused by: java.lang.RuntimeException: Service down
 	at com.example.webshop.OrderControllerTest.testHandle_PostOrder_Failure(OrderControllerTest.java:70)
 	... 69 more
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 s -- in com.example.webshop.OrderControllerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s -- in com.example.webshop.OrderControllerTest
 [INFO] Running com.example.webshop.OrderServicePactTest
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.456 s -- in com.example.webshop.OrderServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.282 s -- in com.example.webshop.OrderServicePactTest
 [INFO] Running com.example.webshop.SecurityFilterTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.506 s -- in com.example.webshop.SecurityFilterTest
+com.auth0.jwt.exceptions.JWTDecodeException: The token was expected to have 3 parts, but got 0.
+	at com.auth0.jwt.TokenUtils.wrongNumberOfParts(TokenUtils.java:45)
+	at com.auth0.jwt.TokenUtils.splitToken(TokenUtils.java:23)
+	at com.auth0.jwt.JWTDecoder.<init>(JWTDecoder.java:37)
+	at com.auth0.jwt.JWTDecoder.<init>(JWTDecoder.java:33)
+	at com.auth0.jwt.JWT.decode(JWT.java:52)
+	at com.example.webshop.SecurityFilter.doFilter(SecurityFilter.java:56)
+	at com.example.webshop.SecurityFilterTest.doFilter_invalidToken_returns401(SecurityFilterTest.java:126)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:218)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:214)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:139)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.141 s -- in com.example.webshop.SecurityFilterTest
 [INFO] Running com.example.webshop.WebshopPactProviderTest
 Test Server started on port 8080
 [main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Webshop is up':SETUP
+[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
 
 Verifying a pact between WarehouseService and WebshopService
   [Using File ../pacts/WarehouseService-WebshopService.json]
@@ -1531,7 +1921,6 @@ Mock Repository: Updated stock for PM ID 1 to 50
     returns a response which
       has status code 200 (OK)
       has a matching body (OK)
-[main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
 [main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Webshop is up':SETUP
 
 Verifying a pact between ProductManagementSystem and WebshopService
@@ -1549,13 +1938,13 @@ Mock Repository: Upserted product Pact Book
       has status code 200 (OK)
       has a matching body (OK)
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.415 s -- in com.example.webshop.WebshopPactProviderTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.277 s -- in com.example.webshop.WebshopPactProviderTest
 [INFO] Running com.example.webshop.ProductRepositoryTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.445 s -- in com.example.webshop.ProductRepositoryTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.319 s -- in com.example.webshop.ProductRepositoryTest
 [INFO] 
 [INFO] Results:
 [INFO] 
-[INFO] Tests run: 28, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 41, Failures: 0, Errors: 0, Skipped: 0
 [INFO] 
 [INFO] 
 [INFO] --- jacoco:0.8.11:report (report) @ webshop ---
@@ -1568,8 +1957,8 @@ Mock Repository: Upserted product Pact Book
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  13.179 s
-[INFO] Finished at: 2026-01-09T17:19:07Z
+[INFO] Total time:  9.216 s
+[INFO] Finished at: 2026-01-09T19:42:02Z
 [INFO] ------------------------------------------------------------------------
 Coverage report for webshop generated at: applications/webshop/target/site/jacoco/index.html
 Running tests for loyaltyService...
@@ -1613,16 +2002,16 @@ Running tests for loyaltyService...
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.loyalty.BonusRuleEngineTest
-[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.101 s -- in com.example.loyalty.BonusRuleEngineTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.242 s -- in com.example.loyalty.BonusRuleEngineTest
 [INFO] Running com.example.loyalty.OrderItemTest
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.example.loyalty.OrderItemTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.example.loyalty.OrderItemTest
 [INFO] Running com.example.loyalty.LoyaltyApplicationTest
 WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.382 s -- in com.example.loyalty.LoyaltyApplicationTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.167 s -- in com.example.loyalty.LoyaltyApplicationTest
 [INFO] Running com.example.loyalty.LoyaltyControllerTest
 LoyaltyController received GET /unknown
 LoyaltyController received POST /api/loyalty/calculate
@@ -1635,13 +2024,13 @@ LoyaltyController received GET /
 LoyaltyController received POST /api/loyalty/redeem
 LoyaltyController received GET /api/loyalty/rules
 LoyaltyController received POST /api/loyalty/admin/toggle-bonus
-[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.691 s -- in com.example.loyalty.LoyaltyControllerTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.750 s -- in com.example.loyalty.LoyaltyControllerTest
 [INFO] Running com.example.loyalty.LoyaltyProgramTest
 Accrued 93 points for customer shopper3
 Accrued 100 points for customer shopper1
 Redeemed 50 points for customer shopper1
 Accrued 90 points for customer shopper2
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.060 s -- in com.example.loyalty.LoyaltyProgramTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.046 s -- in com.example.loyalty.LoyaltyProgramTest
 [INFO] Running com.example.loyalty.LoyaltyPactProviderTest
 Test Server started on port 8084
 [main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Loyalty Service is up':SETUP
@@ -1690,7 +2079,7 @@ LoyaltyController received POST /api/loyalty/accrue
       has status code 200 (OK)
       has a matching body (OK)
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.336 s -- in com.example.loyalty.LoyaltyPactProviderTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.348 s -- in com.example.loyalty.LoyaltyPactProviderTest
 [INFO] Running com.example.loyalty.LoyaltyRepositoryTest
 LoyaltyRepository: Adding 200 points to user2
 LoyaltyRepository: addPoints finished for user2
@@ -1717,12 +2106,12 @@ LoyaltyRepository: Adding 100 points to userA
 LoyaltyRepository: addPoints finished for userA
 LoyaltyRepository: Adding 200 points to userB
 LoyaltyRepository: addPoints finished for userB
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.447 s -- in com.example.loyalty.LoyaltyRepositoryTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.483 s -- in com.example.loyalty.LoyaltyRepositoryTest
 [INFO] Running com.example.loyalty.PointServiceTest
 Redeemed 50 points for customer user1
 Failed to redeem 50 points for customer user1
 Accrued 100 points for customer user1
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 s -- in com.example.loyalty.PointServiceTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in com.example.loyalty.PointServiceTest
 [INFO] Running com.example.loyalty.SecurityFilterTest
 java.lang.Exception: Invalid signature
 	at com.example.loyalty.SecurityFilterTest.testInvalidToken_ApiRequest(SecurityFilterTest.java:90)
@@ -1937,7 +2326,7 @@ java.lang.Exception: Invalid signature
 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.167 s -- in com.example.loyalty.SecurityFilterTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.160 s -- in com.example.loyalty.SecurityFilterTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -1954,8 +2343,8 @@ java.lang.Exception: Invalid signature
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  7.399 s
-[INFO] Finished at: 2026-01-09T17:19:16Z
+[INFO] Total time:  12.809 s
+[INFO] Finished at: 2026-01-09T19:42:17Z
 [INFO] ------------------------------------------------------------------------
 Coverage report for loyaltyService generated at: applications/loyaltyService/target/site/jacoco/index.html
 --- Aggregating Coverage Reports ---

@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: code-coverage-threshold
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-097
+      type: quality
+      description: "All applications must maintain a minimum code coverage of 80%."
+      priority: high
+      validation_policy: "policies/check_code_coverage.rego"
+      tags:
+        - Quality
+        - Testing

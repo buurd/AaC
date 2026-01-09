@@ -4,18 +4,20 @@ This document summarizes the "Architecture as Code" approach we have implemented
 
 ## 1. The Architecture
 
-We are building a landscape consisting of four distinct software systems following the **C4 Model**.
+We are building a landscape consisting of five distinct software systems following the **C4 Model**.
 
 ### System Context (Level 1)
 *   **Webshop System**: The customer-facing e-commerce platform.
 *   **Product Management System**: The internal system for managing product information (e.g., price, name).
 *   **Warehouse Service**: The internal system for managing physical inventory and deliveries.
 *   **Order Service**: The internal system for managing customer orders.
+*   **Loyalty Service**: The internal system for managing customer bonus points.
 *   **Observability System**: The infrastructure system for log aggregation and monitoring.
 *   **Customer**: A person who uses the Webshop.
 *   **Product Manager**: A person who manages products via the PM System.
 *   **Warehouse Staff**: A person who manages inventory via the Warehouse Service.
 *   **Order Manager**: A person who manages orders via the Order Service.
+*   **Loyalty Administrator**: A person who manages the loyalty program.
 *   **Developer**: A person who monitors the system logs.
 
 ### Containers (Level 2)
@@ -37,11 +39,15 @@ The landscape is composed of independent containers, deployed to **Kubernetes**,
 *   **Order WebServer**: A Java application (Java 21) handling order management traffic.
 *   **Order Database**: A dedicated PostgreSQL database for the Order Service.
 
-**5. Infrastructure & Security**
+**5. Loyalty Service**
+*   **Loyalty WebServer**: A Java application (Java 21) handling loyalty logic.
+*   **Loyalty Database**: A dedicated PostgreSQL database for the Loyalty Service.
+
+**6. Infrastructure & Security**
 *   **API Gateway / Reverse Proxy**: An **Nginx** Ingress Controller handling SSL termination and routing.
 *   **Keycloak IAM**: A centralized Identity and Access Management server handling authentication and authorization.
 
-**6. Observability**
+**7. Observability**
 *   **Loki**: Log aggregation system.
 *   **Promtail**: Log collector agent (DaemonSet).
 *   **Grafana**: Visualization dashboard.
@@ -50,6 +56,7 @@ The landscape is composed of independent containers, deployed to **Kubernetes**,
 *   **Product Sync**: The **Product Management System** sends product updates (name, price, etc.) to both the **Webshop** and the **Warehouse Service**.
 *   **Stock Sync**: The **Warehouse Service** sends stock level updates to the **Webshop** when inventory changes.
 *   **Stock Reservation**: The **Order Service** reserves stock in the **Warehouse Service** when an order is placed.
+*   **Loyalty Integration**: The **Order Service** and **Webshop** communicate with the **Loyalty Service** to accrue and redeem points.
 
 ### Components (Level 3)
 Inside the Web Server containers, we have defined the following components:
@@ -57,9 +64,10 @@ Inside the Web Server containers, we have defined the following components:
 *   **Webshop WebServer**:
     1.  **ProductController**: Handles product listing and "Add to Cart" functionality.
     2.  **ShoppingCartController**: Manages the client-side shopping cart view.
-    3.  **ProductSyncController**: Handles product updates from PM.
-    4.  **StockSyncController**: Handles stock updates from Warehouse.
-    5.  **ProductRepository**: Manages data access to the Webshop Database.
+    3.  **OrderHistoryController**: Handles customer order history.
+    4.  **ProductSyncController**: Handles product updates from PM.
+    5.  **StockSyncController**: Handles stock updates from Warehouse.
+    6.  **ProductRepository**: Manages data access to the Webshop Database.
 
 *   **PM WebServer**:
     1.  **ProductController**: Handles CRUD operations.
@@ -77,6 +85,13 @@ Inside the Web Server containers, we have defined the following components:
     1.  **OrderController**: Handles order placement and management.
     2.  **StockReservationService**: Handles stock reservation with Warehouse.
     3.  **OrderRepository**: Manages data access to the Order Database.
+    4.  **LoyaltyIntegrationService**: Handles interaction with Loyalty Service.
+
+*   **Loyalty WebServer**:
+    1.  **LoyaltyController**: Handles API and Dashboard requests.
+    2.  **PointService**: Manages point accrual and redemption.
+    3.  **BonusRuleEngine**: Calculates bonus points based on rules.
+    4.  **LoyaltyRepository**: Manages data access to the Loyalty Database.
 
 ### Code (Level 4)
 All systems implement a shared domain concept:
@@ -88,7 +103,7 @@ All systems implement a shared domain concept:
 
 We define our requirements as code (YAML), allowing us to trace them from high-level goals down to specific code implementations. The system now covers over 55 requirements, including:
 *   **Architectural**: Defining the structure of all systems, their containers, and components.
-*   **Functional**: Specifying user-facing features (CRUD in PM, Delivery Management in Warehouse, **Shopping Cart in Webshop**, **Order Management**) and system integrations (Product Sync, Stock Sync, Stock Reservation).
+*   **Functional**: Specifying user-facing features (CRUD in PM, Delivery Management in Warehouse, **Shopping Cart in Webshop**, **Order Management**, **Loyalty Program**) and system integrations.
 *   **Runtime**: Ensuring services are live and accessible.
 *   **Security**: Mandating HTTPS, Reverse Proxy, and IAM (Keycloak).
 *   **Observability**: Mandating log aggregation and monitoring (Loki, Promtail, Grafana).
@@ -108,12 +123,13 @@ We have implemented a robust security architecture:
 
 ### B. Identity and Access Management (IAM)
 *   **Keycloak**: Used as the centralized IdP.
-*   **Authentication**: Users (Product Managers, Warehouse Staff, Order Managers) authenticate against Keycloak via the Reverse Proxy.
+*   **Authentication**: Users (Product Managers, Warehouse Staff, Order Managers, Loyalty Admins) authenticate against Keycloak via the Reverse Proxy.
 *   **Authorization**: Services enforce **Role-Based Access Control (RBAC)** using JWT tokens.
     *   **PM System**: Requires `product-manager` role.
     *   **Warehouse**: Requires `warehouse-staff` role.
     *   **Order Service**: Requires `order-manager` role.
     *   **Webshop Ordering**: Requires `customer` role.
+    *   **Loyalty Service**: Requires `loyalty-admin` role for dashboard.
 *   **Service-to-Service Security**: Internal synchronization calls use **Client Credentials Flow** to obtain service account tokens, ensuring secure M2M communication.
 
 ---
@@ -121,7 +137,7 @@ We have implemented a robust security architecture:
 ## 4. Observability Architecture
 
 We have implemented a centralized logging and monitoring stack:
-*   **Log Aggregation**: **Promtail** collects logs from all Kubernetes pods (Webshop, PM, Warehouse, Order, Nginx, Postgres) and pushes them to **Loki**.
+*   **Log Aggregation**: **Promtail** collects logs from all Kubernetes pods (Webshop, PM, Warehouse, Order, Loyalty, Nginx, Postgres) and pushes them to **Loki**.
 *   **Visualization**: **Grafana** queries Loki to display log volumes and details.
 *   **Dashboards**: A custom dashboard provides insights into log volume per container and log level (INFO, ERROR, etc.), with filtering capabilities.
 *   **Standardization**: All Java applications use **SLF4J** to produce structured logs that are parsed by Promtail for better analysis.
@@ -142,7 +158,7 @@ We use **Open Policy Agent (OPA)** to validate our architecture model and code a
 *   **Kubernetes Deployment**: Validates that the Kubernetes manifests (`infrastructure/k8s`) contain all required Deployments and Services as defined in `REQ-078`.
 
 ### B. Runtime Verification
-We spin up the entire landscape (4 Apps, 4 DBs, 1 Proxy, 1 Keycloak, Observability Stack) in Docker/Kubernetes to verify the system works as expected.
+We spin up the entire landscape (5 Apps, 5 DBs, 1 Proxy, 1 Keycloak, Observability Stack) in Docker/Kubernetes to verify the system works as expected.
 *   **Infrastructure**: Starts all databases, Keycloak, Nginx, and Observability tools.
 *   **Deployment**: Starts application containers with security configuration.
 *   **Functional Check**: Verifies HTTP endpoints and redirects (302 Found) for secured resources.
@@ -174,5 +190,5 @@ We have successfully scaled our **"Architecture as Code"** approach to a secure,
 *   **Consistency**: We introduced Design Guidelines to maintain UI consistency across systems.
 *   **Security**: We implemented a production-like security stack with Reverse Proxy and Keycloak IAM.
 *   **Observability**: We added a full logging stack to monitor the health and activity of all services.
-*   **New Features**: Added Order Service, Stock Reservation flows, and Product Variations.
+*   **New Features**: Added Order Service, Stock Reservation flows, Product Variations, and Loyalty Program.
 *   **Verification**: Our automated pipeline now validates the integrity of a distributed system, ensuring that the implementation never drifts from the architectural intent.

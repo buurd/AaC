@@ -18,7 +18,7 @@ public class StockSyncController implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-<span class="pc bpc" id="L21" title="1 of 2 branches missed.">        if (&quot;POST&quot;.equalsIgnoreCase(exchange.getRequestMethod())) {</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        if (&quot;POST&quot;.equalsIgnoreCase(exchange.getRequestMethod())) {</span>
             try {
 <span class="fc" id="L23">                InputStream is = exchange.getRequestBody();</span>
 <span class="fc" id="L24">                String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);</span>
@@ -48,16 +48,16 @@ public class StockSyncController implements HttpHandler {
 <span class="fc" id="L48">                try (OutputStream os = exchange.getResponseBody()) {</span>
 <span class="fc" id="L49">                    os.write(response.getBytes());</span>
                 }
-<span class="nc" id="L51">            } catch (Exception e) {</span>
-<span class="nc" id="L52">                e.printStackTrace();</span>
-<span class="nc" id="L53">                String error = &quot;{\&quot;status\&quot;:\&quot;error\&quot;,\&quot;message\&quot;:\&quot;&quot; + e.getMessage() + &quot;\&quot;}&quot;;</span>
-<span class="nc" id="L54">                exchange.sendResponseHeaders(500, error.getBytes().length);</span>
-<span class="nc" id="L55">                try (OutputStream os = exchange.getResponseBody()) {</span>
-<span class="nc" id="L56">                    os.write(error.getBytes());</span>
+<span class="fc" id="L51">            } catch (Exception e) {</span>
+<span class="fc" id="L52">                e.printStackTrace();</span>
+<span class="fc" id="L53">                String error = &quot;{\&quot;status\&quot;:\&quot;error\&quot;,\&quot;message\&quot;:\&quot;&quot; + e.getMessage() + &quot;\&quot;}&quot;;</span>
+<span class="fc" id="L54">                exchange.sendResponseHeaders(500, error.getBytes().length);</span>
+<span class="fc" id="L55">                try (OutputStream os = exchange.getResponseBody()) {</span>
+<span class="fc" id="L56">                    os.write(error.getBytes());</span>
                 }
-<span class="pc" id="L58">            }</span>
+<span class="fc" id="L58">            }</span>
         } else {
-<span class="nc" id="L60">            exchange.sendResponseHeaders(405, -1);</span>
+<span class="fc" id="L60">            exchange.sendResponseHeaders(405, -1);</span>
         }
 <span class="fc" id="L62">    }</span>
 }

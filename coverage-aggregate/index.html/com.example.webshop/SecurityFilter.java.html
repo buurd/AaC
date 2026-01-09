@@ -66,7 +66,7 @@ public class SecurityFilter extends Filter {
             // Check Role (Client Role in resource_access)
             // Structure: resource_access -&gt; webshop-client -&gt; roles -&gt; [product-sync]
 <span class="fc" id="L68">            Map&lt;String, Object&gt; resourceAccess = jwt.getClaim(&quot;resource_access&quot;).asMap();</span>
-<span class="pc bpc" id="L69" title="1 of 2 branches missed.">            if (resourceAccess != null) {</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">            if (resourceAccess != null) {</span>
 <span class="fc" id="L70">                Map&lt;String, Object&gt; clientAccess = (Map&lt;String, Object&gt;) resourceAccess.get(&quot;webshop-client&quot;);</span>
 <span class="pc bpc" id="L71" title="1 of 2 branches missed.">                if (clientAccess != null) {</span>
 <span class="fc" id="L72">                    List&lt;String&gt; roles = (List&lt;String&gt;) clientAccess.get(&quot;roles&quot;);</span>
@@ -79,18 +79,18 @@ public class SecurityFilter extends Filter {
             
             // Also check Realm Roles just in case (though we mapped to client roles)
 <span class="fc" id="L81">            Map&lt;String, Object&gt; realmAccess = jwt.getClaim(&quot;realm_access&quot;).asMap();</span>
-<span class="pc bpc" id="L82" title="1 of 2 branches missed.">            if (realmAccess != null) {</span>
-<span class="nc" id="L83">                List&lt;String&gt; roles = (List&lt;String&gt;) realmAccess.get(&quot;roles&quot;);</span>
-<span class="nc bnc" id="L84" title="All 4 branches missed.">                if (roles != null &amp;&amp; roles.contains(requiredRole)) {</span>
-<span class="nc" id="L85">                    chain.doFilter(exchange);</span>
-<span class="nc" id="L86">                    return;</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">            if (realmAccess != null) {</span>
+<span class="fc" id="L83">                List&lt;String&gt; roles = (List&lt;String&gt;) realmAccess.get(&quot;roles&quot;);</span>
+<span class="pc bpc" id="L84" title="2 of 4 branches missed.">                if (roles != null &amp;&amp; roles.contains(requiredRole)) {</span>
+<span class="fc" id="L85">                    chain.doFilter(exchange);</span>
+<span class="fc" id="L86">                    return;</span>
                 }
             }
             
 <span class="fc" id="L90">            sendError(exchange, 403, &quot;Insufficient permissions&quot;);</span>
-<span class="nc" id="L91">        } catch (Exception e) {</span>
-<span class="nc" id="L92">            e.printStackTrace();</span>
-<span class="nc" id="L93">            sendError(exchange, 401, &quot;Invalid token: &quot; + e.getMessage());</span>
+<span class="fc" id="L91">        } catch (Exception e) {</span>
+<span class="fc" id="L92">            e.printStackTrace();</span>
+<span class="fc" id="L93">            sendError(exchange, 401, &quot;Invalid token: &quot; + e.getMessage());</span>
 <span class="fc" id="L94">        }</span>
 <span class="fc" id="L95">    }</span>
 

@@ -23,7 +23,7 @@ done
 cleanup() {
     echo
     echo "--- Cleaning up temporary files ---"
-    rm -f workspace.json project-files.json requirements.json implementation-input.json code-structure-input.json code-structure-files.json relation-input.json test-content-input.json test-files.json k8s-manifests.json k8s-validation-input.json
+    rm -f workspace.json project-files.json requirements.json implementation-input.json code-structure-input.json code-structure-files.json relation-input.json test-content-input.json test-files.json k8s-manifests.json k8s-validation-input.json coverage-input.json coverage-data.json
     rm -f structurizr/workspace.json
 
     echo "--- Stopping containers ---"
@@ -240,6 +240,7 @@ echo "Phase 1: Generating Contracts (Consumer Tests)..."
 for module in $MODULES; do
     if [ -d "applications/$module" ] && [ -f "applications/$module/pom.xml" ]; then
         echo "  Scanning $module for consumer tests..."
+        # Removed clean to preserve coverage data
         if ! docker run --rm \
             -u "$(id -u):$(id -g)" \
             -e HOME=/tmp \
@@ -250,7 +251,7 @@ for module in $MODULES; do
             -v /etc/passwd:/etc/passwd:ro \
             -v /etc/group:/etc/group:ro \
             -w /usr/src/mymaven \
-            maven:3.9.6-eclipse-temurin-21 mvn clean test -Dgroups=pact-consumer -DfailIfNoTests=false -Dmaven.repo.local=/tmp/.m2/repository; then
+            maven:3.9.6-eclipse-temurin-21 mvn test -Dgroups=pact-consumer -DfailIfNoTests=false -Dmaven.repo.local=/tmp/.m2/repository; then
             echo "🔴 Consumer Contract Tests Failed in $module"
             exit 1
         fi
@@ -261,6 +262,7 @@ echo "Phase 2: Verifying Contracts (Provider Tests)..."
 for module in $MODULES; do
     if [ -d "applications/$module" ] && [ -f "applications/$module/pom.xml" ]; then
         echo "  Scanning $module for provider tests..."
+        # Removed clean to preserve coverage data
         if ! docker run --rm \
             -u "$(id -u):$(id -g)" \
             -e HOME=/tmp \
@@ -271,7 +273,7 @@ for module in $MODULES; do
             -v /etc/passwd:/etc/passwd:ro \
             -v /etc/group:/etc/group:ro \
             -w /usr/src/mymaven \
-            maven:3.9.6-eclipse-temurin-21 mvn clean test -Dgroups=pact-provider -DfailIfNoTests=false -Dmaven.repo.local=/tmp/.m2/repository; then
+            maven:3.9.6-eclipse-temurin-21 mvn test -Dgroups=pact-provider -DfailIfNoTests=false -Dmaven.repo.local=/tmp/.m2/repository; then
             echo "🔴 Provider Contract Verification Failed in $module"
             exit 1
         fi
@@ -279,6 +281,74 @@ for module in $MODULES; do
 done
 
 echo "✅ Contract Validation Passed."
+
+# --- Code Coverage Validation ---
+echo
+echo "--- Running: Code Coverage Validation ---"
+# Generate coverage report (using Jacoco)
+for module in $MODULES; do
+    if [ -d "applications/$module" ] && [ -f "applications/$module/pom.xml" ]; then
+        echo "  Generating coverage for $module..."
+        # We run 'jacoco:report' to ensure the report is generated from the accumulated exec file.
+        if ! docker run --rm \
+            -u "$(id -u):$(id -g)" \
+            -e HOME=/tmp \
+            -e MAVEN_CONFIG=/tmp/.m2 \
+            -v "$(pwd)/applications/$module:/usr/src/mymaven" \
+            -v "$(pwd)/m2-cache:/tmp/.m2" \
+            -v /etc/passwd:/etc/passwd:ro \
+            -v /etc/group:/etc/group:ro \
+            -w /usr/src/mymaven \
+            maven:3.9.6-eclipse-temurin-21 mvn jacoco:report -Dmaven.repo.local=/tmp/.m2/repository > /dev/null; then
+             echo "🔴 Failed to generate coverage report for $module"
+             exit 1
+        fi
+    fi
+done
+
+# Extract coverage data and prepare input for OPA
+echo "  Extracting coverage data..."
+# We'll use a simple python script or similar to parse the XML/CSV report and create a JSON
+# For simplicity, let's assume we parse the index.html or csv. CSV is easier.
+# Jacoco CSV report is usually at target/site/jacoco/jacoco.csv
+
+echo "{" > coverage-data.json
+echo "  \"coverage_data\": {" >> coverage-data.json
+FIRST=1
+for module in $MODULES; do
+    CSV_FILE="applications/$module/target/site/jacoco/jacoco.csv"
+    if [ -f "$CSV_FILE" ]; then
+        # Calculate total instruction coverage
+        # CSV format: GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,...
+        # We sum up missed and covered instructions
+        STATS=$(awk -F, '{missed+=$4; covered+=$5} END {print missed, covered}' "$CSV_FILE")
+        MISSED=$(echo $STATS | cut -d' ' -f1)
+        COVERED=$(echo $STATS | cut -d' ' -f2)
+        TOTAL=$((MISSED + COVERED))
+
+        if [ "$TOTAL" -gt 0 ]; then
+            # Round to nearest integer to match HTML report behavior
+            PERCENTAGE=$(awk "BEGIN {printf \"%.0f\", 100 * $COVERED / $TOTAL}")
+        else
+            PERCENTAGE=0
+        fi
+
+        if [ "$FIRST" -eq 0 ]; then echo "," >> coverage-data.json; fi
+        echo "    \"$module\": { \"percentage\": $PERCENTAGE }" >> coverage-data.json
+        FIRST=0
+    else
+        echo "⚠️  No coverage report found for $module"
+    fi
+done
+echo "  }," >> coverage-data.json
+echo "  \"applications\": [\"webshop\", \"productManagementSystem\", \"warehouse\", \"orderService\", \"loyaltyService\"]" >> coverage-data.json
+echo "}" >> coverage-data.json
+
+mv coverage-data.json coverage-input.json
+
+# Run OPA check
+run_opa_validation "Code Coverage Validation" "/project/coverage-input.json" "/project/policies/check_code_coverage.rego" "data.check_code_coverage.deny"
+
 
 # --- Runtime Validation ---
 echo

@@ -56,6 +56,30 @@ class KeycloakTokenServiceTest {
     }
 
     @Test
+    void getAccessToken_cached() throws ExecutionException, InterruptedException {
+        // Arrange
+        String expectedToken = "access-token-123";
+        String jsonResponse = "{\"access_token\":\"" + expectedToken + "\",\"expires_in\":300}";
+        
+        HttpResponse<String> mockResponse = mock(HttpResponse.class);
+        when(mockResponse.statusCode()).thenReturn(200);
+        when(mockResponse.body()).thenReturn(jsonResponse);
+        when(mockHttpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenReturn(CompletableFuture.completedFuture(mockResponse));
+
+        // Act
+        String token1 = keycloakTokenService.getAccessToken().get();
+        String token2 = keycloakTokenService.getAccessToken().get();
+
+        // Assert
+        assertEquals(expectedToken, token1);
+        assertEquals(expectedToken, token2);
+        
+        // Should be called only once
+        verify(mockHttpClient, times(1)).sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandler.class));
+    }
+
+    @Test
     void getAccessToken_failure() {
         // Arrange
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
@@ -69,5 +93,22 @@ class KeycloakTokenServiceTest {
             keycloakTokenService.getAccessToken().get();
         });
         assertTrue(exception.getCause() instanceof RuntimeException);
+    }
+
+    @Test
+    void getAccessToken_invalidResponse() {
+        // Arrange
+        HttpResponse<String> mockResponse = mock(HttpResponse.class);
+        when(mockResponse.statusCode()).thenReturn(200);
+        when(mockResponse.body()).thenReturn("{}"); // Missing access_token
+        when(mockHttpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenReturn(CompletableFuture.completedFuture(mockResponse));
+
+        // Act & Assert
+        ExecutionException exception = assertThrows(ExecutionException.class, () -> {
+            keycloakTokenService.getAccessToken().get();
+        });
+        assertTrue(exception.getCause() instanceof RuntimeException);
+        assertEquals("Invalid response", exception.getCause().getMessage());
     }
 }

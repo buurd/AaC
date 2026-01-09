@@ -70,4 +70,58 @@ class ProductSyncControllerTest {
         verify(mockRepo).deleteByPmId(101);
         verify(mockExchange).sendResponseHeaders(eq(200), anyLong());
     }
+
+    @Test
+    void testHandleDelete_MissingId_Returns500() throws IOException {
+        // Arrange
+        ProductRepository mockRepo = mock(ProductRepository.class);
+        ProductSyncController controller = new ProductSyncController(mockRepo);
+        HttpExchange mockExchange = mock(HttpExchange.class);
+
+        when(mockExchange.getRequestMethod()).thenReturn("DELETE");
+        when(mockExchange.getRequestURI()).thenReturn(URI.create("/api/products/sync?foo=bar"));
+        when(mockExchange.getResponseBody()).thenReturn(new ByteArrayOutputStream());
+        when(mockExchange.getResponseHeaders()).thenReturn(new Headers());
+
+        // Act
+        controller.handle(mockExchange);
+
+        // Assert
+        verify(mockExchange).sendResponseHeaders(eq(500), anyLong());
+    }
+
+    @Test
+    void testHandle_MethodNotAllowed() throws IOException {
+        // Arrange
+        ProductRepository mockRepo = mock(ProductRepository.class);
+        ProductSyncController controller = new ProductSyncController(mockRepo);
+        HttpExchange mockExchange = mock(HttpExchange.class);
+
+        when(mockExchange.getRequestMethod()).thenReturn("GET");
+
+        // Act
+        controller.handle(mockExchange);
+
+        // Assert
+        verify(mockExchange).sendResponseHeaders(eq(405), anyLong());
+    }
+    
+    @Test
+    void testHandlePost_Exception_Returns500() throws IOException {
+        // Arrange
+        ProductRepository mockRepo = mock(ProductRepository.class);
+        ProductSyncController controller = new ProductSyncController(mockRepo);
+        HttpExchange mockExchange = mock(HttpExchange.class);
+
+        when(mockExchange.getRequestMethod()).thenReturn("POST");
+        when(mockExchange.getRequestBody()).thenThrow(new RuntimeException("Stream error"));
+        when(mockExchange.getResponseBody()).thenReturn(new ByteArrayOutputStream());
+        when(mockExchange.getResponseHeaders()).thenReturn(new Headers());
+
+        // Act
+        controller.handle(mockExchange);
+
+        // Assert
+        verify(mockExchange).sendResponseHeaders(eq(500), anyLong());
+    }
 }

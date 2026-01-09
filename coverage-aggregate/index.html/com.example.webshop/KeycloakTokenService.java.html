@@ -33,8 +33,8 @@ public class KeycloakTokenService implements TokenService {
 
     @Override
     public CompletableFuture&lt;String&gt; getAccessToken() {
-<span class="pc bpc" id="L36" title="3 of 4 branches missed.">        if (accessToken != null &amp;&amp; tokenExpiresAt &gt; System.currentTimeMillis() + 5000) {</span>
-<span class="nc" id="L37">            return CompletableFuture.completedFuture(accessToken);</span>
+<span class="pc bpc" id="L36" title="1 of 4 branches missed.">        if (accessToken != null &amp;&amp; tokenExpiresAt &gt; System.currentTimeMillis() + 5000) {</span>
+<span class="fc" id="L37">            return CompletableFuture.completedFuture(accessToken);</span>
         }
 
 <span class="fc" id="L40">        String requestBody = &quot;grant_type=client_credentials&amp;client_id=&quot; + clientId + &quot;&amp;client_secret=&quot; + clientSecret;</span>
@@ -50,7 +50,7 @@ public class KeycloakTokenService implements TokenService {
 <span class="fc bfc" id="L50" title="All 2 branches covered.">                    if (response.statusCode() == 200) {</span>
 <span class="fc" id="L51">                        String json = response.body();</span>
 <span class="fc" id="L52">                        int tokenStart = json.indexOf(&quot;\&quot;access_token\&quot;:\&quot;&quot;);</span>
-<span class="pc bpc" id="L53" title="1 of 2 branches missed.">                        if (tokenStart == -1) throw new RuntimeException(&quot;Invalid response&quot;);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">                        if (tokenStart == -1) throw new RuntimeException(&quot;Invalid response&quot;);</span>
 <span class="fc" id="L54">                        int tokenEnd = json.indexOf(&quot;\&quot;&quot;, tokenStart + 16);</span>
 <span class="fc" id="L55">                        String token = json.substring(tokenStart + 16, tokenEnd);</span>
 

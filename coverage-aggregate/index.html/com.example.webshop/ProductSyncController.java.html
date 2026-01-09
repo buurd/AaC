@@ -34,11 +34,11 @@ public class ProductSyncController implements HttpHandler {
 <span class="fc" id="L34">                repository.upsert(p);</span>
                 
 <span class="fc" id="L36">                sendResponse(exchange, 200, &quot;{\&quot;status\&quot;:\&quot;success\&quot;}&quot;);</span>
-<span class="nc" id="L37">            } catch (Exception e) {</span>
-<span class="nc" id="L38">                e.printStackTrace();</span>
-<span class="nc" id="L39">                sendResponse(exchange, 500, &quot;{\&quot;status\&quot;:\&quot;error\&quot;,\&quot;message\&quot;:\&quot;&quot; + e.getMessage() + &quot;\&quot;}&quot;);</span>
-<span class="pc" id="L40">            }</span>
-<span class="pc bpc" id="L41" title="1 of 2 branches missed.">        } else if (&quot;DELETE&quot;.equalsIgnoreCase(method)) {</span>
+<span class="fc" id="L37">            } catch (Exception e) {</span>
+<span class="fc" id="L38">                e.printStackTrace();</span>
+<span class="fc" id="L39">                sendResponse(exchange, 500, &quot;{\&quot;status\&quot;:\&quot;error\&quot;,\&quot;message\&quot;:\&quot;&quot; + e.getMessage() + &quot;\&quot;}&quot;);</span>
+<span class="fc" id="L40">            }</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        } else if (&quot;DELETE&quot;.equalsIgnoreCase(method)) {</span>
             try {
 <span class="fc" id="L43">                String query = exchange.getRequestURI().getQuery();</span>
 <span class="fc" id="L44">                System.out.println(&quot;Received DELETE query: &quot; + query);</span>
@@ -47,12 +47,12 @@ public class ProductSyncController implements HttpHandler {
 <span class="fc" id="L47">                repository.deleteByPmId(pmId);</span>
                 
 <span class="fc" id="L49">                sendResponse(exchange, 200, &quot;{\&quot;status\&quot;:\&quot;deleted\&quot;}&quot;);</span>
-<span class="nc" id="L50">            } catch (Exception e) {</span>
-<span class="nc" id="L51">                e.printStackTrace();</span>
-<span class="nc" id="L52">                sendResponse(exchange, 500, &quot;{\&quot;status\&quot;:\&quot;error\&quot;,\&quot;message\&quot;:\&quot;&quot; + e.getMessage() + &quot;\&quot;}&quot;);</span>
-<span class="pc" id="L53">            }</span>
+<span class="fc" id="L50">            } catch (Exception e) {</span>
+<span class="fc" id="L51">                e.printStackTrace();</span>
+<span class="fc" id="L52">                sendResponse(exchange, 500, &quot;{\&quot;status\&quot;:\&quot;error\&quot;,\&quot;message\&quot;:\&quot;&quot; + e.getMessage() + &quot;\&quot;}&quot;);</span>
+<span class="fc" id="L53">            }</span>
         } else {
-<span class="nc" id="L55">            exchange.sendResponseHeaders(405, -1); // Method Not Allowed</span>
+<span class="fc" id="L55">            exchange.sendResponseHeaders(405, -1); // Method Not Allowed</span>
         }
 <span class="fc" id="L57">    }</span>
 
@@ -67,13 +67,13 @@ public class ProductSyncController implements HttpHandler {
 
     private int parseIdFromQuery(String query) {
 <span class="pc bpc" id="L69" title="1 of 2 branches missed.">        if (query == null) throw new IllegalArgumentException(&quot;No query parameters&quot;);</span>
-<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        for (String param : query.split(&quot;&amp;&quot;)) {</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        for (String param : query.split(&quot;&amp;&quot;)) {</span>
 <span class="fc" id="L71">            String[] pair = param.split(&quot;=&quot;);</span>
-<span class="pc bpc" id="L72" title="2 of 4 branches missed.">            if (pair.length == 2 &amp;&amp; &quot;id&quot;.equals(pair[0])) {</span>
+<span class="pc bpc" id="L72" title="1 of 4 branches missed.">            if (pair.length == 2 &amp;&amp; &quot;id&quot;.equals(pair[0])) {</span>
 <span class="fc" id="L73">                return Integer.parseInt(pair[1]);</span>
             }
         }
-<span class="nc" id="L76">        throw new IllegalArgumentException(&quot;No id parameter found&quot;);</span>
+<span class="fc" id="L76">        throw new IllegalArgumentException(&quot;No id parameter found&quot;);</span>
     }
 
     // Very basic JSON parser for flat object

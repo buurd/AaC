@@ -50,26 +50,28 @@ public class KeycloakTokenService implements TokenService {
                              throw new RuntimeException("Invalid JSON response: missing access_token");
                         }
                         int tokenEnd = json.indexOf("\"", tokenStart + 16);
+                        if (tokenEnd == -1) {
+                             throw new RuntimeException("Invalid JSON response: unterminated access_token");
+                        }
                         String token = json.substring(tokenStart + 16, tokenEnd);
 
                         int expiresStart = json.indexOf("\"expires_in\":");
-                        if (expiresStart == -1) {
-                             // Default expiry if not found
-                             this.accessToken = token;
-                             this.tokenExpiresAt = System.currentTimeMillis() + (300 * 1000);
-                             return token;
-                        }
-                        int expiresEnd = json.indexOf(",", expiresStart);
-                        if (expiresEnd == -1) {
-                            // Try finding closing brace if it's the last element
-                            expiresEnd = json.indexOf("}", expiresStart);
-                        }
-                        
                         long expiresIn = 300; // Default
-                        try {
-                            expiresIn = Long.parseLong(json.substring(expiresStart + 13, expiresEnd).trim());
-                        } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-                            System.err.println("Error parsing expires_in: " + e.getMessage());
+                        
+                        if (expiresStart != -1) {
+                            int expiresEnd = json.indexOf(",", expiresStart);
+                            if (expiresEnd == -1) {
+                                // Try finding closing brace if it's the last element
+                                expiresEnd = json.indexOf("}", expiresStart);
+                            }
+                            
+                            if (expiresEnd != -1) {
+                                try {
+                                    expiresIn = Long.parseLong(json.substring(expiresStart + 13, expiresEnd).trim());
+                                } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
+                                    System.err.println("Error parsing expires_in: " + e.getMessage());
+                                }
+                            }
                         }
 
                         this.accessToken = token;

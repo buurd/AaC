@@ -15,6 +15,9 @@ workspace "My System" "My System Description" {
         orderManager = person "Order Manager" "A manager of orders." {
             tags "Person" "Logical"
         }
+        loyaltyAdministrator = person "Loyalty Administrator" "A manager of the loyalty program." {
+            tags "Person" "Logical"
+        }
         developer = person "Developer" "A software developer." {
             tags "Person" "Logical"
         }
@@ -264,6 +267,9 @@ workspace "My System" "My System Description" {
         orderManager -> orderService "Uses" {
             tags "Logical"
         }
+        loyaltyAdministrator -> loyaltyService "Uses" {
+            tags "Logical"
+        }
         developer -> observability "Monitors logs via" {
             tags "Logical"
         }
@@ -309,6 +315,9 @@ workspace "My System" "My System Description" {
             tags "Infrastructure"
         }
         orderManager -> reverseProxy "Uses (HTTPS)" {
+            tags "Infrastructure"
+        }
+        loyaltyAdministrator -> reverseProxy "Uses (HTTPS)" {
             tags "Infrastructure"
         }
         developer -> grafana "Views logs in" {
@@ -376,6 +385,9 @@ workspace "My System" "My System Description" {
             tags "Security"
         }
         orderManager -> keycloakContainer "Authenticates with" {
+            tags "Security"
+        }
+        loyaltyAdministrator -> keycloakContainer "Authenticates with" {
             tags "Security"
         }
         customer -> keycloak "Registers with" {

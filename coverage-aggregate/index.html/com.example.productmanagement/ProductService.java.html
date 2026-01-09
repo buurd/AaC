@@ -250,8 +250,8 @@ public class ProductService {
 
 <span class="fc" id="L251">        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())</span>
 <span class="fc" id="L252">                .thenAccept(response -&gt; {</span>
-<span class="pc bpc" id="L253" title="1 of 2 branches missed.">                    if (response.statusCode() != 200) {</span>
-<span class="nc" id="L254">                        System.err.println(&quot;Failed to sync to &quot; + url + &quot;. Status: &quot; + response.statusCode() + &quot; Body: &quot; + response.body());</span>
+<span class="fc bfc" id="L253" title="All 2 branches covered.">                    if (response.statusCode() != 200) {</span>
+<span class="fc" id="L254">                        System.err.println(&quot;Failed to sync to &quot; + url + &quot;. Status: &quot; + response.statusCode() + &quot; Body: &quot; + response.body());</span>
                     } else {
 <span class="fc" id="L256">                        System.out.println(&quot;Synced to &quot; + url + &quot;. Response: &quot; + response.body());</span>
                     }
