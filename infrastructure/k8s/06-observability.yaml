@@ -79,7 +79,7 @@ spec:
     spec:
       containers:
         - name: loki
-          image: grafana/loki:2.9.4
+          image: grafana/loki:3.3.2
           ports:
             - containerPort: 3100
           args:
@@ -132,7 +132,7 @@ spec:
       serviceAccountName: promtail-sa
       containers:
         - name: promtail
-          image: grafana/promtail:2.9.4
+          image: grafana/promtail:3.3.3
           args:
             - -config.file=/etc/promtail/config.yml
           volumeMounts:

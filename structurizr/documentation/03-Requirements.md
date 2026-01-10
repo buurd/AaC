@@ -115,6 +115,7 @@ The system includes comprehensive monitoring capabilities.
 
 *   **Contract Testing**: All inter-system integrations are verified using Pact contract tests (**REQ-059**).
 *   **Unit Testing**: Critical business logic is verified using isolated unit tests (**REQ-077**).
+*   **Code Coverage**: All applications must maintain a minimum code coverage of 80% (**REQ-097**).
 
 ---
 

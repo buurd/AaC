@@ -156,6 +156,7 @@ We use **Open Policy Agent (OPA)** to validate our architecture model and code a
 *   **Security**: Scans test code to ensure no insecure `http://` URLs are used.
 *   **Contract Verification**: Checks that all integration requirements have a corresponding Pact contract file.
 *   **Kubernetes Deployment**: Validates that the Kubernetes manifests (`infrastructure/k8s`) contain all required Deployments and Services as defined in `REQ-078`.
+*   **Code Coverage**: Validates that all applications meet the minimum code coverage threshold of 80% as defined in `REQ-097`.
 
 ### B. Runtime Verification
 We spin up the entire landscape (5 Apps, 5 DBs, 1 Proxy, 1 Keycloak, Observability Stack) in Docker/Kubernetes to verify the system works as expected.

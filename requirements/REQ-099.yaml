@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: RequirementSet
+metadata:
+  name: vulnerability-scanning
+  version: "1.0"
+spec:
+  requirements:
+    - id: REQ-099
+      type: security
+      description: "All container images used in the system, including infrastructure components and custom applications, must be scanned for known vulnerabilities (CVEs). The build process must fail if any Critical severity vulnerabilities are detected."
+      priority: critical
+      validation_policy: "policies/check_vulnerability_scan.rego"
+      tags:
+        - Security
+        - Compliance

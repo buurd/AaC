@@ -203,6 +203,12 @@ run_opa_validation "HTTPS Usage Validation" "/project/test-content-input.json" "
 run_opa_validation "Pact Verification Validation" "/project/implementation-input.json" "/project/policies/check_pact_verification.rego" "data.integration.pact.violation"
 run_opa_validation "Kubernetes Deployment Validation" "/project/k8s-validation-input.json" "/project/policies/check_k8s_deployment.rego" "data.k8s.deployment.violation"
 
+# --- Vulnerability Scanning ---
+echo
+echo "--- Running: Vulnerability Scanning ---"
+chmod +x scan-vulnerabilities.sh
+./scan-vulnerabilities.sh
+
 # --- Unit Validation ---
 echo
 echo "--- Running: Unit Validation ---"

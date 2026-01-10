@@ -66,7 +66,7 @@ spec:
           command: ['sh', '-c', "until nslookup keycloak-db; do echo waiting for keycloak-db; sleep 2; done"]
       containers:
         - name: keycloak
-          image: quay.io/keycloak/keycloak:23.0.7
+          image: quay.io/keycloak/keycloak:24.0.0
           args: ["start-dev", "--import-realm"]
           env:
             - name: KC_DB
