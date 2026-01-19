@@ -171,7 +171,7 @@ docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd)/structurizr:/usr/local/structu
 mv -f structurizr/workspace.json workspace.json
 
 echo "Step 2: Generating file system view..."
-find . -path ./.git -prune -o -type f -print | sed 's|^\./||' | jq -R . | jq -s . > project-files.json
+find . -type d \( -path ./.git -o -path ./production-data -o -path ./m2-cache -o -path ./logs -o -name target \) -prune -o -type f -print | sed 's|^\./||' | jq -R . | jq -s . > project-files.json
 
 echo "Step 3: Aggregating requirements..."
 docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/workdir" mikefarah/yq eval-all -o=json '. as $doc ireduce ({}; .requirements += [$doc])' requirements/*.yaml > requirements.json
@@ -213,7 +213,18 @@ chmod +x scan-vulnerabilities.sh
 echo
 echo "--- Running: Unit Validation ---"
 mkdir -p m2-cache
+
+# Fix permissions for m2-cache (in case it was created by root in run-webshop.sh)
+docker run --rm -v "$(pwd):/workdir" busybox chown -R $(id -u):$(id -g) /workdir/m2-cache
+
 MODULES="webshop productManagementSystem warehouse orderService loyaltyService"
+
+# Clean up target directories to avoid permission issues
+for module in $MODULES; do
+    if [ -d "applications/$module" ]; then
+         docker run --rm -v "$(pwd)/applications/$module:/usr/src/mymaven" maven:3.9.6-eclipse-temurin-21 rm -rf /usr/src/mymaven/target
+    fi
+done
 
 for module in $MODULES; do
     if [ -d "applications/$module" ] && [ -f "applications/$module/pom.xml" ]; then
@@ -503,7 +514,6 @@ ORDER_CONTAINER_ID=$(docker run -d --network $NETWORK_NAME --name order-service 
     -v "$(pwd)/applications/orderService/target:/app" \
     -e DB_URL=jdbc:postgresql://db_order:5432/postgres \
     -e DB_USER=postgres \
-    -e DB_PASSWORD=postgres \
     -e WAREHOUSE_RESERVE_URL=http://warehouse-demo:8002/api/stock/reserve \
     -e JWKS_URL=http://keycloak:8080/realms/webshop-realm/protocol/openid-connect/certs \
     -e ISSUER_URL=https://reverse-proxy:8446/realms/webshop-realm \

@@ -3,6 +3,10 @@ Step 1: Exporting Structurizr DSL to JSON...
 Step 2: Generating file system view...
 Step 3: Aggregating requirements...
 Step 4: Combining inputs for validations...
+find: ‘./production-data/webshop-db’: Åtkomst nekas
+find: ‘./production-data/pm-db’: Åtkomst nekas
+find: ‘./production-data/warehouse-db’: Åtkomst nekas
+find: ‘./production-data/keycloak-db’: Åtkomst nekas
 Step 5: Parsing Kubernetes manifests...
 Step 6: Combining inputs for K8s validation...
 
@@ -80,6 +84,14 @@ Scan complete. Full report available at logs/trivy-report.txt
 ✅ No critical vulnerabilities found.
 
 --- Running: Unit Validation ---
+Unable to find image 'busybox:latest' locally
+latest: Pulling from library/busybox
+e59838ecfec5: Pulling fs layer
+e59838ecfec5: Verifying Checksum
+e59838ecfec5: Download complete
+e59838ecfec5: Pull complete
+Digest: sha256:2383baad1860bbe9d8a7a843775048fd07d8afe292b94bd876df64a69aae7cb1
+Status: Downloaded newer image for busybox:latest
   Running unit tests for webshop...
 [INFO] Scanning for projects...
 [INFO] 
@@ -89,7 +101,6 @@ Scan complete. Full report available at logs/trivy-report.txt
 [INFO] --------------------------------[ jar ]---------------------------------
 [INFO] 
 [INFO] --- clean:3.2.0:clean (default-clean) @ webshop ---
-[INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ webshop ---
 [INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
@@ -119,11 +130,11 @@ Scan complete. Full report available at logs/trivy-report.txt
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.webshop.StockSyncControllerTest
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 java.lang.RuntimeException: Stream error
 	at com.example.webshop.StockSyncController.handle(StockSyncController.java:23)
 	at com.example.webshop.StockSyncControllerTest.testHandlePost_Exception_Returns500(StockSyncControllerTest.java:72)
@@ -197,9 +208,9 @@ java.lang.RuntimeException: Stream error
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
 Stock Sync received: {"pmId": 1, "stock": 100}
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.141 s -- in com.example.webshop.StockSyncControllerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.118 s -- in com.example.webshop.StockSyncControllerTest
 [INFO] Running com.example.webshop.KeycloakTokenServiceTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.210 s -- in com.example.webshop.KeycloakTokenServiceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.192 s -- in com.example.webshop.KeycloakTokenServiceTest
 [INFO] Running com.example.webshop.ProductSyncControllerTest
 ProductSyncController received POST request
 java.lang.RuntimeException: Stream error
@@ -357,7 +368,7 @@ java.lang.IllegalArgumentException: No id parameter found
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
 [INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s -- in com.example.webshop.ProductSyncControllerTest
 [INFO] Running com.example.webshop.ShoppingCartControllerTest
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s -- in com.example.webshop.ShoppingCartControllerTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s -- in com.example.webshop.ShoppingCartControllerTest
 [INFO] Running com.example.webshop.ProductControllerTest
 [main] INFO com.example.webshop.ProductController - Received request: GET /products
 [main] INFO com.example.webshop.ProductController - Received request: GET /products
@@ -586,7 +597,7 @@ java.sql.SQLException: DB Error
 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.294 s -- in com.example.webshop.ProductControllerTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.242 s -- in com.example.webshop.ProductControllerTest
 [INFO] Running com.example.webshop.OrderHistoryControllerTest
 java.util.concurrent.ExecutionException: java.lang.RuntimeException: Service down
 	at java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:396)
@@ -665,14 +676,14 @@ java.util.concurrent.ExecutionException: java.lang.RuntimeException: Service dow
 Caused by: java.lang.RuntimeException: Service down
 	at com.example.webshop.OrderHistoryControllerTest.testHandle_ServiceFailure_Returns500(OrderHistoryControllerTest.java:74)
 	... 69 more
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.049 s -- in com.example.webshop.OrderHistoryControllerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s -- in com.example.webshop.OrderHistoryControllerTest
 [INFO] Running com.example.webshop.WebshopApplicationTest
 [main] INFO com.example.webshop.WebshopApplication - Received request: POST /login
 [main] WARN com.example.webshop.WebshopApplication - Login failed for user: testuser
 [main] INFO com.example.webshop.WebshopApplication - Received request: POST /login
 [main] INFO com.example.webshop.WebshopApplication - Received request: GET /login
 [main] INFO com.example.webshop.WebshopApplication - Received request: POST /login
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s -- in com.example.webshop.WebshopApplicationTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in com.example.webshop.WebshopApplicationTest
 [INFO] Running com.example.webshop.OrderControllerTest
 java.util.concurrent.CompletionException: java.lang.RuntimeException: Service down
 	at java.base/java.util.concurrent.CompletableFuture.reportJoin(CompletableFuture.java:413)
@@ -830,9 +841,9 @@ com.auth0.jwt.exceptions.JWTDecodeException: The token was expected to have 3 pa
 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.071 s -- in com.example.webshop.SecurityFilterTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.934 s -- in com.example.webshop.SecurityFilterTest
 [INFO] Running com.example.webshop.ProductRepositoryTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.378 s -- in com.example.webshop.ProductRepositoryTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.385 s -- in com.example.webshop.ProductRepositoryTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -845,8 +856,8 @@ com.auth0.jwt.exceptions.JWTDecodeException: The token was expected to have 3 pa
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  6.187 s
-[INFO] Finished at: 2026-01-10T08:49:05Z
+[INFO] Total time:  5.773 s
+[INFO] Finished at: 2026-01-19T05:54:35Z
 [INFO] ------------------------------------------------------------------------
   Running unit tests for productManagementSystem...
 [INFO] Scanning for projects...
@@ -857,7 +868,6 @@ com.auth0.jwt.exceptions.JWTDecodeException: The token was expected to have 3 pa
 [INFO] --------------------------------[ jar ]---------------------------------
 [INFO] 
 [INFO] --- clean:3.2.0:clean (default-clean) @ productManagementSystem ---
-[INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ productManagementSystem ---
 [INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
@@ -897,7 +907,7 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 Exception getting access token: java.lang.RuntimeException: Network error
 Failed to get access token. Status: 401 Body: Unauthorized
 Exception getting access token: java.lang.RuntimeException: Failed to get access token
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.705 s -- in com.example.productmanagement.KeycloakTokenServiceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.353 s -- in com.example.productmanagement.KeycloakTokenServiceTest
 [INFO] Running com.example.productmanagement.ProductManagementApplicationTest
 [main] INFO com.example.productmanagement.ProductManagementApplication - Received request: POST /login
 [main] WARN com.example.productmanagement.ProductManagementApplication - Login failed for user: testuser. Status: 401. Body: null
@@ -906,9 +916,9 @@ Exception getting access token: java.lang.RuntimeException: Failed to get access
 [main] INFO com.example.productmanagement.ProductManagementApplication - Received request: POST /login
 [main] INFO com.example.productmanagement.ProductManagementApplication - Access Token obtained: true
 [main] INFO com.example.productmanagement.ProductManagementApplication - Redirecting to: /products
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.116 s -- in com.example.productmanagement.ProductManagementApplicationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.105 s -- in com.example.productmanagement.ProductManagementApplicationTest
 [INFO] Running com.example.productmanagement.ProductControllerTest
-[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.230 s -- in com.example.productmanagement.ProductControllerTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.178 s -- in com.example.productmanagement.ProductControllerTest
 [INFO] Running com.example.productmanagement.SecurityFilterTest
 SecurityFilter: No token found. Headers: []
 SecurityFilter: No token found. Headers: []
@@ -991,9 +1001,9 @@ com.auth0.jwt.exceptions.JWTDecodeException: The token was expected to have 3 pa
 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.246 s -- in com.example.productmanagement.SecurityFilterTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.220 s -- in com.example.productmanagement.SecurityFilterTest
 [INFO] Running com.example.productmanagement.ProductRepositoryTest
-[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.043 s -- in com.example.productmanagement.ProductRepositoryTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.585 s -- in com.example.productmanagement.ProductRepositoryTest
 [INFO] Running com.example.productmanagement.ProductServiceTest
 ProductService initialized with Webshop API URL: http://webshop-dummy
 ProductService initialized with Warehouse API URL: http://warehouse-dummy
@@ -1037,15 +1047,15 @@ ProductService initialized with Webshop API URL: http://webshop-dummy
 ProductService initialized with Warehouse API URL: http://warehouse-dummy
 Syncing product 1 to http://webshop-dummy
 Exception during sync to http://webshop-dummy: java.lang.RuntimeException: Network Error
-Syncing product 1 to http://warehouse-dummy
 Exception during sync to http://warehouse-dummy: java.lang.RuntimeException: Network Error
+Syncing product 1 to http://warehouse-dummy
 ProductService initialized with Webshop API URL: http://webshop-dummy
 ProductService initialized with Warehouse API URL: http://warehouse-dummy
 Syncing product 1 to http://webshop-dummy
 Synced to http://webshop-dummy. Response: {"status":"success"}
 Syncing product 1 to http://warehouse-dummy
 Synced to http://warehouse-dummy. Response: {"status":"success"}
-[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.121 s -- in com.example.productmanagement.ProductServiceTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.183 s -- in com.example.productmanagement.ProductServiceTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -1058,8 +1068,8 @@ Synced to http://warehouse-dummy. Response: {"status":"success"}
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  9.163 s
-[INFO] Finished at: 2026-01-10T08:49:15Z
+[INFO] Total time:  6.646 s
+[INFO] Finished at: 2026-01-19T05:54:43Z
 [INFO] ------------------------------------------------------------------------
   Running unit tests for warehouse...
 [INFO] Scanning for projects...
@@ -1070,7 +1080,6 @@ Synced to http://warehouse-dummy. Response: {"status":"success"}
 [INFO] --------------------------------[ jar ]---------------------------------
 [INFO] 
 [INFO] --- clean:3.2.0:clean (default-clean) @ warehouse ---
-[INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ warehouse ---
 [INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
@@ -1102,14 +1111,14 @@ Synced to http://warehouse-dummy. Response: {"status":"success"}
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.warehouse.KeycloakTokenServiceTest
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 Failed to get access token. Status: 401 Body: Unauthorized
 Exception getting access token: java.lang.RuntimeException: Failed to get access token
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.788 s -- in com.example.warehouse.KeycloakTokenServiceTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.224 s -- in com.example.warehouse.KeycloakTokenServiceTest
 [INFO] Running com.example.warehouse.WarehouseApplicationTest
 [main] INFO com.example.warehouse.WarehouseApplication - Received request: POST /login
 [main] INFO com.example.warehouse.WarehouseApplication - Access Token obtained: true
@@ -1117,7 +1126,7 @@ Exception getting access token: java.lang.RuntimeException: Failed to get access
 [main] INFO com.example.warehouse.WarehouseApplication - Received request: POST /login
 [main] WARN com.example.warehouse.WarehouseApplication - Login failed for user: testuser. Status: 401. Body: Unauthorized
 [main] INFO com.example.warehouse.WarehouseApplication - Received request: GET /login
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.210 s -- in com.example.warehouse.WarehouseApplicationTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.095 s -- in com.example.warehouse.WarehouseApplicationTest
 [INFO] Running com.example.warehouse.OrderUpdateServiceTest
 Updating status for order 123 to SHIPPED
 Updated order status for 123 to SHIPPED
@@ -1125,7 +1134,7 @@ Updating status for order 123 to SHIPPED
 Failed to update order status. Status: 500 Body: Internal Server Error
 Updating status for order 123 to SHIPPED
 Exception during order status update: java.lang.RuntimeException: Network error
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.128 s -- in com.example.warehouse.OrderUpdateServiceTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.066 s -- in com.example.warehouse.OrderUpdateServiceTest
 [INFO] Running com.example.warehouse.FulfillmentControllerTest
 java.sql.SQLException: DB Error
 	at com.example.warehouse.FulfillmentOrderRepository.updateFulfillmentStatus(FulfillmentOrderRepository.java:55)
@@ -1275,7 +1284,7 @@ java.sql.SQLException: DB Error
 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.196 s -- in com.example.warehouse.FulfillmentControllerTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.115 s -- in com.example.warehouse.FulfillmentControllerTest
 [INFO] Running com.example.warehouse.ProductSyncControllerTest
 Warehouse Sync received: {"id":101,"name":"Test Product"}
 Warehouse Sync received DELETE query: null
@@ -1426,9 +1435,9 @@ java.lang.IllegalArgumentException: Invalid JSON: Missing or invalid 'id'
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
 Warehouse Sync received DELETE query: id=101
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.074 s -- in com.example.warehouse.ProductSyncControllerTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s -- in com.example.warehouse.ProductSyncControllerTest
 [INFO] Running com.example.warehouse.DeliveryControllerTest
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.125 s -- in com.example.warehouse.DeliveryControllerTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.093 s -- in com.example.warehouse.DeliveryControllerTest
 [INFO] Running com.example.warehouse.ProductControllerTest
 [main] INFO com.example.warehouse.ProductController - Received request: GET /
 [main] INFO com.example.warehouse.ProductController - Received request: GET /
@@ -1507,7 +1516,7 @@ java.sql.SQLException: DB Error
 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.example.warehouse.ProductControllerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.example.warehouse.ProductControllerTest
 [INFO] Running com.example.warehouse.OrderFulfillmentControllerTest
 Fulfillment request received: {"orderId":123}
 Fulfillment request received: invalid-json
@@ -1584,11 +1593,11 @@ java.lang.IllegalArgumentException: No orderId found
 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.example.warehouse.OrderFulfillmentControllerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.example.warehouse.OrderFulfillmentControllerTest
 [INFO] Running com.example.warehouse.FulfillmentOrderRepositoryTest
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.604 s -- in com.example.warehouse.FulfillmentOrderRepositoryTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.502 s -- in com.example.warehouse.FulfillmentOrderRepositoryTest
 [INFO] Running com.example.warehouse.DeliveryRepositoryTest
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.055 s -- in com.example.warehouse.DeliveryRepositoryTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.051 s -- in com.example.warehouse.DeliveryRepositoryTest
 [INFO] Running com.example.warehouse.ModelTest
 [INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.example.warehouse.ModelTest
 [INFO] Running com.example.warehouse.StockServiceTest
@@ -1603,7 +1612,7 @@ Failed to sync stock to Webshop. Status: 500 Body: Error
 StockService initialized with Webshop Stock API URL: http://webshop/api/stock/sync
 Syncing stock for product 123 (Stock: 50) to http://webshop/api/stock/sync
 Exception during stock sync: java.lang.RuntimeException: Network error
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.182 s -- in com.example.warehouse.StockServiceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.180 s -- in com.example.warehouse.StockServiceTest
 [INFO] Running com.example.warehouse.SecurityFilterTest
 SecurityFilter: Insufficient permissions. Roles: [wrong-role]
 SecurityFilter: Sending error 403: Insufficient permissions
@@ -1612,9 +1621,9 @@ Headers:
 SecurityFilter: No token found for POST null
 Headers: 
 SecurityFilter: Sending error 401: Missing or invalid Authorization header/cookie
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.835 s -- in com.example.warehouse.SecurityFilterTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.884 s -- in com.example.warehouse.SecurityFilterTest
 [INFO] Running com.example.warehouse.ProductRepositoryTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s -- in com.example.warehouse.ProductRepositoryTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in com.example.warehouse.ProductRepositoryTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -1627,8 +1636,8 @@ SecurityFilter: Sending error 401: Missing or invalid Authorization header/cooki
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  15.007 s
-[INFO] Finished at: 2026-01-10T08:49:32Z
+[INFO] Total time:  6.483 s
+[INFO] Finished at: 2026-01-19T05:54:51Z
 [INFO] ------------------------------------------------------------------------
   Running unit tests for orderService...
 [INFO] Scanning for projects...
@@ -1639,7 +1648,6 @@ SecurityFilter: Sending error 401: Missing or invalid Authorization header/cooki
 [INFO] --------------------------------[ jar ]---------------------------------
 [INFO] 
 [INFO] --- clean:3.2.0:clean (default-clean) @ orderService ---
-[INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ orderService ---
 [INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
@@ -1671,16 +1679,16 @@ SecurityFilter: Sending error 401: Missing or invalid Authorization header/cooki
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.order.CreditServiceTest
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.098 s -- in com.example.order.CreditServiceTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.985 s -- in com.example.order.CreditServiceTest
 [INFO] Running com.example.order.InvoiceControllerTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.265 s -- in com.example.order.InvoiceControllerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.228 s -- in com.example.order.InvoiceControllerTest
 [INFO] Running com.example.order.InvoiceRepositoryTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.549 s -- in com.example.order.InvoiceRepositoryTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.538 s -- in com.example.order.InvoiceRepositoryTest
 [INFO] Running com.example.order.OrderRepositoryTest
 OrderRepository: Created order with ID 1
 OrderRepository: Updating points earned for order 1 to 50
@@ -1691,13 +1699,13 @@ OrderRepository: Found 1 orders.
 OrderRepository: Created order with ID 1
 OrderRepository: Updated status for order 1 to CONFIRMED. Rows affected: 1
 OrderRepository: Found 1 orders.
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 s -- in com.example.order.OrderRepositoryTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s -- in com.example.order.OrderRepositoryTest
 [INFO] Running com.example.order.KeycloakTokenServiceTest
 KeycloakTokenService: Requesting new token for client client from http://keycloak/token
 KeycloakTokenService: Token obtained successfully. Length: 10
 KeycloakTokenService: Requesting new token for client client from http://keycloak/token
 KeycloakTokenService: Failed to get token. Status: 401, Body: Unauthorized
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.323 s -- in com.example.order.KeycloakTokenServiceTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.276 s -- in com.example.order.KeycloakTokenServiceTest
 [INFO] Running com.example.order.OrderControllerTest
 Listing 1 orders.
 Order: 1, Status: PENDING
@@ -1781,7 +1789,7 @@ OrderController: Returning 200 OK
 Received Order: {"customerName":"John Doe","items":[{"productId":1,"quantity":1}]}
 Received Order: {"customerName":"John Doe","pointsToRedeem":100,"items":[{"productId":1,"quantity":1}]}
 Point redemption failed for order 101
-[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.195 s -- in com.example.order.OrderControllerTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.150 s -- in com.example.order.OrderControllerTest
 [INFO] Running com.example.order.OrderApplicationTest
 [main] INFO com.example.order.OrderApplication - Received request: POST /login
 [main] WARN com.example.order.OrderApplication - Login failed for user: testuser. Status: 401. Body: null
@@ -1790,7 +1798,7 @@ Point redemption failed for order 101
 [main] INFO com.example.order.OrderApplication - Received request: POST /login
 [main] INFO com.example.order.OrderApplication - Access Token obtained: true
 [main] INFO com.example.order.OrderApplication - Redirecting to: /orders
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s -- in com.example.order.OrderApplicationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s -- in com.example.order.OrderApplicationTest
 [INFO] Running com.example.order.LoginHandlerTest
 [main] INFO com.example.order.OrderApplication - Received request: POST /login
 [main] WARN com.example.order.OrderApplication - Login failed for user: testuser. Status: 401. Body: null
@@ -1799,12 +1807,12 @@ Point redemption failed for order 101
 [main] INFO com.example.order.OrderApplication - Received request: POST /login
 [main] INFO com.example.order.OrderApplication - Access Token obtained: true
 [main] INFO com.example.order.OrderApplication - Redirecting to: /orders
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.example.order.LoginHandlerTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.example.order.LoginHandlerTest
 [INFO] Running com.example.order.SecurityFilterTest
 SecurityFilter: Checking for role 'user'. Found roles: [user]
 SecurityFilter: Checking for role 'user'. Found roles: [user]
 SecurityFilter: Checking for role 'user'. Found roles: [wrong-role]
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.245 s -- in com.example.order.SecurityFilterTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.053 s -- in com.example.order.SecurityFilterTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -1817,8 +1825,8 @@ SecurityFilter: Checking for role 'user'. Found roles: [wrong-role]
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  6.962 s
-[INFO] Finished at: 2026-01-10T08:49:40Z
+[INFO] Total time:  6.315 s
+[INFO] Finished at: 2026-01-19T05:54:58Z
 [INFO] ------------------------------------------------------------------------
   Running unit tests for loyaltyService...
 [INFO] Scanning for projects...
@@ -1829,7 +1837,6 @@ SecurityFilter: Checking for role 'user'. Found roles: [wrong-role]
 [INFO] --------------------------------[ jar ]---------------------------------
 [INFO] 
 [INFO] --- clean:3.2.0:clean (default-clean) @ loyalty-service ---
-[INFO] Deleting /usr/src/mymaven/target
 [INFO] 
 [INFO] --- jacoco:0.8.11:prepare-agent (default) @ loyalty-service ---
 [INFO] argLine set to -javaagent:/tmp/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/usr/src/mymaven/target/jacoco.exec
@@ -1861,16 +1868,16 @@ SecurityFilter: Checking for role 'user'. Found roles: [wrong-role]
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.loyalty.BonusRuleEngineTest
-[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.074 s -- in com.example.loyalty.BonusRuleEngineTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.080 s -- in com.example.loyalty.BonusRuleEngineTest
 [INFO] Running com.example.loyalty.OrderItemTest
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.example.loyalty.OrderItemTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.example.loyalty.OrderItemTest
 [INFO] Running com.example.loyalty.LoyaltyApplicationTest
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.225 s -- in com.example.loyalty.LoyaltyApplicationTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.209 s -- in com.example.loyalty.LoyaltyApplicationTest
 [INFO] Running com.example.loyalty.LoyaltyControllerTest
 LoyaltyController received GET /unknown
 LoyaltyController received POST /api/loyalty/calculate
@@ -1883,13 +1890,13 @@ LoyaltyController received GET /
 LoyaltyController received POST /api/loyalty/redeem
 LoyaltyController received GET /api/loyalty/rules
 LoyaltyController received POST /api/loyalty/admin/toggle-bonus
-[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.663 s -- in com.example.loyalty.LoyaltyControllerTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.591 s -- in com.example.loyalty.LoyaltyControllerTest
 [INFO] Running com.example.loyalty.LoyaltyProgramTest
 Accrued 93 points for customer shopper3
 Accrued 100 points for customer shopper1
 Redeemed 50 points for customer shopper1
 Accrued 90 points for customer shopper2
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.058 s -- in com.example.loyalty.LoyaltyProgramTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.059 s -- in com.example.loyalty.LoyaltyProgramTest
 [INFO] Running com.example.loyalty.LoyaltyRepositoryTest
 LoyaltyRepository: Adding 200 points to user2
 LoyaltyRepository: addPoints finished for user2
@@ -1916,12 +1923,12 @@ LoyaltyRepository: Adding 100 points to userA
 LoyaltyRepository: addPoints finished for userA
 LoyaltyRepository: Adding 200 points to userB
 LoyaltyRepository: addPoints finished for userB
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.419 s -- in com.example.loyalty.LoyaltyRepositoryTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.391 s -- in com.example.loyalty.LoyaltyRepositoryTest
 [INFO] Running com.example.loyalty.PointServiceTest
 Redeemed 50 points for customer user1
 Failed to redeem 50 points for customer user1
 Accrued 100 points for customer user1
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in com.example.loyalty.PointServiceTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in com.example.loyalty.PointServiceTest
 [INFO] Running com.example.loyalty.SecurityFilterTest
 java.lang.Exception: Invalid signature
 	at com.example.loyalty.SecurityFilterTest.testInvalidToken_ApiRequest(SecurityFilterTest.java:90)
@@ -2136,7 +2143,7 @@ java.lang.Exception: Invalid signature
 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.135 s -- in com.example.loyalty.SecurityFilterTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.132 s -- in com.example.loyalty.SecurityFilterTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -2149,8 +2156,8 @@ java.lang.Exception: Invalid signature
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.459 s
-[INFO] Finished at: 2026-01-10T08:49:46Z
+[INFO] Total time:  5.063 s
+[INFO] Finished at: 2026-01-19T05:55:05Z
 [INFO] ------------------------------------------------------------------------
 ✅ Unit Validation Passed.
 
@@ -2192,15 +2199,15 @@ Phase 1: Generating Contracts (Consumer Tests)...
             variable to 'true'.
             
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.538 s -- in com.example.webshop.LoyaltyServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.333 s -- in com.example.webshop.LoyaltyServicePactTest
 [INFO] Running com.example.webshop.OrderServicePactTest
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.238 s -- in com.example.webshop.OrderServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.171 s -- in com.example.webshop.OrderServicePactTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -2213,8 +2220,8 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  4.728 s
-[INFO] Finished at: 2026-01-10T08:49:52Z
+[INFO] Total time:  4.629 s
+[INFO] Finished at: 2026-01-19T05:55:10Z
 [INFO] ------------------------------------------------------------------------
   Scanning productManagementSystem for consumer tests...
 [INFO] Scanning for projects...
@@ -2251,28 +2258,28 @@ WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/byteb
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-ProductService initialized with Webshop API URL: http://localhost:41539/api/products/sync
+ProductService initialized with Webshop API URL: http://localhost:45547/api/products/sync
 ProductService initialized with Warehouse API URL: http://warehouse-dummy
-Syncing product 1 to http://localhost:41539/api/products/sync
+Syncing product 1 to http://localhost:45547/api/products/sync
 Syncing product 1 to http://warehouse-dummy
 Exception during sync to http://warehouse-dummy: java.net.ConnectException
+Synced to http://localhost:45547/api/products/sync. Response: {"status":"success"}
 [Thread-3] WARN au.com.dius.pact.core.support.Metrics - 
             Please note: we are tracking events anonymously to gather important usage statistics like JVM version
             and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
             variable to 'true'.
             
-Synced to http://localhost:41539/api/products/sync. Response: {"status":"success"}
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.548 s -- in com.example.productmanagement.ProductServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.405 s -- in com.example.productmanagement.ProductServicePactTest
 [INFO] Running com.example.productmanagement.ProductServiceWarehousePactTest
 ProductService initialized with Webshop API URL: http://webshop-dummy
-ProductService initialized with Warehouse API URL: http://localhost:37203/api/products/sync
+ProductService initialized with Warehouse API URL: http://localhost:33729/api/products/sync
 Syncing product 1 to http://webshop-dummy
-Syncing product 1 to http://localhost:37203/api/products/sync
-Synced to http://localhost:37203/api/products/sync. Response: {"status":"success"}
+Syncing product 1 to http://localhost:33729/api/products/sync
+Synced to http://localhost:33729/api/products/sync. Response: {"status":"success"}
 Exception during sync to http://webshop-dummy: java.net.ConnectException
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.638 s -- in com.example.productmanagement.ProductServiceWarehousePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.633 s -- in com.example.productmanagement.ProductServiceWarehousePactTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -2285,8 +2292,8 @@ Exception during sync to http://webshop-dummy: java.net.ConnectException
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  6.842 s
-[INFO] Finished at: 2026-01-10T08:50:00Z
+[INFO] Total time:  5.133 s
+[INFO] Finished at: 2026-01-19T05:55:17Z
 [INFO] ------------------------------------------------------------------------
   Scanning warehouse for consumer tests...
 [INFO] Scanning for projects...
@@ -2323,8 +2330,8 @@ WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/byteb
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-StockService initialized with Webshop Stock API URL: http://localhost:40645/api/stock/sync
-Syncing stock for product 1 (Stock: 50) to http://localhost:40645/api/stock/sync
+StockService initialized with Webshop Stock API URL: http://localhost:41269/api/stock/sync
+Syncing stock for product 1 (Stock: 50) to http://localhost:41269/api/stock/sync
 [Thread-3] WARN au.com.dius.pact.core.support.Metrics - 
             Please note: we are tracking events anonymously to gather important usage statistics like JVM version
             and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
@@ -2332,7 +2339,7 @@ Syncing stock for product 1 (Stock: 50) to http://localhost:40645/api/stock/sync
             
 Synced stock for product 1 to Webshop.
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.732 s -- in com.example.warehouse.StockServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.659 s -- in com.example.warehouse.StockServicePactTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -2345,8 +2352,8 @@ Synced stock for product 1 to Webshop.
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  4.740 s
-[INFO] Finished at: 2026-01-10T08:50:06Z
+[INFO] Total time:  4.447 s
+[INFO] Finished at: 2026-01-19T05:55:22Z
 [INFO] ------------------------------------------------------------------------
   Scanning orderService for consumer tests...
 [INFO] Scanning for projects...
@@ -2391,19 +2398,19 @@ LoyaltyIntegrationService: Redeeming 50 points for order 102
             variable to 'true'.
             
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.858 s -- in com.example.order.LoyaltyIntegrationServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.719 s -- in com.example.order.LoyaltyIntegrationServicePactTest
 [INFO] Running com.example.order.StockReservationServicePactTest
-StockReservationService: Reserving stock for product 1 at http://localhost:38239/api/stock/reserve
+StockReservationService: Reserving stock for product 1 at http://localhost:33013/api/stock/reserve
 StockReservationService: Got token (length: 11)
 StockReservationService: Response status: 200
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.135 s -- in com.example.order.StockReservationServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.133 s -- in com.example.order.StockReservationServicePactTest
 [INFO] Running com.example.order.OrderFulfillmentServicePactTest
-OrderFulfillmentService: Notifying fulfillment for order 123 at http://localhost:36869/api/fulfillment/order
+OrderFulfillmentService: Notifying fulfillment for order 123 at http://localhost:37631/api/fulfillment/order
 OrderFulfillmentService: Got token (length: 11)
 OrderFulfillmentService: Response status: 200
 [main] INFO au.com.dius.pact.consumer.junit5.PactConsumerTestExt$Companion - Writing pacts out to directory from @PactDirectory annotation
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.120 s -- in com.example.order.OrderFulfillmentServicePactTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.119 s -- in com.example.order.OrderFulfillmentServicePactTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -2416,8 +2423,8 @@ OrderFulfillmentService: Response status: 200
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.296 s
-[INFO] Finished at: 2026-01-10T08:50:12Z
+[INFO] Total time:  5.097 s
+[INFO] Finished at: 2026-01-19T05:55:28Z
 [INFO] ------------------------------------------------------------------------
   Scanning loyaltyService for consumer tests...
 [INFO] Scanning for projects...
@@ -2460,8 +2467,8 @@ OrderFulfillmentService: Response status: 200
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.563 s
-[INFO] Finished at: 2026-01-10T08:50:17Z
+[INFO] Total time:  1.669 s
+[INFO] Finished at: 2026-01-19T05:55:31Z
 [INFO] ------------------------------------------------------------------------
 Phase 2: Verifying Contracts (Provider Tests)...
   Scanning webshop for provider tests...
@@ -2532,7 +2539,7 @@ Mock Repository: Upserted product Pact Book
       has status code 200 (OK)
       has a matching body (OK)
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.424 s -- in com.example.webshop.WebshopPactProviderTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.398 s -- in com.example.webshop.WebshopPactProviderTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -2545,8 +2552,8 @@ Mock Repository: Upserted product Pact Book
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.524 s
-[INFO] Finished at: 2026-01-10T08:50:23Z
+[INFO] Total time:  3.257 s
+[INFO] Finished at: 2026-01-19T05:55:35Z
 [INFO] ------------------------------------------------------------------------
   Scanning productManagementSystem for provider tests...
 [INFO] Scanning for projects...
@@ -2589,8 +2596,8 @@ Mock Repository: Upserted product Pact Book
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  1.827 s
-[INFO] Finished at: 2026-01-10T08:50:26Z
+[INFO] Total time:  1.872 s
+[INFO] Finished at: 2026-01-19T05:55:38Z
 [INFO] ------------------------------------------------------------------------
   Scanning warehouse for provider tests...
 [INFO] Scanning for projects...
@@ -2676,7 +2683,7 @@ Mock Repository: Upserted product Pact Book
       has status code 200 (OK)
       has a matching body (OK)
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.573 s -- in com.example.warehouse.WarehousePactProviderTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.467 s -- in com.example.warehouse.WarehousePactProviderTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -2689,8 +2696,8 @@ Mock Repository: Upserted product Pact Book
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.864 s
-[INFO] Finished at: 2026-01-10T08:50:31Z
+[INFO] Total time:  3.639 s
+[INFO] Finished at: 2026-01-19T05:55:43Z
 [INFO] ------------------------------------------------------------------------
   Scanning orderService for provider tests...
 [INFO] Scanning for projects...
@@ -2722,11 +2729,11 @@ Mock Repository: Upserted product Pact Book
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.order.OrderPactProviderTest
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 Test Server started on port 8083
 [main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Order Service is up':SETUP
 
@@ -2764,7 +2771,7 @@ Verifying a pact between Webshop and OrderService
       has status code 200 (OK)
       has a matching body (OK)
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.830 s -- in com.example.order.OrderPactProviderTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.001 s -- in com.example.order.OrderPactProviderTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -2777,8 +2784,8 @@ Verifying a pact between Webshop and OrderService
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.121 s
-[INFO] Finished at: 2026-01-10T08:50:37Z
+[INFO] Total time:  5.187 s
+[INFO] Finished at: 2026-01-19T05:55:49Z
 [INFO] ------------------------------------------------------------------------
   Scanning loyaltyService for provider tests...
 [INFO] Scanning for projects...
@@ -2810,11 +2817,11 @@ Verifying a pact between Webshop and OrderService
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.loyalty.LoyaltyPactProviderTest
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/tmp/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 Test Server started on port 8084
 [main] INFO au.com.dius.pact.provider.junit5.PactVerificationStateChangeExtension$Companion - Invoking state change method 'Loyalty Service is up':SETUP
 
@@ -2862,7 +2869,7 @@ LoyaltyController received POST /api/loyalty/accrue
       has status code 200 (OK)
       has a matching body (OK)
 [main] WARN au.com.dius.pact.provider.DefaultTestResultAccumulator - Skipping publishing of verification results as it has been disabled (pact.verifier.publishResults is not 'true')
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.055 s -- in com.example.loyalty.LoyaltyPactProviderTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.955 s -- in com.example.loyalty.LoyaltyPactProviderTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -2875,8 +2882,8 @@ LoyaltyController received POST /api/loyalty/accrue
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  4.933 s
-[INFO] Finished at: 2026-01-10T08:50:43Z
+[INFO] Total time:  4.680 s
+[INFO] Finished at: 2026-01-19T05:55:55Z
 [INFO] ------------------------------------------------------------------------
 ✅ Contract Validation Passed.
 
@@ -2908,7 +2915,7 @@ Created a new certificate valid for the following names 📜
 
 The certificate is at "/home/roland/Good Project/infrastructure/nginx/certs/localhost.pem" and the key at "/home/roland/Good Project/infrastructure/nginx/certs/localhost-key.pem" ✅
 
-It will expire on 10 April 2028 🗓
+It will expire on 19 April 2028 🗓
 
 Certificates generated in /home/roland/Good Project/infrastructure/nginx/certs
 Compiling Webshop application...
@@ -2957,8 +2964,8 @@ Compiling Webshop application...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  4.093 s
-[INFO] Finished at: 2026-01-10T08:50:57Z
+[INFO] Total time:  4.016 s
+[INFO] Finished at: 2026-01-19T05:56:08Z
 [INFO] ------------------------------------------------------------------------
 Compiling Product Management application...
 [INFO] Scanning for projects...
@@ -3008,8 +3015,8 @@ Compiling Product Management application...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  4.217 s
-[INFO] Finished at: 2026-01-10T08:51:02Z
+[INFO] Total time:  3.836 s
+[INFO] Finished at: 2026-01-19T05:56:13Z
 [INFO] ------------------------------------------------------------------------
 Compiling Warehouse Service...
 [INFO] Scanning for projects...
@@ -3059,8 +3066,8 @@ Compiling Warehouse Service...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  4.388 s
-[INFO] Finished at: 2026-01-10T08:51:08Z
+[INFO] Total time:  3.970 s
+[INFO] Finished at: 2026-01-19T05:56:18Z
 [INFO] ------------------------------------------------------------------------
 Compiling Order Service...
 [INFO] Scanning for projects...
@@ -3110,8 +3117,8 @@ Compiling Order Service...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  4.635 s
-[INFO] Finished at: 2026-01-10T08:51:14Z
+[INFO] Total time:  4.012 s
+[INFO] Finished at: 2026-01-19T05:56:23Z
 [INFO] ------------------------------------------------------------------------
 Compiling Loyalty Service...
 [INFO] Scanning for projects...
@@ -3161,10 +3168,10 @@ Compiling Loyalty Service...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.963 s
-[INFO] Finished at: 2026-01-10T08:51:19Z
+[INFO] Total time:  3.776 s
+[INFO] Finished at: 2026-01-19T05:56:28Z
 [INFO] ------------------------------------------------------------------------
-45358a6acb4743113f442562f16764163342a72f9ddf996833acdbb97db7e13c
+b13461ac0b0bdc88089a3304e48412ae7e9e2ca91d33376b0e42b5a43124ab82
 Starting Webshop Database container...
 Starting PM Database container...
 Starting Warehouse Database container...
@@ -3230,7 +3237,7 @@ Running Cypress tests against https://reverse-proxy:8444...
 [STARTED] Task without title.
 [SUCCESS] Task without title.
 
-DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a1e5-6549ce2f60e7
+DevTools listening on ws://127.0.0.1:35677/devtools/browser/33087f38-c747-488b-abf2-60a71f6c30d9
 [35mThe [33mexperimentalSessionAndOrigin[35m configuration option was removed in Cypress version 12.0.0.[39m
 [35m[39m
 [35mYou can safely remove this option from your config.[39m
@@ -3260,12 +3267,12 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 
 [0m[0m
 [0m  Loyalty Program E2E[0m
-  [32m  ✓[0m[90m Test 1: Earn and Burn Flow[0m[33m (10247ms)[0m
-  [32m  ✓[0m[90m Test 2: Complex Rule Stacking[0m[90m (3638ms)[0m
-  [32m  ✓[0m[90m Test 3: Admin Dashboards[0m[90m (1479ms)[0m
+  [32m  ✓[0m[90m Test 1: Earn and Burn Flow[0m[90m (9740ms)[0m
+  [32m  ✓[0m[90m Test 2: Complex Rule Stacking[0m[90m (3546ms)[0m
+  [32m  ✓[0m[90m Test 3: Admin Dashboards[0m[90m (1422ms)[0m
 
 
-[92m [0m[32m 3 passing[0m[90m (17s)[0m
+[92m [0m[32m 3 passing[0m[90m (16s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -3278,7 +3285,7 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m16 seconds[39m                                                                       [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m15 seconds[39m                                                                       [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mloyalty_program.cy.js[32m[39m                                                            [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -3294,12 +3301,12 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 
 [0m[0m
 [0m  Navigation Links[0m
-  [32m  ✓[0m[90m should navigate correctly in Webshop[0m[90m (136ms)[0m
-  [32m  ✓[0m[90m should navigate correctly in Product Management[0m[90m (757ms)[0m
-  [32m  ✓[0m[90m should navigate correctly in Warehouse[0m[90m (770ms)[0m
+  [32m  ✓[0m[90m should navigate correctly in Webshop[0m[90m (133ms)[0m
+  [32m  ✓[0m[90m should navigate correctly in Product Management[0m[90m (706ms)[0m
+  [32m  ✓[0m[90m should navigate correctly in Warehouse[0m[90m (737ms)[0m
 
 
-[92m [0m[32m 3 passing[0m[90m (5s)[0m
+[92m [0m[32m 3 passing[0m[90m (4s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -3328,7 +3335,7 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 
 [0m[0m
 [0m  Order Flow[0m
-  [32m  ✓[0m[90m should place an order, reduce stock, and show in order history[0m[33m (13053ms)[0m
+  [32m  ✓[0m[90m should place an order, reduce stock, and show in order history[0m[33m (12545ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (13s)[0m
@@ -3344,7 +3351,7 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m13 seconds[39m                                                                       [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m12 seconds[39m                                                                       [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32morder_flow.cy.js[32m[39m                                                                 [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -3360,11 +3367,11 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 
 [0m[0m
 [0m  Order Service Navigation[0m
-  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (716ms)[0m
-  [32m  ✓[0m[90m should logout correctly from header[0m[90m (712ms)[0m
+  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (708ms)[0m
+  [32m  ✓[0m[90m should logout correctly from header[0m[90m (664ms)[0m
 
 
-[92m [0m[32m 2 passing[0m[90m (3s)[0m
+[92m [0m[32m 2 passing[0m[90m (2s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -3393,8 +3400,8 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 
 [0m[0m
 [0m  Product Management Navigation[0m
-  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (2278ms)[0m
-  [32m  ✓[0m[90m should logout correctly from header[0m[90m (655ms)[0m
+  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (2256ms)[0m
+  [32m  ✓[0m[90m should logout correctly from header[0m[90m (653ms)[0m
 
 
 [92m [0m[32m 2 passing[0m[90m (3s)[0m
@@ -3426,7 +3433,7 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 
 [0m[0m
 [0m  Product Management CRUD[0m
-  [32m  ✓[0m[90m should create, edit, and delete a product[0m[90m (3149ms)[0m
+  [32m  ✓[0m[90m should create, edit, and delete a product[0m[90m (3074ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (3s)[0m
@@ -3458,7 +3465,7 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 
 [0m[0m
 [0m  Product Synchronization[0m
-  [32m  ✓[0m[90m should sync create, update, and delete to webshop[0m[90m (9218ms)[0m
+  [32m  ✓[0m[90m should sync create, update, and delete to webshop[0m[90m (9102ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (9s)[0m
@@ -3490,7 +3497,7 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 
 [0m[0m
 [0m  Product Variations[0m
-  [32m  ✓[0m[90m should handle dynamic attributes and prevent duplicates[0m[90m (5935ms)[0m
+  [32m  ✓[0m[90m should handle dynamic attributes and prevent duplicates[0m[90m (5795ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (6s)[0m
@@ -3522,7 +3529,7 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 
 [0m[0m
 [0m  User Registration Flow[0m
-  [32m  ✓[0m[90m should allow a new user to register, login, and logout[0m[90m (3875ms)[0m
+  [32m  ✓[0m[90m should allow a new user to register, login, and logout[0m[90m (4021ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (4s)[0m
@@ -3538,7 +3545,7 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m3 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m4 seconds[39m                                                                        [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mregistration_flow.cy.js[32m[39m                                                          [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -3554,13 +3561,13 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 
 [0m[0m
 [0m  Security and Error Handling[0m
-  [32m  ✓[0m[90m should reject login with invalid credentials[0m[90m (1748ms)[0m
-  [32m  ✓[0m[90m should enforce Role-Based Access Control (RBAC)[0m[90m (1168ms)[0m
-  [32m  ✓[0m[90m should redirect to login when accessing protected resources without auth[0m[90m (133ms)[0m
-  [32m  ✓[0m[90m should validate input when creating a product[0m[90m (1803ms)[0m
+  [32m  ✓[0m[90m should reject login with invalid credentials[0m[90m (1760ms)[0m
+  [32m  ✓[0m[90m should enforce Role-Based Access Control (RBAC)[0m[90m (1093ms)[0m
+  [32m  ✓[0m[90m should redirect to login when accessing protected resources without auth[0m[90m (87ms)[0m
+  [32m  ✓[0m[90m should validate input when creating a product[0m[90m (1496ms)[0m
 
 
-[92m [0m[32m 4 passing[0m[90m (9s)[0m
+[92m [0m[32m 4 passing[0m[90m (8s)[0m
 
 
 [32m  ([4m[1mResults[22m[24m)[39m
@@ -3573,7 +3580,7 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m8 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m7 seconds[39m                                                                        [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32msecurity_and_errors.cy.js[32m[39m                                                        [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -3589,8 +3596,8 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 
 [0m[0m
 [0m  Shopping Cart[0m
-  [32m  ✓[0m[90m should add, view, and remove a product from the cart[0m[90m (609ms)[0m
-  [32m  ✓[0m[90m should not allow adding more items than available in stock[0m[90m (888ms)[0m
+  [32m  ✓[0m[90m should add, view, and remove a product from the cart[0m[90m (639ms)[0m
+  [32m  ✓[0m[90m should not allow adding more items than available in stock[0m[90m (843ms)[0m
 
 
 [92m [0m[32m 2 passing[0m[90m (3s)[0m
@@ -3622,7 +3629,7 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 
 [0m[0m
 [0m  Warehouse Delivery Management[0m
-  [32m  ✓[0m[90m should create delivery, add items, and return delivery[0m[90m (1744ms)[0m
+  [32m  ✓[0m[90m should create delivery, add items, and return delivery[0m[90m (1747ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (3s)[0m
@@ -3654,7 +3661,7 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 
 [0m[0m
 [0m  Warehouse Order Fulfillment[0m
-  [32m  ✓[0m[90m should display confirmed orders in warehouse and allow fulfillment[0m[90m (6453ms)[0m
+  [32m  ✓[0m[90m should display confirmed orders in warehouse and allow fulfillment[0m[90m (6581ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (7s)[0m
@@ -3683,19 +3690,11 @@ DevTools listening on ws://127.0.0.1:36167/devtools/browser/f6735595-ff02-4ab5-a
 [90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m
                                                                                                     
   Running:  [90mwarehouse_navigation.cy.js[39m                                                    [90m(14 of 16)[39m
-Warning: vkCreateInstance: Found no drivers!
-Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
-    at CheckVkSuccessImpl (../../third_party/dawn/src/dawn/native/vulkan/VulkanError.cpp:88)
-    at CreateVkInstance (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:458)
-    at Initialize (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:344)
-    at Create (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:266)
-    at operator() (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:521)
-
 
 [0m[0m
 [0m  Warehouse Navigation[0m
-  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (1204ms)[0m
-  [32m  ✓[0m[90m should logout correctly from header[0m[90m (629ms)[0m
+  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (1188ms)[0m
+  [32m  ✓[0m[90m should logout correctly from header[0m[90m (613ms)[0m
 
 
 [92m [0m[32m 2 passing[0m[90m (3s)[0m
@@ -3711,7 +3710,7 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 [90m  │[39m [90mSkipped:[39m      [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mScreenshots:[39m  [32m0[39m                                                                                [90m│[39m
 [90m  │[39m [90mVideo:[39m        [32mtrue[39m                                                                             [90m│[39m
-[90m  │[39m [90mDuration:[39m     [32m3 seconds[39m                                                                        [90m│[39m
+[90m  │[39m [90mDuration:[39m     [32m2 seconds[39m                                                                        [90m│[39m
 [90m  │[39m [90mSpec Ran:[39m     [32m[32mwarehouse_navigation.cy.js[32m[39m                                                       [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
 
@@ -3727,7 +3726,15 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 
 [0m[0m
 [0m  Warehouse Synchronization[0m
-  [32m  ✓[0m[90m should sync create, update, and delete to warehouse[0m[33m (13258ms)[0m
+Warning: vkCreateInstance: Found no drivers!
+Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
+    at CheckVkSuccessImpl (../../third_party/dawn/src/dawn/native/vulkan/VulkanError.cpp:88)
+    at CreateVkInstance (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:458)
+    at Initialize (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:344)
+    at Create (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:266)
+    at operator() (../../third_party/dawn/src/dawn/native/vulkan/BackendVk.cpp:521)
+
+  [32m  ✓[0m[90m should sync create, update, and delete to warehouse[0m[33m (13031ms)[0m
 
 
 [92m [0m[32m 1 passing[0m[90m (13s)[0m
@@ -3759,8 +3766,8 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 
 [0m[0m
 [0m  Webshop Navigation[0m
-  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (4821ms)[0m
-  [32m  ✓[0m[90m should logout correctly from header[0m[90m (1018ms)[0m
+  [32m  ✓[0m[90m should have consistent navigation header on all pages[0m[90m (4720ms)[0m
+  [32m  ✓[0m[90m should logout correctly from header[0m[90m (953ms)[0m
 
 
 [92m [0m[32m 2 passing[0m[90m (7s)[0m
@@ -3793,11 +3800,11 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 
 [90m   [39m    [90mSpec[39m                                              [90mTests[39m  [90mPassing[39m  [90mFailing[39m  [90mPending[39m  [90mSkipped[39m [90m [39m
 [90m  ┌[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┐[39m
-[90m  │[39m [32m✔[39m  [0mloyalty_program.cy.js[0m                    [90m00:16[39m        [0m3[0m        [32m3[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mloyalty_program.cy.js[0m                    [90m00:15[39m        [0m3[0m        [32m3[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0mnavigation.cy.js[0m                         [90m00:04[39m        [0m3[0m        [32m3[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0morder_flow.cy.js[0m                         [90m00:13[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0morder_flow.cy.js[0m                         [90m00:12[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0morder_navigation.cy.js[0m                   [90m00:02[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
@@ -3809,9 +3816,9 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0mproduct_variations.cy.js[0m                 [90m00:05[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mregistration_flow.cy.js[0m                  [90m00:03[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mregistration_flow.cy.js[0m                  [90m00:04[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0msecurity_and_errors.cy.js[0m                [90m00:08[39m        [0m4[0m        [32m4[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0msecurity_and_errors.cy.js[0m                [90m00:07[39m        [0m4[0m        [32m4[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0mshopping_cart.cy.js[0m                      [90m00:02[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
@@ -3819,13 +3826,13 @@ Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0mwarehouse_fulfillment.cy.js[0m              [90m00:06[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
-[90m  │[39m [32m✔[39m  [0mwarehouse_navigation.cy.js[0m               [90m00:03[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
+[90m  │[39m [32m✔[39m  [0mwarehouse_navigation.cy.js[0m               [90m00:02[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0mwarehouse_sync.cy.js[0m                     [90m00:13[39m        [0m1[0m        [32m1[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  ├[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┤[39m
 [90m  │[39m [32m✔[39m  [0mwebshop_navigation.cy.js[0m                 [90m00:06[39m        [0m2[0m        [32m2[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m│[39m
 [90m  └[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m─[39m[90m┘[39m
-[90m   [39m [32m✔[39m  [32mAll specs passed![39m                        [90m01:46[39m       [0m28[0m       [32m28[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m [39m
+[90m   [39m [32m✔[39m  [32mAll specs passed![39m                        [90m01:42[39m       [0m28[0m       [32m28[39m        [90m-[39m        [90m-[39m        [90m-[39m [90m [39m
 
 ✅ Functional Validation Passed.
 
@@ -3833,5 +3840,5 @@ All validations passed successfully!
 
 --- Cleaning up temporary files ---
 --- Stopping containers ---
-Removing network: webshop-net-648005
-Total execution time: 436 seconds
+Removing network: webshop-net-1842157
+Total execution time: 411 seconds
